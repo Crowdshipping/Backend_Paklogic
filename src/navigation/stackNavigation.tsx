@@ -74,7 +74,7 @@ const DrawerNavigator = () => {
 
 export const StackNavigation = () => {
   return (
-    <Stack.Navigator initialRouteName="Splash">
+    <Stack.Navigator initialRouteName="Splash" screenOptions={{ gestureEnabled: false }}>
       <Stack.Screen
         options={{
           headerShown: false,
@@ -83,7 +83,7 @@ export const StackNavigation = () => {
         name="Drawer"
         component={DrawerNavigator}
       />
-      <Stack.Screen name="Splash" component={Splash} />
+      <Stack.Screen name="Splash" component={Splash} options={{ headerShown: false }} />
       <Stack.Screen
         options={{
           headerStyle: {
@@ -144,7 +144,7 @@ export const StackNavigation = () => {
         name="RegisterProvider"
         component={RegisterProvider}
       />
-      <Stack.Screen name="ResetPassword" component={ResetPassword} />
+      <Stack.Screen name="ResetPassword" options={{ headerLeft: () => null }} component={ResetPassword} />
       {/* <Stack.Screen name="Landing" component={Landing} /> */}
       <Stack.Screen
         options={{

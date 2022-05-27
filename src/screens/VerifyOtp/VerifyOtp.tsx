@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Alert,
   KeyboardAvoidingView,
@@ -13,16 +13,16 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
-import {SvgXml} from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
 
-import {Button, Header} from '../../components';
-import {otp, otpEmail, verifyOtp, verifyOtpEmail} from '../../services';
-import {register5} from '../../theme/assets/svg';
-import {colors} from '../../theme/colors';
-import {styles} from './style';
+import { Button, Header } from '../../components';
+import { otp, otpEmail, verifyOtp, verifyOtpEmail } from '../../services';
+import { register5 } from '../../theme/assets/svg';
+import { colors } from '../../theme/colors';
+import { styles } from './style';
 
 const VerifyOtp = (props: any) => {
-  const {requestData, flightInfoData} = props.route.params;
+  const { requestData, flightInfoData } = props.route.params;
   const [num1, setNum1] = useState('');
   const [num2, setNum2] = useState('');
   const [num3, setNum3] = useState('');
@@ -131,7 +131,7 @@ const VerifyOtp = (props: any) => {
     SetCounter(60);
     setDisabled(true);
     if (isEmail) {
-      otpEmail({email: props.route.params.email})
+      otpEmail({ email: props.route.params.email })
         .then(response => response.json())
         .then(result => {
           setLoading(false);
@@ -176,7 +176,7 @@ const VerifyOtp = (props: any) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{alignItems: 'center'}}>
+        <View style={{ alignItems: 'center' }}>
           <SvgXml
             xml={register5}
             width={widthPercentageToDP(90)}
@@ -187,7 +187,7 @@ const VerifyOtp = (props: any) => {
             {isEmail
               ? props.route.params.email
               : props.route.params.countrycode.dial_code +
-                props.route.params.phoneno}
+              props.route.params.phoneno}
           </Text>
           <View style={styles.codeContainer}>
             <TextInput
@@ -286,17 +286,17 @@ const VerifyOtp = (props: any) => {
               onFinish={() => {
                 setDisabled(false);
               }}
-              separatorStyle={{color: colors.red}}
+              separatorStyle={{ color: colors.red }}
               digitStyle={{}}
-              digitTxtStyle={{color: colors.red}}
+              digitTxtStyle={{ color: colors.red }}
               timeToShow={['M', 'S']}
               showSeparator
-              timeLabels={{m: '', s: ''}}
-              style={{marginVertical: hp(3)}}
+              timeLabels={{ m: '', s: '' }}
+              style={{ marginVertical: hp(3) }}
             />
           ) : (
             <Text
-              style={{alignSelf: 'center', marginVertical: hp(3)}}
+              style={{ alignSelf: 'center', marginVertical: hp(3) }}
               onPress={() => {
                 resendCode();
               }}>
@@ -316,8 +316,11 @@ const VerifyOtp = (props: any) => {
               //   countrycode: props.route.params.countrycode,
               //   option: props.route.params.option,
               // });
+              // props.navigation.navigate('ResetPassword', {
+              //   uid: 123456,
+              // });
             }}
-            containerStyle={{width: widthPercentageToDP(80)}}
+            containerStyle={{ width: widthPercentageToDP(80) }}
           />
         </View>
       </ScrollView>

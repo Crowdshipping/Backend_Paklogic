@@ -356,7 +356,7 @@ export const addFlight = (data: any) => {
   formdata.append('fa_flight_id', data.flightId);
   formdata.append('pickupIATACityCode', data.departureAirportCode);
   formdata.append('dropoffIATACityCode', data.destinationAirportCode);
-  formdata.append('flightArrivalDate', data.flightArrivalDate);
+  formdata.append('flightarrivalDate', data.flightArrivalDate);
   var requestOptions = {
     method: 'POST',
     headers: myHeaders,
@@ -570,4 +570,21 @@ export const changeStateByProvider = (state: any, requestId: any) => {
 
   return fetch("https://backend-crowdshipping.herokuapp.com/provider/setrequeststate", requestOptions);
 
+}
+
+export const verifyBookingForCompletion = (image: any, requestId: any) => {
+  console.log("verify booking for completion image requestID ", image, requestId);
+  var myHeaders = new Headers();
+  myHeaders.append("Cookie", "connect.sid=s%3AO0hdh4M60sPg4fyfkl3hiJQ4QV-SDmtp.9vDASPjdRAnclaACJt0TRhCqyZ%2B03rrqfqfN3fRXeEg");
+  var formdata = new FormData();
+  formdata.append("verificationImage", image);
+  formdata.append("requestId", requestId);
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: formdata,
+    redirect: 'follow'
+  };
+  return fetch("https://backend-crowdshipping.herokuapp.com/provider/verifyingbookingcompletion", requestOptions);
 }

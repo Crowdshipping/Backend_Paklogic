@@ -3,8 +3,10 @@ import { View, StyleSheet, Text } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import CheckBoxState from '../../components/CheckBoxState';
+import CheckBoxState2 from '../../components/CheckBoxState2';
 import HorizontalDivider from '../../components/HorizontalDivider';
 import MapButton from '../../components/MapButton';
+import MyLoader from '../../components/MyLoader';
 import { changeStateByProvider, getFlightsDate } from '../../services';
 // requestData: requestData,
 // flightInfoData: flightInfo,
@@ -73,65 +75,75 @@ const AcceptBooking = ({ route, navigation }: any) => {
 
   return (
     <View style={styles.container}>
-      <MapView
-        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-        style={styles.map}
-        region={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.015,
-          longitudeDelta: 0.0121,
-        }}></MapView>
-      <View style={styles.mapInformation}>
-        <View style={styles.topView}>
-          <Text style={{ fontSize: 20, color: 'grey' }}>Pick up city</Text>
-          <Text style={{ fontSize: 20, color: 'red' }}>
-            {requestData.flight.pickupCity}
-          </Text>
-        </View>
-        <HorizontalDivider />
-        <View style={styles.topView}>
-          <Text style={{ fontSize: 20, color: 'grey' }}>Drop off city</Text>
-          <Text style={{ fontSize: 20, color: 'red' }}>
-            {requestData.flight.dropoffCity}
-          </Text>
-        </View>
-        <HorizontalDivider />
-        {flightInfoData ? toAndFromDateFlightInfoData() : toAndFromDateFlightInfo()}
+      {isLoading ? <MyLoader /> :
+        <View>
+          <MapView
+            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+            style={styles.map}
+            region={{
+              latitude: 37.78825,
+              longitude: -122.4324,
+              latitudeDelta: 0.015,
+              longitudeDelta: 0.0121,
+            }}></MapView>
+          <View style={styles.mapInformation}>
+            <View style={styles.topView}>
+              <Text style={{ fontSize: 20, color: 'grey' }}>Pick up city</Text>
+              <Text style={{ fontSize: 20, color: 'red' }}>
+                {requestData.flight.pickupCity}
+              </Text>
+            </View>
+            <HorizontalDivider />
+            <View style={styles.topView}>
+              <Text style={{ fontSize: 20, color: 'grey' }}>Drop off city</Text>
+              <Text style={{ fontSize: 20, color: 'red' }}>
+                {requestData.flight.dropoffCity}
+              </Text>
+            </View>
+            <HorizontalDivider />
+            {flightInfoData ? toAndFromDateFlightInfoData() : toAndFromDateFlightInfo()}
 
-      </View>
-      <View style={styles.mapBottom}>
-        <View style={styles.topPart}>
-          <Text style={styles.topPartText}>View Package Detail</Text>
-        </View>
-        <View style={styles.bottomPart}>
-          <View style={styles.checkBoxRow}>
-            <CheckBoxState text={'Pick up'} whenPressed={() => { }} />
-            <CheckBoxState text={'Transit'} whenPressed={() => { }} />
-            <CheckBoxState text={'Reached'} whenPressed={() => { }} />
           </View>
-          <MapButton
-            onPress={() => {
-              // navigation.navigate('AcceptBooking2', {
-              //   requestData: requestData,
-              //   flightInfoData: flightInfoData ? flightInfoData : flightInfo,
-              // });
-              changeStateByProvider("Pickedup", requestData._id)
-                .then(response => response.json())
-                .then(result => {
-                  if (result.success) {
-                    navigation.navigate('AcceptBooking2', {
-                      requestData: requestData,
-                      flightInfoData: flightInfoData ? flightInfoData : flightInfo,
+          <View style={styles.mapBottom}>
+            <View style={styles.topPart}>
+              <Text style={styles.topPartText}>View Package Detail</Text>
+            </View>
+            <View style={styles.bottomPart}>
+              <View style={styles.checkBoxRow}>
+                <CheckBoxState2 text={'Pick up'} />
+                <CheckBoxState2 text={'Transit'} />
+                <CheckBoxState2 text={'Reached'} />
+              </View>
+              <MapButton
+                onPress={() => {
+                  setIsLoading(true);
+                  // navigation.navigate('AcceptBooking2', {
+                  //   requestData: requestData,
+                  //   flightInfoData: flightInfoData ? flightInfoData : flightInfo,
+                  // });
+                  changeStateByProvider("Pickedup", requestData._id)
+                    .then(response => response.json())
+                    .then(result => {
+
+                      if (result.success) {
+                        setIsLoading(false);
+                        navigation.navigate('AcceptBooking2', {
+                          requestData: requestData,
+                          flightInfoData: flightInfoData ? flightInfoData : flightInfo,
+                        });
+                      }
+                    })
+                    .catch(error => {
+                      setIsLoading(false);
+                      console.log('error', error)
                     });
-                  }
-                })
-                .catch(error => console.log('error', error));
-            }}
-            text={'PICKED UP'}
-          />
+                }}
+                text={'PICKED UP'}
+              />
+            </View>
+          </View>
         </View>
-      </View>
+      }
     </View>
   );
 };
@@ -141,7 +153,6 @@ const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
-    backgroundColor: 'red',
     justifyContent: 'flex-end',
   },
   mapInformation: {

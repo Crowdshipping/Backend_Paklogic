@@ -21,11 +21,10 @@ import { ScrollView } from 'react-native-gesture-handler';
 import RequestComponent2 from '../../components/RequestComponent2';
 import { addFlight, searchFlight } from '../../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useIsFocused } from "@react-navigation/native";
-
+import { useIsFocused } from '@react-navigation/native';
+import MyLoader from '../../components/MyLoader';
 
 const AvailableFight = ({ route, navigation, status, myColor }: any) => {
-
   const isFocused = useIsFocused();
   const getData = async () => {
     try {
@@ -41,14 +40,12 @@ const AvailableFight = ({ route, navigation, status, myColor }: any) => {
     }
   };
 
-
   const [providerId, setProviderId] = React.useState('');
   const { flightData } = route.params;
   const [response, setResponse] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
 
   React.useEffect(() => {
-
     if (isFocused) {
       console.log('useeffect called isfocus');
       getData();
@@ -57,7 +54,8 @@ const AvailableFight = ({ route, navigation, status, myColor }: any) => {
         flightData.departureAirportCode,
         flightData.destinationAirportCode,
         flightData.flightNumber,
-      ).then(response => response.json())
+      )
+        .then(response => response.json())
         .then(result => {
           setIsLoading(false);
           setResponse(result.flights);
@@ -72,56 +70,75 @@ const AvailableFight = ({ route, navigation, status, myColor }: any) => {
 
   return (
     <ScrollView>
-      {/* <ActivityIndicator size="large" /> */}
-      {response &&
-        response.map(item => {
-          console.log("map data from available flight", item.scheduled_in);
-          return (
-            <View style={styles.container}>
-              <RequestComponent2
-                date={item.scheduled_out.slice(0, -10)}
-                airline={item.ident_iata}
-                fromCountry={flightData.departureAirport}
-                toCountry={flightData.destinationAirport}
-                onPress={() => {
-                  var flight: AddFlight = {
-                    airline: flightData.airline,
-                    date: flightData.date,
-                    departureAirport: flightData.departureAirport,
-                    destinationAirport: flightData.destinationAirport,
-                    departureTime: flightData.departureTime,
-                    destinationTime: flightData.destinationTime,
-                    flightNumber: flightData.flightNumber,
-                    image: flightData.image,
-                    departureAirportCode: flightData.departureAirportCode,
-                    destinationAirportCode: flightData.destinationAirportCode,
-                    flightId: item.fa_flight_id,
-                    providerId: providerId,
-                    flightArrivalDate: item.scheduled_in
-                  };
-                  addFlight(flight)
-                    .then(response => response.json())
-                    .then(result => {
-                      console.log('Final Result', result);
-                      if (result.success) {
-                        Alert.alert('Alert', 'Flight Has Been Added', [
-                          {
-                            text: 'Ok',
-                            onPress: () => {
-                              navigation.navigate('AllFlight');
-                            },
-                            style: 'cancel',
-                          },
-                        ]);
-                      }
-                    })
-                    .catch(error => console.log('error', error));
-                  console.log('flightData', flight);
-                }}
-              />
-            </View>
-          );
-        })}
+      {isLoading ? (
+        <MyLoader />
+      ) : (
+        <View>
+          {/* <ActivityIndicator size="large" /> */}
+          {response &&
+            response.map(item => {
+              console.log('map data from available flight', item.scheduled_in);
+              return (
+                <View style={styles.container}>
+                  <RequestComponent2
+                    date={item.scheduled_out.slice(0, -10)}
+                    airline={item.ident_iata}
+                    fromCountry={flightData.departureAirport}
+                    toCountry={flightData.destinationAirport}
+                    onPress={() => {
+                      setIsLoading(true);
+                      var flight: AddFlight = {
+                        airline: flightData.airline,
+                        date: flightData.date,
+                        departureAirport: flightData.departureAirport,
+                        destinationAirport: flightData.destinationAirport,
+                        departureTime: flightData.departureTime,
+                        destinationTime: flightData.destinationTime,
+                        flightNumber: flightData.flightNumber,
+                        image: flightData.image,
+                        departureAirportCode: flightData.departureAirportCode,
+                        destinationAirportCode:
+                          flightData.destinationAirportCode,
+                        flightId: item.fa_flight_id,
+                        providerId: providerId,
+                        flightArrivalDate: item.scheduled_in,
+                      };
+                      addFlight(flight)
+                        .then(response => response.json())
+                        .then(result => {
+                          setIsLoading(false);
+                          console.log('Final Result', result);
+                          if (result.success) {
+                            //   Alert.alert('Alert', result.message, [
+                            //     {
+                            //       text: 'Ok',
+                            //       onPress: () => {
+                            //         navigation.navigate('AllFlight');
+                            //       },
+                            //       style: 'cancel',
+                            //     },
+                            //   ]);
+                            // } else {
+                            Alert.alert('Alert', result.message, [
+                              {
+                                text: 'Ok',
+                                onPress: () => {
+                                  navigation.navigate('AllFlight');
+                                },
+                                style: 'cancel',
+                              },
+                            ]);
+                          }
+                        })
+                        .catch(error => console.log('error', error));
+                      console.log('flightData', flight);
+                    }}
+                  />
+                </View>
+              );
+            })}
+        </View>
+      )}
     </ScrollView>
   );
 };

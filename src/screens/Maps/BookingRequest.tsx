@@ -1,19 +1,25 @@
 import React from 'react';
-import {View, StyleSheet, Text, Button, TextInput} from 'react-native';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import { View, StyleSheet, Text, Button, TextInput } from 'react-native';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import HorizontalDivider from '../../components/HorizontalDivider';
 import MyButton from '../../components/MyButton';
 import Modal from 'react-native-modal';
 import CloseButton from '../../components/CloseButton';
 import MapButton from '../../components/MapButton';
-import {getFlightsDate} from '../../services';
+import { getFlightsDate, setAcceptOrReject } from '../../services';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-const BookingRequest = ({route, navigation}: any) => {
+import MyLoader from '../../components/MyLoader';
+const BookingRequest = ({ route, navigation }: any) => {
   console.log('class initialized');
-  const {requestData} = route.params;
+  const { requestData } = route.params;
   const [isModalVisible, setModalVisible] = React.useState(false);
   const [flightInfo, setFlightInfo] = React.useState({});
+
+
+  const [isLoading, setIsLoading] = React.useState(false);
+
+
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -35,87 +41,99 @@ const BookingRequest = ({route, navigation}: any) => {
 
   return (
     <View style={styles.container}>
-      {console.log('request Data from booking request', requestData)}
-      <Modal isVisible={isModalVisible}>
-        <View style={styles.modalView}>
-          <View style={styles.closeButtonView}>
-            <CloseButton whenPressed={toggleModal} />
-          </View>
-          <View style={styles.modalViewContent}>
-            <Text
-              style={{textAlign: 'center', fontWeight: 'bold', fontSize: 12}}>
-              Reason for Ignorance{'\n'}
-              Rejection
-            </Text>
-          </View>
-          <View
-            style={{
-              backgroundColor: '#f8f8f8',
-              margin: 15,
-              height: 140,
-              borderRadius: 5,
-            }}>
-            <TextInput style={styles.textInput} placeholder="Type Here" />
-          </View>
+      {isLoading ? <MyLoader /> :
+        <View style={styles.container}>
+          <Modal isVisible={isModalVisible}>
+            <View style={styles.modalView}>
+              <View style={styles.closeButtonView}>
+                <CloseButton whenPressed={toggleModal} />
+              </View>
+              <View style={styles.modalViewContent}>
+                <Text
+                  style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 12 }}>
+                  Reason for Ignorance{'\n'}
+                  Rejection
+                </Text>
+              </View>
+              <View
+                style={{
+                  backgroundColor: '#f8f8f8',
+                  margin: 15,
+                  height: 140,
+                  borderRadius: 5,
+                }}>
+                <TextInput style={styles.textInput} placeholder="Type Here" />
+              </View>
 
-          <View style={{alignItems: 'center'}}>
-            <MapButton text={'Submit'} />
+              <View style={{ alignItems: 'center' }}>
+                <MapButton text={'Submit'} />
+              </View>
+            </View>
+          </Modal>
+          <MapView
+            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+            style={styles.map}
+            region={{
+              latitude: 37.78825,
+              longitude: -122.4324,
+              latitudeDelta: 0.015,
+              longitudeDelta: 0.0121,
+            }}></MapView>
+          <View style={styles.mapInformation}>
+            <View style={styles.topView}>
+              <View style={styles.leftView}>
+                <Text style={{ fontSize: 20, color: 'grey' }}>Pick up</Text>
+                <Text style={{ fontSize: 12.5, color: 'red' }}>
+                  {requestData.flight.departureAirport}
+                </Text>
+                <Text style={{ fontSize: 18, color: 'black' }}>
+                  from
+                  {flightInfo.scheduled_out !== undefined &&
+                    flightInfo.scheduled_out.slice(0, -10)}
+                </Text>
+                <Text style={{ fontSize: 20, color: 'grey' }}>Total Distance</Text>
+                <Text style={{ fontSize: 20, color: 'red' }}>100kM</Text>
+              </View>
+              <View style={styles.rightView}>
+                <Text style={{ fontSize: 20, color: 'grey' }}>Drop off</Text>
+                <Text style={{ fontSize: 12.5, color: 'red' }}>
+                  {requestData.flight.destinationAirport}
+                </Text>
+                <Text style={{ fontSize: 18, color: 'black' }}>
+                  to
+                  {flightInfo.scheduled_on !== undefined &&
+                    flightInfo.scheduled_on.slice(0, -10)}
+                </Text>
+                <Text style={{ fontSize: 20, color: 'grey' }}>Est. Fare</Text>
+                <Text style={{ fontSize: 20, color: 'red' }}>250$</Text>
+              </View>
+            </View>
+            <HorizontalDivider />
+            <View style={styles.bottomView}>
+              <TouchableOpacity onPress={toggleModal}>
+                <Text>Ignore Job</Text>
+              </TouchableOpacity>
+              <MyButton
+                onPress={() => {
+                  setIsLoading(true);
+                  setAcceptOrReject(requestData._id, 'Accepted').then(response =>
+                    response
+                      .json()
+                      .then((res) => {
+                        setIsLoading(false);
+                        navigation.navigate("AllRequest");
+                      })
+                      .catch(e => {
+                        setIsLoading(false);
+                        console.log('error')
+                      }),
+                  );
+                }}
+              />
+            </View>
           </View>
-        </View>
-      </Modal>
-      <MapView
-        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-        style={styles.map}
-        region={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.015,
-          longitudeDelta: 0.0121,
-        }}></MapView>
-      <View style={styles.mapInformation}>
-        <View style={styles.topView}>
-          <View style={styles.leftView}>
-            <Text style={{fontSize: 20, color: 'grey'}}>Pick up</Text>
-            <Text style={{fontSize: 12.5, color: 'red'}}>
-              {requestData.flight.departureAirport}
-            </Text>
-            <Text style={{fontSize: 18, color: 'black'}}>
-              from
-              {flightInfo.scheduled_out !== undefined &&
-                flightInfo.scheduled_out.slice(0, -10)}
-            </Text>
-            <Text style={{fontSize: 20, color: 'grey'}}>Total Distance</Text>
-            <Text style={{fontSize: 20, color: 'red'}}>100kM</Text>
-          </View>
-          <View style={styles.rightView}>
-            <Text style={{fontSize: 20, color: 'grey'}}>Drop off</Text>
-            <Text style={{fontSize: 12.5, color: 'red'}}>
-              {requestData.flight.destinationAirport}
-            </Text>
-            <Text style={{fontSize: 18, color: 'black'}}>
-              to
-              {flightInfo.scheduled_on !== undefined &&
-                flightInfo.scheduled_on.slice(0, -10)}
-            </Text>
-            <Text style={{fontSize: 20, color: 'grey'}}>Est. Fare</Text>
-            <Text style={{fontSize: 20, color: 'red'}}>250$</Text>
-          </View>
-        </View>
-        <HorizontalDivider />
-        <View style={styles.bottomView}>
-          <TouchableOpacity onPress={toggleModal}>
-          <Text>Ignore Job</Text>
-          </TouchableOpacity>
-          <MyButton
-            onPress={() => {
-              navigation.navigate('AcceptBooking', {
-                requestData: requestData,
-                flightInfoData: flightInfo,
-              });
-            }}
-          />
-        </View>
-      </View>
+        </View>}
+
     </View>
   );
 };

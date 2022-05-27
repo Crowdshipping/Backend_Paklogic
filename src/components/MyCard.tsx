@@ -1,8 +1,8 @@
 import React from 'react';
-import {View, Image, Text, TouchableOpacity} from 'react-native';
+import { View, Image, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const MyCard = ({status, myColor}: any) => {
+const MyCard = ({ status, myColor }: any) => {
   return (
     <View
       style={{
@@ -21,7 +21,7 @@ const MyCard = ({status, myColor}: any) => {
 
         elevation: 5,
       }}>
-      <View style={{flex: 1.3, flexDirection: 'row'}}>
+      <View style={{ flex: 1.3, flexDirection: 'row' }}>
         <View
           style={{
             flex: 1,
@@ -29,7 +29,7 @@ const MyCard = ({status, myColor}: any) => {
             margin: 12,
           }}>
           <Image
-            style={{width: 100, height: 100, borderRadius: 50}}
+            style={{ width: 100, height: 100, borderRadius: 50 }}
             source={require('../assets/tony.jpg')}
           />
         </View>
@@ -46,7 +46,7 @@ const MyCard = ({status, myColor}: any) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <Text style={{color: 'black', fontSize: 20, fontWeight: 'bold'}}>
+            <Text style={{ color: 'black', fontSize: 20, fontWeight: 'bold' }}>
               Aman
             </Text>
             <View
@@ -60,9 +60,9 @@ const MyCard = ({status, myColor}: any) => {
                 name="clock"
                 color={'red'}
                 size={25}
-                style={{alignSelf: 'center'}}
+                style={{ alignSelf: 'center' }}
               />
-              <Text style={{color: 'red'}}>8:00PM</Text>
+              <Text style={{ color: 'red' }}>8:00PM</Text>
             </View>
           </View>
           <Text>892 Chestnut Ave.Long Branch</Text>
@@ -83,13 +83,12 @@ const MyCard = ({status, myColor}: any) => {
         <TouchableOpacity
           style={{
             alignItems: 'center',
-            backgroundColor: 'red',
             padding: 17,
             borderBottomLeftRadius: 12,
             borderBottomRightRadius: 12,
           }}
-          onPress={() => {}}>
-          <Text style={{fontWeight: 'bold', fontSize: 17, color: 'white'}}>
+          onPress={() => { }}>
+          <Text style={{ fontWeight: 'bold', fontSize: 17, color: 'white' }}>
             VIEW FULL DETAILS
           </Text>
         </TouchableOpacity>

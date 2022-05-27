@@ -8,24 +8,24 @@ import {
   Image,
   Alert,
 } from 'react-native';
-import {SvgXml} from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {ImagePickerSvg} from '../theme/assets/svg/ImagePickerSvg';
-import {Button} from '../components';
-import {launchImageLibrary} from 'react-native-image-picker';
+import { ImagePickerSvg } from '../theme/assets/svg/ImagePickerSvg';
+import { Button } from '../components';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 import CloseButton from '../components/CloseButton';
-import {TextInput} from 'react-native-gesture-handler';
+import { TextInput } from 'react-native-gesture-handler';
 import MapButton from '../components/MapButton';
 import PopupModalOfSuccess from '../components/PopupModalOfSuccess';
 
-const PictureDelivery = ({route, navigation}: any) => {
+const PictureDelivery = ({ route, navigation }: any) => {
   const [image, setImage] = React.useState<any>({});
-
-  const {requestData, flightInfoData} = route.params;
+  const [error, setError] = React.useState(false);
+  const { requestData, flightInfoData } = route.params;
 
   const imagePicker = async () => {
     try {
@@ -47,7 +47,19 @@ const PictureDelivery = ({route, navigation}: any) => {
       Alert.alert(err);
     }
   };
-
+  const validate = () => {
+    if (Object.keys(image).length === 0) {
+      setError(true)
+      return;
+    } else {
+      setError(false)
+      navigation.navigate('AcceptBooking4', {
+        requestData: requestData,
+        flightInfoData: flightInfoData,
+        image: image
+      });
+    }
+  }
   return (
     <View style={styles.container}>
       {Object.keys(image).length === 0 ? (
@@ -56,29 +68,28 @@ const PictureDelivery = ({route, navigation}: any) => {
             <Text style={styles.imageBoxText}>Submit delivery parcal here</Text>
             <SvgXml width={30} height={30} xml={ImagePickerSvg} />
           </View>
+          {error && <Text style={{ textAlign: 'center', color: 'red' }}>Image is not selected</Text>}
         </Pressable>
       ) : (
         <View style={styles.imageBox}>
           <Image
-            style={{width: '100%', height: '100%'}}
-            source={{uri: image.uri}}
+            style={{ width: '100%', height: '100%' }}
+            source={{ uri: image.uri }}
           />
         </View>
       )}
 
       <View style={styles.deliveryBox}>
         <View style={styles.deliveryText}>
-          <Text style={{fontSize: 20, color: '#1B8B18'}}>Delivered</Text>
+          <Text style={{ fontSize: 20, color: '#1B8B18' }}>Delivered</Text>
         </View>
         <Button
           title="SUBMIT"
           onPress={() => {
-            navigation.navigate('AcceptBooking4', {
-              requestData: requestData,
-              flightInfoData: flightInfoData,
-            });
+            validate();
+
           }}
-          containerStyle={{width: wp(80)}}
+          containerStyle={{ width: wp(80) }}
         />
       </View>
     </View>

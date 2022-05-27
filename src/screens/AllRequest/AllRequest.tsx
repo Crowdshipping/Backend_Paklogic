@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import HorizontalDivider from '../../components/HorizontalDivider';
 import { SvgXml } from 'react-native-svg';
@@ -173,19 +174,22 @@ const AllRequest = ({ navigation, status, myColor }: any) => {
                 departureAirport={item.flight.departureAirport}
                 destinationAirport={item.flight.destinationAirport}
                 acceptPress={() => {
-                  setAcceptOrReject(item._id, 'Accepted').then(response =>
-                    response
-                      .json()
-                      .then(res => console.log('from accept buttonsuccses'))
-                      .catch(e => console.log('error')),
-                  );
+                  navigation.navigate('BookingRequest', {
+                    requestData: item,
+                  });
                 }}
                 rejectPress={() => {
+                  setIsloading(true);
                   setAcceptOrReject(item._id, 'Rejected').then(response =>
                     response
                       .json()
-                      .then(res => console.log('from reject buttonsuccses'))
-                      .catch(e => console.log('error')),
+                      .then(res => {
+                        setIsloading(false)
+                        navigation.navigate("AllRequest");
+                      })
+                      .catch(e => {
+                        setIsloading(false)
+                      }),
                   );
                 }}
                 date={item.flight.flightDate.slice(0, -14)}

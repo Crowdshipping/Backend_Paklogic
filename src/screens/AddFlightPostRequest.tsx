@@ -42,28 +42,20 @@ const getMyTime = (date: Date) => {
     return strTime;
 };
 
-
-
-
-
 const AddFlightPostRequest = ({ navigation, route }: any) => {
-
-    const [userId, setUserId] = React.useState("");
-
+    const [userId, setUserId] = React.useState('');
 
     const getUserId = async () => {
         const value: any = await AsyncStorage.getItem('@user_Id');
         setUserId(value);
-    }
+    };
 
     React.useEffect(() => {
         getUserId();
-    }, [])
-
-
+    }, []);
 
     const { postRequestData } = route.params;
-    console.log("data from addflightpostrequest", postRequestData);
+    console.log('data from addflightpostrequest', postRequestData);
     //date varibales
     const [date, setDate] = React.useState(new Date());
     const [open, setOpen] = React.useState(false);
@@ -79,7 +71,6 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
     //////validation of each varible
     const [isValidImage, setIsValidImage] = React.useState(true);
 
-
     const [isLoading, setIsLoading] = React.useState(false);
     const validateImage = () => {
         if (Object.keys(image).length === 0) {
@@ -91,9 +82,7 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
         }
     };
 
-
     const validateForm = () => {
-
         const imagevalid = validateImage();
         if (imagevalid) {
             let flightData: AddFlightPostRequest = {
@@ -114,19 +103,31 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
                 postrequestId: postRequestData._id,
                 customerId: postRequestData.requestedBy,
                 bookingId: postRequestData.bookingId,
-                flightarrivalDate: postRequestData.flightarrivalDate
+                flightarrivalDate: postRequestData.flightarrivalDate,
             };
             setIsLoading(true);
 
-            addFlightAfterPost(flightData).then(response => response.json())
+            addFlightAfterPost(flightData)
+                .then(response => response.json())
                 .then(result => {
                     setIsLoading(false);
-                    navigation.navigate("AllRequest");
-                    console.log("result of addflightafterpost", result)
+                    //   navigation.navigate('AllRequest');
+                    Alert.alert('Alert', 'Requested Accenpted', [
+                        {
+                            text: 'Ok',
+                            onPress: () => {
+                                // console.log('knvsldxkn')
+                                navigation.navigate('AllRequest');
+                                // props.navigation.navigate('SignIn')
+                            },
+                            style: 'cancel',
+                        },
+                    ]);
+                    console.log('result of addflightafterpost', result);
                 })
                 .catch(error => {
                     setIsLoading(false);
-                    console.log('error', error)
+                    console.log('error', error);
                 });
         }
     };
@@ -154,7 +155,9 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
     };
     return (
         <SafeAreaView>
-            {isLoading ? <MyLoader /> :
+            {isLoading ? (
+                <MyLoader />
+            ) : (
                 <ScrollView>
                     <View style={styles.container}>
                         <DatePicker
@@ -218,13 +221,10 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
                             <View style={styles.singleItemView}>
                                 <Text style={styles.singleItemText}>Date</Text>
 
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        setOpen(true);
-                                    }}
-                                    style={styles.inputContainer2}>
+                                <TouchableOpacity disabled style={styles.inputContainer2}>
                                     <Text style={{ fontSize: 12, marginLeft: 10 }}>
-                                        {date.toDateString()}
+                                        {/* {date.toDateString()} */}
+                                        {postRequestData.date.slice(0, -14)}
                                     </Text>
                                     <SvgXml style={styles.icon} xml={dateSvg} width={20} />
                                 </TouchableOpacity>
@@ -301,8 +301,7 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
                         />
                     </View>
                 </ScrollView>
-            }
-
+            )}
         </SafeAreaView>
     );
 };
