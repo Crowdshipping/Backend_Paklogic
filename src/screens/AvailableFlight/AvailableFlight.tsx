@@ -9,22 +9,22 @@ import {
   Alert,
 } from 'react-native';
 import HorizontalDivider from '../../components/HorizontalDivider';
-import {SvgXml} from 'react-native-svg';
-import {LocationSvg} from '../../theme/assets/svg/LocationSvg';
+import { SvgXml } from 'react-native-svg';
+import { LocationSvg } from '../../theme/assets/svg/LocationSvg';
 import VerticalDivider from '../../components/VerticalDivider';
-import {dateSvg} from '../../theme/assets/svg/dateSvg';
+import { dateSvg } from '../../theme/assets/svg/dateSvg';
 import DateComponent from '../../components/DateComponent';
 import MyDropdown from '../../components/MyDropdown';
 import RequestComponent from '../../components/RequestComponent';
 import DatePicker from 'react-native-date-picker';
-import {ScrollView} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import RequestComponent2 from '../../components/RequestComponent2';
-import {addFlight, searchFlight} from '../../services';
+import { addFlight, searchFlight } from '../../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from "@react-navigation/native";
 
 
-const AvailableFight = ({route, navigation, status, myColor}: any) => {
+const AvailableFight = ({ route, navigation, status, myColor }: any) => {
 
   const isFocused = useIsFocused();
   const getData = async () => {
@@ -40,16 +40,16 @@ const AvailableFight = ({route, navigation, status, myColor}: any) => {
       // error reading value
     }
   };
-             
- 
+
+
   const [providerId, setProviderId] = React.useState('');
-  const {flightData} = route.params;
+  const { flightData } = route.params;
   const [response, setResponse] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
 
   React.useEffect(() => {
-   
-    if(isFocused){
+
+    if (isFocused) {
       console.log('useeffect called isfocus');
       getData();
       setIsLoading(true);
@@ -75,6 +75,7 @@ const AvailableFight = ({route, navigation, status, myColor}: any) => {
       {/* <ActivityIndicator size="large" /> */}
       {response &&
         response.map(item => {
+          console.log("map data from available flight", item.scheduled_in);
           return (
             <View style={styles.container}>
               <RequestComponent2
@@ -96,6 +97,7 @@ const AvailableFight = ({route, navigation, status, myColor}: any) => {
                     destinationAirportCode: flightData.destinationAirportCode,
                     flightId: item.fa_flight_id,
                     providerId: providerId,
+                    flightArrivalDate: item.scheduled_in
                   };
                   addFlight(flight)
                     .then(response => response.json())
@@ -114,7 +116,7 @@ const AvailableFight = ({route, navigation, status, myColor}: any) => {
                       }
                     })
                     .catch(error => console.log('error', error));
-                  // console.log('flightData', flight);
+                  console.log('flightData', flight);
                 }}
               />
             </View>
@@ -149,13 +151,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 15,
   },
-  topLeft: {flex: 1},
-  topRight: {flex: 3.35},
+  topLeft: { flex: 1 },
+  topRight: { flex: 3.35 },
   bottom: {
     marginTop: 15,
     flexDirection: 'row',
   },
-  bottomLeft: {flex: 1.0},
+  bottomLeft: { flex: 1.0 },
   bottomMid: {
     justifyContent: 'space-between',
     flex: 1.3,

@@ -3,6 +3,7 @@ import {View, StyleSheet, Image, Text, Pressable} from 'react-native';
 import HorizontalDivider from './HorizontalDivider';
 import {SvgXml} from 'react-native-svg';
 import {LocationSvg} from '../theme/assets/svg/LocationSvg';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 const RequestComponent = ({
   onPress,
   firstName,
@@ -50,12 +51,16 @@ const RequestComponent = ({
             <Text style={styles.countryText}>{destinationAirport}</Text>
           </View>
           <View style={styles.bottomRight}>
-            <Text style={styles.acceptText} onPress={acceptPress}>
+            <TouchableOpacity onPress={acceptPress}>
+            <Text style={styles.acceptText} >
               {isAccepted ? 'Accepted' : 'Accept'}
             </Text>
-            <Text style={styles.rejectText} onPress={rejectPress}>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={rejectPress}>
+            <Text style={styles.rejectText} >
               {isAccepted || isPostRequest ? '' : 'Reject'}
             </Text>
+            </TouchableOpacity>
             <Text style={styles.dateText}>{date}</Text>
           </View>
         </View>

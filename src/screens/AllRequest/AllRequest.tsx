@@ -6,27 +6,31 @@ import {
   Image,
   TouchableOpacity,
   SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
 import HorizontalDivider from '../../components/HorizontalDivider';
-import {SvgXml} from 'react-native-svg';
-import {LocationSvg} from '../../theme/assets/svg/LocationSvg';
+import { SvgXml } from 'react-native-svg';
+import { LocationSvg } from '../../theme/assets/svg/LocationSvg';
 import VerticalDivider from '../../components/VerticalDivider';
-import {dateSvg} from '../../theme/assets/svg/dateSvg';
+import { dateSvg } from '../../theme/assets/svg/dateSvg';
 import DateComponent from '../../components/DateComponent';
 import MyDropdown from '../../components/MyDropdown';
 import RequestComponent from '../../components/RequestComponent';
 import DatePicker from 'react-native-date-picker';
-import {ScrollView} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import {
+  changePostRequestStatus,
   getAllPostRequests,
+  getFlightsDate,
   getRequestsToAllProviders,
   setAcceptOrReject,
 } from '../../services';
-import {backendUrl} from '../../appConstants';
+import { backendUrl } from '../../appConstants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TabButton from '../../components/TabButton';
+import MyLoader from '../../components/MyLoader';
 
-const AllRequest = ({navigation, status, myColor}: any) => {
+const AllRequest = ({ navigation, status, myColor }: any) => {
   const [fromDate, setFromDate] = React.useState(new Date());
   const [fromDateOpen, setFromDateOpen] = React.useState(false);
   const [isFromDateSet, setIsFromDateSet] = React.useState(false);
@@ -34,6 +38,7 @@ const AllRequest = ({navigation, status, myColor}: any) => {
   const [toDate, setToDate] = React.useState(new Date());
   const [toDateOpen, setToDateOpen] = React.useState(false);
   const [response, setResponse] = React.useState([]);
+  const [userId, setUserId] = React.useState("");
 
   const [postRequestResponse, setPostRequestResponse] = React.useState([]);
 
@@ -45,37 +50,101 @@ const AllRequest = ({navigation, status, myColor}: any) => {
   */
 
   const [tabSelected, setTabSelected] = React.useState(1);
+  const [isLoading, setIsloading] = React.useState(false);
 
   const getData = async () => {
+    setIsloading(true)
     try {
-      const value = await AsyncStorage.getItem('@user_Id');
+
+      const value: any = await AsyncStorage.getItem('@user_Id');
+      setUserId(value);
       console.log('value of getdata function', value);
       if (value !== null) {
         getRequestsToAllProviders(value)
           .then(response => response.json())
           .then(result => {
-            // console.log('response form all request', result);
+            setIsloading(false)
+            console.log('RESPONSEFROMAlLLREQUEST', result);
             setResponse(result.requests);
           })
-          .catch(error => console.log('error', error));
+          .catch(error => {
+            setIsloading(false)
+            console.log("error", error);
+          });
       }
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const getPostRequestData = () => {
+    setIsloading(true)
     getAllPostRequests()
       .then(response => response.json())
       .then(result => {
+        setIsloading(false)
         if (result.success) {
           setPostRequestResponse(result.postRequests);
         }
+        setIsloading(false)
+      }).catch((err) => {
+        console.log("error");
+        setIsloading(false)
       });
   };
-
   React.useEffect(() => {
     getData();
     getPostRequestData();
+    const willFocusSubscription = navigation.addListener('focus', () => {
+      console.log("from back navigation all flight")
+      getData();
+      getPostRequestData();
+    });
+    return willFocusSubscription;
   }, []);
+
+  const getFlightDataFromServer = (item: any) => {
+    setIsloading(true);
+    getFlightsDate(item.flight.fa_flight_id)
+      .then(response => response.json())
+      .then(result => {
+        if (result.success) {
+          setIsloading(false);
+          if (item.state === "Pickedup") {
+            navigation.navigate('AcceptBooking2', {
+              requestData: item,
+              flightInfoData: result.flightInfo,
+            });
+          }
+          else if (item.state === "Transit") {
+            navigation.navigate('AcceptBooking3', {
+              requestData: item,
+              flightInfoData: result.flightInfo,
+
+            });
+          }
+          else if (item.state === "Reached") {
+            navigation.navigate('AcceptBooking4', {
+              requestData: item,
+              flightInfoData: result.flightInfo,
+
+            });
+          }
+          else {
+            navigation.navigate('AcceptBooking', {
+              requestData: item,
+              flightInfoData: result.flightInfo,
+            });
+          }
+        }
+      })
+      .catch(error => {
+        setIsloading(false);
+        console.log("error", error);
+      });
+  }
+
+
+
+
 
   const renderAcceptAndPendingTab = () => {
     ///first if for render accepted and pendings tabs
@@ -129,9 +198,9 @@ const AllRequest = ({navigation, status, myColor}: any) => {
             );
           }
         }
-         else if (tabSelected === 1) {
+        else if (tabSelected === 1) {
           if (item.status === 'Accepted') {
-            console.log('yes date', item);
+
             if (item.flight === undefined || item.flight === null) {
               return;
             }
@@ -152,14 +221,14 @@ const AllRequest = ({navigation, status, myColor}: any) => {
                 airLine={item.flight.flightAirline}
                 departureAirport={item.flight.departureAirport}
                 destinationAirport={item.flight.destinationAirport}
-                acceptPress={() => {
-                  setAcceptOrReject(item._id, 'Accepted').then(response =>
-                    response
-                      .json()
-                      .then(res => console.log('from accept buttonsuccses'))
-                      .catch(e => console.log('error')),
-                  );
-                }}
+                // acceptPress={() => {
+                //   setAcceptOrReject(item._id, 'Accepted').then(response =>
+                //     response
+                //       .json()
+                //       .then(res => console.log('from accept buttonsuccses'))
+                //       .catch(e => console.log('error')),
+                //   );
+                // }}
                 // rejectPress={() => {
                 //   setAcceptOrReject(item._id, 'Rejected').then(response =>
                 //     response
@@ -169,11 +238,13 @@ const AllRequest = ({navigation, status, myColor}: any) => {
                 //   );
                 // }}
                 date={item.flight.flightDate.slice(0, -14)}
-                // onPress={() => {
-                //   navigation.navigate('BookingRequest', {
-                //     requestData: item,
-                //   });
-                // }}
+                onPress={() => {
+                  getFlightDataFromServer(item);
+
+                  // navigation.navigate('BookingRequest', {
+                  //   requestData: item,
+                  // });
+                }}
               />
             );
           }
@@ -185,10 +256,9 @@ const AllRequest = ({navigation, status, myColor}: any) => {
   const renderPostRequesttab = () => {
     if (postRequestResponse) {
       return postRequestResponse.map((item: any) => {
-        console.log('map item ', item);
         if (item.requestedBy) {
           if (tabSelected === 3) {
-            console.log('tab post request3');
+            console.log('tab post request3 items', item);
             let uri =
               'https://upload.wikimedia.org/wikipedia/en/f/f2/Robert_Downey_Jr._as_Tony_Stark_in_Avengers_Infinity_War.jpg';
             if (
@@ -206,14 +276,29 @@ const AllRequest = ({navigation, status, myColor}: any) => {
                 airLine={item.airline}
                 departureAirport={item.departureAirport}
                 destinationAirport={item.destinationAirport}
-                // acceptPress={() => {
-                //   setAcceptOrReject(item._id, 'Accepted').then(response =>
-                //     response
-                //       .json()
-                //       .then(res => console.log('from accept buttonsuccses'))
-                //       .catch(e => console.log('error')),
-                //   );
-                // }}
+                acceptPress={() => {
+                  setIsloading(true);
+                  changePostRequestStatus(item._id, userId)
+                    .then(response => response.json())
+                    .then((result) => {
+                      setIsloading(false);
+                      navigation.navigate('AddFlightPostRequest', {
+                        postRequestData: result.updatedPostRequest
+                      });
+                      console.log("result need to pass from all request");
+                      // postRequestData
+                    })
+                    .catch(error => {
+                      console.log("error", error);
+                      setIsloading(false);
+                    });
+                  // setAcceptOrReject(item._id, 'Accepted').then(response =>
+                  //   response
+                  //     .json()
+                  //     .then(res => console.log('from accept buttonsuccses'))
+                  //     .catch(e => console.log('error')),
+                  // );
+                }}
                 // rejectPress={() => {
                 //   setAcceptOrReject(item._id, 'Rejected').then(response =>
                 //     response
@@ -223,11 +308,11 @@ const AllRequest = ({navigation, status, myColor}: any) => {
                 //   );
                 // }}
                 date={item.date.slice(0, -14)}
-                // onPress={() => {
-                //   navigation.navigate('BookingRequest', {
-                //     requestData: item,
-                //   });
-                // }}
+              // onPress={() => {
+              //   navigation.navigate('BookingRequest', {
+              //     requestData: item,
+              //   });
+              // }}
               />
             );
           }
@@ -237,9 +322,14 @@ const AllRequest = ({navigation, status, myColor}: any) => {
   };
 
   return (
+
     <SafeAreaView>
-      <ScrollView>
+
+      {isLoading ? <MyLoader /> : <ScrollView>
+
         <View style={styles.container}>
+
+
           {/* <MyDropdown /> */}
           <View
             style={{
@@ -255,7 +345,7 @@ const AllRequest = ({navigation, status, myColor}: any) => {
           </View>
 
           {/* <VerticalDivider />
-            <MyDropdown /> */}
+    <MyDropdown /> */}
 
           <DatePicker
             modal
@@ -271,7 +361,7 @@ const AllRequest = ({navigation, status, myColor}: any) => {
               setFromDateOpen(false);
             }}
           />
-          {console.log('AllRequest Data from response', response)}
+
           <DatePicker
             modal
             mode="date"
@@ -310,7 +400,7 @@ const AllRequest = ({navigation, status, myColor}: any) => {
             <View
               style={[
                 styles.acceptedTabStyle,
-                {borderBottomColor: tabSelected === 1 ? 'black' : '#f0f0f0'},
+                { borderBottomColor: tabSelected === 1 ? 'black' : '#f0f0f0' },
               ]}>
               <TabButton
                 isFontBold={tabSelected === 1 && true}
@@ -324,7 +414,7 @@ const AllRequest = ({navigation, status, myColor}: any) => {
             <View
               style={[
                 styles.pendingTabStyle,
-                {borderBottomColor: tabSelected === 2 ? 'black' : '#f0f0f0'},
+                { borderBottomColor: tabSelected === 2 ? 'black' : '#f0f0f0' },
               ]}>
               <TabButton
                 isFontBold={tabSelected === 2 && true}
@@ -352,13 +442,16 @@ const AllRequest = ({navigation, status, myColor}: any) => {
             </View>
           </View>
 
-          <Text style={{textAlign: 'center', color: 'green', marginTop: 24}}>
+          <Text style={{ textAlign: 'center', color: 'green', marginTop: 24 }}>
             Available Booking
           </Text>
           {renderAcceptAndPendingTab()}
           {renderPostRequesttab()}
         </View>
-      </ScrollView>
+      </ScrollView>}
+
+
+
     </SafeAreaView>
   );
 };
@@ -388,13 +481,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 15,
   },
-  topLeft: {flex: 1},
-  topRight: {flex: 3.35},
+  topLeft: { flex: 1 },
+  topRight: { flex: 3.35 },
   bottom: {
     marginTop: 15,
     flexDirection: 'row',
   },
-  bottomLeft: {flex: 1.0},
+  bottomLeft: { flex: 1.0 },
   bottomMid: {
     justifyContent: 'space-between',
     flex: 1.3,

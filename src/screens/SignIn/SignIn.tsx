@@ -27,6 +27,7 @@ import {validateEmail, validateEmpty, validatePassword} from '../../validation';
 import {styles} from './style';
 import {NavigationProp} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 export default function SignIn({navigation}: any) {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
@@ -106,23 +107,26 @@ export default function SignIn({navigation}: any) {
             errorMessage={'Invalid Password'}
             isError={passwordError}
           />
+          <TouchableOpacity onPress={() => navigation.navigate('ForgetPassword')}> 
           <Text
             style={{
               fontWeight: 'bold',
               alignSelf: 'flex-end',
               marginRight: wp(7),
             }}
-            onPress={() => navigation.navigate('ForgetPassword')}>
+            >
             Forget Password?
           </Text>
-
+          </TouchableOpacity>
           <Text style={{alignSelf: 'center', marginTop: hp(1)}}>
             Don't have an Account ?
+            <TouchableOpacity onPress={() => navigation.navigate('REGISTER')}>
             <Text
               style={{color: colors.red}}
-              onPress={() => navigation.navigate('REGISTER')}>
+              >
               Register Now
             </Text>
+            </TouchableOpacity>
           </Text>
           <Button
             title="NEXT"

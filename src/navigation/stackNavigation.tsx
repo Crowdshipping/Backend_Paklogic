@@ -1,4 +1,4 @@
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import ForgetPassword from '../screens/ForgetPassword/ForgetPassword';
 import Landing from '../screens/Landing/Landing';
@@ -12,26 +12,27 @@ import SignIn from '../screens/SignIn/SignIn';
 import Splash from '../screens/Splash/Splash';
 import VerifyOtp from '../screens/VerifyOtp/VerifyOtp';
 import Welcome from '../screens/Welcome/Welcome';
-import {View, Text} from 'react-native';
+import { View, Text } from 'react-native';
 const Stack = createStackNavigator();
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import AllRequest from '../screens/AllRequest/AllRequest';
 import AcceptBooking from '../screens/Maps/AcceptBooking';
 import AcceptBooking2 from '../screens/Maps/AcceptBooking2';
 import AcceptBooking3 from '../screens/Maps/AcceptBooking3';
 import AcceptBooking4 from '../screens/Maps/AcceptBooking4';
 import BookingRequest from '../screens/Maps/BookingRequest';
-import {Button} from '../components';
+import { Button } from '../components';
 import AllFlight from '../screens/Booking/AllFlight';
 import AddTicketDetails from '../screens/Booking/AddTicketDetails';
 import EditTicketDetail from '../screens/Booking/EditTicketDetail';
 import AvailableFight from '../screens/AvailableFlight/AvailableFlight';
-import {CommonActions} from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 import LastBookingHistory from '../screens/Booking/LastBookingHistory';
 import PictureDelivery from '../screens/PictureDelivery';
+import AddFlightPostRequest from '../screens/AddFlightPostRequest';
 const Drawer = createDrawerNavigator();
 
-function CustomDrawerContent({navigation}: any) {
+function CustomDrawerContent({ navigation }: any) {
   return (
     <Button
       title="Manage Flights"
@@ -402,6 +403,22 @@ export const StackNavigation = () => {
         name="attachImage"
         component={PictureDelivery}
       />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'Attach Images',
+        }}
+        name="AddFlightPostRequest"
+        component={AddFlightPostRequest}
+      />
+
     </Stack.Navigator>
   );
 };

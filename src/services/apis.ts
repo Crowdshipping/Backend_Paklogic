@@ -1,6 +1,6 @@
-import axios, {AxiosRequestConfig} from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 
-import {backendUrl} from '../appConstants';
+import { backendUrl } from '../appConstants';
 
 export const userData = () => {
   // var body = JSON.stringify(data);
@@ -356,6 +356,7 @@ export const addFlight = (data: any) => {
   formdata.append('fa_flight_id', data.flightId);
   formdata.append('pickupIATACityCode', data.departureAirportCode);
   formdata.append('dropoffIATACityCode', data.destinationAirportCode);
+  formdata.append('flightArrivalDate', data.flightArrivalDate);
   var requestOptions = {
     method: 'POST',
     headers: myHeaders,
@@ -491,7 +492,82 @@ export const getAllPostRequests = () => {
     'https://backend-crowdshipping.herokuapp.com/provider/allpostrequests',
     requestOptions,
   );
-  // .then(response => response.text())
-  // .then(result => console.log(result))
-  // .catch(error => console.log('error', error));
 };
+export const changePostRequestStatus = (postRequestId: any, providerId: any) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Cookie", "connect.sid=s%3AU8xqFWhyglrgAoqvsfZ0nifDa86VtpSA.MZnOyFTVT5%2F%2BxQrtKBbN3zjecsYAf7uG7WK8gVXdRzg");
+
+  var raw = JSON.stringify({
+    "postrequestId": postRequestId,
+    "providerId": providerId
+  });
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+
+  return fetch("https://backend-crowdshipping.herokuapp.com/provider/changepostrequeststatus", requestOptions)
+};
+
+
+export const addFlightAfterPost = (flightDataFromPostRequest: any) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Cookie", "connect.sid=s%3AU8xqFWhyglrgAoqvsfZ0nifDa86VtpSA.MZnOyFTVT5%2F%2BxQrtKBbN3zjecsYAf7uG7WK8gVXdRzg");
+
+  var formdata = new FormData();
+  formdata.append("providerId", flightDataFromPostRequest.providerId);
+  formdata.append("pickupCity", flightDataFromPostRequest.pickupCity);
+  formdata.append("dropoffCity", flightDataFromPostRequest.dropoffCity);
+  formdata.append("flightDate", flightDataFromPostRequest.flightDate);
+  formdata.append("departureAirport", flightDataFromPostRequest.departureAirport);
+  formdata.append("destinationAirport", flightDataFromPostRequest.destinationAirport);
+  formdata.append("departureTime", flightDataFromPostRequest.departureTime);
+  formdata.append("destinationTime", flightDataFromPostRequest.destinationTime);
+  formdata.append("flightNumber", flightDataFromPostRequest.flightNumber);
+  formdata.append("flightAirline", flightDataFromPostRequest.flightAirline);
+  formdata.append("ticketImage", flightDataFromPostRequest.ticketImage);
+  formdata.append("fa_flight_id", flightDataFromPostRequest.fa_flight_id);
+  formdata.append("pickupIATACityCode", flightDataFromPostRequest.pickupIATACityCode);
+  formdata.append("dropoffIATACityCode", flightDataFromPostRequest.dropoffIATACityCode);
+  formdata.append("postrequestId", flightDataFromPostRequest.postrequestId);
+  formdata.append("customerId", flightDataFromPostRequest.customerId);
+  formdata.append("bookingId", flightDataFromPostRequest.bookingId);
+  formdata.append("flightarrivalDate", flightDataFromPostRequest.flightarrivalDate);
+
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: formdata,
+    redirect: 'follow'
+  };
+
+  return fetch("https://backend-crowdshipping.herokuapp.com/provider/addflightafterpost", requestOptions);
+
+}
+
+export const changeStateByProvider = (state: any, requestId: any) => {
+
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Cookie", "connect.sid=s%3AO0hdh4M60sPg4fyfkl3hiJQ4QV-SDmtp.9vDASPjdRAnclaACJt0TRhCqyZ%2B03rrqfqfN3fRXeEg");
+
+  var raw = JSON.stringify({
+    "requestId": requestId,
+    "state": state
+  });
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+
+  return fetch("https://backend-crowdshipping.herokuapp.com/provider/setrequeststate", requestOptions);
+
+}

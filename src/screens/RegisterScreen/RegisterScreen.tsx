@@ -29,7 +29,9 @@ import {validateNumber} from '../../validation';
 import {styles} from './style';
 
 export default function RegisterScreen(props: any) {
+
   const [number, setNumber] = useState('');
+  const [isBack, setIsBack] = useState(false);
   const [loading, setLoading] = useState(false);
   const [country, setCountry] = useState({
     name: 'United States',
@@ -74,11 +76,25 @@ export default function RegisterScreen(props: any) {
       });
     // setLoading(false)
   };
+
+
+  React.useEffect(() => {
+    const willFocusSubscription = props.navigation.addListener('focus', () => {
+      setIsBack(true);
+  });
+
+  return willFocusSubscription;
+}, [isBack]);
+
+
+
+
   // alert('lsjdc')
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{flex: 1}}>
+        {console.log("render from registerscreen number",number)}
       <ScrollView>
         <View style={{height: hp(45)}}>
           <SvgXml

@@ -1,13 +1,13 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import { View, StyleSheet, Text } from 'react-native';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import CheckBoxState from '../../components/CheckBoxState';
 import HorizontalDivider from '../../components/HorizontalDivider';
 import MapButton from '../../components/MapButton';
 
-const AcceptBooking2 = ({route, navigation}: any) => {
-  const {requestData, flightInfoData} = route.params;
+const AcceptBooking2 = ({ route, navigation }: any) => {
+  const { requestData, flightInfoData } = route.params;
   return (
     <View style={styles.container}>
       <MapView
@@ -21,30 +21,30 @@ const AcceptBooking2 = ({route, navigation}: any) => {
         }}></MapView>
       <View style={styles.mapInformation}>
         <View style={styles.topView}>
-          <Text style={{fontSize: 20, color: 'grey'}}>Pick up city</Text>
-          <Text style={{fontSize: 20, color: 'red'}}>
+          <Text style={{ fontSize: 20, color: 'grey' }}>Pick up city</Text>
+          <Text style={{ fontSize: 20, color: 'red' }}>
             {requestData.flight.pickupCity}
           </Text>
         </View>
         <HorizontalDivider />
         <View style={styles.topView}>
-          <Text style={{fontSize: 20, color: 'grey'}}>Dropoff city</Text>
-          <Text style={{fontSize: 20, color: 'red'}}>
+          <Text style={{ fontSize: 20, color: 'grey' }}>Dropoff city</Text>
+          <Text style={{ fontSize: 20, color: 'red' }}>
             {requestData.flight.dropoffCity}
           </Text>
         </View>
         <HorizontalDivider />
         <View style={styles.topView}>
-          <Text style={{fontSize: 20, color: 'grey'}}>To Date</Text>
-          <Text style={{fontSize: 20, color: 'red'}}>
+          <Text style={{ fontSize: 20, color: 'grey' }}>To Date</Text>
+          <Text style={{ fontSize: 20, color: 'red' }}>
             {flightInfoData.scheduled_on !== undefined &&
               flightInfoData.scheduled_on.slice(0, -10)}
           </Text>
         </View>
         <HorizontalDivider />
         <View style={styles.topView}>
-          <Text style={{fontSize: 20, color: 'grey'}}>Estimated Fare</Text>
-          <Text style={{fontSize: 20, color: 'red'}}>256$</Text>
+          <Text style={{ fontSize: 20, color: 'grey' }}>Estimated Fare</Text>
+          <Text style={{ fontSize: 20, color: 'red' }}>256$</Text>
         </View>
         <HorizontalDivider />
       </View>
@@ -54,9 +54,9 @@ const AcceptBooking2 = ({route, navigation}: any) => {
         </View>
         <View style={styles.bottomPart}>
           <View style={styles.checkBoxRow}>
-            <CheckBoxState text={'Pick up'} whenPressed={() => {}} />
-            <CheckBoxState text={'Transit'} whenPressed={() => {}} />
-            <CheckBoxState text={'Reached'} whenPressed={() => {}} />
+            <CheckBoxState isDisabled={true} text={'Pick up'} whenPressed={() => { }} />
+            <CheckBoxState text={'Transit'} whenPressed={() => { }} />
+            <CheckBoxState text={'Reached'} whenPressed={() => { }} />
           </View>
           <MapButton
             onPress={() => {

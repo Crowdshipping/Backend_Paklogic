@@ -12,15 +12,15 @@ import {
   FlatList,
   ScrollView,
 } from 'react-native';
-import {widthPercentageToDP} from 'react-native-responsive-screen';
-import {Button} from '../../components';
-import {SvgXml} from 'react-native-svg';
-import {dateSvg} from '../../theme/assets/svg/dateSvg';
-import {timeSvg} from '../../theme/assets/svg/timeSvg';
-import {ImageSvg} from '../../theme/assets/svg/ImageSvg';
-import {launchImageLibrary} from 'react-native-image-picker';
+import { widthPercentageToDP } from 'react-native-responsive-screen';
+import { Button } from '../../components';
+import { SvgXml } from 'react-native-svg';
+import { dateSvg } from '../../theme/assets/svg/dateSvg';
+import { timeSvg } from '../../theme/assets/svg/timeSvg';
+import { ImageSvg } from '../../theme/assets/svg/ImageSvg';
+import { launchImageLibrary } from 'react-native-image-picker';
 import DatePicker from 'react-native-date-picker';
-import {getAirportName} from '../../services';
+import { getAirportName } from '../../services';
 const formatAMPM = (date: Date) => {
   let hours = date.getHours();
   let minutes = date.getMinutes();
@@ -41,7 +41,7 @@ const getMyTime = (date: Date) => {
   return strTime;
 };
 
-const AddTicketDetails = ({navigation, status, myColor}: any) => {
+const AddTicketDetails = ({ navigation, status, myColor }: any) => {
   //date varibales
   const [date, setDate] = React.useState(new Date());
   const [open, setOpen] = React.useState(false);
@@ -154,7 +154,7 @@ const AddTicketDetails = ({navigation, status, myColor}: any) => {
       destinationvalid &&
       departurevalid
     ) {
-      var flightData: AddFlight = {
+      let flightData: AddFlight = {
         airline: airline,
         date: date.toISOString().slice(0, -14),
         departureAirport: departureAirport,
@@ -165,6 +165,9 @@ const AddTicketDetails = ({navigation, status, myColor}: any) => {
         image: image,
         departureAirportCode: departureAirportCode,
         destinationAirportCode: destinationAirportCode,
+        providerId: '',
+        flightId: '',
+        flightArrivalDate: ''
       };
       console.log('flight data from flight add', flightData);
       navigation.navigate('AvailableFlight', {
@@ -172,44 +175,6 @@ const AddTicketDetails = ({navigation, status, myColor}: any) => {
       });
     }
   };
-
-  // const needToGo = () => {
-  //   console.log(
-  //     'validation success , airline, depart, destin, fligt, image',
-  //     isValidAirLine,
-  //     isValidDepartureAirport,
-  //     isValidDestinationAirport,
-  //     isValidFlightNumber,
-  //     isValidImage,
-  //   );
-  //   if (
-  //     isValidDepartureAirport &&
-  //     isValidDestinationAirport &&
-  //     isValidFlightNumber &&
-  //     isValidAirLine &&
-  //     isValidImage
-  //   ) {
-  //     console.log('worked from function ');
-  //     // var flight: AddFlight = {
-  //     //   airline: airline,
-  //     //   date: date.toISOString().slice(0, -14),
-  //     //   departureAirport: departureAirport,
-  //     //   destinationAirport: destinationAirport,
-  //     //   departureTime: getMyTime(departureTime),
-  //     //   destinationTime: getMyTime(destinationTime),
-  //     //   flightNumber: flightNumber,
-  //     //   image: image,
-  //     //   departureAirportCode: departureAirportCode,
-  //     //   destinationAirportCode: destinationAirportCode,
-  //     // };
-  //     // console.log('flight detail button pressed', flight);
-
-  //     // navigation.navigate('AvailableFlight', {
-  //     //   flightData: flight,
-  //     // });
-  //   }
-  // };
-
   const onChangeTextDeparture = async (text: string) => {
     setDepartureAirport(text);
     let res = await getAirportName(departureAirport);
@@ -225,9 +190,9 @@ const AddTicketDetails = ({navigation, status, myColor}: any) => {
 
   const getItemText = (item: any) => {
     return (
-      <View style={{flexDirection: 'row', alignItems: 'center', padding: 15}}>
-        <View style={{marginLeft: 10, flexShrink: 1}}>
-          <Text style={{fontWeight: '700'}}>{item.name}</Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}>
+        <View style={{ marginLeft: 10, flexShrink: 1 }}>
+          <Text style={{ fontWeight: '700' }}>{item.name}</Text>
         </View>
       </View>
     );
@@ -309,7 +274,7 @@ const AddTicketDetails = ({navigation, status, myColor}: any) => {
               {console.log('saved', departureAirport)}
             </View>
             {!isValidDepartureAirport && (
-              <Text style={{color: 'red'}}>Pick Departure Airport from list</Text>
+              <Text style={{ color: 'red' }}>Pick Departure Airport from list</Text>
             )}
             <View style={styles.singleItemView}>
               <Text style={styles.singleItemText}>Destination Airport</Text>
@@ -322,15 +287,15 @@ const AddTicketDetails = ({navigation, status, myColor}: any) => {
               />
             </View>
             {!isValidDestinationAirport && (
-              <Text style={{color: 'red'}}>Pick Destination Airport from list</Text>
+              <Text style={{ color: 'red' }}>Pick Destination Airport from list</Text>
             )}
             {departureAirport && departureData.length > 0 ? (
               <FlatList
                 data={departureData}
                 showsVerticalScrollIndicator={false}
-                renderItem={({item, index}) => (
+                renderItem={({ item, index }) => (
                   <Pressable
-                    style={({pressed}) => [{opacity: pressed ? 0.5 : 1}]}
+                    style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1 }]}
                     onPress={
                       () => {
                         setDepartureAirport(item.name);
@@ -350,9 +315,9 @@ const AddTicketDetails = ({navigation, status, myColor}: any) => {
               <FlatList
                 data={destinationData}
                 showsVerticalScrollIndicator={false}
-                renderItem={({item, index}) => (
+                renderItem={({ item, index }) => (
                   <Pressable
-                    style={({pressed}) => [{opacity: pressed ? 0.5 : 1}]}
+                    style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1 }]}
                     onPress={
                       () => {
                         setDestinationAirport(item.name);
@@ -376,7 +341,7 @@ const AddTicketDetails = ({navigation, status, myColor}: any) => {
                   setOpen(true);
                 }}
                 style={styles.inputContainer2}>
-                <Text style={{fontSize: 12, marginLeft: 10}}>
+                <Text style={{ fontSize: 12, marginLeft: 10 }}>
                   {date.toDateString()}
                 </Text>
                 <SvgXml style={styles.icon} xml={dateSvg} width={20} />
@@ -390,7 +355,7 @@ const AddTicketDetails = ({navigation, status, myColor}: any) => {
                   setDepartureTimeOpen(true);
                 }}
                 style={styles.inputContainer2}>
-                <Text style={{fontSize: 12, marginLeft: 10}}>
+                <Text style={{ fontSize: 12, marginLeft: 10 }}>
                   {formatAMPM(departureTime)}
                 </Text>
                 <SvgXml style={styles.icon} xml={timeSvg} width={20} />
@@ -403,7 +368,7 @@ const AddTicketDetails = ({navigation, status, myColor}: any) => {
                   setDestinationTimeOpen(true);
                 }}
                 style={styles.inputContainer2}>
-                <Text style={{fontSize: 12, marginLeft: 10}}>
+                <Text style={{ fontSize: 12, marginLeft: 10 }}>
                   {formatAMPM(destinationTime)}
                 </Text>
                 <SvgXml style={styles.icon} xml={timeSvg} width={20} />
@@ -419,7 +384,7 @@ const AddTicketDetails = ({navigation, status, myColor}: any) => {
               />
             </View>
             {!isValidFlightNumber && (
-              <Text style={{color: 'red'}}>Flight Number is require</Text>
+              <Text style={{ color: 'red' }}>Flight Number is require</Text>
             )}
             <View style={styles.singleItemView}>
               <Text style={styles.singleItemText}>Airline</Text>
@@ -431,7 +396,7 @@ const AddTicketDetails = ({navigation, status, myColor}: any) => {
               />
             </View>
             {!isValidAirLine && (
-              <Text style={{color: 'red'}}>Airline is require</Text>
+              <Text style={{ color: 'red' }}>Airline is require</Text>
             )}
             <View style={styles.singleItemView}>
               <Text style={styles.singleItemText}>Ticket Image</Text>
@@ -441,22 +406,21 @@ const AddTicketDetails = ({navigation, status, myColor}: any) => {
                 <TextInput
                   editable={false}
                   style={styles.input2}
-                  onChangeText={onChangeNumber}
-                  value={number}
+                  value={image.name}
                   placeholder="Image"
                 />
                 <SvgXml style={styles.icon} xml={ImageSvg} width={20} />
               </TouchableOpacity>
             </View>
             {!isValidImage && (
-              <Text style={{color: 'red'}}>Image is require</Text>
+              <Text style={{ color: 'red' }}>Image is require</Text>
             )}
           </View>
           <Button
             onPress={() => {
               validateForm();
             }}
-            containerStyle={{marginHorizontal: widthPercentageToDP(4)}}
+            containerStyle={{ marginHorizontal: widthPercentageToDP(4) }}
             title="SUBMIT FLIGHT DETAILS"
           />
         </View>

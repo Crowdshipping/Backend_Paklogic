@@ -9,15 +9,15 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native';
-import {SvgXml} from 'react-native-svg';
-import {backendUrl} from '../../appConstants';
-import {ButtonOutline} from '../../components';
+import { SvgXml } from 'react-native-svg';
+import { backendUrl } from '../../appConstants';
+import { ButtonOutline } from '../../components';
 import FlightComponent from '../../components/FlightComponent';
-import {getAllFlightAddedByProvider} from '../../services';
-import {airplane} from '../../theme/assets/svg/airplaneSvg';
-import {DeleteSvg} from '../../theme/assets/svg/DeleteSvg';
+import { getAllFlightAddedByProvider } from '../../services';
+import { airplane } from '../../theme/assets/svg/airplaneSvg';
+import { DeleteSvg } from '../../theme/assets/svg/DeleteSvg';
 
-const AllFlight = ({navigation, status, myColor}: any) => {
+const AllFlight = ({ navigation, status, myColor }: any) => {
   const [providerID, setProviderId] = React.useState<string | null>(null);
 
   const getData = async () => {
@@ -33,28 +33,21 @@ const AllFlight = ({navigation, status, myColor}: any) => {
           })
           .catch(error => console.log('error', error));
       }
-    } catch (e) {}
+    } catch (e) { }
   };
   const [flightResponse, setFlightResponse] = React.useState([]);
 
+  // React.useEffect(() => {
+  //   getData();
+  // }, []);
   React.useEffect(() => {
+    console.log("useeffect worked from alllfight")
     getData();
- 
-    // console.log('from use');
-    // const mineValue = AsyncStorage.getItem('@user_Id');
-
-    // const providerId = async () => {
-    //   const mineValue = AsyncStorage.getItem('@user_Id');
-    //   // try {
-
-    //   //   // setProviderId(mineValue);
-    //   //   console.log('value', mineValue);
-    //   //   return mineValue;
-    //   // } catch (error) {
-    //   //   console.log('from catch error', error);
-    //   // }
-    // // };
-    // console.log('provider from allflight useeffect', mineValue);
+    const willFocusSubscription = navigation.addListener('focus', () => {
+      console.log("from back navigation all flight")
+      getData();
+    });
+    return willFocusSubscription;
   }, []);
   return (
     <ScrollView>
@@ -63,7 +56,7 @@ const AllFlight = ({navigation, status, myColor}: any) => {
           onPress={() => {
             navigation.navigate('AddTicket');
           }}
-          buttonStyle={{borderRadius: 18}}
+          buttonStyle={{ borderRadius: 18 }}
           fontSize={18}
           containerStyle={{
             paddingHorizontal: 0,
@@ -131,9 +124,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
-  bottomView: {flex: 1, paddingVertical: 10},
-  left: {flex: 1},
-  right: {flex: 2},
+  bottomView: { flex: 1, paddingVertical: 10 },
+  left: { flex: 1 },
+  right: { flex: 2 },
   singleTextRowView: {
     flexDirection: 'row',
     justifyContent: 'space-between',

@@ -11,4 +11,5 @@ interface AddFlight {
   flightNumber: string;
   airline: string;
   image: string;
+  flightArrivalDate: string;
 }

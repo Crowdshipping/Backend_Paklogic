@@ -1,15 +1,15 @@
 import React from 'react';
-import {View, StyleSheet, Text, Alert} from 'react-native';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import { View, StyleSheet, Text, Alert } from 'react-native';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import CheckBoxState from '../../components/CheckBoxState';
 import HorizontalDivider from '../../components/HorizontalDivider';
 import MapButton from '../../components/MapButton';
 import PopupModalOfSuccess from '../../components/PopupModalOfSuccess';
-import {otp} from '../../services';
+import { otp } from '../../services';
 
-const AcceptBooking4 = ({route, navigation}: any) => {
-  const {requestData, flightInfoData} = route.params;
+const AcceptBooking4 = ({ route, navigation }: any) => {
+  const { requestData, flightInfoData } = route.params;
   const [isModalVisible, setModalVisible] = React.useState(false);
 
   const toggleModal = () => {
@@ -29,7 +29,7 @@ const AcceptBooking4 = ({route, navigation}: any) => {
         if (result.success) {
           navigation.navigate('VerifyOtp', {
             phoneno: phoneNumber,
-            countrycode: {dial_code: countryCode},
+            countrycode: { dial_code: countryCode },
             option: 'acceptbooking4',
             requestData: requestData,
             flightInfoData: flightInfoData,
@@ -74,30 +74,30 @@ const AcceptBooking4 = ({route, navigation}: any) => {
         }}></MapView>
       <View style={styles.mapInformation}>
         <View style={styles.topView}>
-          <Text style={{fontSize: 20, color: 'grey'}}>Pick up city</Text>
-          <Text style={{fontSize: 20, color: 'red'}}>
+          <Text style={{ fontSize: 20, color: 'grey' }}>Pick up city</Text>
+          <Text style={{ fontSize: 20, color: 'red' }}>
             {requestData.flight.pickupCity}
           </Text>
         </View>
         <HorizontalDivider />
         <View style={styles.topView}>
-          <Text style={{fontSize: 20, color: 'grey'}}>Drop off city</Text>
-          <Text style={{fontSize: 20, color: 'red'}}>
+          <Text style={{ fontSize: 20, color: 'grey' }}>Drop off city</Text>
+          <Text style={{ fontSize: 20, color: 'red' }}>
             {requestData.flight.dropoffCity}
           </Text>
         </View>
         <HorizontalDivider />
         <View style={styles.topView}>
-          <Text style={{fontSize: 20, color: 'grey'}}>From Date</Text>
-          <Text style={{fontSize: 20, color: 'red'}}>
+          <Text style={{ fontSize: 20, color: 'grey' }}>From Date</Text>
+          <Text style={{ fontSize: 20, color: 'red' }}>
             {flightInfoData.scheduled_out !== undefined &&
               flightInfoData.scheduled_out.slice(0, -10)}
           </Text>
         </View>
         <HorizontalDivider />
         <View style={styles.topView}>
-          <Text style={{fontSize: 20, color: 'grey'}}>To Date</Text>
-          <Text style={{fontSize: 20, color: 'red'}}>
+          <Text style={{ fontSize: 20, color: 'grey' }}>To Date</Text>
+          <Text style={{ fontSize: 20, color: 'red' }}>
             {flightInfoData.scheduled_on !== undefined &&
               flightInfoData.scheduled_on.slice(0, -10)}
           </Text>
@@ -126,9 +126,9 @@ const AcceptBooking4 = ({route, navigation}: any) => {
         </View>
         <View style={styles.bottomPart}>
           <View style={styles.checkBoxRow}>
-            <CheckBoxState text={'Pick up'} whenPressed={() => {}} />
-            <CheckBoxState text={'Transit'} whenPressed={() => {}} />
-            <CheckBoxState text={'Reached'} whenPressed={() => {}} />
+            <CheckBoxState isDisabled={true} text={'Pick up'} whenPressed={() => { }} />
+            <CheckBoxState isDisabled={true} text={'Transit'} whenPressed={() => { }} />
+            <CheckBoxState isDisabled={true} text={'Reached'} whenPressed={() => { }} />
           </View>
           <MapButton onPress={toggleModal} text={'COMPLETE'} />
         </View>

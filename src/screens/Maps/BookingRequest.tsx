@@ -8,6 +8,7 @@ import Modal from 'react-native-modal';
 import CloseButton from '../../components/CloseButton';
 import MapButton from '../../components/MapButton';
 import {getFlightsDate} from '../../services';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 const BookingRequest = ({route, navigation}: any) => {
   console.log('class initialized');
   const {requestData} = route.params;
@@ -102,7 +103,9 @@ const BookingRequest = ({route, navigation}: any) => {
         </View>
         <HorizontalDivider />
         <View style={styles.bottomView}>
-          <Text onPress={toggleModal}>Ignore Job</Text>
+          <TouchableOpacity onPress={toggleModal}>
+          <Text>Ignore Job</Text>
+          </TouchableOpacity>
           <MyButton
             onPress={() => {
               navigation.navigate('AcceptBooking', {

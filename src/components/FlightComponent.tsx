@@ -75,9 +75,27 @@ const FlightComponent = ({
   );
 };
 const styles = StyleSheet.create({
+  // cardView: {
+  //   paddingHorizontal: 20,
+  //   paddingVertical: 30,
+  //   marginTop: 25,
+  //   width: '100%',
+  //   borderRadius: 12,
+  //   shadowColor: '#000',
+  //   shadowOffset: {
+  //     width: 0,
+  //     height: 2,
+  //   },
+  //   shadowOpacity: 0.25,
+  //   shadowRadius: 3.84,
+  //   elevation: 2,
+  //   marginBottom: 25,
+  // },
   cardView: {
+    display: 'flex',
     paddingHorizontal: 20,
     paddingVertical: 30,
+    backgroundColor: 'white',
     marginTop: 25,
     width: '100%',
     borderRadius: 12,
@@ -88,8 +106,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 2,
-    marginBottom: 25,
+    elevation: 5,
   },
   topView: {
     flexDirection: 'row',
