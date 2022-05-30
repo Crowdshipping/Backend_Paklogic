@@ -33,6 +33,11 @@ const PictureDelivery = ({ route, navigation }: any) => {
         mediaType: 'photo',
         quality: 0.5,
       });
+      if (result.didCancel) {
+        return;
+      }
+      console.log("result of camera or gallery", result);
+      // didCancel
       let data = result.assets[0];
       if (Platform.OS === 'ios') {
         data.uri = data?.uri?.slice(7);

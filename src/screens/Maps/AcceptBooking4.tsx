@@ -79,87 +79,88 @@ const AcceptBooking4 = ({ route, navigation }: any) => {
 
   return (
     <View style={styles.container}>
-      {isLoading ? <MyLoader /> : <View>
-        <PopupModalOfSuccess
-          isModalVisible={isModalVisible}
-          closeButtonOnPressed={() => {
-            navigation.navigate('Drawer');
-          }}
-        />
-        <MapView
-          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-          style={styles.map}
-          region={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.015,
-            longitudeDelta: 0.0121,
-          }}></MapView>
-        <View style={styles.mapInformation}>
-          <View style={styles.topView}>
-            <Text style={{ fontSize: 20, color: 'grey' }}>Pick up city</Text>
-            <Text style={{ fontSize: 20, color: 'red' }}>
-              {requestData.flight.pickupCity}
-            </Text>
-          </View>
-          <HorizontalDivider />
-          <View style={styles.topView}>
-            <Text style={{ fontSize: 20, color: 'grey' }}>Drop off city</Text>
-            <Text style={{ fontSize: 20, color: 'red' }}>
-              {requestData.flight.dropoffCity}
-            </Text>
-          </View>
-          <HorizontalDivider />
-          <View style={styles.topView}>
-            <Text style={{ fontSize: 20, color: 'grey' }}>From Date</Text>
-            <Text style={{ fontSize: 20, color: 'red' }}>
-              {flightInfoData.scheduled_out !== undefined &&
-                flightInfoData.scheduled_out.slice(0, -10)}
-            </Text>
-          </View>
-          <HorizontalDivider />
-          <View style={styles.topView}>
-            <Text style={{ fontSize: 20, color: 'grey' }}>To Date</Text>
-            <Text style={{ fontSize: 20, color: 'red' }}>
-              {flightInfoData.scheduled_on !== undefined &&
-                flightInfoData.scheduled_on.slice(0, -10)}
-            </Text>
-          </View>
-          <HorizontalDivider />
-        </View>
-        <View style={styles.mapBottom}>
-          <View style={styles.topPart}>
-            <Text
-              // onPress={() => {
-              //   verifyMyOtp();
-              // }}
-              style={styles.topPartText}>
-              VERIFY OTP
-            </Text>
-            <TouchableOpacity onPress={() => {
-              navigation.navigate('attachImage', {
-                requestData: requestData,
-                flightInfoData: flightInfoData,
-              });
-            }}>
-              <Text
-                style={styles.topPartText}>
-                UPLOAD IMAGE FOR VERIFICATION
+      {isLoading ? <MyLoader /> :
+        <View style={styles.container}>
+          <PopupModalOfSuccess
+            isModalVisible={isModalVisible}
+            closeButtonOnPressed={() => {
+              navigation.navigate('Drawer');
+            }}
+          />
+          <MapView
+            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+            style={styles.map}
+            region={{
+              latitude: 37.78825,
+              longitude: -122.4324,
+              latitudeDelta: 0.015,
+              longitudeDelta: 0.0121,
+            }}></MapView>
+          <View style={styles.mapInformation}>
+            <View style={styles.topView}>
+              <Text style={{ fontSize: 20, color: 'grey' }}>Pick up city</Text>
+              <Text style={{ fontSize: 20, color: 'red' }}>
+                {requestData.flight.pickupCity}
               </Text>
-            </TouchableOpacity>
-
-          </View>
-          <View style={styles.bottomPart}>
-            <View style={styles.checkBoxRow}>
-              <CheckBoxState isDisabled={true} text={'Pick up'} whenPressed={() => { }} />
-              <CheckBoxState isDisabled={true} text={'Transit'} whenPressed={() => { }} />
-              <CheckBoxState isDisabled={true} text={'Reached'} whenPressed={() => { }} />
             </View>
-            {/* <MapButton onPress={toggleModal} text={'COMPLETE'} /> */}
-            <MapButton onPress={validate} text={'COMPLETE'} />
+            <HorizontalDivider />
+            <View style={styles.topView}>
+              <Text style={{ fontSize: 20, color: 'grey' }}>Drop off city</Text>
+              <Text style={{ fontSize: 20, color: 'red' }}>
+                {requestData.flight.dropoffCity}
+              </Text>
+            </View>
+            <HorizontalDivider />
+            <View style={styles.topView}>
+              <Text style={{ fontSize: 20, color: 'grey' }}>From Date</Text>
+              <Text style={{ fontSize: 20, color: 'red' }}>
+                {flightInfoData.scheduled_out &&
+                  flightInfoData.scheduled_out.slice(0, -10)}
+              </Text>
+            </View>
+            <HorizontalDivider />
+            <View style={styles.topView}>
+              <Text style={{ fontSize: 20, color: 'grey' }}>To Date</Text>
+              <Text style={{ fontSize: 20, color: 'red' }}>
+                {flightInfoData.scheduled_on &&
+                  flightInfoData.scheduled_on.slice(0, -10)}
+              </Text>
+            </View>
+            <HorizontalDivider />
           </View>
-        </View>
-      </View>}
+          <View style={styles.mapBottom}>
+            <View style={styles.topPart}>
+              <Text
+                // onPress={() => {
+                //   verifyMyOtp();
+                // }}
+                style={styles.topPartText}>
+                VERIFY OTP
+              </Text>
+              <TouchableOpacity onPress={() => {
+                navigation.navigate('attachImage', {
+                  requestData: requestData,
+                  flightInfoData: flightInfoData,
+                });
+              }}>
+                <Text
+                  style={styles.topPartText}>
+                  UPLOAD IMAGE FOR VERIFICATION
+                </Text>
+              </TouchableOpacity>
+
+            </View>
+            <View style={styles.bottomPart}>
+              <View style={styles.checkBoxRow}>
+                <CheckBoxState isDisabled={true} text={'Pick up'} whenPressed={() => { }} />
+                <CheckBoxState isDisabled={true} text={'Transit'} whenPressed={() => { }} />
+                <CheckBoxState isDisabled={true} text={'Reached'} whenPressed={() => { }} />
+              </View>
+              {/* <MapButton onPress={toggleModal} text={'COMPLETE'} /> */}
+              <MapButton onPress={validate} text={'COMPLETE'} />
+            </View>
+          </View>
+        </View>}
     </View>
   );
 };
@@ -169,7 +170,6 @@ const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
-    backgroundColor: 'red',
     justifyContent: 'flex-end',
   },
   mapInformation: {

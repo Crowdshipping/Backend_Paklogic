@@ -96,6 +96,7 @@ const AllRequest = ({ navigation, status, myColor }: any) => {
     getPostRequestData();
     const willFocusSubscription = navigation.addListener('focus', () => {
       console.log("from back navigation all flight")
+      setTabSelected(1);
       getData();
       getPostRequestData();
     });
@@ -107,8 +108,10 @@ const AllRequest = ({ navigation, status, myColor }: any) => {
     getFlightsDate(item.flight.fa_flight_id)
       .then(response => response.json())
       .then(result => {
-        if (result.success) {
-          setIsloading(false);
+        setIsloading(false);
+        console.log("items of Flights", result.flightInfo)
+        if (result.success && result.flightInfo) {
+
           if (item.state === "Pickedup") {
             navigation.navigate('AcceptBooking2', {
               requestData: item,
@@ -142,13 +145,9 @@ const AllRequest = ({ navigation, status, myColor }: any) => {
         console.log("error", error);
       });
   }
-
-
-
-
-
   const renderAcceptAndPendingTab = () => {
     ///first if for render accepted and pendings tabs
+    console.log("responsefrom from from", response)
     if (response) {
       return response.map((item: any) => {
         if (tabSelected === 2) {
@@ -157,17 +156,10 @@ const AllRequest = ({ navigation, status, myColor }: any) => {
             if (item.flight === undefined || item.flight === null) {
               return;
             }
-            let uri =
-              'https://upload.wikimedia.org/wikipedia/en/f/f2/Robert_Downey_Jr._as_Tony_Stark_in_Avengers_Infinity_War.jpg';
-            if (
-              item.requestedBy.profilepic !== null ||
-              item.requestedBy.profilepic !== undefined
-            ) {
-              uri = item.requestedBy.profilepic;
-            }
+
             return (
               <RequestComponent
-                myImage={backendUrl + uri}
+                myImage={item.requestedBy.profilepic}
                 firstName={item.requestedBy.firstname}
                 lastName={item.requestedBy.lastname}
                 airLine={item.flight.flightAirline}
@@ -179,18 +171,31 @@ const AllRequest = ({ navigation, status, myColor }: any) => {
                   });
                 }}
                 rejectPress={() => {
-                  setIsloading(true);
-                  setAcceptOrReject(item._id, 'Rejected').then(response =>
-                    response
-                      .json()
-                      .then(res => {
-                        setIsloading(false)
-                        navigation.navigate("AllRequest");
-                      })
-                      .catch(e => {
-                        setIsloading(false)
-                      }),
-                  );
+                  Alert.alert("Attention Please!",
+                    "You need to register this flight in order to accept this request?",
+                    [
+                      {
+                        text: 'Yes', onPress: () => {
+                          setIsloading(true);
+                          setAcceptOrReject(item._id, 'Rejected').then(response =>
+                            response
+                              .json()
+                              .then(res => {
+                                setIsloading(false)
+                                navigation.navigate("AllRequest");
+                              })
+                              .catch(e => {
+                                setIsloading(false)
+                              }),
+                          );
+                        },
+                        style: 'default',
+                      },
+                      { text: 'No' },
+                    ],
+                    { cancelable: false }
+                  )
+
                 }}
                 date={item.flight.flightDate.slice(0, -14)}
                 onPress={() => {
@@ -204,50 +209,22 @@ const AllRequest = ({ navigation, status, myColor }: any) => {
         }
         else if (tabSelected === 1) {
           if (item.status === 'Accepted') {
-
-            if (item.flight === undefined || item.flight === null) {
+            console.log("completion of item", item.isverificationComplete);
+            if (item.flight === undefined || item.flight === null || item.isverificationComplete) {
               return;
-            }
-            let uri =
-              'https://upload.wikimedia.org/wikipedia/en/f/f2/Robert_Downey_Jr._as_Tony_Stark_in_Avengers_Infinity_War.jpg';
-            if (
-              item.requestedBy.profilepic !== null ||
-              item.requestedBy.profilepic !== undefined
-            ) {
-              uri = item.requestedBy.profilepic;
             }
             return (
               <RequestComponent
                 isAccepted={true}
-                myImage={backendUrl + uri}
+                myImage={item.requestedBy.profilepic}
                 firstName={item.requestedBy.firstname}
                 lastName={item.requestedBy.lastname}
                 airLine={item.flight.flightAirline}
                 departureAirport={item.flight.departureAirport}
                 destinationAirport={item.flight.destinationAirport}
-                // acceptPress={() => {
-                //   setAcceptOrReject(item._id, 'Accepted').then(response =>
-                //     response
-                //       .json()
-                //       .then(res => console.log('from accept buttonsuccses'))
-                //       .catch(e => console.log('error')),
-                //   );
-                // }}
-                // rejectPress={() => {
-                //   setAcceptOrReject(item._id, 'Rejected').then(response =>
-                //     response
-                //       .json()
-                //       .then(res => console.log('from reject buttonsuccses'))
-                //       .catch(e => console.log('error')),
-                //   );
-                // }}
                 date={item.flight.flightDate.slice(0, -14)}
                 onPress={() => {
                   getFlightDataFromServer(item);
-
-                  // navigation.navigate('BookingRequest', {
-                  //   requestData: item,
-                  // });
                 }}
               />
             );
@@ -263,45 +240,46 @@ const AllRequest = ({ navigation, status, myColor }: any) => {
         if (item.requestedBy) {
           if (tabSelected === 3) {
             console.log('tab post request3 items', item);
-            let uri =
-              'https://upload.wikimedia.org/wikipedia/en/f/f2/Robert_Downey_Jr._as_Tony_Stark_in_Avengers_Infinity_War.jpg';
-            if (
-              item.requestedBy.profilepic !== null ||
-              item.requestedBy.profilepic !== undefined
-            ) {
-              uri = item.requestedBy.profilepic;
-            }
+
             return (
               <RequestComponent
                 isPostRequest={true}
-                myImage={backendUrl + uri}
+                myImage={item.requestedBy.profilepic}
                 firstName={item.requestedBy.firstname}
                 lastName={item.requestedBy.lastname}
                 airLine={item.airline}
                 departureAirport={item.departureAirport}
                 destinationAirport={item.destinationAirport}
                 acceptPress={() => {
-                  setIsloading(true);
-                  changePostRequestStatus(item._id, userId)
-                    .then(response => response.json())
-                    .then((result) => {
-                      setIsloading(false);
-                      navigation.navigate('AddFlightPostRequest', {
-                        postRequestData: result.updatedPostRequest
-                      });
-                      console.log("result need to pass from all request");
-                      // postRequestData
-                    })
-                    .catch(error => {
-                      console.log("error", error);
-                      setIsloading(false);
-                    });
-                  // setAcceptOrReject(item._id, 'Accepted').then(response =>
-                  //   response
-                  //     .json()
-                  //     .then(res => console.log('from accept buttonsuccses'))
-                  //     .catch(e => console.log('error')),
-                  // );
+
+                  Alert.alert("Attention Please!",
+                    "You need to register this flight in order to accept this request?",
+                    [
+                      {
+                        text: 'Yes', onPress: () => {
+                          setIsloading(true);
+                          changePostRequestStatus(item._id, userId)
+                            .then(response => response.json())
+                            .then((result) => {
+                              setIsloading(false);
+                              navigation.navigate('AddFlightPostRequest', {
+                                postRequestData: result.updatedPostRequest
+                              });
+                              console.log("result need to pass from all request");
+                              // postRequestData
+                            })
+                            .catch(error => {
+                              console.log("error", error);
+                              setIsloading(false);
+                            });
+                        },
+                        style: 'default',
+                      },
+                      { text: 'No' },
+                    ],
+                    { cancelable: false }
+                  )
+
                 }}
                 // rejectPress={() => {
                 //   setAcceptOrReject(item._id, 'Rejected').then(response =>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text, Button, TextInput } from 'react-native';
+import { View, StyleSheet, Text, Button, TextInput, Alert } from 'react-native';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import HorizontalDivider from '../../components/HorizontalDivider';
@@ -110,7 +110,32 @@ const BookingRequest = ({ route, navigation }: any) => {
             </View>
             <HorizontalDivider />
             <View style={styles.bottomView}>
-              <TouchableOpacity onPress={toggleModal}>
+              <TouchableOpacity onPress={() => {
+                Alert.alert("",
+                  "Are you sure to reject this request?",
+                  [
+                    {
+                      text: 'Yes', onPress: () => {
+                        setIsLoading(true);
+                        setAcceptOrReject(requestData._id, 'Rejected').then(response =>
+                          response
+                            .json()
+                            .then(res => {
+                              setIsLoading(false);
+                              navigation.navigate("AllRequest");
+                            })
+                            .catch(e => {
+                              setIsLoading(false);
+                            }),
+                        );
+                      },
+                      style: 'default',
+                    },
+                    { text: 'No' },
+                  ],
+                  { cancelable: false }
+                )
+              }}>
                 <Text>Ignore Job</Text>
               </TouchableOpacity>
               <MyButton

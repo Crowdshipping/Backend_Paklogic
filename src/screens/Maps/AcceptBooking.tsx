@@ -34,7 +34,7 @@ const AcceptBooking = ({ route, navigation }: any) => {
       <View style={styles.topView}>
         <Text style={{ fontSize: 20, color: 'grey' }}>From Date</Text>
         <Text style={{ fontSize: 20, color: 'red' }}>
-          {flightInfoData.scheduled_out !== undefined &&
+          {flightInfoData.scheduled_out &&
             flightInfoData.scheduled_out.slice(0, -10)}
         </Text>
       </View>
@@ -42,7 +42,7 @@ const AcceptBooking = ({ route, navigation }: any) => {
       <View style={styles.topView}>
         <Text style={{ fontSize: 20, color: 'grey' }}>To Date</Text>
         <Text style={{ fontSize: 20, color: 'red' }}>
-          {flightInfoData.scheduled_on !== undefined &&
+          {flightInfoData.scheduled_on &&
             flightInfoData.scheduled_on.slice(0, -10)}
         </Text>
       </View>
@@ -76,7 +76,7 @@ const AcceptBooking = ({ route, navigation }: any) => {
   return (
     <View style={styles.container}>
       {isLoading ? <MyLoader /> :
-        <View>
+        <View style={styles.container}>
           <MapView
             provider={PROVIDER_GOOGLE} // remove if not using Google Maps
             style={styles.map}
@@ -154,6 +154,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
     justifyContent: 'flex-end',
+    height: "100%"
   },
   mapInformation: {
     backgroundColor: 'white',

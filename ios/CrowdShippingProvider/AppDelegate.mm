@@ -29,7 +29,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [GMSServices provideAPIKey:@"AIzaSyC-LaezTvsnTMTEDeRISwXfV2u7RrRuq9I"]; // add this line using the api key obtained from Google Console
+  [GMSServices provideAPIKey:@"AIzaSyC3vl-jtFGzrBapun1U6sxT-Toena_1ywY"]; // add this line using the api key obtained from Google Console
   RCTAppSetupPrepareApp(application);
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];

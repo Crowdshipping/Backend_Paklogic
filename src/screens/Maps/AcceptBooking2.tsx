@@ -19,7 +19,7 @@ const AcceptBooking2 = ({ route, navigation }: any) => {
   return (
     <View style={styles.container}>
       {isLoading ? <MyLoader /> :
-        <View>
+        <View style={styles.container}>
           <MapView
             provider={PROVIDER_GOOGLE} // remove if not using Google Maps
             style={styles.map}
@@ -104,14 +104,15 @@ const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
-    backgroundColor: 'red',
     justifyContent: 'flex-end',
+    height: "100%",
+
   },
   mapInformation: {
     backgroundColor: 'white',
     width: wp(95),
     marginHorizontal: 10,
-    height: '37%',
+    height: '40%',
     borderTopLeftRadius: wp(2),
     borderTopRightRadius: wp(2),
   },
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
   mapBottom: {
     backgroundColor: 'white',
     width: wp(100),
-    height: '37%',
+    height: '40%',
   },
   checkBoxRow: {
     display: 'flex',

@@ -13,82 +13,83 @@ const AcceptBooking3 = ({ route, navigation }: any) => {
   const [isLoading, setIsLoading] = React.useState(false);
   return (
     <View style={styles.container}>
-      {isLoading ? <MyLoader /> : <View>
-        <MapView
-          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-          style={styles.map}
-          region={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.015,
-            longitudeDelta: 0.0121,
-          }}></MapView>
-        <View style={styles.mapInformation}>
-          <View style={styles.topView}>
-            <Text style={{ fontSize: 20, color: 'grey' }}>Pick up city</Text>
-            <Text style={{ fontSize: 20, color: 'red' }}>
-              {requestData.flight.pickupCity}
-            </Text>
-          </View>
-          <HorizontalDivider />
-          <View style={styles.topView}>
-            <Text style={{ fontSize: 20, color: 'grey' }}>Dropoff city</Text>
-            <Text style={{ fontSize: 20, color: 'red' }}>
-              {requestData.flight.dropoffCity}
-            </Text>
-          </View>
-          <HorizontalDivider />
-          <View style={styles.topView}>
-            <Text style={{ fontSize: 20, color: 'grey' }}>From Date</Text>
-            <Text style={{ fontSize: 20, color: 'red' }}>
-              {flightInfoData.scheduled_out !== undefined &&
-                flightInfoData.scheduled_out.slice(0, -10)}
-            </Text>
-          </View>
-          <HorizontalDivider />
-          <View style={styles.topView}>
-            <Text style={{ fontSize: 20, color: 'grey' }}>To Date</Text>
-            <Text style={{ fontSize: 20, color: 'red' }}>
-              {flightInfoData.scheduled_on !== undefined &&
-                flightInfoData.scheduled_on.slice(0, -10)}
-            </Text>
-          </View>
-
-          <HorizontalDivider />
-        </View>
-        <View style={styles.mapBottom}>
-          <View style={styles.topPart}></View>
-          <View style={styles.bottomPart}>
-            <View style={styles.checkBoxRow}>
-              <CheckBoxState isDisabled={true} text={'Pick up'} whenPressed={() => { }} />
-              <CheckBoxState isDisabled={true} text={'Transit'} whenPressed={() => { }} />
-              <CheckBoxState2 text={'Reached'} />
+      {isLoading ? <MyLoader /> :
+        <View style={styles.container}>
+          <MapView
+            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+            style={styles.map}
+            region={{
+              latitude: 37.78825,
+              longitude: -122.4324,
+              latitudeDelta: 0.015,
+              longitudeDelta: 0.0121,
+            }}></MapView>
+          <View style={styles.mapInformation}>
+            <View style={styles.topView}>
+              <Text style={{ fontSize: 20, color: 'grey' }}>Pick up city</Text>
+              <Text style={{ fontSize: 20, color: 'red' }}>
+                {requestData.flight.pickupCity}
+              </Text>
             </View>
-            <MapButton
-              onPress={() => {
-                setIsLoading(true);
-                changeStateByProvider("Reached", requestData._id)
-                  .then(response => response.json())
-                  .then(result => {
-                    console.log("result of reached", result);
-                    if (result.success) {
-                      setIsLoading(false);
-                      navigation.navigate('AcceptBooking4', {
-                        requestData: requestData,
-                        flightInfoData: flightInfoData
-                      });
-                    }
-                  })
-                  .catch(error => {
-                    setIsLoading(false);
-                    console.log('error', error)
-                  });
-              }}
-              text={'REACHED'}
-            />
+            <HorizontalDivider />
+            <View style={styles.topView}>
+              <Text style={{ fontSize: 20, color: 'grey' }}>Dropoff city</Text>
+              <Text style={{ fontSize: 20, color: 'red' }}>
+                {requestData.flight.dropoffCity}
+              </Text>
+            </View>
+            <HorizontalDivider />
+            <View style={styles.topView}>
+              <Text style={{ fontSize: 20, color: 'grey' }}>From Date</Text>
+              <Text style={{ fontSize: 20, color: 'red' }}>
+                {flightInfoData.scheduled_out !== undefined &&
+                  flightInfoData.scheduled_out.slice(0, -10)}
+              </Text>
+            </View>
+            <HorizontalDivider />
+            <View style={styles.topView}>
+              <Text style={{ fontSize: 20, color: 'grey' }}>To Date</Text>
+              <Text style={{ fontSize: 20, color: 'red' }}>
+                {flightInfoData.scheduled_on !== undefined &&
+                  flightInfoData.scheduled_on.slice(0, -10)}
+              </Text>
+            </View>
+
+            <HorizontalDivider />
           </View>
-        </View>
-      </View>}
+          <View style={styles.mapBottom}>
+            <View style={styles.topPart}></View>
+            <View style={styles.bottomPart}>
+              <View style={styles.checkBoxRow}>
+                <CheckBoxState isDisabled={true} text={'Pick up'} whenPressed={() => { }} />
+                <CheckBoxState isDisabled={true} text={'Transit'} whenPressed={() => { }} />
+                <CheckBoxState2 text={'Reached'} />
+              </View>
+              <MapButton
+                onPress={() => {
+                  setIsLoading(true);
+                  changeStateByProvider("Reached", requestData._id)
+                    .then(response => response.json())
+                    .then(result => {
+                      console.log("result of reached", result);
+                      if (result.success) {
+                        setIsLoading(false);
+                        navigation.navigate('AcceptBooking4', {
+                          requestData: requestData,
+                          flightInfoData: flightInfoData
+                        });
+                      }
+                    })
+                    .catch(error => {
+                      setIsLoading(false);
+                      console.log('error', error)
+                    });
+                }}
+                text={'REACHED'}
+              />
+            </View>
+          </View>
+        </View>}
     </View>
   );
 };
@@ -98,7 +99,6 @@ const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
-    backgroundColor: 'red',
     justifyContent: 'flex-end',
   },
   mapInformation: {
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   mapBottom: {
     backgroundColor: 'white',
     width: wp(100),
-    height: '25%',
+    height: '20%',
   },
   checkBoxRow: {
     display: 'flex',

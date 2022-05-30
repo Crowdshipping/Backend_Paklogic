@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Alert,
   KeyboardAvoidingView,
@@ -15,7 +15,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {SvgXml} from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import {
@@ -26,9 +26,9 @@ import {
   PhoneNumberPickerUI,
   Textbox,
 } from '../../components';
-import {register} from '../../services/apis';
-import {register1} from '../../theme/assets/svg';
-import {colors} from '../../theme/colors';
+import { register } from '../../services/apis';
+import { register1 } from '../../theme/assets/svg';
+import { colors } from '../../theme/colors';
 import {
   validateAlphabet,
   validateEmail,
@@ -36,7 +36,7 @@ import {
   validateNumber,
   validatePassword,
 } from '../../validation';
-import {styles} from './style';
+import { styles } from './style';
 
 export default function RegisterProvider(props: any) {
   const [firstName, setFirstName] = useState('');
@@ -99,7 +99,7 @@ export default function RegisterProvider(props: any) {
                 uid: result.data._id,
               });
             } else {
-              Alert.alert('Alert', 'Password successfully changed', [
+              Alert.alert('Alert', 'Registered Successfully', [
                 {
                   text: 'Ok',
                   onPress: () => {
@@ -129,23 +129,23 @@ export default function RegisterProvider(props: any) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{flex: 1, paddingHorizontal: wp(6)}}>
+      style={{ flex: 1, paddingHorizontal: wp(6) }}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{flex: 2}}>
+        <View style={{ flex: 2 }}>
           <SvgXml
-            style={{alignSelf: 'center'}}
+            style={{ alignSelf: 'center' }}
             width={wp(80)}
             height={wp(80)}
             xml={register1}
           />
         </View>
-        <View style={{flex: 2}}>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <View style={{ flex: 2 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Textbox
               title="FIRST NAME"
               placeholder="First Name"
               onChangeValue={(text: string) => setFirstName(text)}
-              containerStyle={{width: wp(45)}}
+              containerStyle={{ width: wp(45) }}
               errorMessage={'First Name is required'}
               isError={firstNameError}
             />
@@ -153,7 +153,7 @@ export default function RegisterProvider(props: any) {
               title="LAST NAME"
               placeholder="Last Name"
               onChangeValue={(text: string) => setLastName(text)}
-              containerStyle={{width: wp(45)}}
+              containerStyle={{ width: wp(45) }}
               errorMessage={'Last Name is required'}
               isError={lastNameError}
             />
@@ -189,11 +189,11 @@ export default function RegisterProvider(props: any) {
             isError={passwordError}
           />
 
-          <Text style={{alignSelf: 'center'}}>
+          <Text style={{ alignSelf: 'center' }}>
             Already have an Account ?
             <Text
-              style={{color: colors.red}}
-              onPress={() => props.navigation.navigate('SignIn')}>
+              style={{ color: colors.red }}
+              onPress={() => props.navigation.navigate('SIGNIN')}>
               Signin
             </Text>
           </Text>
@@ -210,7 +210,7 @@ export default function RegisterProvider(props: any) {
               //   uid: '625fce9a524a45000483eb88',
               // });
             }}
-            containerStyle={{marginTop: hp(4)}}
+            containerStyle={{ marginTop: hp(4) }}
           />
         </View>
       </ScrollView>

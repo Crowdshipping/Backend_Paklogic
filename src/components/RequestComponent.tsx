@@ -1,9 +1,10 @@
 import React from 'react';
-import {View, StyleSheet, Image, Text, Pressable} from 'react-native';
+import { View, StyleSheet, Image, Text, Pressable } from 'react-native';
 import HorizontalDivider from './HorizontalDivider';
-import {SvgXml} from 'react-native-svg';
-import {LocationSvg} from '../theme/assets/svg/LocationSvg';
+import { SvgXml } from 'react-native-svg';
+import { LocationSvg } from '../theme/assets/svg/LocationSvg';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { backendUrl } from '../appConstants';
 const RequestComponent = ({
   onPress,
   firstName,
@@ -18,16 +19,33 @@ const RequestComponent = ({
   isAccepted,
   isPostRequest,
 }: any) => {
+
+  console.log("my image", myImage);
   return (
     <Pressable onPress={onPress}>
       <View style={styles.card}>
         {console.log('requestcomimag', myImage)}
+
+
+
+
         <View style={styles.top}>
           <View style={styles.topLeft}>
-            <Image
+            {/* <Image
               style={{width: 55, height: 55, borderRadius: 50}}
               source={{uri: myImage}}
-            />
+            /> */}
+            {myImage ? (
+              <Image
+                style={{ width: 50, height: 50, borderRadius: 50, marginRight: 10 }}
+                source={{ uri: backendUrl + myImage }}
+              />
+            ) : (
+              <Image
+                style={{ width: 50, height: 50, borderRadius: 50, marginRight: 10 }}
+                source={require('../assets/aeroplane.png')}
+              />
+            )}
           </View>
           <View style={styles.topRight}>
             <View
@@ -52,14 +70,16 @@ const RequestComponent = ({
           </View>
           <View style={styles.bottomRight}>
             <TouchableOpacity onPress={acceptPress}>
-            <Text style={styles.acceptText} >
-              {isAccepted ? 'Accepted' : 'Accept'}
-            </Text>
+              <Text style={styles.acceptText} >
+                {isAccepted ? 'Accepted' : 'Accept'}
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={rejectPress}>
-            <Text style={styles.rejectText} >
-              {isAccepted || isPostRequest ? '' : 'Reject'}
-            </Text>
+            <TouchableOpacity >
+
+              <Text onPress={rejectPress} style={styles.rejectText} >
+                {isAccepted || isPostRequest ? '' : 'Reject'}
+              </Text>
+
             </TouchableOpacity>
             <Text style={styles.dateText}>{date}</Text>
           </View>
@@ -90,13 +110,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 15,
   },
-  topLeft: {flex: 1},
-  topRight: {flex: 3.35},
+  topLeft: { flex: 1 },
+  topRight: { flex: 3.35 },
   bottom: {
     marginTop: 15,
     flexDirection: 'row',
   },
-  bottomLeft: {flex: 1.0},
+  bottomLeft: { flex: 1.0 },
   bottomMid: {
     justifyContent: 'space-between',
     flex: 1.9,
@@ -112,6 +132,7 @@ const styles = StyleSheet.create({
   rejectText: {
     color: '#DC3E3E',
     fontSize: 15,
+    fontWeight: 'bold'
   },
   dateText: {
     color: '#A19B9B',
