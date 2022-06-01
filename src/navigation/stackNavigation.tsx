@@ -30,6 +30,10 @@ import { CommonActions } from '@react-navigation/native';
 import LastBookingHistory from '../screens/Booking/LastBookingHistory';
 import PictureDelivery from '../screens/PictureDelivery';
 import AddFlightPostRequest from '../screens/AddFlightPostRequest';
+import DrawerSideScreen from '../screens/DrawerSideScreen';
+import AllShips from '../screens/AllShips';
+import AddShipTicket from '../screens/AddShipTicket';
+import MyProfile from '../screens/MyProfile';
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent({ navigation }: any) {
@@ -54,7 +58,7 @@ function CustomDrawerContent({ navigation }: any) {
 
 const DrawerNavigator = () => {
   return (
-    <Drawer.Navigator drawerContent={CustomDrawerContent}>
+    <Drawer.Navigator drawerContent={DrawerSideScreen}>
       <Drawer.Screen
         options={{
           headerTitleAlign: 'center',
@@ -417,6 +421,52 @@ export const StackNavigation = () => {
         }}
         name="AddFlightPostRequest"
         component={AddFlightPostRequest}
+      />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'All Ships',
+        }}
+        name="ALLSHIPS"
+        component={AllShips}
+      />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'ADD TICKET DETAILS',
+        }}
+        name="ADDSHIP"
+        component={AddShipTicket}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'ADD TICKET DETAILS',
+        }}
+        name="MYPROFILE"
+        component={MyProfile}
       />
 
     </Stack.Navigator>

@@ -30,8 +30,9 @@ import { backendUrl } from '../../appConstants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TabButton from '../../components/TabButton';
 import MyLoader from '../../components/MyLoader';
+import { CommonActions, StackActions } from '@react-navigation/native';
 
-const AllRequest = ({ navigation, status, myColor }: any) => {
+const AllRequest = ({ navigation, status, myColor, route }: any) => {
   const [fromDate, setFromDate] = React.useState(new Date());
   const [fromDateOpen, setFromDateOpen] = React.useState(false);
   const [isFromDateSet, setIsFromDateSet] = React.useState(false);
@@ -56,7 +57,6 @@ const AllRequest = ({ navigation, status, myColor }: any) => {
   const getData = async () => {
     setIsloading(true)
     try {
-
       const value: any = await AsyncStorage.getItem('@user_Id');
       setUserId(value);
       console.log('value of getdata function', value);
@@ -65,15 +65,19 @@ const AllRequest = ({ navigation, status, myColor }: any) => {
           .then(response => response.json())
           .then(result => {
             setIsloading(false)
-            console.log('RESPONSEFROMAlLLREQUEST', result);
-            setResponse(result.requests);
+            if (result.success) {
+              console.log('RESPONSEFROMAlLLREQUEST', result);
+              setResponse(result.requests);
+            }
           })
           .catch(error => {
             setIsloading(false)
             console.log("error", error);
           });
       }
-    } catch (e) { }
+    } catch (e) {
+      setIsloading(false)
+    }
   };
 
   const getPostRequestData = () => {
@@ -85,7 +89,6 @@ const AllRequest = ({ navigation, status, myColor }: any) => {
         if (result.success) {
           setPostRequestResponse(result.postRequests);
         }
-        setIsloading(false)
       }).catch((err) => {
         console.log("error");
         setIsloading(false)
@@ -126,11 +129,47 @@ const AllRequest = ({ navigation, status, myColor }: any) => {
             });
           }
           else if (item.state === "Reached") {
-            navigation.navigate('AcceptBooking4', {
+
+
+            navigation.replace('AcceptBooking4', {
               requestData: item,
               flightInfoData: result.flightInfo,
-
             });
+            // navigation.dispatch(CommonActions.reset({
+            //   index: 1, routes: [{
+            //     name: 'AcceptBooking4', params: {
+            //       requestData: item,
+            //       flightInfoData: result.flightInfo,
+            //     }
+            //   }],
+            // }))
+
+
+            // navigation.dispatch(
+            //   CommonActions.reset({
+            //     index: 0,
+            //     routes: [
+            //       {
+            //         name: 'AcceptBooking4',
+            //         params: { requestData: item, flightInfoData: result.flightInfo, },
+            //       },
+            //     ],
+            //   })
+            // );
+            // navigation.reset({
+            //   index: 1,
+            //   routes: [{
+            //     name: 'Profile', params: {
+            //       requestData: item,
+            //       flightInfoData: result.flightInfo,
+            //     }
+            //   }]
+            // })
+            // navigation.navigate('AcceptBooking4', {
+            //   requestData: item,
+            //   flightInfoData: result.flightInfo,
+
+            // });
           }
           else {
             navigation.navigate('AcceptBooking', {
@@ -150,6 +189,8 @@ const AllRequest = ({ navigation, status, myColor }: any) => {
     console.log("responsefrom from from", response)
     if (response) {
       return response.map((item: any) => {
+
+
         if (tabSelected === 2) {
           if (item.status === 'Pending') {
             console.log('pending contents', item);
@@ -208,26 +249,36 @@ const AllRequest = ({ navigation, status, myColor }: any) => {
           }
         }
         else if (tabSelected === 1) {
-          if (item.status === 'Accepted') {
-            console.log("completion of item", item.isverificationComplete);
-            if (item.flight === undefined || item.flight === null || item.isverificationComplete) {
-              return;
+          if (item.isverificationComplete) {
+            console.log("completed things", item)
+            return;
+          } else {
+            if (item.status === 'Accepted') {
+              console.log("Accepted things", item);
+              // if (item.flight === undefined || item.flight === null) {
+              //   return;
+              // }
+              if (item.requestedBy !== null && item.flight !== null) {
+                if (item.requestedBy.profilepic !== null || item.requestedBy.firstname !== null || item.requestedBy.lastname !== null || item.flight.flightAirline !== null || item.flight.departureAirport !== null || item.flight.destinationAirport !== null || item.flight.flightDate !== null) {
+                  return (
+                    <RequestComponent
+                      isAccepted={true}
+                      myImage={item.requestedBy.profilepic}
+                      firstName={item.requestedBy.firstname}
+                      lastName={item.requestedBy.lastname}
+                      airLine={item.flight.flightAirline}
+                      departureAirport={item.flight.departureAirport}
+                      destinationAirport={item.flight.destinationAirport}
+                      date={item.flight.flightDate.slice(0, -14)}
+                      onPress={() => {
+                        getFlightDataFromServer(item);
+                      }}
+                    />
+                  );
+                }
+              }
+
             }
-            return (
-              <RequestComponent
-                isAccepted={true}
-                myImage={item.requestedBy.profilepic}
-                firstName={item.requestedBy.firstname}
-                lastName={item.requestedBy.lastname}
-                airLine={item.flight.flightAirline}
-                departureAirport={item.flight.departureAirport}
-                destinationAirport={item.flight.destinationAirport}
-                date={item.flight.flightDate.slice(0, -14)}
-                onPress={() => {
-                  getFlightDataFromServer(item);
-                }}
-              />
-            );
           }
         }
       });

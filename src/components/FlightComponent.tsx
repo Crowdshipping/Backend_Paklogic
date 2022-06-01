@@ -1,8 +1,9 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
-import {SvgXml} from 'react-native-svg';
-import {airplane} from '../theme/assets/svg/airplaneSvg';
-import {DeleteSvg} from '../theme/assets/svg/DeleteSvg';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import { SvgXml } from 'react-native-svg';
+import { airplane } from '../theme/assets/svg/airplaneSvg';
+import { DeleteSvg } from '../theme/assets/svg/DeleteSvg';
+
 const FlightComponent = ({
   onPressEdit,
   departureAirport,
@@ -13,25 +14,25 @@ const FlightComponent = ({
   flightNumber,
   airline,
   myImage,
+  leftSvg,
 }: any) => {
   return (
     <View style={styles.cardView}>
-      <View style={{flexDirection: 'row-reverse', marginBottom: 10}}>
+      <View style={{ flexDirection: 'row-reverse', marginBottom: 10 }}>
         <SvgXml xml={DeleteSvg} width={20} height={20} />
       </View>
-      {console.log('image', myImage)}
       <View style={styles.topView}>
         <View style={styles.left}>
-          <SvgXml xml={airplane} width={60} />
+          <SvgXml xml={leftSvg} width={60} />
         </View>
         <View style={styles.right}>
           <View style={styles.singleTextRowView}>
-            <Text style={{marginRight: 18}}>Destination Airport</Text>
-            <Text style={{flex: 1, flexWrap: 'wrap'}}>{departureAirport}</Text>
+            <Text style={{ marginRight: 18 }}>Destination Airport</Text>
+            <Text style={{ flex: 1, flexWrap: 'wrap' }}>{departureAirport}</Text>
           </View>
           <View style={styles.singleTextRowView}>
-            <Text style={{marginRight: 18}}>Destination Airport</Text>
-            <Text style={{flex: 1, flexWrap: 'wrap'}}>
+            <Text style={{ marginRight: 18 }}>Destination Airport</Text>
+            <Text style={{ flex: 1, flexWrap: 'wrap' }}>
               {destinationAirport}
             </Text>
           </View>
@@ -58,11 +59,11 @@ const FlightComponent = ({
         </View>
       </View>
       <View style={styles.bottomView}>
-        <View style={{alignItems: 'center', justifyContent: 'center'}}>
-          <Image style={{width: 200, height: 100}} source={{uri: myImage}} />
+        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+          <Image style={{ width: 200, height: 100 }} source={{ uri: myImage }} />
         </View>
       </View>
-      <View style={{flexDirection: 'row'}}>
+      <View style={{ flexDirection: 'row' }}>
         <View style={styles.left}></View>
         <View style={styles.lastTextRow}>
           {/* <Text style={styles.lastTextStyle}>Completed</Text> */}
@@ -113,9 +114,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
-  bottomView: {flex: 1, paddingVertical: 10},
-  left: {flex: 1},
-  right: {flex: 2.5},
+  bottomView: { flex: 1, paddingVertical: 10 },
+  left: { flex: 1 },
+  right: { flex: 2.5 },
   singleTextRowView: {
     flexDirection: 'row',
     justifyContent: 'space-between',

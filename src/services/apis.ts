@@ -588,3 +588,60 @@ export const verifyBookingForCompletion = (image: any, requestId: any) => {
   };
   return fetch("https://backend-crowdshipping.herokuapp.com/provider/verifyingbookingcompletion", requestOptions);
 }
+
+/////get seaaport 
+export const getSeaportName = (data: any) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Cookie", "connect.sid=s%3AMTbRbdlC1iXSx9uxn1XZDaWEE3JCq_6O.d5R7tQ6BZvLY9WTgUMB8bE08GIg1M32vZIwcmDlhSk0");
+
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow'
+  };
+
+  return fetch(`https://backend-crowdshipping.herokuapp.com/provider/searchport/${data}`, requestOptions)
+};
+
+
+export const addShipToServer = (shipData: AddShip) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Cookie", "connect.sid=s%3AMTbRbdlC1iXSx9uxn1XZDaWEE3JCq_6O.d5R7tQ6BZvLY9WTgUMB8bE08GIg1M32vZIwcmDlhSk0");
+
+  var formdata = new FormData();
+  formdata.append("providerId", shipData.providerId);
+  formdata.append("pickupCity", shipData.pickupCity);
+  formdata.append("dropoffCity", shipData.dropoffCity);
+  formdata.append("shipDate", shipData.date);
+  formdata.append("departurePort", shipData.departureSeaport);
+  formdata.append("destinationPort", shipData.destinationSeaport);
+  formdata.append("departureTime", shipData.departureTime);
+  formdata.append("mmsiNumber", shipData.mmsiNumber);
+  formdata.append("ticketImage", shipData.image);
+  formdata.append("pickupPortUnlocode", shipData.pickupPortUnlocode);
+  formdata.append("dropoffPortUnlocode", shipData.dropoffPortUnlocode);
+  formdata.append("destinationTime", shipData.destinationTime);
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: formdata,
+    redirect: 'follow'
+  };
+
+  return fetch("https://backend-crowdshipping.herokuapp.com/provider/addship", requestOptions);
+}
+
+
+
+export const getAllShipAddedByProvider = (userId: any) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Cookie", "connect.sid=s%3ATxYIr2uWFt93Y0scgBAxxu5462TN4hbE.V4I5S6FdwvvgAYBxAdhXXsJ26w21uE87EnhC%2BsxD9Ro");
+
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow'
+  };
+
+  return fetch(`https://backend-crowdshipping.herokuapp.com/provider/getproviderships/${userId}`, requestOptions);
+}

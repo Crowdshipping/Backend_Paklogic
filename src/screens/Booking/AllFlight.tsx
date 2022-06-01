@@ -3,24 +3,21 @@ import React from 'react';
 import {
   View,
   StyleSheet,
-  Text,
-  Image,
   ScrollView,
-  TouchableOpacity,
   Pressable,
 } from 'react-native';
-import { SvgXml } from 'react-native-svg';
 import { backendUrl } from '../../appConstants';
 import { ButtonOutline } from '../../components';
 import FlightComponent from '../../components/FlightComponent';
+import MyLoader from '../../components/MyLoader';
 import { getAllFlightAddedByProvider } from '../../services';
 import { airplane } from '../../theme/assets/svg/airplaneSvg';
-import { DeleteSvg } from '../../theme/assets/svg/DeleteSvg';
 
 const AllFlight = ({ navigation, status, myColor }: any) => {
-  const [providerID, setProviderId] = React.useState<string | null>(null);
-
+  const [flightResponse, setFlightResponse] = React.useState([]);
+  const [isLoading, setIsloading] = React.useState(false);
   const getData = async () => {
+    setIsloading(true);
     try {
       const value = await AsyncStorage.getItem('@user_Id');
       console.log('value of getdata function', value);
@@ -28,18 +25,18 @@ const AllFlight = ({ navigation, status, myColor }: any) => {
         getAllFlightAddedByProvider(value)
           .then(response => response.json())
           .then(result => {
+            setIsloading(false);
             setFlightResponse(result.flights);
             console.log('getallflight', result.flights);
           })
-          .catch(error => console.log('error', error));
+          .catch(error => {
+            setIsloading(false);
+            console.log('error', error)
+          });
       }
     } catch (e) { }
   };
-  const [flightResponse, setFlightResponse] = React.useState([]);
 
-  // React.useEffect(() => {
-  //   getData();
-  // }, []);
   React.useEffect(() => {
     console.log("useeffect worked from alllfight")
     getData();
@@ -51,7 +48,7 @@ const AllFlight = ({ navigation, status, myColor }: any) => {
   }, []);
   return (
     <ScrollView>
-      <View style={styles.container}>
+      {isLoading ? <MyLoader /> : <View style={styles.container}>
         <ButtonOutline
           onPress={() => {
             navigation.navigate('AddTicket');
@@ -68,7 +65,7 @@ const AllFlight = ({ navigation, status, myColor }: any) => {
           color="black"
         />
         {flightResponse &&
-          flightResponse.map(item => {
+          flightResponse.map((item: any) => {
             console.log('entire item from all flight', item);
             return (
               <Pressable
@@ -86,6 +83,7 @@ const AllFlight = ({ navigation, status, myColor }: any) => {
                   flightNumber={item.flightNumber}
                   airline={item.flightAirline}
                   myImage={backendUrl + item.ticketImage}
+                  leftSvg={airplane}
                   onPressEdit={() => {
                     // navigation.navigate('EditTicket');
                   }}
@@ -93,7 +91,8 @@ const AllFlight = ({ navigation, status, myColor }: any) => {
               </Pressable>
             );
           })}
-      </View>
+      </View>}
+
     </ScrollView>
   );
 };

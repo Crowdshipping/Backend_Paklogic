@@ -9,18 +9,18 @@ import { styles } from './style';
 
 export const Header = (props: IHeader) => {
   return (
-    <View style={{flexDirection:'row', paddingHorizontal:wp(4), marginVertical:hp(2)}}>
+    <View style={{ flexDirection: 'row', paddingHorizontal: wp(4), marginVertical: hp(2) }}>
       <AntDesign
         onPress={() => {
           try { props.onBackPress() }
           catch (e) { console.log(e) }
         }}
         name="arrowleft"
-        color={'#000'}
+        color={'white'}
         size={wp(9)}
       />
-      <View style={{flex:1, alignItems:'center'}}>
-        <Text style={{fontSize:wp(6), marginRight:wp(9), fontWeight:'600', color:'black'}}>{props.title.toUpperCase()}</Text>
+      <View style={{ flex: 1, alignItems: 'center' }}>
+        <Text style={{ fontSize: wp(6), marginRight: wp(9), fontWeight: '600', color: 'white' }}>{props.title}</Text>
       </View>
     </View>
   );
@@ -28,7 +28,7 @@ export const Header = (props: IHeader) => {
 
 export const HeaderOption = (props: IHeader) => {
   return (
-    <View style={{flexDirection:'row', paddingHorizontal:wp(4), marginVertical:hp(2)}}>
+    <View style={{ flexDirection: 'row', paddingHorizontal: wp(4), marginVertical: hp(2) }}>
       <Entypo
         onPress={() => {
           try { props.onButtonPress() }
@@ -38,8 +38,8 @@ export const HeaderOption = (props: IHeader) => {
         color={'#000'}
         size={wp(9)}
       />
-      <View style={{flex:1, alignItems:'center'}}>
-        <Text style={{fontSize:wp(6), marginRight:wp(9), fontWeight:'600', color:'black'}}>{props.title.toUpperCase()}</Text>
+      <View style={{ flex: 1, alignItems: 'center' }}>
+        <Text style={{ fontSize: wp(6), marginRight: wp(9), fontWeight: '600', color: 'black' }}>{props.title.toUpperCase()}</Text>
       </View>
     </View>
   );

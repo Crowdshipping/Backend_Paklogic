@@ -60,13 +60,13 @@ export const PhoneNumberPicker = (props: IPhonePicker) => {
               android: {},
             }),
           }}
-          onChangeText={(t) => {
+          onChangeText={(value) => {
             try {
-              if (t == '0') {
+              if (value == '0') {
                 return
               }
-              setText(t)
-              onChange(selectedCountry, t)
+              setText(value)
+              onChange(selectedCountry, value)
             }
             catch (e) { console.log(e) }
           }}
@@ -126,6 +126,7 @@ export const PhoneNumberPickerUI = (props: IPhonePicker) => {
         </TouchableOpacity>
 
         <TextInput
+          maxLength={12}
           value={text}
           placeholder='Phone Number'
           placeholderTextColor={'grey'}

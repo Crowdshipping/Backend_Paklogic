@@ -1,5 +1,5 @@
 // import {NavigationRouteContext} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -17,16 +17,16 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {SvgXml} from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Zocial from 'react-native-vector-icons/Zocial';
 
-import {Button, Header, PhoneNumberPickerUI, Textbox} from '../../components';
-import {otp} from '../../services';
-import {register} from '../../theme/assets/svg';
-import {colors} from '../../theme/colors';
-import {validateNumber} from '../../validation';
-import {styles} from './style';
+import { Button, Header, PhoneNumberPickerUI, Textbox } from '../../components';
+import { otp } from '../../services';
+import { register } from '../../theme/assets/svg';
+import { colors } from '../../theme/colors';
+import { validateNumber } from '../../validation';
+import { styles } from './style';
 
 export default function RegisterScreen(props: any) {
 
@@ -81,10 +81,10 @@ export default function RegisterScreen(props: any) {
   React.useEffect(() => {
     const willFocusSubscription = props.navigation.addListener('focus', () => {
       setIsBack(true);
-  });
+    });
 
-  return willFocusSubscription;
-}, [isBack]);
+    return willFocusSubscription;
+  }, [isBack]);
 
 
 
@@ -93,22 +93,22 @@ export default function RegisterScreen(props: any) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{flex: 1}}>
-        {console.log("render from registerscreen number",number)}
+      style={{ flex: 1 }}>
+      {console.log("render from registerscreen number", number)}
       <ScrollView>
-        <View style={{height: hp(45)}}>
+        <View style={{ height: hp(45) }}>
           <SvgXml
-            style={{alignSelf: 'center'}}
+            style={{ alignSelf: 'center' }}
             width={wp(80)}
             height={wp(80)}
             xml={register}
           />
         </View>
-        <View style={{height: hp(40)}}>
+        <View style={{ height: hp(40) }}>
           <View style={styles.phoneContainer}>
-            <Text style={{color: 'black'}}>MOBILE</Text>
+            <Text style={{ color: 'black' }}>MOBILE</Text>
             <PhoneNumberPickerUI
-              containerStyle={{width: wp(80)}}
+              containerStyle={{ width: wp(80) }}
               onChange={(country: any, text: any) => {
                 console.log(country.dial_code, text);
                 setCountry(country);

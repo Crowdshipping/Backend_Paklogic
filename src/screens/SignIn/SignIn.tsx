@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Alert,
   SafeAreaView,
@@ -13,22 +13,22 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {SvgXml} from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Zocial from 'react-native-vector-icons/Zocial';
-import {StackActions} from '@react-navigation/native';
-import {CommonActions} from '@react-navigation/native';
+import { StackActions } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 
-import {Button, Header, PhoneNumberPickerUI, Textbox} from '../../components';
-import {login, otp, userData} from '../../services';
-import {signIn} from '../../theme/assets/svg';
-import {colors} from '../../theme/colors';
-import {validateEmail, validateEmpty, validatePassword} from '../../validation';
-import {styles} from './style';
-import {NavigationProp} from '@react-navigation/native';
+import { Button, Header, PhoneNumberPickerUI, Textbox } from '../../components';
+import { login, otp, userData } from '../../services';
+import { signIn } from '../../theme/assets/svg';
+import { colors } from '../../theme/colors';
+import { validateEmail, validateEmpty, validatePassword } from '../../validation';
+import { styles } from './style';
+import { NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-export default function SignIn({navigation}: any) {
+export default function SignIn({ navigation }: any) {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [nameError, setNameError] = useState(false);
@@ -79,11 +79,11 @@ export default function SignIn({navigation}: any) {
     }
   };
   return (
-    <View style={{flex: 1}}>
-      <ScrollView style={{flex: 1}}>
-        <View style={{height: hp(35), alignItems: 'center'}}>
+    <View style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1 }}>
+        <View style={{ height: hp(35), alignItems: 'center' }}>
           <SvgXml
-            style={{alignSelf: 'center', marginLeft: wp(15)}}
+            style={{ alignSelf: 'center', marginLeft: wp(15) }}
             width={wp(75)}
             height={wp(75)}
             xml={signIn}
@@ -94,7 +94,7 @@ export default function SignIn({navigation}: any) {
             title="EMAIL"
             placeholder="Enter Email"
             onChangeValue={(text: string) => setName(text)}
-            containerStyle={{paddingHorizontal: wp(8)}}
+            containerStyle={{ paddingHorizontal: wp(8) }}
             errorMessage={'Invalid Email'}
             isError={nameError}
           />
@@ -103,36 +103,36 @@ export default function SignIn({navigation}: any) {
             placeholder="Enter Password"
             password={true}
             onChangeValue={(text: string) => setPassword(text)}
-            containerStyle={{paddingHorizontal: wp(8)}}
+            containerStyle={{ paddingHorizontal: wp(8) }}
             errorMessage={'Invalid Password'}
             isError={passwordError}
           />
-          <TouchableOpacity onPress={() => navigation.navigate('ForgetPassword')}> 
-          <Text
-            style={{
-              fontWeight: 'bold',
-              alignSelf: 'flex-end',
-              marginRight: wp(7),
-            }}
+          <TouchableOpacity onPress={() => navigation.navigate('ForgetPassword')}>
+            <Text
+              style={{
+                fontWeight: 'bold',
+                alignSelf: 'flex-end',
+                marginRight: wp(7),
+              }}
             >
-            Forget Password?
-          </Text>
+              Forget Password?
+            </Text>
           </TouchableOpacity>
-          <Text style={{alignSelf: 'center', marginTop: hp(1)}}>
+          <Text style={{ alignSelf: 'center', marginTop: hp(1) }}>
             Don't have an Account ?
             <TouchableOpacity onPress={() => navigation.navigate('REGISTER')}>
-            <Text
-              style={{color: colors.red}}
+              <Text
+                style={{ color: colors.red }}
               >
-              Register Now
-            </Text>
+                Register Now
+              </Text>
             </TouchableOpacity>
           </Text>
           <Button
             title="NEXT"
             onPress={() => {
-              validate();
-              // navigation.navigate('Drawer');
+              // validate();
+              navigation.navigate('Drawer');
               // navigation.dispatch((state: any) => {
               //   const routes = [{name: 'Drawer'}, ...state.routes];
               //   return CommonActions.reset({

@@ -127,6 +127,12 @@ const VerifyOtp = (props: any) => {
   };
 
   const resendCode = () => {
+    refNum1.current.clear();
+    refNum2.current.clear();
+    refNum3.current.clear();
+    refNum4.current.clear();
+    refNum5.current.clear();
+    refNum6.current.clear();
     SetRandom(Math.random());
     SetCounter(60);
     setDisabled(true);
@@ -158,6 +164,7 @@ const VerifyOtp = (props: any) => {
         .then((result: any) => {
           if (result.success) {
             console.log(result);
+            Alert.alert('Success', result.message);
           } else {
             setLoading(false);
             console.log(result);

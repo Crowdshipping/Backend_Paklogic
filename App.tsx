@@ -16,9 +16,9 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import {NavigationContainer} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 
-import {StackNavigation} from './src/navigation';
+import { StackNavigation } from './src/navigation';
 import BookingRequest from './src/screens/Maps/BookingRequest';
 import BookingHistory from './src/screens/Booking/BookingHistory';
 import AddTicketDetails from './src/screens/Booking/AddTicketDetails';
@@ -35,6 +35,9 @@ import {
   VerifyOtp,
 } from './src/screens';
 import MyTest from './src/screens/MyTest';
+import AddShip from './src/screens/AddShipTicket';
+import AddShipTicket from './src/screens/AddShipTicket';
+import AllShips from './src/screens/AllShips';
 // import MapsPickedUp from './src/screens/Maps/MapsPickedUp';
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -52,8 +55,10 @@ const App = () => {
     // <RegisterProvider />
     // <ResetPassword/>
     // <MyTest />
+    // <AllShips />
+    // <AddShipTicket />
     //////////////////////
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{ flex: 1 }}>
       <NavigationContainer>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
         <StackNavigation />
