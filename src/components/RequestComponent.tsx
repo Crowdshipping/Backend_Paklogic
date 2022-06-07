@@ -9,7 +9,6 @@ const RequestComponent = ({
   onPress,
   firstName,
   lastName,
-  airLine,
   departureAirport,
   destinationAirport,
   acceptPress,
@@ -18,6 +17,7 @@ const RequestComponent = ({
   myImage,
   isAccepted,
   isPostRequest,
+  flightNumber,
 }: any) => {
 
   console.log("my image", myImage);
@@ -55,7 +55,7 @@ const RequestComponent = ({
               <Text style={styles.titleText}>
                 {firstName + '\t' + lastName}
               </Text>
-              <Text style={styles.subTitleText}>Airline: {airLine}</Text>
+              <Text style={styles.subTitleText}>FlightNumber: {flightNumber}</Text>
             </View>
           </View>
         </View>

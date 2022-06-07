@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
+// import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import CheckBoxState from '../../components/CheckBoxState';
 import CheckBoxState2 from '../../components/CheckBoxState2';
@@ -11,74 +11,40 @@ import MyLoader from '../../components/MyLoader';
 import { changeStateByProvider, getFlightsDate } from '../../services';
 // requestData: requestData,
 // flightInfoData: flightInfo,
-const AcceptBooking = ({ route, navigation }: any) => {
-  const { requestData, flightInfoData } = route.params;
+const PickedUpForShip = ({ route, navigation }: any) => {
+  const { shipData } = route.params;
 
 
   const [flightInfo, setFlightInfo] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(false);
 
-  React.useEffect(() => {
-    getFlightsDate(requestData.flight.fa_flight_id)
-      .then(response => response.json())
-      .then(result => {
-        if (result.success) {
-          setFlightInfo(result.flightInfo);
-          console.log('result from booking ', result);
-        }
-      })
-      .catch(error => console.log('error', error));
-  }, []);
+
 
   const toAndFromDateFlightInfoData = () => {
     return <View>
       <View style={styles.topView}>
         <Text style={{ fontSize: 20, color: 'grey' }}>From Date</Text>
         <Text style={{ fontSize: 20, color: 'red' }}>
-          {flightInfoData.scheduled_out &&
-            flightInfoData.scheduled_out.slice(0, -10)}
+          from data
         </Text>
       </View>
       <HorizontalDivider />
       <View style={styles.topView}>
         <Text style={{ fontSize: 20, color: 'grey' }}>To Date</Text>
         <Text style={{ fontSize: 20, color: 'red' }}>
-          {flightInfoData.scheduled_on &&
-            flightInfoData.scheduled_on.slice(0, -10)}
+          {shipData.ship.shipDate.slice(0, -14)}
         </Text>
       </View>
 
     </View>
 
   }
-  const toAndFromDateFlightInfo = () => {
-    return <View>
-      <View style={styles.topView}>
-        <Text style={{ fontSize: 20, color: 'grey' }}>From Date</Text>
-        <Text style={{ fontSize: 20, color: 'red' }}>
-          {flightInfo.scheduled_out !== undefined &&
-            flightInfo.scheduled_out.slice(0, -10)}
-        </Text>
-      </View>
-      <HorizontalDivider />
-      <View style={styles.topView}>
-        <Text style={{ fontSize: 20, color: 'grey' }}>To Date</Text>
-        <Text style={{ fontSize: 20, color: 'red' }}>
-          {flightInfo.scheduled_on !== undefined &&
-            flightInfo.scheduled_on.slice(0, -10)}
-        </Text>
-      </View>
-
-    </View>
-
-  }
-
-
   return (
     <View style={styles.container}>
+      {console.log("ship data from render function", shipData)}
       {isLoading ? <MyLoader /> :
         <View style={styles.container}>
-          <MapView
+          {/* <MapView
             provider={PROVIDER_GOOGLE} // remove if not using Google Maps
             style={styles.map}
             region={{
@@ -87,32 +53,33 @@ const AcceptBooking = ({ route, navigation }: any) => {
               latitudeDelta: 0.015,
               longitudeDelta: 0.0121,
             }}>
-          </MapView>
+          </MapView> */}
           <View style={styles.mapInformation}>
             <View style={styles.topView}>
               <Text style={{ fontSize: 20, color: 'grey' }}>Pick up city</Text>
               <Text style={{ fontSize: 20, color: 'red' }}>
-                {requestData.flight.pickupCity}
+                {shipData.ship.pickupCity}
               </Text>
             </View>
             <HorizontalDivider />
             <View style={styles.topView}>
               <Text style={{ fontSize: 20, color: 'grey' }}>Drop off city</Text>
               <Text style={{ fontSize: 20, color: 'red' }}>
-                {requestData.flight.dropoffCity}
+                {shipData.ship.dropoffCity}
               </Text>
             </View>
             <HorizontalDivider />
-            {flightInfoData ? toAndFromDateFlightInfoData() : toAndFromDateFlightInfo()}
+            {toAndFromDateFlightInfoData()}
+            {/* {flightInfoData ? toAndFromDateFlightInfoData() : toAndFromDateFlightInfo()} */}
 
           </View>
           <View style={styles.mapBottom}>
             <View style={styles.topPart}>
               <TouchableOpacity onPress={() => {
-                console.log("from detail caller request data + flightInfoData ", requestData, flightInfoData);
-                navigation.navigate("PACKAGEDETAIL", {
-                  requestData: requestData,
-                })
+                // console.log("from detail caller request data + flightInfoData ", requestData, flightInfoData);
+                // navigation.navigate("PACKAGEDETAIL", {
+                //   requestData: requestData,
+                // })
               }}>
                 <Text style={styles.topPartText}>View Package Detail</Text>
               </TouchableOpacity>
@@ -126,19 +93,14 @@ const AcceptBooking = ({ route, navigation }: any) => {
               <MapButton
                 onPress={() => {
                   setIsLoading(true);
-                  // navigation.navigate('AcceptBooking2', {
-                  //   requestData: requestData,
-                  //   flightInfoData: flightInfoData ? flightInfoData : flightInfo,
-                  // });
-                  changeStateByProvider("Pickedup", requestData._id)
+                  changeStateByProvider("Pickedup", shipData._id)
                     .then(response => response.json())
                     .then(result => {
-
+                      console.log("result of ship", result);
                       if (result.success) {
                         setIsLoading(false);
-                        navigation.navigate('AcceptBooking2', {
-                          requestData: requestData,
-                          flightInfoData: flightInfoData ? flightInfoData : flightInfo,
+                        navigation.navigate('TRANSITFORSHIP', {
+                          shipData: shipData,
                         });
                       }
                     })
@@ -156,7 +118,7 @@ const AcceptBooking = ({ route, navigation }: any) => {
     </View>
   );
 };
-export default AcceptBooking;
+export default PickedUpForShip;
 
 const styles = StyleSheet.create({
   container: {

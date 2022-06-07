@@ -34,6 +34,12 @@ import DrawerSideScreen from '../screens/DrawerSideScreen';
 import AllShips from '../screens/AllShips';
 import AddShipTicket from '../screens/AddShipTicket';
 import MyProfile from '../screens/MyProfile';
+import PackageDetail from '../screens/PackageDetail';
+import AddShipPostRequest from '../screens/AddShipPostRequest';
+import PickedUpForShip from '../screens/Ship/PickedUpForShip';
+import TransitForShip from '../screens/Ship/TransitForShip';
+import ReachedForShip from '../screens/Ship/ReachedForShip';
+import CompleteForShip from '../screens/Ship/CompleteForShip';
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent({ navigation }: any) {
@@ -467,6 +473,97 @@ export const StackNavigation = () => {
         }}
         name="MYPROFILE"
         component={MyProfile}
+      />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'PACKAGE DETAILS',
+        }}
+        name="PACKAGEDETAIL"
+        component={PackageDetail}
+      />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'Attach Images',
+        }}
+        name="AddShipPostRequest"
+        component={AddShipPostRequest}
+      />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'Attach Images',
+        }}
+        name="PICKEDUPFORSHIP"
+        component={PickedUpForShip}
+      />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'Attach Images',
+        }}
+        name="TRANSITFORSHIP"
+        component={TransitForShip}
+      />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'Attach Images',
+        }}
+        name="REACHEDFORSHIP"
+        component={ReachedForShip}
+      />
+
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'Attach Images',
+        }}
+        name="COMPLETEFORSHIP"
+        component={CompleteForShip}
       />
 
     </Stack.Navigator>

@@ -1,64 +1,69 @@
-import React, {useState} from 'react';
-import {Text, StyleSheet, TouchableOpacity, View, Image} from 'react-native';
+import React, { useState } from 'react';
+import { Text, StyleSheet, TouchableOpacity, View, Image } from 'react-native';
 
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {Header} from '../components/header';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Header } from '../components/header';
 
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import { backendUrl } from '../appConstants';
 
-const MyTest = ({navigation}: any) => {
-  const [bdetail, setbdetail] = useState({
-    name: 'Mr.Joy',
-    phone: '090078601',
-    date: 'Sat, 11 jul, 10:30 AM',
-    ticket: 'A56t70',
-    pickup: 'Tellin, Estonia',
-    dropoff: 'Helsinki, Estonia',
-    date1: 'March 13,2022',
-    request: 'In-Progress',
-  });
+const PackageDetail = ({ navigation, route }: any) => {
 
+  const { requestData } = route.params;
   return (
     <SafeAreaView>
+      {console.log("data form package detail", requestData)}
       <Header
         title="Package Details "
-        // pressMethod={() => navigation.goBack()}
-        //   menu={true}
+      // pressMethod={() => navigation.goBack()}
+      //   menu={true}
       />
 
       {/* available booking view */}
-      <View style={{marginTop: hp(6)}}>
+      <View >
         <View style={styles.detailsbox}>
           <View style={styles.detailsboxinner}>
             {/* 2ndView */}
             <View style={styles.viewdetailbox}>
               <View style={styles.viewdetail}>
                 <Text style={styles.txtdetailbox}>Category</Text>
-                <Text style={styles.txtdetailbox}>wood</Text>
+                <Text style={styles.txtdetailbox}>{requestData.bookingId.category}</Text>
               </View>
               <View style={styles.viewdetail}>
                 <Text style={styles.txtdetailbox}>Product Type</Text>
-                <Text style={styles.txtdetailbox}>cargo</Text>
+                <Text style={styles.txtdetailbox}>{requestData.bookingId.productType}</Text>
               </View>
               <View style={styles.viewdetail}>
                 <Text style={styles.txtdetailbox}>Product Weight</Text>
-                <Text style={styles.txtdetailbox}>60GM</Text>
+                <Text style={styles.txtdetailbox}>{requestData.bookingId.productWeight}</Text>
               </View>
               <Text style={styles.txtheading}>Attached Photos</Text>
               <View style={styles.imgpicker}>
-                <Text>Image Picker</Text>
+                {console.log("my image from package detail", backendUrl + requestData.bookingId.productImage)}
+                {requestData.bookingId.productImage ? (
+                  <Image
+                    style={{ width: "100%", height: "100%" }}
+                    source={{ uri: backendUrl + requestData.bookingId.productImage }}
+                  />
+                ) : (
+                  <Image
+                    style={{ width: 50, height: 50, borderRadius: 50, marginRight: 10 }}
+                    source={require('../assets/aeroplane.png')}
+                  />
+                )}
+
               </View>
               <Text style={styles.txtheading}>Receiver Details</Text>
               <View style={styles.viewdetail}>
                 <Text style={styles.txtdetailbox}>Name</Text>
-                <Text style={styles.txtdetailbox}>{bdetail.name}</Text>
+                <Text style={styles.txtdetailbox}>{requestData.bookingId.recieverName}</Text>
               </View>
               <View style={styles.viewdetail}>
                 <Text style={styles.txtdetailbox}>Phone Number</Text>
-                <Text style={styles.txtdetailbox}>{bdetail.phone}</Text>
+                <Text style={styles.txtdetailbox}>{requestData.bookingId.recieverPhoneno}</Text>
               </View>
             </View>
           </View>
@@ -78,11 +83,7 @@ const styles = StyleSheet.create({
   },
 
   imgpicker: {
-    height: hp(10),
-    // width: wp(90),
-    backgroundColor: 'lightgrey',
-    padding: 5,
-    borderRadius: 10,
+    height: "50%",
   },
   detailsbox: {
     elevation: 8,
@@ -124,4 +125,4 @@ const styles = StyleSheet.create({
     // paddingVertical: hp(1),
   },
 });
-export default MyTest;
+export default PackageDetail;

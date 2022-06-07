@@ -19,7 +19,7 @@ import { ImageSvg } from '../theme/assets/svg/ImageSvg';
 import { launchImageLibrary } from 'react-native-image-picker';
 import DatePicker from 'react-native-date-picker';
 
-import { addFlightAfterPost } from '../services';
+import { addFlightAfterPost, addShipAfterPost } from '../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyLoader from '../components/MyLoader';
 const formatAMPM = (date: Date) => {
@@ -42,7 +42,7 @@ const getMyTime = (date: Date) => {
     return strTime;
 };
 
-const AddFlightPostRequest = ({ navigation, route }: any) => {
+const AddShipPostRequest = ({ navigation, route }: any) => {
     const [userId, setUserId] = React.useState('');
 
     const getUserId = async () => {
@@ -55,7 +55,7 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
     }, []);
 
     const { postRequestData } = route.params;
-    console.log('data from addflightpostrequest', postRequestData);
+    console.log('ADDSHIPPOSTREQUEST', postRequestData);
     //date varibales
     const [date, setDate] = React.useState(new Date());
     const [open, setOpen] = React.useState(false);
@@ -85,32 +85,31 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
     const validateForm = () => {
         const imagevalid = validateImage();
         if (imagevalid) {
-            let flightData: AddFlightPostRequest = {
-                flightAirline: postRequestData.airline,
-                flightDate: date.toISOString().slice(0, -14),
-                departureAirport: postRequestData.departureAirport,
-                destinationAirport: postRequestData.destinationAirport,
+            let shipData: AddShipPostRequest = {
+                departurePort: postRequestData.departurePort,
+                destinationPort: postRequestData.destinationPort,
                 departureTime: getMyTime(departureTime),
                 destinationTime: getMyTime(destinationTime),
-                flightNumber: postRequestData.flightNumber,
                 ticketImage: image,
                 providerId: userId,
-                pickupCity: postRequestData.pickupCity,
-                dropoffCity: postRequestData.dropoffCity,
-                fa_flight_id: postRequestData.fa_flight_id,
-                pickupIATACityCode: postRequestData.pickupIATACityCode,
-                dropoffIATACityCode: postRequestData.dropoffIATACityCode,
+                pickupCity: postRequestData.departurePort,
+                dropoffCity: postRequestData.destinationPort,
                 postrequestId: postRequestData._id,
                 customerId: postRequestData.requestedBy,
                 bookingId: postRequestData.bookingId,
-                flightarrivalDate: postRequestData.flightarrivalDate,
+                mmsiNumber: postRequestData.mmsiNumber,
+                pickupPortUnlocode: postRequestData.pickupPortUnlocode,
+                dropoffPortUnlocode: postRequestData.dropoffPortUnlocode,
+                shipArrivaldate: postRequestData.shipArrivaldate
             };
+            console.log("shipdata", shipData);
             setIsLoading(true);
-
-            addFlightAfterPost(flightData)
+            // addShipAfterPost(shipData)
+            addShipAfterPost(shipData)
                 .then(response => response.json())
                 .then(result => {
                     setIsLoading(false);
+                    console.log("result of add ship", result);
                     //   navigation.navigate('AllRequest');
                     Alert.alert('', 'Request Accepted', [
                         {
@@ -123,7 +122,6 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
                             style: 'cancel',
                         },
                     ]);
-                    console.log('result of addflightafterpost', result);
                 })
                 .catch(error => {
                     setIsLoading(false);
@@ -152,7 +150,7 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
         } catch (err: any) {
             Alert.alert(err);
         }
-    };
+    }
     return (
         <SafeAreaView>
             {isLoading ? (
@@ -201,19 +199,19 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
                         />
                         <View style={styles.cardView}>
                             <View style={styles.singleItemView}>
-                                <Text style={styles.singleItemText}>Departure Airport</Text>
+                                <Text style={styles.singleItemText}>Departure Seaport</Text>
                                 <TextInput
                                     editable={false}
                                     style={styles.input}
-                                    value={postRequestData.departureAirport}
+                                    value={postRequestData.departurePort}
                                     placeholder="Enter Airport"
                                 />
                             </View>
                             <View style={styles.singleItemView}>
-                                <Text style={styles.singleItemText}>Destination Airport</Text>
+                                <Text style={styles.singleItemText}>Destination Seaport</Text>
                                 <TextInput
                                     editable={false}
-                                    value={postRequestData.destinationAirport}
+                                    value={postRequestData.destinationPort}
                                     style={styles.input}
                                     placeholder="Enter Airport"
                                 />
@@ -224,7 +222,7 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
                                 <TouchableOpacity disabled style={styles.inputContainer2}>
                                     <Text style={{ fontSize: 12, marginLeft: 10 }}>
                                         {/* {date.toDateString()} */}
-                                        {postRequestData.date.slice(0, -14)}
+                                        {postRequestData.shipArrivaldate.slice(0, -14)}
                                     </Text>
                                     <SvgXml style={styles.icon} xml={dateSvg} width={20} />
                                 </TouchableOpacity>
@@ -257,23 +255,15 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.singleItemView}>
-                                <Text style={styles.singleItemText}>Flight Number</Text>
+                                <Text style={styles.singleItemText}>MMSI Number</Text>
                                 <TextInput
                                     editable={false}
                                     style={styles.input}
-                                    value={postRequestData.flightNumber}
+                                    value={postRequestData.mmsiNumber}
                                     placeholder="1979H6"
                                 />
                             </View>
-                            <View style={styles.singleItemView}>
-                                <Text style={styles.singleItemText}>Airline</Text>
-                                <TextInput
-                                    editable={false}
-                                    style={styles.input}
-                                    value={postRequestData.airline}
-                                    placeholder="PIA"
-                                />
-                            </View>
+
                             <View style={styles.singleItemView}>
                                 <Text style={styles.singleItemText}>Ticket Image</Text>
                                 <TouchableOpacity
@@ -304,7 +294,8 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
             )}
         </SafeAreaView>
     );
-};
+}
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -375,4 +366,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default AddFlightPostRequest;
+export default AddShipPostRequest;

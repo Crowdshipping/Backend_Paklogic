@@ -31,6 +31,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import TabButton from '../../components/TabButton';
 import MyLoader from '../../components/MyLoader';
 import { CommonActions, StackActions } from '@react-navigation/native';
+import RequestComponentForShip from '../../components/RequestComponentForShip';
 
 const AllRequest = ({ navigation, status, myColor, route }: any) => {
   const [fromDate, setFromDate] = React.useState(new Date());
@@ -135,41 +136,7 @@ const AllRequest = ({ navigation, status, myColor, route }: any) => {
               requestData: item,
               flightInfoData: result.flightInfo,
             });
-            // navigation.dispatch(CommonActions.reset({
-            //   index: 1, routes: [{
-            //     name: 'AcceptBooking4', params: {
-            //       requestData: item,
-            //       flightInfoData: result.flightInfo,
-            //     }
-            //   }],
-            // }))
 
-
-            // navigation.dispatch(
-            //   CommonActions.reset({
-            //     index: 0,
-            //     routes: [
-            //       {
-            //         name: 'AcceptBooking4',
-            //         params: { requestData: item, flightInfoData: result.flightInfo, },
-            //       },
-            //     ],
-            //   })
-            // );
-            // navigation.reset({
-            //   index: 1,
-            //   routes: [{
-            //     name: 'Profile', params: {
-            //       requestData: item,
-            //       flightInfoData: result.flightInfo,
-            //     }
-            //   }]
-            // })
-            // navigation.navigate('AcceptBooking4', {
-            //   requestData: item,
-            //   flightInfoData: result.flightInfo,
-
-            // });
           }
           else {
             navigation.navigate('AcceptBooking', {
@@ -184,175 +151,264 @@ const AllRequest = ({ navigation, status, myColor, route }: any) => {
         console.log("error", error);
       });
   }
-  const renderAcceptAndPendingTab = () => {
-    ///first if for render accepted and pendings tabs
-    console.log("responsefrom from from", response)
-    if (response) {
-      return response.map((item: any) => {
 
+  const whenShipDataPressed = (item: any) => {
 
-        if (tabSelected === 2) {
-          if (item.status === 'Pending') {
-            console.log('pending contents', item);
-            if (item.flight === undefined || item.flight === null) {
-              return;
-            }
-
-            return (
-              <RequestComponent
-                myImage={item.requestedBy.profilepic}
-                firstName={item.requestedBy.firstname}
-                lastName={item.requestedBy.lastname}
-                airLine={item.flight.flightAirline}
-                departureAirport={item.flight.departureAirport}
-                destinationAirport={item.flight.destinationAirport}
-                acceptPress={() => {
-                  navigation.navigate('BookingRequest', {
-                    requestData: item,
-                  });
-                }}
-                rejectPress={() => {
-                  Alert.alert("Attention Please!",
-                    "You need to register this flight in order to accept this request?",
-                    [
-                      {
-                        text: 'Yes', onPress: () => {
-                          setIsloading(true);
-                          setAcceptOrReject(item._id, 'Rejected').then(response =>
-                            response
-                              .json()
-                              .then(res => {
-                                setIsloading(false)
-                                navigation.navigate("AllRequest");
-                              })
-                              .catch(e => {
-                                setIsloading(false)
-                              }),
-                          );
-                        },
-                        style: 'default',
-                      },
-                      { text: 'No' },
-                    ],
-                    { cancelable: false }
-                  )
-
-                }}
-                date={item.flight.flightDate.slice(0, -14)}
-                onPress={() => {
-                  navigation.navigate('BookingRequest', {
-                    requestData: item,
-                  });
-                }}
-              />
-            );
-          }
-        }
-        else if (tabSelected === 1) {
-          if (item.isverificationComplete) {
-            console.log("completed things", item)
-            return;
-          } else {
-            if (item.status === 'Accepted') {
-              console.log("Accepted things", item);
-              // if (item.flight === undefined || item.flight === null) {
-              //   return;
-              // }
-              if (item.requestedBy !== null && item.flight !== null) {
-                if (item.requestedBy.profilepic !== null || item.requestedBy.firstname !== null || item.requestedBy.lastname !== null || item.flight.flightAirline !== null || item.flight.departureAirport !== null || item.flight.destinationAirport !== null || item.flight.flightDate !== null) {
-                  return (
-                    <RequestComponent
-                      isAccepted={true}
-                      myImage={item.requestedBy.profilepic}
-                      firstName={item.requestedBy.firstname}
-                      lastName={item.requestedBy.lastname}
-                      airLine={item.flight.flightAirline}
-                      departureAirport={item.flight.departureAirport}
-                      destinationAirport={item.flight.destinationAirport}
-                      date={item.flight.flightDate.slice(0, -14)}
-                      onPress={() => {
-                        getFlightDataFromServer(item);
-                      }}
-                    />
-                  );
-                }
-              }
-
-            }
-          }
-        }
+    console.log("function called ", item);
+    if (item.state === "Pickedup") {
+      navigation.navigate('TRANSITFORSHIP', {
+        shipData: item,
       });
     }
-    //second if for render post requests tabs
-  };
-  const renderPostRequesttab = () => {
+    else if (item.state === "Transit") {
+      navigation.navigate('REACHEDFORSHIP', {
+        shipData: item,
+      });
+    }
+    else if (item.state === "Reached") {
+      navigation.navigate('COMPLETEFORSHIP', {
+        shipData: item,
+      });
+    }
+    else {
+      navigation.navigate('PICKEDUPFORSHIP', {
+        shipData: item,
+      });
+    }
+  }
+
+
+
+
+  const postRequestTab = () => {
+    console.log("post request called")
     if (postRequestResponse) {
       return postRequestResponse.map((item: any) => {
-        if (item.requestedBy) {
-          if (tabSelected === 3) {
-            console.log('tab post request3 items', item);
+        console.log('tab post request3 items', item);
+        if (item.requestedBy && item.type === "Flight") {
+          return (
+            <RequestComponent
+              isPostRequest={true}
+              myImage={item.requestedBy.profilepic}
+              firstName={item.requestedBy.firstname}
+              lastName={item.requestedBy.lastname}
+              flightNumber={item.flightNumber}
+              departureAirport={item.departureAirport}
+              destinationAirport={item.destinationAirport}
+              acceptPress={() => {
 
-            return (
-              <RequestComponent
-                isPostRequest={true}
-                myImage={item.requestedBy.profilepic}
-                firstName={item.requestedBy.firstname}
-                lastName={item.requestedBy.lastname}
-                airLine={item.airline}
-                departureAirport={item.departureAirport}
-                destinationAirport={item.destinationAirport}
-                acceptPress={() => {
+                Alert.alert("Attention Please!",
+                  "You need to register this flight in order to accept this request?",
+                  [
+                    {
+                      text: 'Yes', onPress: () => {
+                        setIsloading(true);
+                        changePostRequestStatus(item._id, userId)
+                          .then(response => response.json())
+                          .then((result) => {
+                            setIsloading(false);
+                            navigation.navigate('AddFlightPostRequest', {
+                              postRequestData: result.updatedPostRequest
+                            });
+                            console.log("result need to pass from all request");
+                            // postRequestData
+                          })
+                          .catch(error => {
+                            console.log("error", error);
+                            setIsloading(false);
+                          });
+                      },
+                      style: 'default',
+                    },
+                    { text: 'No' },
+                  ],
+                  { cancelable: false }
+                )
 
-                  Alert.alert("Attention Please!",
-                    "You need to register this flight in order to accept this request?",
-                    [
-                      {
-                        text: 'Yes', onPress: () => {
-                          setIsloading(true);
-                          changePostRequestStatus(item._id, userId)
-                            .then(response => response.json())
-                            .then((result) => {
-                              setIsloading(false);
-                              navigation.navigate('AddFlightPostRequest', {
+              }}
+              date={item.date.slice(0, -14)}
+
+            />
+          );
+        }
+        else if (item.type === "Ship") {
+          return (
+            <RequestComponentForShip
+              isPostRequest={true}
+              myImage={item.requestedBy.profilepic}
+              firstName={item.requestedBy.firstname}
+              lastName={item.requestedBy.lastname}
+              mmsiNumber={item.mmsiNumber}
+              departureAirport={item.departurePort}
+              destinationAirport={item.destinationPort}
+              acceptPress={() => {
+                Alert.alert("",
+                  "You need to register this flight in order to accept this request?",
+                  [
+                    {
+                      text: 'Yes', onPress: () => {
+                        setIsloading(true);
+                        changePostRequestStatus(item._id, userId)
+                          .then(response => response.json())
+                          .then((result) => {
+                            setIsloading(false);
+                            if (result.success) {
+                              navigation.navigate('AddShipPostRequest', {
                                 postRequestData: result.updatedPostRequest
                               });
-                              console.log("result need to pass from all request");
-                              // postRequestData
-                            })
-                            .catch(error => {
-                              console.log("error", error);
-                              setIsloading(false);
-                            });
-                        },
-                        style: 'default',
-                      },
-                      { text: 'No' },
-                    ],
-                    { cancelable: false }
-                  )
+                            }
+                            console.log("result from all request ship", result)
 
-                }}
-                // rejectPress={() => {
-                //   setAcceptOrReject(item._id, 'Rejected').then(response =>
-                //     response
-                //       .json()
-                //       .then(res => console.log('from reject buttonsuccses'))
-                //       .catch(e => console.log('error')),
-                //   );
-                // }}
-                date={item.date.slice(0, -14)}
-              // onPress={() => {
-              //   navigation.navigate('BookingRequest', {
-              //     requestData: item,
-              //   });
-              // }}
-              />
-            );
-          }
+                          })
+                          .catch(error => {
+                            console.log("error", error);
+                            setIsloading(false);
+                          });
+                      },
+                      style: 'default',
+                    },
+                    { text: 'No' },
+                  ],
+                  { cancelable: false }
+                )
+
+              }}
+              date={item.shipArrivaldate.slice(0, -14)}
+            />
+          );
         }
       });
     }
   };
+
+  const acceptedTab = (item: any) => {
+
+    console.log("item from accept tab", item);
+
+
+    // show only accepted and not completed requests.
+    if (item.isverificationComplete) {
+      return;
+    }
+    if (item.status === 'Accepted' && item.type === "Flight") {
+      if (item.requestedBy !== null && item.flight !== null) {
+        if (item.requestedBy.profilepic !== null || item.requestedBy.firstname !== null || item.requestedBy.lastname !== null || item.flight.flightAirline !== null || item.flight.departureAirport !== null || item.flight.destinationAirport !== null || item.flight.flightDate !== null) {
+          return (
+            <RequestComponent
+              isAccepted={true}
+              myImage={item.requestedBy.profilepic}
+              firstName={item.requestedBy.firstname}
+              lastName={item.requestedBy.lastname}
+              flightNumber={item.flight.flightNumber}
+              departureAirport={item.flight.departureAirport}
+              destinationAirport={item.flight.destinationAirport}
+              date={item.flight.flightDate.slice(0, -14)}
+              onPress={() => {
+                getFlightDataFromServer(item);
+              }}
+            />
+          );
+        }
+      }
+    }
+    else if (item.status === 'Accepted' && item.type === "Ship" && item.ship !== null) {
+      console.log("item from else tab accepted")
+      return (
+        <RequestComponentForShip
+          isPostRequest={true}
+          myImage={item.requestedBy.profilepic}
+          firstName={item.requestedBy.firstname}
+          lastName={item.requestedBy.lastname}
+          mmsiNumber={item.ship.mmsiNumber}
+          departureAirport={item.ship.departurePort}
+          destinationAirport={item.ship.destinationPort}
+          acceptPress={() => {
+            whenShipDataPressed(item)
+          }}
+          date={item.ship.shipDate.slice(0, -14)}
+        />
+      );
+    }
+  }
+
+  const pendingTab = (item: any) => {
+    console.log("pending function called", item)
+    if (item.status === 'Pending') {
+      console.log('pending contents', item);
+      if (item.flight === undefined || item.flight === null) {
+        return;
+      }
+      return (
+        <RequestComponent
+          myImage={item.requestedBy.profilepic}
+          firstName={item.requestedBy.firstname}
+          lastName={item.requestedBy.lastname}
+          flightNumber={item.flight.flightNumber}
+          departureAirport={item.flight.departureAirport}
+          destinationAirport={item.flight.destinationAirport}
+          acceptPress={() => {
+            navigation.navigate('BookingRequest', {
+              requestData: item,
+            });
+          }}
+          rejectPress={() => {
+            Alert.alert("Attention Please!",
+              "You need to register this flight in order to accept this request?",
+              [
+                {
+                  text: 'Yes', onPress: () => {
+                    setIsloading(true);
+                    setAcceptOrReject(item._id, 'Rejected').then(response =>
+                      response
+                        .json()
+                        .then(res => {
+                          setIsloading(false)
+                          navigation.navigate("AllRequest");
+                        })
+                        .catch(e => {
+                          setIsloading(false)
+                        }),
+                    );
+                  },
+                  style: 'default',
+                },
+                { text: 'No' },
+              ],
+              { cancelable: false }
+            )
+
+          }}
+          date={item.flight.flightDate.slice(0, -14)}
+          onPress={() => {
+            navigation.navigate('BookingRequest', {
+              requestData: item,
+            });
+          }}
+        />
+      );
+    }
+  }
+
+  const renderTabs = () => {
+    //when post request tab selected this will run
+    if (tabSelected === 3) {
+      console.log("tab 3 selected")
+      return postRequestTab()
+    }
+    //response used for both accepted and pending thats why written here
+    else if (response) {
+      return response.map((item: any) => {
+        //when accepted tab selected this will run
+        if (tabSelected === 1) {
+          return acceptedTab(item)
+        }
+        //when pending tab selected this will run
+        else if (tabSelected === 2) {
+          return pendingTab(item)
+        }
+      });
+    }
+  }
 
   return (
 
@@ -478,8 +534,9 @@ const AllRequest = ({ navigation, status, myColor, route }: any) => {
           <Text style={{ textAlign: 'center', color: 'green', marginTop: 24 }}>
             Available Booking
           </Text>
-          {renderAcceptAndPendingTab()}
-          {renderPostRequesttab()}
+          {renderTabs()}
+          {/* {renderAcceptAndPendingTab()}
+          {renderPostRequesttab()} */}
         </View>
       </ScrollView>}
 

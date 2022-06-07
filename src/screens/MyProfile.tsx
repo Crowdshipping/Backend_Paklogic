@@ -8,8 +8,6 @@ import {
     Image,
     ImageBackground,
 } from 'react-native';
-
-
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -23,7 +21,7 @@ import { settingSvg } from '../theme/assets/svg/settingSvg';
 import { location2Svg } from '../theme/assets/svg/location2Svg';
 import { mailSvg } from '../theme/assets/svg/mailSvg';
 import { profileSvg } from '../theme/assets/svg/profileSvg';
-const MyProfile = (props: any) => {
+const MyProfile = ({ navigation }: any) => {
     const [pdetail, setpdetail] = useState({
         name: 'Roma',
         email: 'roma1996@gmail.com',
@@ -44,8 +42,8 @@ const MyProfile = (props: any) => {
                     <View style={styles.header}>
                         <Header
                             title="My Profile"
-                            pressMethod={() => {
-                                props.navigation.goBack();
+                            onPress={() => {
+                                navigation.navigate("Drawer")
                                 console.log('Error in Go Back');
                             }}
                         />
@@ -109,13 +107,12 @@ const MyProfile = (props: any) => {
 
                     <View>
                         <TouchableOpacity>
-                            {console.log(props)}
                             <AntDesign
                                 name="right"
                                 color={'#000'}
                                 size={wp(5)}
                                 onPress={() =>
-                                    props.navigation.dispatch(DrawerActions.openDrawer())
+                                    navigation.dispatch(DrawerActions.openDrawer())
                                 }
                             // onPress={() => console.log('adasdsefsssd')}
                             />

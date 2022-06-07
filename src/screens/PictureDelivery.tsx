@@ -25,7 +25,7 @@ import PopupModalOfSuccess from '../components/PopupModalOfSuccess';
 const PictureDelivery = ({ route, navigation }: any) => {
   const [image, setImage] = React.useState<any>({});
   const [error, setError] = React.useState(false);
-  const { requestData, flightInfoData } = route.params;
+  const { requestData, flightInfoData, shipData } = route.params;
 
   const imagePicker = async () => {
     try {
@@ -58,11 +58,23 @@ const PictureDelivery = ({ route, navigation }: any) => {
       return;
     } else {
       setError(false)
-      navigation.navigate('AcceptBooking4', {
-        requestData: requestData,
-        flightInfoData: flightInfoData,
-        image: image
-      });
+
+      console.log("shipdata, requestData flightInfoData from image", shipData, requestData, flightInfoData)
+
+      /////for goto flight Data
+      if (requestData && flightInfoData) {
+        navigation.navigate('AcceptBooking4', {
+          requestData: requestData,
+          flightInfoData: flightInfoData,
+          image: image
+        });
+      } else {
+        navigation.navigate('COMPLETEFORSHIP', {
+          shipData: shipData,
+          image: image,
+        });
+      }
+
     }
   }
   return (

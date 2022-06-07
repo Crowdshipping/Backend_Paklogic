@@ -34,10 +34,11 @@ import {
   ResetPassword,
   VerifyOtp,
 } from './src/screens';
-import MyTest from './src/screens/MyTest';
+import MyTest from './src/screens/PackageDetail';
 import AddShip from './src/screens/AddShipTicket';
 import AddShipTicket from './src/screens/AddShipTicket';
 import AllShips from './src/screens/AllShips';
+import AcceptBooking2 from './src/screens/Maps/AcceptBooking2';
 // import MapsPickedUp from './src/screens/Maps/MapsPickedUp';
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -57,6 +58,7 @@ const App = () => {
     // <MyTest />
     // <AllShips />
     // <AddShipTicket />
+    // <AcceptBooking2 />
     //////////////////////
     <SafeAreaView style={{ flex: 1 }}>
       <NavigationContainer>

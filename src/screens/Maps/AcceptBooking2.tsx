@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import CheckBoxState from '../../components/CheckBoxState';
@@ -60,7 +61,14 @@ const AcceptBooking2 = ({ route, navigation }: any) => {
           </View>
           <View style={styles.mapBottom}>
             <View style={styles.topPart}>
-              <Text style={styles.topPartText}>View Package Detail</Text>
+              <TouchableOpacity onPress={() => {
+                console.log("from detail caller request data + flightInfoData ", requestData, flightInfoData);
+                navigation.navigate("PACKAGEDETAIL", {
+                  requestData: requestData,
+                })
+              }}>
+                <Text style={styles.topPartText}>View Package Detail</Text>
+              </TouchableOpacity>
             </View>
             <View style={styles.bottomPart}>
               <View style={styles.checkBoxRow}>

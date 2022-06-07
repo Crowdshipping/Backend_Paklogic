@@ -5,12 +5,13 @@ import {
   StyleSheet,
   ScrollView,
   Pressable,
+  Alert,
 } from 'react-native';
 import { backendUrl } from '../../appConstants';
 import { ButtonOutline } from '../../components';
 import FlightComponent from '../../components/FlightComponent';
 import MyLoader from '../../components/MyLoader';
-import { getAllFlightAddedByProvider } from '../../services';
+import { deleleFlightRecord, getAllFlightAddedByProvider } from '../../services';
 import { airplane } from '../../theme/assets/svg/airplaneSvg';
 
 const AllFlight = ({ navigation, status, myColor }: any) => {
@@ -68,27 +69,55 @@ const AllFlight = ({ navigation, status, myColor }: any) => {
           flightResponse.map((item: any) => {
             console.log('entire item from all flight', item);
             return (
-              <Pressable
+
+              <FlightComponent
+                departureAirport={item.departureAirport}
+                destinationAirport={item.destinationAirport}
+                date={item.flightDate.slice(0, -14)}
+                departureTime={item.departureTime}
+                destinationTime={item.destinationTime}
+                flightNumber={item.flightNumber}
+                airline={item.flightAirline}
+                myImage={backendUrl + item.ticketImage}
+                leftSvg={airplane}
                 onPress={() => {
                   navigation.navigate('DetailFlightBooking', {
                     singleFightData: item,
                   });
-                }}>
-                <FlightComponent
-                  departureAirport={item.departureAirport}
-                  destinationAirport={item.destinationAirport}
-                  date={item.flightDate.slice(0, -14)}
-                  departureTime={item.departureTime}
-                  destinationTime={item.destinationTime}
-                  flightNumber={item.flightNumber}
-                  airline={item.flightAirline}
-                  myImage={backendUrl + item.ticketImage}
-                  leftSvg={airplane}
-                  onPressEdit={() => {
-                    // navigation.navigate('EditTicket');
-                  }}
-                />
-              </Pressable>
+                }}
+                onPressEdit={() => {
+                  // navigation.navigate('EditTicket');
+                }}
+                onDeletePress={() => {
+                  Alert.alert("",
+                    "Are you sure to Delete?",
+                    [
+                      {
+                        text: 'Yes', onPress: () => {
+                          setIsloading(true);
+                          deleleFlightRecord(item._id)
+                            .then(response => response.json())
+                            .then((result) => {
+                              getData();
+                              setIsloading(false);
+
+                              console.log("delete flight", result);
+                              // postRequestData
+                            })
+                            .catch(error => {
+                              console.log("error", error);
+                              setIsloading(false);
+                            });
+                        },
+                        style: 'default',
+                      },
+                      { text: 'No' },
+                    ],
+                    { cancelable: false }
+                  )
+
+                }}
+              />
             );
           })}
       </View>}

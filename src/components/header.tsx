@@ -7,20 +7,17 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { IHeader } from './interface';
 import { styles } from './style';
 
-export const Header = (props: IHeader) => {
+export const Header = ({ onPress, title }: any) => {
   return (
     <View style={{ flexDirection: 'row', paddingHorizontal: wp(4), marginVertical: hp(2) }}>
       <AntDesign
-        onPress={() => {
-          try { props.onBackPress() }
-          catch (e) { console.log(e) }
-        }}
+        onPress={onPress}
         name="arrowleft"
         color={'white'}
         size={wp(9)}
       />
       <View style={{ flex: 1, alignItems: 'center' }}>
-        <Text style={{ fontSize: wp(6), marginRight: wp(9), fontWeight: '600', color: 'white' }}>{props.title}</Text>
+        <Text style={{ fontSize: wp(6), marginRight: wp(9), fontWeight: '600', color: 'white' }}>{title}</Text>
       </View>
     </View>
   );

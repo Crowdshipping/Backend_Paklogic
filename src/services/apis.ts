@@ -589,6 +589,9 @@ export const verifyBookingForCompletion = (image: any, requestId: any) => {
   return fetch("https://backend-crowdshipping.herokuapp.com/provider/verifyingbookingcompletion", requestOptions);
 }
 
+
+
+/* SHIP Things */
 /////get seaaport 
 export const getSeaportName = (data: any) => {
   var myHeaders = new Headers();
@@ -602,7 +605,6 @@ export const getSeaportName = (data: any) => {
 
   return fetch(`https://backend-crowdshipping.herokuapp.com/provider/searchport/${data}`, requestOptions)
 };
-
 
 export const addShipToServer = (shipData: AddShip) => {
   var myHeaders = new Headers();
@@ -630,9 +632,6 @@ export const addShipToServer = (shipData: AddShip) => {
 
   return fetch("https://backend-crowdshipping.herokuapp.com/provider/addship", requestOptions);
 }
-
-
-
 export const getAllShipAddedByProvider = (userId: any) => {
   var myHeaders = new Headers();
   myHeaders.append("Cookie", "connect.sid=s%3ATxYIr2uWFt93Y0scgBAxxu5462TN4hbE.V4I5S6FdwvvgAYBxAdhXXsJ26w21uE87EnhC%2BsxD9Ro");
@@ -644,4 +643,50 @@ export const getAllShipAddedByProvider = (userId: any) => {
   };
 
   return fetch(`https://backend-crowdshipping.herokuapp.com/provider/getproviderships/${userId}`, requestOptions);
+}
+export const deleleFlightRecord = (flightId: any) => {
+  var requestOptions = {
+    method: 'DELETE',
+    redirect: 'follow'
+  };
+  return fetch(`https://backend-crowdshipping.herokuapp.com/provider/deleteflight/${flightId}`, requestOptions)
+}
+export const deleteShipRecord = (shipId: any) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Cookie", "connect.sid=s%3Awls0FQ5Goy7QXzmUmdahX5QUxCxuDpN7.Fjd1n2Z%2BOPlJSJucFJlo0PtlmL4zjNQzhCG2nQorpdY");
+
+  var requestOptions = {
+    method: 'DELETE',
+    headers: myHeaders,
+    redirect: 'follow'
+  };
+
+  return fetch(`https://backend-crowdshipping.herokuapp.com/provider/deleteship/${shipId}`, requestOptions)
+
+}
+export const addShipAfterPost = (shipDataFromPostRequest: AddShipPostRequest) => {
+  var formdata = new FormData();
+  formdata.append("providerId", shipDataFromPostRequest.providerId);
+  formdata.append("pickupCity", shipDataFromPostRequest.pickupCity);
+  formdata.append("dropoffCity", shipDataFromPostRequest.dropoffCity);
+  formdata.append("departureTime", shipDataFromPostRequest.departureTime);
+  formdata.append("destinationTime", shipDataFromPostRequest.destinationTime);
+  formdata.append("mmsiNumber", shipDataFromPostRequest.mmsiNumber);
+  formdata.append("ticketImage", shipDataFromPostRequest.ticketImage);
+  formdata.append("pickupPortUnlocode", shipDataFromPostRequest.pickupPortUnlocode);
+  formdata.append("dropoffPortUnlocode", shipDataFromPostRequest.dropoffPortUnlocode);
+  formdata.append("postrequestId", shipDataFromPostRequest.postrequestId);
+  formdata.append("customerId", shipDataFromPostRequest.customerId);
+  formdata.append("bookingId", shipDataFromPostRequest.bookingId);
+  formdata.append("shipArrivaldate", shipDataFromPostRequest.shipArrivaldate);
+  formdata.append("departurePort", shipDataFromPostRequest.departurePort);
+  formdata.append("destinationPort", shipDataFromPostRequest.destinationPort);
+
+  var requestOptions = {
+    method: 'POST',
+    body: formdata,
+    redirect: 'follow'
+  };
+
+  return fetch("https://backend-crowdshipping.herokuapp.com/provider/addshipafterpost", requestOptions);
 }

@@ -72,7 +72,7 @@ const AvailableFight = ({ route, navigation, status, myColor }: any) => {
   const renderAvailbleFlights = () => {
     // if (response && response.length !== 0) {
     console.log("if check", response);
-    return response.map(item => {
+    return response.map((item: any) => {
       console.log('map data from available flight', item.scheduled_in);
       return (
 

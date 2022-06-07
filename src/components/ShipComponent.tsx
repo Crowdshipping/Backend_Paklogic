@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SvgXml } from 'react-native-svg';
 import { airplane } from '../theme/assets/svg/airplaneSvg';
 import { DeleteSvg } from '../theme/assets/svg/DeleteSvg';
@@ -14,13 +15,16 @@ const ShipComponent = ({
     mmsiNumber,
     myImage,
     leftSvg,
+    onDeletePress,
 }: any) => {
     { console.log("myimagefrom ship component", myImage); }
     return (
         <View style={styles.cardView}>
-            <View style={{ flexDirection: 'row-reverse', marginBottom: 10 }}>
-                <SvgXml xml={DeleteSvg} width={20} height={20} />
-            </View>
+            <TouchableOpacity onPress={onDeletePress}>
+                <View style={{ flexDirection: 'row-reverse', marginBottom: 10 }}>
+                    <SvgXml xml={DeleteSvg} width={20} height={20} />
+                </View>
+            </TouchableOpacity>
             <View style={styles.topView}>
                 <View style={styles.left}>
                     <SvgXml xml={leftSvg} width={60} />

@@ -45,6 +45,7 @@ export default function SignIn({ navigation }: any) {
   };
 
   const validate = () => {
+
     console.log('button worked');
     setNameError(!validateEmail(name));
     setPasswordError(!validatePassword(password));
@@ -95,7 +96,7 @@ export default function SignIn({ navigation }: any) {
             placeholder="Enter Email"
             onChangeValue={(text: string) => setName(text)}
             containerStyle={{ paddingHorizontal: wp(8) }}
-            errorMessage={'Invalid Email'}
+            errorMessage={name === '' ? "Email is required" : 'Invalid Email'}
             isError={nameError}
           />
           <Textbox
@@ -104,7 +105,7 @@ export default function SignIn({ navigation }: any) {
             password={true}
             onChangeValue={(text: string) => setPassword(text)}
             containerStyle={{ paddingHorizontal: wp(8) }}
-            errorMessage={'Invalid Password'}
+            errorMessage={password === '' ? "Password is required" : 'Invalid Password'}
             isError={passwordError}
           />
           <TouchableOpacity onPress={() => navigation.navigate('ForgetPassword')}>
@@ -131,8 +132,8 @@ export default function SignIn({ navigation }: any) {
           <Button
             title="NEXT"
             onPress={() => {
-              // validate();
-              navigation.navigate('Drawer');
+              validate();
+              // navigation.navigate('Drawer');
               // navigation.dispatch((state: any) => {
               //   const routes = [{name: 'Drawer'}, ...state.routes];
               //   return CommonActions.reset({

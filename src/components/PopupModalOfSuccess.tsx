@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CloseButton from './CloseButton';
@@ -7,14 +7,14 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-const PopupModalOfSuccess = ({isModalVisible, closeButtonOnPressed}: any) => {
+const PopupModalOfSuccess = ({ isModalVisible, closeButtonOnPressed, firstText, secondText }: any) => {
   return (
     <Modal isVisible={isModalVisible}>
       <View style={styles.modalView}>
         <View style={styles.closeButtonView}>
           <CloseButton whenPressed={closeButtonOnPressed} />
         </View>
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
           <View
             style={{
               backgroundColor: '#38EA28',
@@ -27,13 +27,15 @@ const PopupModalOfSuccess = ({isModalVisible, closeButtonOnPressed}: any) => {
             }}>
             <Icon color={'white'} name="check" size={30} />
           </View>
-          <Text style={{textAlign: 'center', fontSize: 18}}>
-            Parsal successfully{'\n'}
-            delivered
+
+          <Text style={{ fontSize: 18, textAlign: 'center' }}>
+            {firstText}
+            {"\n"}
+            <Text>{secondText}</Text>
           </Text>
         </View>
       </View>
-    </Modal>
+    </Modal >
   );
 };
 const styles = StyleSheet.create({
