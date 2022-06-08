@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 // import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import CheckBoxState from '../../components/CheckBoxState';
@@ -52,8 +53,16 @@ const PickedUpForShip = ({ route, navigation }: any) => {
               longitude: -122.4324,
               latitudeDelta: 0.015,
               longitudeDelta: 0.0121,
-            }}>
-          </MapView> */}
+            }}></MapView> */}
+          <MapView
+            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+            style={styles.map}
+            region={{
+              latitude: 37.78825,
+              longitude: -122.4324,
+              latitudeDelta: 0.015,
+              longitudeDelta: 0.0121,
+            }}></MapView>
           <View style={styles.mapInformation}>
             <View style={styles.topView}>
               <Text style={{ fontSize: 20, color: 'grey' }}>Pick up city</Text>

@@ -32,11 +32,8 @@ const AvailableFight = ({ route, navigation, status, myColor }: any) => {
       console.log('value of getdata function', value);
       if (value !== null) {
         setProviderId(value);
-        // return value;
-        // value previously stored
       }
     } catch (e) {
-      // error reading value
     }
   };
 
@@ -54,6 +51,7 @@ const AvailableFight = ({ route, navigation, status, myColor }: any) => {
         flightData.departureAirportCode,
         flightData.destinationAirportCode,
         flightData.flightNumber,
+        flightData.date
       )
         .then(response => response.json())
         .then(result => {
@@ -78,6 +76,7 @@ const AvailableFight = ({ route, navigation, status, myColor }: any) => {
 
         <View style={styles.container}>
           <RequestComponent2
+            destinationTime={(new Date(item.scheduled_out)).toTimeString().slice(0, -18)}
             date={item.scheduled_out.slice(0, -10)}
             airline={item.ident_iata}
             fromCountry={flightData.departureAirport}
@@ -149,9 +148,10 @@ const AvailableFight = ({ route, navigation, status, myColor }: any) => {
   }
 
   const rendering = () => {
+    console.log("flightData from available flight", flightData)
     if (isLoading) {
       return <MyLoader />
-    } else if (response.length !== 0) {
+    } else if (response && response.length !== 0) {
       return <ScrollView>
         {renderAvailbleFlights()}
       </ScrollView>

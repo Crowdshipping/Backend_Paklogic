@@ -14,32 +14,14 @@ const AcceptRejectForShip = ({ route, navigation }: any) => {
     const { shipData } = route.params;
     const [isModalVisible, setModalVisible] = React.useState(false);
     const [flightInfo, setFlightInfo] = React.useState({});
-
-
     const [isLoading, setIsLoading] = React.useState(false);
-
-
-
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
     };
-
-    // React.useEffect(() => {
-    //     getFlightsDate(requestData.flight.fa_flight_id)
-    //         .then(response => response.json())
-    //         .then(result => {
-    //             if (result.success) {
-    //                 setFlightInfo(result.flightInfo);
-    //                 console.log('result from booking ', result);
-    //             }
-    //         })
-    //         .catch(error => console.log('error', error));
-    // }, []);
-
-    // fa_flight_id
-
     return (
         <View style={styles.container}>
+            {console.log("ship data from acceptreject", shipData)}
+
             {isLoading ? <MyLoader /> :
                 <View style={styles.container}>
                     <Modal isVisible={isModalVisible}>
@@ -83,11 +65,11 @@ const AcceptRejectForShip = ({ route, navigation }: any) => {
                             <View style={styles.leftView}>
                                 <Text style={{ fontSize: 20, color: 'grey' }}>Pick up</Text>
                                 <Text style={{ fontSize: 12.5, color: 'red' }}>
-                                    {/* {requestData.flight.departureAirport} */}
+                                    {shipData.ship.pickupCity}
                                     pickup
                                 </Text>
                                 <Text style={{ fontSize: 18, color: 'black' }}>
-                                    from date
+                                    from
                                     {/* {flightInfo.scheduled_out !== undefined &&
                                         flightInfo.scheduled_out.slice(0, -10)} */}
                                 </Text>
@@ -97,14 +79,12 @@ const AcceptRejectForShip = ({ route, navigation }: any) => {
                             <View style={styles.rightView}>
                                 <Text style={{ fontSize: 20, color: 'grey' }}>Drop off</Text>
                                 <Text style={{ fontSize: 12.5, color: 'red' }}>
-                                    {/* {requestData.flight.destinationAirport} */}
+                                    {shipData.ship.dropoffCity}
                                     dropoff
                                 </Text>
                                 <Text style={{ fontSize: 18, color: 'black' }}>
                                     to
-                                    date
-                                    {/* {flightInfo.scheduled_on !== undefined &&
-                                        flightInfo.scheduled_on.slice(0, -10)} */}
+                                    {shipData.ship.shipDate.slice(0, -14)}
                                 </Text>
                                 <Text style={{ fontSize: 20, color: 'grey' }}>Est. Fare</Text>
                                 <Text style={{ fontSize: 20, color: 'red' }}>250$</Text>
@@ -113,48 +93,48 @@ const AcceptRejectForShip = ({ route, navigation }: any) => {
                         <HorizontalDivider />
                         <View style={styles.bottomView}>
                             <TouchableOpacity onPress={() => {
-                                // Alert.alert("",
-                                //     "Are you sure to reject this request?",
-                                //     [
-                                //         {
-                                //             text: 'Yes', onPress: () => {
-                                //                 setIsLoading(true);
-                                //                 setAcceptOrReject(requestData._id, 'Rejected').then(response =>
-                                //                     response
-                                //                         .json()
-                                //                         .then(res => {
-                                //                             setIsLoading(false);
-                                //                             navigation.navigate("AllRequest");
-                                //                         })
-                                //                         .catch(e => {
-                                //                             setIsLoading(false);
-                                //                         }),
-                                //                 );
-                                //             },
-                                //             style: 'default',
-                                //         },
-                                //         { text: 'No' },
-                                //     ],
-                                //     { cancelable: false }
-                                // )
+                                Alert.alert("",
+                                    "Are you sure to reject this request?",
+                                    [
+                                        {
+                                            text: 'Yes', onPress: () => {
+                                                setIsLoading(true);
+                                                setAcceptOrReject(shipData._id, 'Rejected').then(response =>
+                                                    response
+                                                        .json()
+                                                        .then(res => {
+                                                            setIsLoading(false);
+                                                            navigation.navigate("AllRequest");
+                                                        })
+                                                        .catch(e => {
+                                                            setIsLoading(false);
+                                                        }),
+                                                );
+                                            },
+                                            style: 'default',
+                                        },
+                                        { text: 'No' },
+                                    ],
+                                    { cancelable: false }
+                                )
                             }}>
                                 <Text>Ignore Job</Text>
                             </TouchableOpacity>
                             <MyButton
                                 onPress={() => {
                                     setIsLoading(true);
-                                    // setAcceptOrReject(requestData._id, 'Accepted').then(response =>
-                                    //     response
-                                    //         .json()
-                                    //         .then((res) => {
-                                    //             setIsLoading(false);
-                                    //             navigation.navigate("AllRequest");
-                                    //         })
-                                    //         .catch(e => {
-                                    //             setIsLoading(false);
-                                    //             console.log('error')
-                                    //         }),
-                                    // );
+                                    setAcceptOrReject(shipData._id, 'Accepted').then(response =>
+                                        response
+                                            .json()
+                                            .then((res) => {
+                                                setIsLoading(false);
+                                                navigation.navigate("AllRequest");
+                                            })
+                                            .catch(e => {
+                                                setIsLoading(false);
+                                                console.log('error')
+                                            }),
+                                    );
                                 }}
                             />
                         </View>

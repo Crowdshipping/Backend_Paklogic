@@ -373,6 +373,7 @@ export const searchFlight = (
   departureAirportCode: any,
   destinationAirportCode: any,
   flightNumber: any,
+  myDate: any
 ) => {
   var myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');
@@ -385,6 +386,8 @@ export const searchFlight = (
     departCode: departureAirportCode,
     arrivalCode: destinationAirportCode,
     flightnumber: flightNumber,
+    date: myDate
+
   });
   console.log('raw bodyfrom apis', raw);
 

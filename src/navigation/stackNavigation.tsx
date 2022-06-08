@@ -40,6 +40,8 @@ import PickedUpForShip from '../screens/Ship/PickedUpForShip';
 import TransitForShip from '../screens/Ship/TransitForShip';
 import ReachedForShip from '../screens/Ship/ReachedForShip';
 import CompleteForShip from '../screens/Ship/CompleteForShip';
+import ShipDetail from '../screens/Ship/ShipDetail';
+import AcceptRejectForShip from '../screens/Ship/AcceptRejectForShip';
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent({ navigation }: any) {
@@ -564,6 +566,37 @@ export const StackNavigation = () => {
         }}
         name="COMPLETEFORSHIP"
         component={CompleteForShip}
+      />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'Attach Images',
+        }}
+        name="SHIPDETAIL"
+        component={ShipDetail}
+      />
+
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'Attach Images',
+        }}
+        name="ACCEPTREJECTFORSHIP"
+        component={AcceptRejectForShip}
       />
 
     </Stack.Navigator>

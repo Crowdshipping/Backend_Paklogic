@@ -1,14 +1,15 @@
 import React from 'react';
-import {View, StyleSheet, Image, Text, Pressable} from 'react-native';
+import { View, StyleSheet, Image, Text, Pressable } from 'react-native';
 import HorizontalDivider from './HorizontalDivider';
-import {SvgXml} from 'react-native-svg';
-import {LocationSvg} from '../theme/assets/svg/LocationSvg';
+import { SvgXml } from 'react-native-svg';
+import { LocationSvg } from '../theme/assets/svg/LocationSvg';
 const RequestComponent2 = ({
   onPress,
   fromCountry,
   toCountry,
   date,
   airline,
+  destinationTime
 }: any) => {
   return (
     <Pressable onPress={onPress}>
@@ -16,7 +17,7 @@ const RequestComponent2 = ({
         <View style={styles.top}>
           <View style={styles.topLeft}>
             <Image
-              style={{width: 55, height: 55, borderRadius: 50}}
+              style={{ width: 55, height: 55, borderRadius: 50 }}
               source={require('../assets/aeroplane.png')}
             />
           </View>
@@ -40,10 +41,14 @@ const RequestComponent2 = ({
             <Text style={styles.countryText}>{toCountry}</Text>
           </View>
           <View style={styles.bottomRight}>
+            <Text style={styles.dateText}>{destinationTime}</Text>
             <Text style={styles.dateText}>{date}</Text>
           </View>
+
         </View>
+
       </View>
+
     </Pressable>
   );
 };
@@ -69,13 +74,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 15,
   },
-  topLeft: {flex: 1},
-  topRight: {flex: 3.35},
+  topLeft: { flex: 1 },
+  topRight: { flex: 3.35 },
   bottom: {
     marginTop: 15,
     flexDirection: 'row',
   },
-  bottomLeft: {flex: 1.0},
+  bottomLeft: { flex: 1.0 },
   bottomMid: {
     justifyContent: 'space-between',
     flex: 2,

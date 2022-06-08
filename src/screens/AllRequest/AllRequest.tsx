@@ -176,10 +176,6 @@ const AllRequest = ({ navigation, status, myColor, route }: any) => {
       });
     }
   }
-
-
-
-
   const postRequestTab = () => {
     console.log("post request called")
     if (postRequestResponse) {
@@ -197,7 +193,7 @@ const AllRequest = ({ navigation, status, myColor, route }: any) => {
               destinationAirport={item.destinationAirport}
               acceptPress={() => {
 
-                Alert.alert("Attention Please!",
+                Alert.alert("",
                   "You need to register this flight in order to accept this request?",
                   [
                     {
@@ -332,9 +328,30 @@ const AllRequest = ({ navigation, status, myColor, route }: any) => {
   }
 
   const pendingTab = (item: any) => {
-    console.log("pending function called", item)
     if (item.status === 'Pending') {
-      console.log('pending contents', item);
+
+      if (item.type === "Ship") {
+        return <RequestComponentForShip
+          isPostRequest={false}
+          myImage={item.requestedBy.profilepic}
+          firstName={item.requestedBy.firstname}
+          lastName={item.requestedBy.lastname}
+          mmsiNumber={item.ship.mmsiNumber}
+          departureAirport={item.ship.departurePort}
+          destinationAirport={item.ship.destinationPort}
+          acceptPress={() => {
+            navigation.navigate('ACCEPTREJECTFORSHIP', {
+              shipData: item,
+            });
+            // whenShipDataPressed(item)
+          }}
+          rejectPress={() => {
+            console.log("rejected")
+          }}
+
+          date={item.ship.shipDate.slice(0, -14)}
+        />
+      }
       if (item.flight === undefined || item.flight === null) {
         return;
       }
@@ -352,7 +369,7 @@ const AllRequest = ({ navigation, status, myColor, route }: any) => {
             });
           }}
           rejectPress={() => {
-            Alert.alert("Attention Please!",
+            Alert.alert("",
               "You need to register this flight in order to accept this request?",
               [
                 {
@@ -398,6 +415,9 @@ const AllRequest = ({ navigation, status, myColor, route }: any) => {
     //response used for both accepted and pending thats why written here
     else if (response) {
       return response.map((item: any) => {
+        console.log("full item from render tab", item);
+
+
         //when accepted tab selected this will run
         if (tabSelected === 1) {
           return acceptedTab(item)

@@ -66,7 +66,7 @@ const RequestComponentForShip = ({
                                 {isAccepted ? 'Accepted' : 'Accept'}
                             </Text>
                         </TouchableOpacity>
-                        <TouchableOpacity >
+                        <TouchableOpacity onPress={rejectPress} >
 
                             <Text onPress={rejectPress} style={styles.rejectText} >
                                 {isAccepted || isPostRequest ? '' : 'Reject'}
