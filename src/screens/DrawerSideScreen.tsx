@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     Image,
     ImageBackground,
+    Alert,
 } from 'react-native';
 import {
     widthPercentageToDP as wp,
@@ -25,88 +26,144 @@ import { clockSvg } from '../theme/assets/svg/clockSvg';
 import { flightSvg } from '../theme/assets/svg/flightSvg';
 import { ship } from '../theme/assets/svg/shipSvg';
 import { ship2Svg } from '../theme/assets/svg/ship2Svg';
-// import {homeicon} from '../theme/svg/homeicon';
-// import {yourpkgicon} from '../theme/svg/yourpkgicon';
-// import {claimicon} from '../theme/svg/claimicon';
-// import {setting} from '../theme/svg/setting';
-// import {notificationicon} from '../theme/svg/notificationicon';
-// import {supporticon} from '../theme/svg/supporticon';
-// import {logouticon} from '../../theme/svg/logouticon';
+import { logoutUser } from '../services';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import MyLoader from '../components/MyLoader';
+
 const DrawerSideScreen = ({ navigation }: any) => {
-    const [pdetail, setpdetail] = useState({
-        name: 'Tony Stark',
-        email: 'tony@gmail.com',
-        location: 'United States of America',
-    });
+
+
+    const [userId, setUserId] = React.useState('');
+    const [isLoading, setIsLoading] = React.useState(false);
+
+    const getUserId = async () => {
+        try {
+            const value = await AsyncStorage.getItem('@user_Id');
+            setUserId(value);
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    const removeId = async () => {
+        await AsyncStorage.removeItem('@user_Id');
+    }
+
+    const logout = () => {
+        Alert.alert("",
+            "Are you Sure you want to Logout?",
+            [
+                {
+                    text: 'Yes', onPress: () => {
+                        setIsLoading(true);
+                        logoutUser(userId).then(parseData => parseData.json()).then(result => {
+                            setIsLoading(false);
+                            if (result.success) {
+                                removeId();
+                                console.log()
+                                navigation.navigate("SIGNIN")
+                            }
+                        }).catch(error => {
+                            setIsLoading(false);
+                            console.log("error", error);
+                        })
+
+                    },
+                    style: 'default',
+                },
+                { text: 'No' },
+            ],
+            { cancelable: false }
+        )
+
+    }
+    React.useEffect(() => {
+        getUserId();
+    }, []);
     return (
         <SafeAreaView>
-            <View style={styles.ViewTop}>
-                <Image
-                    source={require('../assets/tony.jpg')}
-                    style={styles.img}
-                />
-                <View style={{ paddingTop: 10, alignItems: 'center' }}>
-                    <Text style={{ fontSize: 18, color: 'white', fontWeight: 'bold' }}>
-                        {pdetail.name}
-                    </Text>
-                    <Text style={{ fontSize: 18, color: 'white' }}>{pdetail.email}</Text>
-                    <TouchableOpacity onPress={() => {
-                        navigation.navigate('MYPROFILE');
-                    }}>
-                        <Text style={{ fontSize: 18, color: 'yellow' }}>View Profile</Text>
-                    </TouchableOpacity>
+            {isLoading ? <MyLoader /> :
+                <View >
+                    <View style={styles.ViewTop}>
+                        <Image
+                            source={require('../assets/tony.jpg')}
+                            style={styles.img}
+                        />
+                        <View style={{ paddingTop: 10, alignItems: 'center' }}>
+                            <Text style={{ fontSize: 18, color: 'white', fontWeight: 'bold' }}>
+                                tony stark
+                            </Text>
+                            <Text style={{ fontSize: 18, color: 'white' }}>
+                                tonystark@gmail.com
+                            </Text>
+                            <TouchableOpacity onPress={() => {
+                                navigation.navigate('MYPROFILE');
+                            }}>
+                                <Text style={{ fontSize: 18, color: 'yellow' }}>View Profile</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    <View style={styles.ViewDetails}>
+                        <TouchableOpacity style={styles.viewunderline}>
+                            <SvgXml xml={homeSvg} width={25} />
+                            <Text style={styles.txtdetail}>Home</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => {
+                            navigation.navigate('AllFlight');
+                        }} style={styles.viewunderline}>
+                            <SvgXml style={styles.svg} xml={flightSvg} width={25} />
+                            <Text style={styles.txtdetail}>Manage Flights</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => {
+                            navigation.navigate('ALLSHIPS');
+                        }} style={styles.viewunderline}>
+                            <SvgXml style={styles.svg} xml={ship2Svg} width={25} />
+                            <Text style={styles.txtdetail}>Manage Ships</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.viewunderline}>
+                            <SvgXml style={styles.svg} xml={yourpkgSvg} width={25} />
+                            <Text style={styles.txtdetail}>Your Package</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.viewunderline}>
+                            <SvgXml style={styles.svg} xml={clockSvg} width={25} />
+                            <Text style={styles.txtdetail}>Booking History</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => {
+                            navigation.navigate("CLAIM")
+                        }} style={styles.viewunderline}>
+                            <SvgXml style={styles.svg} xml={claimSvg} width={25} />
+                            <Text style={styles.txtdetail}>Claim</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => {
+                            navigation.navigate("COMPLAIN")
+                        }} style={styles.viewunderline}>
+                            <SvgXml style={styles.svg} xml={claimSvg} width={25} />
+                            <Text style={styles.txtdetail}>Complain</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.viewunderline}>
+                            <SvgXml style={styles.svg} xml={supportSvg} width={25} />
+                            <Text style={styles.txtdetail}>Support</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.viewunderline}>
+                            <SvgXml style={styles.svg} xml={settingSvg} width={25} />
+
+                            <Text style={styles.txtdetail}>Setting</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.viewunderline}>
+                            <SvgXml style={styles.svg} xml={notificationSvg} width={25} />
+                            <Text style={styles.txtdetail}>Notification</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={logout} style={styles.viewunderline}>
+                            <SvgXml style={styles.svg} xml={logoutSvg} width={25} />
+                            <Text style={styles.txtdetail}>Logout</Text>
+                        </TouchableOpacity>
+
+                        {/* <View style={{borderBottomWidth: 1}}></View> */}
+                    </View>
                 </View>
-            </View>
-            <View style={styles.ViewDetails}>
-                <TouchableOpacity style={styles.viewunderline}>
-                    <SvgXml xml={homeSvg} width={25} />
-                    <Text style={styles.txtdetail}>Home</Text>
-                </TouchableOpacity>
+            }
 
-                <TouchableOpacity onPress={() => {
-                    navigation.navigate('AllFlight');
-                }} style={styles.viewunderline}>
-                    <SvgXml style={styles.svg} xml={flightSvg} width={25} />
-                    <Text style={styles.txtdetail}>Manage Flights</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => {
-                    navigation.navigate('ALLSHIPS');
-                }} style={styles.viewunderline}>
-                    <SvgXml style={styles.svg} xml={ship2Svg} width={25} />
-                    <Text style={styles.txtdetail}>Manage Ships</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.viewunderline}>
-                    <SvgXml style={styles.svg} xml={yourpkgSvg} width={25} />
-                    <Text style={styles.txtdetail}>Your Package</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.viewunderline}>
-                    <SvgXml style={styles.svg} xml={clockSvg} width={25} />
-                    <Text style={styles.txtdetail}>Booking History</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.viewunderline}>
-                    <SvgXml style={styles.svg} xml={claimSvg} width={25} />
-                    <Text style={styles.txtdetail}>Claim</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.viewunderline}>
-                    <SvgXml style={styles.svg} xml={supportSvg} width={25} />
-                    <Text style={styles.txtdetail}>Support</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.viewunderline}>
-                    <SvgXml style={styles.svg} xml={settingSvg} width={25} />
-
-                    <Text style={styles.txtdetail}>Setting</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.viewunderline}>
-                    <SvgXml style={styles.svg} xml={notificationSvg} width={25} />
-                    <Text style={styles.txtdetail}>Notification</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.viewunderline}>
-                    <SvgXml style={styles.svg} xml={logoutSvg} width={25} />
-                    <Text style={styles.txtdetail}>Logout</Text>
-                </TouchableOpacity>
-
-                {/* <View style={{borderBottomWidth: 1}}></View> */}
-            </View>
         </SafeAreaView>
     );
 };
@@ -114,22 +171,17 @@ const styles = StyleSheet.create({
     header: {
         paddingTop: hp(3),
     },
-    //   imgview: {
-    //     justifyContent: 'center',
-    //     alignItems: 'center',
-    //     top: hp(3),
-    //   },
     img: {
         width: 100,
         height: 100,
         borderRadius: 100 / 2,
         overflow: "hidden",
         borderWidth: 3,
-        borderColor: "red"
+        borderColor: "#DB3F34"
     },
     ViewTop: {
         alignItems: 'center',
-        backgroundColor: 'red',
+        backgroundColor: '#DB3F34',
         paddingVertical: 10,
         justifyContent: 'center',
     },
@@ -140,7 +192,6 @@ const styles = StyleSheet.create({
     ViewDetails: {
         paddingTop: hp(5),
         paddingHorizontal: hp(5),
-        // height: '75%',
     },
     viewunderline: {
         flexDirection: 'row',
@@ -152,8 +203,6 @@ const styles = StyleSheet.create({
         paddingLeft: wp(5),
         color: 'black',
         textAlign: 'center',
-        // justifyContent: 'center',
-        // alignContent: 'center',
     },
 });
 export default DrawerSideScreen;

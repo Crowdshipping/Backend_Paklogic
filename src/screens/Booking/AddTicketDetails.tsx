@@ -223,6 +223,7 @@ const AddTicketDetails = ({ navigation, status, myColor }: any) => {
       <ScrollView>
         <View style={styles.container}>
           <DatePicker
+            minimumDate={new Date()}
             modal
             mode="date"
             open={open}

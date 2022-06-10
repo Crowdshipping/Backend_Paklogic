@@ -42,6 +42,12 @@ import ReachedForShip from '../screens/Ship/ReachedForShip';
 import CompleteForShip from '../screens/Ship/CompleteForShip';
 import ShipDetail from '../screens/Ship/ShipDetail';
 import AcceptRejectForShip from '../screens/Ship/AcceptRejectForShip';
+import Claim from '../screens/Claim/Claim';
+import ClaimDetail from '../screens/Claim/ClaimDetail';
+import Complain from '../screens/Complain/Complain';
+import AddComplain from '../screens/Complain/AddComplain';
+import ComplainDetail from '../screens/Complain/ComplainDetail';
+import AddClaim from '../screens/Claim/AddClaim';
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent({ navigation }: any) {
@@ -597,6 +603,96 @@ export const StackNavigation = () => {
         }}
         name="ACCEPTREJECTFORSHIP"
         component={AcceptRejectForShip}
+      />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'Claim',
+        }}
+        name="CLAIM"
+        component={Claim}
+      />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'Add Claim',
+        }}
+        name="ADDCLAIM"
+        component={AddClaim}
+      />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'Claim Detail',
+        }}
+        name="CLAIMDETAIL"
+        component={ClaimDetail}
+      />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'Complain',
+        }}
+        name="COMPLAIN"
+        component={Complain}
+      />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'Add Complain',
+        }}
+        name="ADDCOMPLAIN"
+        component={AddComplain}
+      />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'Complain Detail',
+        }}
+        name="COMPLAINDETAIL"
+        component={ComplainDetail}
       />
 
     </Stack.Navigator>

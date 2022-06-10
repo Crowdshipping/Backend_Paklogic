@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Alert,
   SafeAreaView,
@@ -35,15 +35,13 @@ export default function SignIn({ navigation }: any) {
   const [passwordError, setPasswordError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const storeUserId = async value => {
-    console.log('value form storeuseridfunction', value);
+  const storeUserId = async (value: any) => {
     try {
       await AsyncStorage.setItem('@user_Id', value);
     } catch (e) {
       console.log('error', e);
     }
   };
-
   const validate = () => {
 
     console.log('button worked');
@@ -119,16 +117,14 @@ export default function SignIn({ navigation }: any) {
               Forget Password?
             </Text>
           </TouchableOpacity>
-          <Text style={{ alignSelf: 'center', marginTop: hp(1) }}>
-            Don't have an Account ?
+          <View style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+            <Text >Don't have an Account ? </Text>
             <TouchableOpacity onPress={() => navigation.navigate('REGISTER')}>
-              <Text
-                style={{ color: colors.red }}
-              >
+              <Text style={{ color: colors.red }}>
                 Register Now
               </Text>
             </TouchableOpacity>
-          </Text>
+          </View>
           <Button
             title="NEXT"
             onPress={() => {

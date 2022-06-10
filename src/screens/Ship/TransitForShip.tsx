@@ -63,9 +63,9 @@ const TransitForShip = ({ route, navigation }: any) => {
                     <View style={styles.mapBottom}>
                         <View style={styles.topPart}>
                             <TouchableOpacity onPress={() => {
-                                // navigation.navigate("PACKAGEDETAIL", {
-                                //     requestData: requestData,
-                                // })
+                                navigation.navigate("PACKAGEDETAIL", {
+                                    requestData: shipData,
+                                })
                             }}>
                                 <Text style={styles.topPartText}>View Package Detail</Text>
                             </TouchableOpacity>

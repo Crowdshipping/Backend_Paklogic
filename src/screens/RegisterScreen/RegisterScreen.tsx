@@ -1,4 +1,5 @@
 // import {NavigationRouteContext} from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
   ActivityIndicator,
@@ -78,18 +79,37 @@ export default function RegisterScreen(props: any) {
   };
 
 
+  // React.useEffect(() => {
+  //   const willFocusSubscription = props.navigation.addListener('focus', () => {
+  //     console.log("before text", number);
+  //     setNumber("");
+  //     console.log("after text", number);
+  //   });
+  //   return willFocusSubscription;
+  // }, []);
+
+
+
   React.useEffect(() => {
-    const willFocusSubscription = props.navigation.addListener('focus', () => {
-      setIsBack(true);
-    });
+    const unsubscribeNavigationFocus = props.navigation.addListener(
+      'focus',
+      async () => {
+        try {
+          setNumber('');
+          console.log('OLD VALUE of number', number);
+          // }
+        } catch (error) {
+          console.log('inside error');
+          console.log(error);
+        } finally {
+        }
+      }
+    );
 
-    return willFocusSubscription;
-  }, [isBack]);
+    return unsubscribeNavigationFocus;
+  }, [props.navigation, number]);
 
 
-
-
-  // alert('lsjdc')
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -137,6 +157,7 @@ export default function RegisterScreen(props: any) {
               //   countrycode: country,
               //   option: props.route.params.option,
               // });
+
             }}
           />
         </View>

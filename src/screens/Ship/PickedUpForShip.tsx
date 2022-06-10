@@ -45,15 +45,7 @@ const PickedUpForShip = ({ route, navigation }: any) => {
       {console.log("ship data from render function", shipData)}
       {isLoading ? <MyLoader /> :
         <View style={styles.container}>
-          {/* <MapView
-            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-            style={styles.map}
-            region={{
-              latitude: 37.78825,
-              longitude: -122.4324,
-              latitudeDelta: 0.015,
-              longitudeDelta: 0.0121,
-            }}></MapView> */}
+
           <MapView
             provider={PROVIDER_GOOGLE} // remove if not using Google Maps
             style={styles.map}
@@ -86,9 +78,9 @@ const PickedUpForShip = ({ route, navigation }: any) => {
             <View style={styles.topPart}>
               <TouchableOpacity onPress={() => {
                 // console.log("from detail caller request data + flightInfoData ", requestData, flightInfoData);
-                // navigation.navigate("PACKAGEDETAIL", {
-                //   requestData: requestData,
-                // })
+                navigation.navigate("PACKAGEDETAIL", {
+                  requestData: shipData,
+                })
               }}>
                 <Text style={styles.topPartText}>View Package Detail</Text>
               </TouchableOpacity>

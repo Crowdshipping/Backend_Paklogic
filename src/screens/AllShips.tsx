@@ -103,7 +103,6 @@ const AllShips = ({ navigation }: any) => {
                 getAllShipAddedByProvider(value)
                     .then(response => response.json())
                     .then(result => {
-
                         if (result.success) {
                             setIsLoading(false);
                             setShipResponse(result.ships)

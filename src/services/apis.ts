@@ -693,3 +693,13 @@ export const addShipAfterPost = (shipDataFromPostRequest: AddShipPostRequest) =>
 
   return fetch("https://backend-crowdshipping.herokuapp.com/provider/addshipafterpost", requestOptions);
 }
+
+
+//users things //
+export const logoutUser = (userId: any) => {
+  var requestOptions = {
+    method: 'GET',
+    redirect: 'follow'
+  };
+  return fetch(`https://backend-crowdshipping.herokuapp.com/user/logout/${userId}`, requestOptions);
+} 

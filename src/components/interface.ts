@@ -34,8 +34,8 @@ export interface IButton {
   onPress?: Function;
   color?: string;
   loading?: boolean;
-  buttonStyle?:ViewStyle;
-  fontSize?:number  
+  buttonStyle?: ViewStyle;
+  fontSize?: number
 }
 export interface IPhonePicker {
   containerStyle?: ViewStyle;

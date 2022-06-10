@@ -50,7 +50,7 @@ const PackageDetail = ({ navigation, route }: any) => {
                   />
                 ) : (
                   <Image
-                    style={{ width: 50, height: 50, borderRadius: 50, marginRight: 10 }}
+                    style={{ width: "100%", height: "100%" }}
                     source={require('../assets/aeroplane.png')}
                   />
                 )}
