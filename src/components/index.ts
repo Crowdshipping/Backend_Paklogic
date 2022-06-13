@@ -4,6 +4,9 @@ import {Address} from './address';
 import {PhoneNumberPicker, PhoneNumberPickerUI} from './phone';
 import {Header} from './header';
 import {MapHeader} from './mapheader';
+import {Datepicker} from './datepicker';
+import {TextInputPencil} from './textboxPencil';
+import {BookingListCard} from './bookingListCard';
 
 export {
   Textbox,
@@ -13,4 +16,7 @@ export {
   PhoneNumberPickerUI,
   Header,
   MapHeader,
+  Datepicker,
+  TextInputPencil,
+  BookingListCard,
 };

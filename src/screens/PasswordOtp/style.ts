@@ -17,6 +17,7 @@ export const styles = StyleSheet.create({
     borderRadius: wp(1.5),
     alignSelf: 'center',
     backgroundColor: '#fff',
+    elevation: 2,
     shadowColor: '#000',
     shadowOffset: {
       width: 0.5,

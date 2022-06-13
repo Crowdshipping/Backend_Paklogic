@@ -23,7 +23,7 @@ const WelcomeScreen = ({navigation}: any) => {
   //         },
   //         {text: 'YES', onPress: () => BackHandler.exitApp()},
   //       ]);
-  //       console.log('back btn is pressed');
+
   //       navigation.navigate('RegisterScreen');
   //       return true;
   //     };
@@ -69,7 +69,7 @@ const WelcomeScreen = ({navigation}: any) => {
             },
           },
         ]);
-        console.log('back btn is pressed');
+
         // navigation.navigate('Register');
         return true;
       }),
@@ -89,8 +89,8 @@ const WelcomeScreen = ({navigation}: any) => {
           title="sign in"
           bg={true}
           onPress={() => {
-            // navigation.navigate('Signin');
-            navigation.navigate('BookingList');
+            navigation.navigate('Signin');
+            // navigation.navigate('Landing');
           }}
         />
       </View>
@@ -104,10 +104,10 @@ const WelcomeScreen = ({navigation}: any) => {
       </View>
       <View style={styles.textView}>
         <Text style={styles.text}>
-          Roadstar Corporation App is ground breaking crowd delivery platform
-          where multiple businesses and everone shares delivery providers to
-          send and receive packages or goods for both local and international
-          delieveries
+          Crowd shipping corporation App is ground breaking crowd delivery
+          platform where multiple businesses and everone shares delivery
+          providers to send and receive packages or goods for both local and
+          international delieveries
         </Text>
       </View>
     </SafeAreaView>

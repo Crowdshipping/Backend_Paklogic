@@ -14,13 +14,27 @@ export const MapHeader = (props: IHeader) => {
   const {title, pressMethod, picture} = props;
   return (
     <View style={styles.mapheader}>
-      <SvgXml style={styles.svg} xml={picture} width={wp(25)} height={wp(20)} />
-      <TouchableOpacity
-        onPress={() => pressMethod()}
-        style={styles.arrorwStyle}>
-        <AntDesign name="arrowleft" color={'#000'} size={wp(7)} />
-      </TouchableOpacity>
-      <Text style={styles.textHeader}>{title}</Text>
+      {picture ? (
+        <SvgXml
+          style={styles.svg}
+          xml={picture}
+          width={wp(25)}
+          height={wp(20)}
+        />
+      ) : (
+        <View style={{height: wp(20)}}></View>
+      )}
+      {pressMethod ? (
+        <TouchableOpacity
+          onPress={() => pressMethod()}
+          style={styles.arrorwStyle}>
+          <AntDesign name="arrowleft" color={'#000'} size={wp(7)} />
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.arrorwStyle} />
+      )}
+
+      <Text style={[styles.textHeader, {bottom: hp(2)}]}>{title}</Text>
     </View>
   );
 };

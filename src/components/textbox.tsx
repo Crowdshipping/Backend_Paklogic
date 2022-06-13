@@ -11,29 +11,33 @@ export const Textbox = (props: ITextBox) => {
     onChangeValue,
     password,
     errormsg,
+    editable,
+    focus,
+    type,
   } = props;
   const secureText = password === undefined ? false : password;
   return (
     <View style={[styles.sectionContainer, containerStyle]}>
-      <Text style={styles.titleText}>{title}</Text>
+      {title ? <Text style={styles.titleText}>{title}</Text> : <View></View>}
       <TextInput
         placeholder={placeholder}
         placeholderTextColor="gray"
         autoCapitalize="none"
         style={styles.inputText}
         secureTextEntry={secureText}
+        editable={!editable ? editable : true}
+        keyboardType={type ? 'numeric' : 'default'}
+        autoFocus={focus ? focus : false}
         onChangeText={text => {
-          try {
-            onChangeValue(text);
-          } catch (e) {
-            console.log(e);
+          {
+            onChangeValue ? onChangeValue(text) : null;
           }
         }}
       />
       {errormsg ? (
         <Text style={styles.errorMsg}>{errormsg}</Text>
       ) : (
-        <View></View>
+        <Text></Text>
       )}
     </View>
   );

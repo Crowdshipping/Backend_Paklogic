@@ -3,12 +3,14 @@ import {ViewStyle} from 'react-native';
 export interface ITextBox {
   // tags: Array<string>;
   // onSave: Function;
-  // type?: string;
+  type?: boolean;
   containerStyle?: ViewStyle;
-  title: string;
+  title?: string;
   placeholder: string;
-  onChangeValue: Function;
+  onChangeValue?: Function;
   password?: boolean;
+  editable?: boolean;
+  focus?: boolean;
   errormsg?: string;
   //((value: string) => void)
 }
@@ -31,6 +33,7 @@ export interface IPhonePicker {
     flag: string;
   };
   phone?: string;
+  editable?: boolean;
 }
 
 export interface ICountryCode {
@@ -51,4 +54,5 @@ export interface IHeader {
   title: string;
   pressMethod?: Function;
   picture?: any;
+  menu?: boolean;
 }

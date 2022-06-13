@@ -8,14 +8,23 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 export const styles = StyleSheet.create({
   addressView: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-around',
   },
   titleText: {
     fontSize: wp(4),
     textTransform: 'uppercase',
   },
+  txt1: {
+    fontSize: wp(4),
+    // textTransform: 'uppercase',
+    color: 'black',
+    // paddingRight: wp(),
+    width: wp(15),
+  },
   sectionContainer: {
-    marginVertical: hp(2),
+    // marginVertical: hp(2),
+    marginTop: hp(2),
+    marginBottom: hp(1),
     paddingHorizontal: wp(5),
     // borderColor: 'green',
     // backgroundColor: 'green',
@@ -24,9 +33,10 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    width: '30%',
+    maxWidth: '45%',
     borderColor: 'grey',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
+    marginRight: '5%',
   },
   countryText: {
     fontSize: wp(5),
@@ -38,26 +48,27 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: hp(2),
-    borderWidth: 1,
   },
   textHeader: {
     fontSize: 18,
     textTransform: 'uppercase',
     fontWeight: 'bold',
     textAlign: 'center',
-    // bottom: hp(2),
   },
   arrowStyle: {
     width: wp(10),
   },
-
+  arrorwStyle: {
+    // width: wp(10),
+    bottom: hp(2),
+  },
   inputText: {
     paddingVertical: Platform.OS === 'ios' ? wp(2) : 0,
     borderBottomWidth: 1,
     borderColor: 'grey',
   },
   textInput: {
-    width: '65%',
+    width: '50%',
     fontSize: wp(4),
     borderBottomWidth: 1,
     borderColor: 'grey',
@@ -113,8 +124,18 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
   },
-  arrorwStyle: {
-    // width: wp(10),
-    bottom: hp(2),
+  Touch: {
+    flex: 1,
+    // backgroundColor: 'lightgrey',
+    // borderRadius: hp(1),
+    paddingRight: wp(1.5),
+    paddingLeft: wp(1.5),
+    paddingVertical: hp(1),
+    flexDirection: 'row',
+    // alignSelf: 'center',
+    borderBottomWidth: 1,
+    // justifyContent: 'center',
+    alignItems: 'center',
+    // width: wp(25),
   },
 });

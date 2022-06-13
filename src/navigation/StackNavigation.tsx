@@ -16,7 +16,16 @@ import {
   ProviderDetailScreen,
   ReceiverDetailsScreen,
   BookingListScreen,
-} from '../screens/index';
+  ProductScreen,
+  AirDelivery,
+  ModifyRequest,
+  ShipDelivery,
+  BookingListShipping,
+  ShipProviderDetail,
+  ShipProductDetail,
+  ShipReceiverDetail,
+  ShipModifyRequest,
+} from '../screens';
 
 type rootStack = {
   Welcome: undefined;
@@ -33,14 +42,42 @@ type rootStack = {
   ProviderDetail: undefined;
   ReceiverDetails: undefined;
   BookingList: undefined;
+  ProductScreen: undefined;
+  AirDelivery: undefined;
+  ModifyRequest: undefined;
+  ShipDelivery: undefined;
+  ShipFlowNavigation: undefined;
+  BookingListShipping: undefined;
+  ShipProviderDetail: undefined;
+  ShipProductDetail: undefined;
+  ShipReceiverDetail: undefined;
+  ShipModifyRequest: undefined;
 };
 
 const Stack = createStackNavigator<rootStack>();
 
+const ShipFlowNavigation = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{headerShown: false, gestureEnabled: false}}
+      initialRouteName={'ShipDelivery'}>
+      <Stack.Screen name="ShipDelivery" component={ShipDelivery} />
+      <Stack.Screen
+        name="BookingListShipping"
+        component={BookingListShipping}
+      />
+      <Stack.Screen name="ShipProviderDetail" component={ShipProviderDetail} />
+      <Stack.Screen name="ShipProductDetail" component={ShipProductDetail} />
+      <Stack.Screen name="ShipReceiverDetail" component={ShipReceiverDetail} />
+      <Stack.Screen name="ShipModifyRequest" component={ShipModifyRequest} />
+    </Stack.Navigator>
+  );
+};
+
 const StackNavigation = () => {
   return (
     <Stack.Navigator
-      screenOptions={{headerShown: false}}
+      screenOptions={{headerShown: false, gestureEnabled: false}}
       initialRouteName={'Splash'}>
       <Stack.Screen name="Splash" component={SplashScreen} />
       <Stack.Screen name="Welcome" component={WelcomeScreen} />
@@ -56,6 +93,10 @@ const StackNavigation = () => {
       <Stack.Screen name="ProviderDetail" component={ProviderDetailScreen} />
       <Stack.Screen name="ReceiverDetails" component={ReceiverDetailsScreen} />
       <Stack.Screen name="BookingList" component={BookingListScreen} />
+      <Stack.Screen name="ProductScreen" component={ProductScreen} />
+      <Stack.Screen name="AirDelivery" component={AirDelivery} />
+      <Stack.Screen name="ModifyRequest" component={ModifyRequest} />
+      <Stack.Screen name="ShipFlowNavigation" component={ShipFlowNavigation} />
     </Stack.Navigator>
   );
 };

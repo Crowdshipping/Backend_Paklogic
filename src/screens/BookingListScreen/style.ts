@@ -1,8 +1,9 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Platform} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import {colors} from '../../theme';
 export const styles = StyleSheet.create({
   sectionContainer: {
     marginTop: 32,
@@ -11,7 +12,7 @@ export const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: hp(5),
+    paddingHorizontal: hp(2),
     paddingTop: hp(3),
   },
   txt1: {
@@ -26,14 +27,16 @@ export const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   Touch: {
-    backgroundColor: 'lightgrey',
+    backgroundColor: '#F0F0F0',
     borderRadius: hp(1),
     paddingHorizontal: hp(1),
     paddingVertical: hp(1),
-    flexDirection: 'row',
+    // flexDirection: 'row',
+    // alignItems: 'center',
     alignSelf: 'center',
     justifyContent: 'space-between',
-    width: wp(35),
+    width: wp(43),
+    height: hp(7),
   },
   bookingtxt: {
     textAlign: 'center',
@@ -42,27 +45,45 @@ export const styles = StyleSheet.create({
     color: 'red',
   },
   detailsbox: {
-    elevation: 8,
-    marginHorizontal: wp(5),
+    flex: 1,
+    // elevation: 8,
+    // marginHorizontal: wp(5),
     // paddingHorizontal: wp(2),
-    paddingVertical: hp(1),
-    shadowColor: 'grey',
-    borderRadius: hp(2),
-    backgroundColor: 'white',
+    // paddingBottom: hp(5),
+    // shadowColor: 'grey',
+    // borderRadius: hp(2),
+    // backgroundColor: 'white',
     // borderWidth: 2,
+    // borderColor: colors.red,
+    // marginBottom: hp(15),
+    // height: hp(60),
   },
   detailsboxinner: {
     marginHorizontal: wp(5),
-    // paddingHorizontal: wp(3),
+    paddingHorizontal: wp(5),
     paddingVertical: hp(2),
-    borderColor: 'red',
-
-    // borderWidth: 2,
+    elevation: 8,
+    // marginHorizontal: wp(5),
+    // paddingHorizontal: wp(2),
+    // paddingVertical: hp(1),
+    shadowColor: Platform.OS === 'android' ? '#000' : 'grey',
+    borderRadius: hp(2),
+    backgroundColor: 'white',
+    marginVertical: hp(1),
+    // borderWidth: 1,
+    shadowOffset: {
+      width: 1,
+      height: 1,
+    },
+    shadowOpacity: 10,
+    shadowRadius: 5,
   },
   flexrow: {
     flexDirection: 'row',
     // justifyContent: 'space-between',
     borderBottomWidth: 2,
+    alignItems: 'center',
+    paddingBottom: hp(1),
   },
   viewlocation: {
     flexDirection: 'row',
@@ -85,7 +106,7 @@ export const styles = StyleSheet.create({
   },
   img: {
     resizeMode: 'contain',
-    height: hp(6),
+    height: wp(12),
     width: wp(12),
     // borderWidth: 2,
     borderColor: 'green',
@@ -105,9 +126,17 @@ export const styles = StyleSheet.create({
     // height: hp(6),
     // width: wp(12),
     // borderWidth: 2,
-    borderColor: 'orange',
+    // borderColor: 'orange',
+    justifyContent: 'center',
+    // alignItems: 'center',
     borderRadius: 10,
-    marginBottom: 20,
+    // marginBottom: 20,
     // flex: 1,
+  },
+  errorMsg: {
+    textAlign: 'left',
+    color: 'red',
+    paddingHorizontal: hp(2),
+    paddingTop: hp(1),
   },
 });

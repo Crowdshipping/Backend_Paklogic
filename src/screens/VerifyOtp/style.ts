@@ -24,5 +24,7 @@ export const styles = StyleSheet.create({
     },
     shadowOpacity: 0.5,
     shadowRadius: 5,
+    elevation: 2,
   },
+  textField: {textAlign: 'center', width: '100%', height: '100%'},
 });

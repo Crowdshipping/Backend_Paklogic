@@ -14,6 +14,12 @@ import {ship} from './ship';
 import {receiver_derails} from './receiverdetails';
 import {location} from './location';
 import {calendar} from './calendar';
+import {packagedetails} from './packagedetails';
+import {cross} from './cross';
+import {carlocation} from './carlocation';
+import {dropdown} from './dropdown';
+import {pencil} from './pencil';
+import {success} from './success';
 
 export {
   register,
@@ -32,4 +38,10 @@ export {
   receiver_derails,
   location,
   calendar,
+  packagedetails,
+  cross,
+  carlocation,
+  dropdown,
+  pencil,
+  success,
 };

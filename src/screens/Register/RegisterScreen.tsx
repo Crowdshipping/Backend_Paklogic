@@ -9,13 +9,17 @@ import {
   Address,
   PhoneNumberPicker,
   Header,
-} from '../../components/index';
+} from '../../components';
 import {SvgXml} from 'react-native-svg';
-import {register} from '../../theme/assets/svg/index';
+import {register} from '../../theme/assets/svg';
 import {registerUser} from '../../API/registerUser';
+import {SuccessModal} from '../../Modals';
 
 const RegisterScreen = ({route, navigation}: any) => {
   const [loading, setloading] = useState(false);
+  const [success, setsuccess] = useState(false);
+  const [text, settext] = useState('');
+
   const {countryCode, phone} = route.params;
   const [fnameValue, setfnameValue] = useState(true);
   const [fname, setfname] = useState('');
@@ -23,8 +27,7 @@ const RegisterScreen = ({route, navigation}: any) => {
   const [lname, setlname] = useState('');
   const [emailValue, setemailValue] = useState(true);
   const [email, setemail] = useState('');
-  // const [phoneNumValue, setphoneNumValue] = useState(true);
-  // const [phoneNum, setphoneNum] = useState('');
+
   const [addressValue, setaddressValue] = useState(true);
   const [address, setaddress] = useState('');
   const [passwordValue, setpasswordValue] = useState(true);
@@ -35,7 +38,7 @@ const RegisterScreen = ({route, navigation}: any) => {
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     let passRegex =
-      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-_]).{8,}$/;
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     let nameRegex = /^[a-zA-Z]{2,}$/;
 
     // let phNumRegex = /^[0-9]{1,10}$/;
@@ -49,30 +52,17 @@ const RegisterScreen = ({route, navigation}: any) => {
       setlnameValue(false);
       validate = false;
     }
-    // if (!email) {
-    //   setemailValue(false);
-    //   validate = false;
-    // }
+
     if (!emailRegx.test(email)) {
       setemailValue(false);
       validate = false;
     }
-    // if (!phoneNum) {
-    //   setphoneNumValue(false);
-    //   validate = false;
-    // }
-    // if (!phNumRegex.test(phoneNum)) {
-    //   setphoneNumValue(false);
-    //   validate = false;
-    // }
+
     if (!addressRegex.test(address)) {
       setaddressValue(false);
       validate = false;
     }
-    // if (!password) {
-    //   setpasswordValue(false);
-    //   validate = false;
-    // }
+
     if (!passRegex.test(password)) {
       setpasswordValue(false);
       validate = false;
@@ -82,7 +72,7 @@ const RegisterScreen = ({route, navigation}: any) => {
       registerUser(fname, lname, email, phone, address, password)
         .then((rest: any) => {
           setloading(false);
-          rest.success ? navigation.navigate('Signin') : console.log('no rest');
+          rest.success && (settext(rest.message), setsuccess(true));
         })
         .catch(error => {
           Alert.alert(error.message);
@@ -98,7 +88,7 @@ const RegisterScreen = ({route, navigation}: any) => {
           <Header
             title={'Register'}
             pressMethod={() => {
-              navigation.goBack();
+              navigation.navigate('RegisterNumber');
             }}
           />
         </View>
@@ -114,7 +104,13 @@ const RegisterScreen = ({route, navigation}: any) => {
                 setfnameValue(true);
                 setfname(text);
               }}
-              errormsg={!fnameValue ? 'Invalid First Name' : ''}
+              errormsg={
+                !fnameValue
+                  ? fname.length === 0
+                    ? 'First Name is Required'
+                    : 'Invalid First Name'
+                  : ''
+              }
             />
           </View>
           <View style={styles.innerNameView}>
@@ -125,7 +121,13 @@ const RegisterScreen = ({route, navigation}: any) => {
                 setlnameValue(true);
                 setlname(text);
               }}
-              errormsg={!lnameValue ? 'Invalid Last Name' : ''}
+              errormsg={
+                !lnameValue
+                  ? lname.length === 0
+                    ? 'Last Name is Required'
+                    : 'Invalid Last Name'
+                  : ''
+              }
             />
           </View>
         </View>
@@ -138,18 +140,20 @@ const RegisterScreen = ({route, navigation}: any) => {
               setemail(text);
               setemailValue(true);
             }}
-            errormsg={!emailValue ? 'Invalid email' : ''}
+            errormsg={
+              !emailValue
+                ? email.length == 0
+                  ? 'Email is Required'
+                  : 'Invalid Email'
+                : ''
+            }
           />
         </View>
         <View>
           <PhoneNumberPicker
-            // onChange={(selectedCountry: any, text: string) => {
-            //   // setphoneNumValue(true);
-            //   // setphoneNum(text);
-            // }}
             countryCode={countryCode}
             phone={phone}
-            // errormsg={!phone ? 'Invalid phoneNum number' : ''}
+            editable={false}
           />
         </View>
         <View>
@@ -158,7 +162,13 @@ const RegisterScreen = ({route, navigation}: any) => {
               setaddressValue(true);
               setaddress(text);
             }}
-            errormsg={!addressValue ? 'Invalid Address' : ''}
+            errormsg={
+              !addressValue
+                ? address.length === 0
+                  ? 'Address is Required'
+                  : 'Invalid Address'
+                : ''
+            }
           />
         </View>
         <View>
@@ -168,7 +178,9 @@ const RegisterScreen = ({route, navigation}: any) => {
             password={true}
             errormsg={
               !passwordValue
-                ? 'Password must have atleast 8 characters, a uppercase and a lowercase letter, a number, and a symbol(e.g. #, ?, !, @, $, %, ^, &, *, -, _) '
+                ? password.length === 0
+                  ? 'Password is Required'
+                  : 'Password must have atleast 8 characters, a uppercase and a lowercase letter, a number, and a symbol(e.g. #, ?, !, @, $, %, ^, &, *, -, _) '
                 : ''
             }
             onChangeValue={(text: string) => {
@@ -196,6 +208,15 @@ const RegisterScreen = ({route, navigation}: any) => {
           />
         </View>
       </KeyboardAwareScrollView>
+      <SuccessModal
+        isSuccess={success}
+        setsuccess={() => setsuccess(false)}
+        text={text}
+        pressMethod={() => {
+          setsuccess(false);
+          navigation.navigate('Signin');
+        }}
+      />
     </SafeAreaView>
   );
 };

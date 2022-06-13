@@ -7,19 +7,22 @@ import {SvgXml} from 'react-native-svg';
 import {forgot_password} from '../../theme/assets/svg/index';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {setnewPassword} from '../../API/setnewPassword';
+import {SuccessModal} from '../../Modals';
 
 const ResetPasswordScreen = ({route, navigation}: any) => {
   const {id} = route.params;
   const [loading, setloading] = useState(false);
+  const [success, setsuccess] = useState(false);
   const [passwordValue, setpasswordValue] = useState(true);
   const [password, setpassword] = useState('');
   const [confirmPasswordValue, setconfirmPasswordValue] = useState(true);
   const [confirmPassword, setconfirmPassword] = useState('');
-
+  const [text, settext] = useState('');
   function handleSubmit() {
     let validate = true;
     let passRegex =
-      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-_]).{8,}$/;
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    // /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-_]).{8,}$/;
 
     if (!password) {
       setpasswordValue(false);
@@ -40,7 +43,7 @@ const ResetPasswordScreen = ({route, navigation}: any) => {
       setnewPassword(password, confirmPassword, id)
         .then((rest: any) => {
           setloading(false);
-          rest.success ? navigation.navigate('Signin') : console.log('no rest');
+          rest.success && (settext(rest.message), setsuccess(true));
         })
         .catch(error => {
           Alert.alert(error.message);
@@ -55,7 +58,7 @@ const ResetPasswordScreen = ({route, navigation}: any) => {
           <Header
             title={'Reset Password'}
             pressMethod={() => {
-              navigation.goBack();
+              navigation.navigate('ForgotPassword');
             }}
           />
         </View>
@@ -71,10 +74,12 @@ const ResetPasswordScreen = ({route, navigation}: any) => {
         <View>
           <Textbox
             title={'New Password'}
-            placeholder={'Enter New Password'}
+            placeholder={'New Password'}
             errormsg={
               !passwordValue
-                ? 'Password must have atleast 8 characters, a uppercase and a lowercase letter, a number, and a symbol(e.g. #, ?, !, @, $, %, ^, &, *, -, _) '
+                ? password.length === 0
+                  ? 'Password is Required'
+                  : 'Password must have atleast 8 characters, a uppercase and a lowercase letter, a number, and a symbol(e.g. #, ?, !, @, $, %, ^, &, *, -, _) '
                 : ''
             }
             onChangeValue={(text: string) => {
@@ -84,15 +89,20 @@ const ResetPasswordScreen = ({route, navigation}: any) => {
             password={true}
           />
         </View>
+        {/* !passwordValue
+                ? 'Password must have atleast 8 characters, a uppercase and a lowercase letter, a number, and a symbol(e.g. #, ?, !, @, $, %, ^, &, *, -, _) '
+                : !confirmPasswordValue
+                ? 'password does not match'
+                : '' */}
         <View>
           <Textbox
             title={'Confirm Password'}
-            placeholder={'Enter Confirm Password'}
+            placeholder={'Confirm Password'}
             errormsg={
-              !passwordValue
-                ? 'Password must have atleast 8 characters, a uppercase and a lowercase letter, a number, and a symbol(e.g. #, ?, !, @, $, %, ^, &, *, -, _) '
-                : !confirmPasswordValue
-                ? 'password must match'
+              !confirmPasswordValue
+                ? confirmPassword.length === 0
+                  ? 'Confirm Password is Required'
+                  : 'password does not match'
                 : ''
             }
             onChangeValue={(text: string) => {
@@ -113,6 +123,15 @@ const ResetPasswordScreen = ({route, navigation}: any) => {
           />
         </View>
       </KeyboardAwareScrollView>
+      <SuccessModal
+        isSuccess={success}
+        setsuccess={() => setsuccess(false)}
+        text={text}
+        pressMethod={() => {
+          setsuccess(false);
+          navigation.navigate('Signin');
+        }}
+      />
     </SafeAreaView>
   );
 };

@@ -30,10 +30,8 @@ const ForgotPassword = ({navigation}: any) => {
       forgotPassword(email)
         .then((rest: any) => {
           setloading(false);
-          console.log('fogotpassword', rest);
-          rest.success
-            ? navigation.navigate('PasswordOtp', {email})
-            : console.log('no rest');
+
+          rest.success && navigation.navigate('PasswordOtp', {email});
         })
         .catch(error => {
           setloading(false);
@@ -65,8 +63,14 @@ const ForgotPassword = ({navigation}: any) => {
         <View>
           <Textbox
             title={''}
-            placeholder={'email ID'}
-            errormsg={!emailValue ? 'Invalid email ID' : ''}
+            placeholder={'Email'}
+            errormsg={
+              !emailValue
+                ? email.length == 0
+                  ? 'Email is Required'
+                  : 'Invalid Email'
+                : ''
+            }
             onChangeValue={(text: string) => {
               setemailValue(true);
               setemail(text);

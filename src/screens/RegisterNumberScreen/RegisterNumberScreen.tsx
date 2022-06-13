@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Alert, SafeAreaView, Text, View} from 'react-native';
 import {styles} from './style';
 
-import {Button, PhoneNumberPickerUI, Header} from '../../components/index';
+import {Button, PhoneNumberPicker, Header} from '../../components/index';
 
 import {SvgXml} from 'react-native-svg';
 import {welcome} from '../../theme/assets/svg/index';
@@ -12,8 +12,19 @@ import {
 } from 'react-native-responsive-screen';
 
 import {verifyNumber} from '../../API/verifyPhone';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const RegisterNumberScreen = ({navigation}: any) => {
+  useEffect(() => {
+    setphone(''),
+      setcountryCode({
+        name: 'United States',
+        dial_code: '+1',
+        code: 'US',
+        preferred: true,
+        flag: '🇺🇸',
+      });
+  }, []);
   const [phoneValue, setphoneValue] = useState(true);
   const [loading, setloading] = useState(false);
   const [phone, setphone] = useState('');
@@ -27,7 +38,7 @@ const RegisterNumberScreen = ({navigation}: any) => {
 
   async function handleSubmit() {
     let validate = true;
-    let phNumRegex = /^[0-9]{1,10}$/;
+    let phNumRegex = /^[0-9]{6,15}$/;
     // if (!phone) {
     //   setphoneValue(false);
     //   validate = false;
@@ -46,9 +57,8 @@ const RegisterNumberScreen = ({navigation}: any) => {
         .then((rest: any) => {
           {
             setloading(false);
-            rest.success
-              ? navigation.navigate('VerifyOtp', {countryCode, phone})
-              : console.log('no rest');
+            rest.success &&
+              navigation.navigate('VerifyOtp', {countryCode, phone});
           }
         })
         .catch(error => {
@@ -59,64 +69,54 @@ const RegisterNumberScreen = ({navigation}: any) => {
   }
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
-      <View>
-        <Header
-          title={'Register'}
-          pressMethod={() => {
-            navigation.goBack();
-          }}
-        />
-      </View>
-      <View>
-        <SvgXml
-          xml={welcome}
-          style={{alignSelf: 'center'}}
-          // width={wp(90)}
-          // height={hp(50)}
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={{flex: 1, textAlign: 'center'}}>MOBILE</Text>
-        <View style={{width: wp(70), flexWrap: 'wrap'}}>
-          <PhoneNumberPickerUI
+      <KeyboardAwareScrollView>
+        <View>
+          <Header
+            title={'Register'}
+            pressMethod={() => {
+              navigation.goBack();
+            }}
+          />
+        </View>
+        <View>
+          <SvgXml
+            xml={welcome}
+            style={{alignSelf: 'center'}}
+            // width={wp(90)}
+            // height={hp(50)}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          {/* <Text style={{flex: 1, textAlign: 'center'}}>MOBILE</Text> */}
+          {/* <View style={{flexWrap: 'wrap'}}> */}
+          <PhoneNumberPicker
             onChange={(selectedCountry: any, text: string) => {
               setphoneValue(true);
               setphone(text);
               setcountryCode(selectedCountry);
             }}
-            errormsg={!phoneValue ? 'Invalid phone number' : ''}
+            errormsg={
+              !phoneValue
+                ? phone.length === 0
+                  ? 'Phone Number is Required'
+                  : 'Must Enter valid phone number'
+                : ''
+            }
+          />
+          {/* </View> */}
+        </View>
+
+        <View>
+          <Button
+            title="Next"
+            onPress={() => {
+              // navigation.navigate('Sign');
+              handleSubmit();
+            }}
+            loading={loading}
           />
         </View>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginVertical: hp(5),
-        }}>
-        <View
-          style={{
-            borderBottomWidth: 1,
-            borderColor: '#e0e0e0',
-            width: wp(30),
-          }}
-        />
-        <Text style={{fontSize: 14, textTransform: 'uppercase'}}>or</Text>
-        <View
-          style={{borderBottomWidth: 1, borderColor: '#e0e0e0', width: wp(30)}}
-        />
-      </View>
-      <View>
-        <Button
-          title="Next"
-          onPress={() => {
-            // navigation.navigate('Sign');
-            handleSubmit();
-          }}
-          loading={loading}
-        />
-      </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

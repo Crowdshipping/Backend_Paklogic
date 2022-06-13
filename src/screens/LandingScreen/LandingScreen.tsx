@@ -12,7 +12,7 @@ import {truck, plane, ship} from '../../theme/assets/svg/index';
 const LandingScreen = ({navigation}: any) => {
   return (
     <SafeAreaView style={styles.container}>
-      <Header title={'ROADSTAR'} />
+      <Header title={'CrowdShipping'} />
       <View style={styles.deliveryComponent}>
         <Text style={styles.text}>LOCAL DELIVERY</Text>
         <TouchableOpacity
@@ -33,7 +33,7 @@ const LandingScreen = ({navigation}: any) => {
         <Text style={styles.text}>INTERNATIONAL Air DELIVERY</Text>
         <TouchableOpacity
           onPress={() => {
-            // navigation.navigate('StartBooking');
+            navigation.navigate('AirDelivery');
           }}
           style={styles.svgView}>
           <SvgXml
@@ -49,7 +49,7 @@ const LandingScreen = ({navigation}: any) => {
         <Text style={styles.text}>INTERNATIONAL Ship DELIVERY</Text>
         <TouchableOpacity
           onPress={() => {
-            // navigation.navigate('StartBooking');
+            navigation.navigate('ShipFlowNavigation');
           }}
           style={styles.svgView}>
           <SvgXml

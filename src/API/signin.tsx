@@ -16,8 +16,7 @@ export const signIn = async (email: string, password: string) => {
         resolve(response.data);
       })
       .catch(error => {
-        console.log(error);
-        reject(error);
+        reject(error.response.data.message);
       });
   });
 };

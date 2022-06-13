@@ -9,7 +9,7 @@ import {
 import {styles} from './style';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
-import {Textbox, Button, Header} from '../../components/index';
+import {Button, Header} from '../../components/index';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,

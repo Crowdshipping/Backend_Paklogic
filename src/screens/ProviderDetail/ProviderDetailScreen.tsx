@@ -14,21 +14,34 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {Textbox, Button, Header} from '../../components/index';
+import {Button, Header} from '../../components/index';
 import {styles} from './style';
 import {SvgXml} from 'react-native-svg';
 import {avatar} from '../../theme/assets/svg/index';
+import moment from 'moment';
 
-const ProviderDetailScreen = ({navigation}: any) => {
-  // const {number, pickCity, dropCity, arrivalDate, departureDate, airline } = props
+const ProviderDetailScreen = ({route, navigation}: any) => {
+  // const {phoneno, lastname, firstname} = route.params.provider;
+  const {
+    dropoffCity,
+    pickupCity,
+    flightDate,
+    flightAirline,
+    arrivalDate,
+    firstname,
+    lastname,
+    phoneno,
+  } = route.params.data;
+  // pickCity, dropCity, arrivalDate, departureDate, airline
+
   const [details, setDetails] = useState({
-    name: 'Mr.Joy',
-    number: '+078545452',
-    pickCity: 'Pakistan',
-    dropCity: 'America',
-    arrivalDate: '18-02-2020',
-    departureDate: '18-02-2020',
-    airline: 'PIA',
+    name: firstname + ' ' + lastname,
+    number: phoneno,
+    pickCity: pickupCity,
+    dropCity: dropoffCity,
+    arrivalDate: moment(arrivalDate).format('YYYY-MM-DD'),
+    departureDate: moment(flightDate).format('YYYY-MM-DD'),
+    airline: flightAirline,
   });
   return (
     <SafeAreaView style={{display: 'flex', flex: 1}}>
@@ -57,13 +70,14 @@ const ProviderDetailScreen = ({navigation}: any) => {
             <Text style={styles.details}>Dropoff City</Text>
             <Text style={styles.details}>{details.dropCity}</Text>
           </View>
-          <View style={styles.data}>
-            <Text style={styles.details}>Arival Date</Text>
-            <Text style={styles.details}>{details.arrivalDate}</Text>
-          </View>
+
           <View style={styles.data}>
             <Text style={styles.details}>Departure Date</Text>
             <Text style={styles.details}>{details.departureDate}</Text>
+          </View>
+          <View style={styles.data}>
+            <Text style={styles.details}>Arival Date</Text>
+            <Text style={styles.details}>{details.arrivalDate}</Text>
           </View>
           <View style={styles.data}>
             <Text style={styles.details}>Airline</Text>
@@ -71,7 +85,23 @@ const ProviderDetailScreen = ({navigation}: any) => {
           </View>
         </View>
         <View style={styles.btnView}>
-          <Button title="Request" onPress={() => navigation.navigate('')} />
+          <Button
+            title="Request"
+            onPress={() => {
+              navigation.navigate('ProductScreen', {
+                item: {
+                  pickcoords: route.params?.data?.pickcoords,
+                  dropcoords: route.params?.data?.dropcoords,
+                  flightId: route.params?.data?.flightId,
+                  providerId: route.params?.data?.providerId,
+                  pickupCity: route.params?.data?.pickupCity,
+                  dropoffCity: route.params?.data?.dropoffCity,
+                  initialDate: route.params?.data?.initialDate,
+                  finalDate: route.params?.data?.finalDate,
+                },
+              });
+            }}
+          />
         </View>
       </View>
     </SafeAreaView>

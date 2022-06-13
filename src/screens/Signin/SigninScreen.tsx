@@ -1,20 +1,25 @@
 import React, {useState} from 'react';
 import {SafeAreaView, Text, View, TouchableOpacity, Alert} from 'react-native';
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import {
+  heightPercentageToDP,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
 import {styles} from './style';
 import {Textbox, Button, Header} from '../../components/index';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {SvgXml} from 'react-native-svg';
 import {signin} from '../../theme/assets/svg/index';
 import {signIn} from '../../API/signin';
 const SigninScreen = ({navigation}: any) => {
   const [emailValue, setemailValue] = useState(true);
-  // const [email, setemail] = useState('Salman090898@gmail.com');
-  const [email, setemail] = useState('');
+  // const [email, setemail] = useState('');
   const [passwordValue, setpasswordValue] = useState(true);
-  // const [password, setpassword] = useState('Qwerty1@');
-  const [password, setpassword] = useState('');
+  const [email, setemail] = useState(__DEV__ ? 'Salman090898@gmail.com' : '');
+  const [password, setpassword] = useState(__DEV__ ? 'Qwerty1@' : '');
+  // const [password, setpassword] = useState('');
+
   const [loading, setloading] = useState(false);
 
   function handleSubmit() {
@@ -22,8 +27,6 @@ const SigninScreen = ({navigation}: any) => {
     let emailRegx =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    let passRegex =
-      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-_]).{8,}$/;
     if (!email) {
       setemailValue(false);
       validate = false;
@@ -32,11 +35,7 @@ const SigninScreen = ({navigation}: any) => {
       setemailValue(false);
       validate = false;
     }
-    if (!password) {
-      setpasswordValue(false);
-      validate = false;
-    }
-    if (!passRegex.test(password)) {
+    if (!(password.length > 1)) {
       setpasswordValue(false);
       validate = false;
     }
@@ -45,13 +44,16 @@ const SigninScreen = ({navigation}: any) => {
       signIn(email, password)
         .then((rest: any) => {
           setloading(false);
-          rest.success
-            ? navigation.navigate('Landing')
-            : console.log('no rest');
+          try {
+            AsyncStorage.setItem('@userId', rest.user._id);
+          } catch (e) {
+            console.log('error', e);
+          }
+          rest.success && navigation.navigate('Landing');
         })
         .catch(error => {
           setloading(false);
-          Alert.alert(error.message);
+          Alert.alert(error);
         });
     }
   }
@@ -59,44 +61,50 @@ const SigninScreen = ({navigation}: any) => {
     <SafeAreaView>
       <KeyboardAwareScrollView>
         {/* <Text>Signin Screen</Text> */}
-        <View>
-          <Header
-            title={'Sign in'}
-            pressMethod={() => {
-              navigation.goBack();
-            }}
-          />
-        </View>
-        <View>
-          <SvgXml xml={signin} width={wp(100)} />
-        </View>
-        <View>
-          <Textbox
-            title={'User Name'}
-            placeholder={'Username'}
-            errormsg={!emailValue ? 'Invalid Username' : ''}
-            onChangeValue={(text: string) => {
-              setemailValue(true);
-              setemail(text);
-            }}
-          />
-        </View>
-        <View>
-          <Textbox
-            title={'Password'}
-            placeholder={'Password'}
-            password={true}
-            errormsg={!passwordValue ? 'Invalid Password' : ''}
-            onChangeValue={(text: string) => {
-              setpasswordValue(true);
-              setpassword(text);
-            }}
-          />
-          <TouchableOpacity
-            onPress={() => navigation.navigate('ForgotPassword')}>
-            <Text style={styles.forgotText}>Forgot Password ?</Text>
-          </TouchableOpacity>
-        </View>
+
+        <Header
+          title={'Sign in'}
+          pressMethod={() => {
+            navigation.navigate('Welcome');
+          }}
+        />
+
+        <SvgXml xml={signin} width={wp(100)} />
+
+        <Textbox
+          title={'Email'}
+          placeholder={'Email'}
+          errormsg={
+            !emailValue
+              ? email.length == 0
+                ? 'Email is Required'
+                : 'Invalid Email'
+              : ''
+          }
+          onChangeValue={(text: string) => {
+            setemailValue(true);
+            setemail(text);
+          }}
+        />
+        <Textbox
+          title={'Password'}
+          placeholder={'Password'}
+          password={true}
+          errormsg={
+            !passwordValue
+              ? password.length == 0
+                ? 'Password is Required'
+                : 'Invalid Password'
+              : ''
+          }
+          onChangeValue={(text: string) => {
+            setpasswordValue(true);
+            setpassword(text);
+          }}
+        />
+        <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+          <Text style={styles.forgotText}>Forgot Password ?</Text>
+        </TouchableOpacity>
 
         <View style={styles.registerView}>
           <Text>Don't have an Account ?</Text>
@@ -107,7 +115,7 @@ const SigninScreen = ({navigation}: any) => {
             <Text style={styles.btnText}> Register Now</Text>
           </TouchableOpacity>
         </View>
-        <View>
+        <View style={{marginBottom: heightPercentageToDP(10)}}>
           <Button
             title="Next"
             onPress={() => {

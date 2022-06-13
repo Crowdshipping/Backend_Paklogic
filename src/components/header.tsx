@@ -6,17 +6,23 @@ import {
 } from 'react-native-responsive-screen';
 import {styles} from './style';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Entypo from 'react-native-vector-icons/Entypo';
 import {IHeader} from './interface';
+import {colors} from '../theme/colors';
 
 export const Header = (props: IHeader) => {
-  const {title, pressMethod} = props;
+  const {title, pressMethod, menu} = props;
   return (
     <View style={styles.header}>
       {pressMethod ? (
         <TouchableOpacity
           onPress={() => pressMethod()}
           style={styles.arrowStyle}>
-          <AntDesign name="arrowleft" color={'#000'} size={wp(7)} />
+          {menu ? (
+            <Entypo name="menu" size={wp(7)} />
+          ) : (
+            <AntDesign name="arrowleft" color={'#000'} size={wp(7)} />
+          )}
         </TouchableOpacity>
       ) : (
         <View style={styles.arrowStyle} />

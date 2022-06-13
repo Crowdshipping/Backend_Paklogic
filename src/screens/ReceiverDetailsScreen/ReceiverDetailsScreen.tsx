@@ -1,27 +1,167 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
-  Text,
   View,
   TouchableOpacity,
-  TextInput,
-  Image,
   ImageBackground,
+  Alert,
+  SafeAreaView,
 } from 'react-native';
-import {Textbox, Button, MapHeader} from '../../components/index';
-import {receiver_derails} from '../../theme/assets/svg/index';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {mapp} from '../../theme/assets/images/index';
-
 import Entypo from 'react-native-vector-icons/Entypo';
 import {styles} from './style';
+import {Textbox, Button, MapHeader, PhoneNumberPicker} from '../../components';
+import {receiver_derails} from '../../theme/assets/svg';
+import {mapp} from '../../theme/assets/images';
+import {
+  createBooking,
+  requestProvider,
+  postRequest,
+  postImage,
+} from '../../API';
+import {SuccessModal} from '../../Modals';
 
-const ReceiverDetailsScreen = ({navigation}: any) => {
+export interface ICountryCode {
+  name: string;
+  dial_code: string;
+  code: string;
+  flag: string;
+}
+interface IimageShow {
+  name: string;
+  uri: string;
+  type: string;
+}
+interface IimageShow1 extends Array<IimageShow> {}
+
+const ReceiverDetailsScreen = ({navigation, route}: any) => {
+  const {
+    SelectedCategory,
+    SelectedType,
+    description,
+    weight,
+    SelectedUnit,
+    pickcoords,
+    dropcoords,
+    dropoffCity,
+    pickupCity,
+    providerId,
+    flightId,
+    fa_flight_id,
+    type,
+    pickupIATACityCode,
+    dropoffIATACityCode,
+    Images,
+  } = route.params?.data;
+  let bookingId: string;
+  const [receiverName, setreceiverName] = useState('');
+  const [receiverNum, setreceiverNum] = useState('');
+  const [valueNum, setvalueNum] = useState(true);
+  const [valueName, setvalueName] = useState(true);
+  const [loading, setloading] = useState(false);
+  const [isSuccess, setsuccess] = useState(false);
+  const [countrySelect, setcountrySelect] = useState<ICountryCode>();
+  let productImage: string;
+  let productImage2: string;
+  const [phone, setphone] = useState('');
+  function handleSubmit() {
+    let validate = true;
+    let phNumRegex = /^[0-9]{6,15}$/;
+    let nameRegex = /^[a-zA-Z]{2,}$/;
+
+    if (!nameRegex.test(receiverName)) {
+      validate = false;
+      setvalueName(false);
+    }
+    if (!phNumRegex.test(receiverNum)) {
+      validate = false;
+      setvalueNum(false);
+    }
+    if (validate) {
+      setloading(true);
+      postImage(Images)
+        .then((rest: any) => {
+          let validate = true;
+          // setloading(false);
+          if (rest.length === 2) {
+            if (rest[0].success && rest[1].success) {
+              productImage = rest[0].imageUrl;
+              productImage2 = rest[1].imageUrl;
+            } else validate = false;
+          } else if (rest.length === 1) {
+            if (rest[0].success) {
+              productImage = rest[0].imageUrl;
+            } else validate = false;
+          }
+          if (validate) {
+            createBooking(
+              SelectedCategory,
+              SelectedType,
+              description,
+              weight,
+              SelectedUnit,
+              pickcoords,
+              dropcoords,
+              null,
+              null,
+              receiverName,
+              receiverNum,
+              productImage,
+              productImage2,
+            )
+              .then((rest: any) => {
+                bookingId = rest.booking._id;
+                setloading(false);
+                rest.success && providerId
+                  ? requestProvider(providerId, bookingId, type, null, flightId)
+                      .then((rest: any) => {
+                        rest.success && setsuccess(true);
+                      })
+                      .catch(error => {
+                        setloading(false);
+                        Alert.alert(error);
+                      })
+                  : postRequest(
+                      bookingId,
+                      type,
+                      pickupCity,
+                      dropoffCity,
+                      fa_flight_id,
+                      pickupIATACityCode,
+                      dropoffIATACityCode,
+                      null,
+                      null,
+                      null,
+                      null,
+                      null,
+                      null,
+                    )
+                      .then((rest: any) => {
+                        rest.success && setsuccess(true);
+                      })
+                      .catch(error => {
+                        setloading(false);
+                        Alert.alert(error);
+                      });
+              })
+              .catch(error => {
+                setloading(false);
+                Alert.alert(error);
+              });
+          }
+        })
+        .catch(error => {
+          setloading(false);
+          Alert.alert(error);
+        });
+    }
+  }
+
+  // const {} = route.params?.data?.item?.provider;
   return (
     <SafeAreaView>
       <KeyboardAwareScrollView>
         <ImageBackground
-          style={styles.bgImage}
+          // style={styles.bgImage}
           resizeMode={'cover'}
           source={mapp}>
           <TouchableOpacity onPress={() => {}} style={styles.menu}>
@@ -30,13 +170,15 @@ const ReceiverDetailsScreen = ({navigation}: any) => {
           <View style={styles.location}>
             <Textbox
               title={'Pickup Location'}
-              placeholder={'Pickup Location'}
+              placeholder={pickupCity}
               onChangeValue={() => {}}
+              editable={false}
             />
             <Textbox
               title={'Drop Location'}
-              placeholder={'Drop Location'}
+              placeholder={dropoffCity}
               onChangeValue={() => {}}
+              editable={false}
             />
           </View>
           <View style={styles.body}>
@@ -44,7 +186,9 @@ const ReceiverDetailsScreen = ({navigation}: any) => {
               <MapHeader
                 title="receiver Details"
                 picture={receiver_derails}
-                pressMethod={() => {}}
+                pressMethod={() => {
+                  navigation.goBack();
+                }}
               />
             </View>
             <View style={styles.main}>
@@ -52,23 +196,69 @@ const ReceiverDetailsScreen = ({navigation}: any) => {
                 <Textbox
                   title="Name"
                   placeholder="Name"
-                  onChangeValue={() => {}}
+                  onChangeValue={(text: string) => {
+                    setreceiverName(text);
+                    setvalueName(true);
+                  }}
+                  errormsg={
+                    !valueName
+                      ? receiverName.length === 0
+                        ? 'Receiver name is required'
+                        : 'Name should have atleast 3 alphabets'
+                      : ''
+                  }
                 />
-                <Textbox
-                  title="Phone Number"
-                  placeholder="Phone Number"
-                  onChangeValue={() => {}}
+                <PhoneNumberPicker
+                  onChange={(selectedCountry: ICountryCode, text: string) => {
+                    setcountrySelect(selectedCountry);
+                    setphone(text);
+                    setreceiverNum(
+                      selectedCountry.dial_code.substring(1) + text,
+                    );
+                    setvalueNum(true);
+                  }}
+                  errormsg={
+                    !valueNum
+                      ? receiverNum.length
+                        ? 'Receiver Number is required'
+                        : 'Must Enter valid phone number'
+                      : ''
+                  }
                 />
               </View>
 
               <Button
                 title="Proceed to pay"
-                onPress={() => navigation.navigate('VerifyOtp')}
+                onPress={() => {
+                  handleSubmit();
+                }}
+                loading={loading}
+              />
+              <Button
+                title="Modify Request"
+                onPress={() => {
+                  navigation.navigate('ModifyRequest', {
+                    data: route.params.data,
+                    receiverName,
+                    countrySelect,
+                    phone,
+                    bookingId,
+                  });
+                }}
               />
             </View>
           </View>
         </ImageBackground>
       </KeyboardAwareScrollView>
+
+      <SuccessModal
+        isSuccess={isSuccess}
+        setsuccess={() => {
+          setsuccess(false);
+          navigation.navigate('Landing');
+        }}
+        text={'Submitted Successfuly'}
+      />
     </SafeAreaView>
   );
 };

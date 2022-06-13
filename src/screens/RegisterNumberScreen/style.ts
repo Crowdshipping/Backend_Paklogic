@@ -1,5 +1,8 @@
 import {StyleSheet} from 'react-native';
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
 
 export const styles = StyleSheet.create({
   sectionContainer: {
@@ -12,6 +15,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     backgroundColor: '#fff',
+    marginBottom: hp(10),
     width: wp(90),
     borderRadius: 10,
     elevation: 5,
