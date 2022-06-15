@@ -36,7 +36,7 @@ const AddComplain = ({ navigation }: any) => {
             }
             console.log("result of camera or gallery", result);
             // didCancel
-            let data = result.assets[0];
+            let data: any = result.assets?.[0];
             if (Platform.OS === 'ios') {
                 data.uri = data?.uri?.slice(7);
             }

@@ -33,7 +33,7 @@ import MyLoader from '../components/MyLoader';
 const DrawerSideScreen = ({ navigation }: any) => {
 
 
-    const [userId, setUserId] = React.useState('');
+    const [userId, setUserId] = React.useState<any>('');
     const [isLoading, setIsLoading] = React.useState(false);
 
     const getUserId = async () => {

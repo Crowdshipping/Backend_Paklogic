@@ -8,12 +8,12 @@ import {
     Alert,
     Text,
 } from 'react-native';
-import { ship } from '../theme/assets/svg/shipSvg';
-import { backendUrl } from '../appConstants';
-import { ButtonOutline } from '../components';
-import { deleteShipRecord, getAllShipAddedByProvider } from '../services';
-import ShipComponent from '../components/ShipComponent';
-import MyLoader from '../components/MyLoader';
+import { ship } from '../../theme/assets/svg/shipSvg';
+import { backendUrl } from '../../appConstants';
+import { ButtonOutline } from '../../components';
+import { deleteShipRecord, getAllShipAddedByProvider } from '../../services';
+import ShipComponent from '../../components/ShipComponent';
+import MyLoader from '../../components/MyLoader';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { heightPercentageToDP } from 'react-native-responsive-screen';
@@ -104,6 +104,7 @@ const AllShips = ({ navigation }: any) => {
                     .then(response => response.json())
                     .then(result => {
                         if (result.success) {
+                            console.log("result of all ships response", result);
                             setIsLoading(false);
                             setShipResponse(result.ships)
                         } else if (result.success == false) {

@@ -23,8 +23,7 @@ export const userData = () => {
       console.log('error/n', error);
     });
 };
-
-export const otp = data => {
+export const otp = (data: any) => {
   var myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');
   myHeaders.append(
@@ -43,8 +42,7 @@ export const otp = data => {
 
   return fetch(backendUrl + '/user/sendotp', requestOptions);
 };
-
-export const otpEmail = data => {
+export const otpEmail = (data: any) => {
   var myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');
   myHeaders.append(
@@ -63,8 +61,7 @@ export const otpEmail = data => {
 
   return fetch(backendUrl + '/user/forgetpassword2', requestOptions);
 };
-
-export const verifyOtp = data => {
+export const verifyOtp = (data: any) => {
   var myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');
   myHeaders.append(
@@ -85,8 +82,7 @@ export const verifyOtp = data => {
 
   return fetch(backendUrl + '/user/confirmotp', requestOptions);
 };
-
-export const verifyOtpEmail = data => {
+export const verifyOtpEmail = (data: any) => {
   var myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');
   myHeaders.append(
@@ -106,8 +102,7 @@ export const verifyOtpEmail = data => {
   };
   return fetch(backendUrl + '/user/verifyotp', requestOptions);
 };
-
-export const register = data => {
+export const register = (data: any) => {
   var formdata = new FormData();
   formdata.append('firstname', data.fname);
   formdata.append('lastname', data.lname);
@@ -126,8 +121,7 @@ export const register = data => {
 
   return fetch(backendUrl + '/user/', requestOptions);
 };
-
-export const login = data => {
+export const login = (data: any) => {
   var myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');
   myHeaders.append(
@@ -146,8 +140,7 @@ export const login = data => {
 
   return fetch(backendUrl + '/user/login', requestOptions);
 };
-
-export const resetPassword = data => {
+export const resetPassword = (data: any) => {
   var myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');
   myHeaders.append(
@@ -163,8 +156,7 @@ export const resetPassword = data => {
   };
   return fetch(backendUrl + '/user/resetpassword', requestOptions);
 };
-
-export const company = data => {
+export const company = (data: any) => {
   var formdata = new FormData();
   formdata.append('companyName', data.name);
   formdata.append('companyRegNo', data.totalVehicle);
@@ -188,8 +180,7 @@ export const company = data => {
     requestOptions,
   );
 };
-
-export const driver = data => {
+export const driver = (data: any) => {
   var myHeaders = new Headers();
   myHeaders.append(
     'Cookie',
@@ -219,7 +210,6 @@ export const driver = data => {
     requestOptions,
   );
 };
-
 export const handleUpload = async (image: any) => {
   var formdata = new FormData();
   formdata.append('image', image);
@@ -233,89 +223,26 @@ export const handleUpload = async (image: any) => {
     requestOptions,
   );
 
-  // const data = new FormData()
-  // data.append('file', image)
-  // data.append("upload_preset", "gohp28zp")
-  // data.append("cloud_name", "resbook")
-  // return await fetch("https://api.cloudinary.com/v1_1/resbook/image/upload", {
-  //   method: "post",
-  //   body: data
-  // })
-  // .then(res => res.json())
-  // .then(data => {
-  //   // setPhoto(data.secure_url)
-  //   // imgdata.push({ name: d.name, url: data.secure_url })
-  //   console.log('res', data.secure_url)
-  // }).catch(err => {
-  //   console.log('err', err)
-  //   error = { error: true, err: err }
-  //   // Alert.alert("An Error Occured While Uploading")
-  // })
-
-  // let imgdata: Array<any> = []
-  // let error: Array<any> = []
-  // let isError = false
-  // console.log("handling image")
-  // const data2 = new FormData()
-  // data2.append("file", image)
-  // data2.append("upload_preset", "gohp28zp")
-  // data2.append("cloud_name", "ResBook")
-  // const URL = " https://api.cloudinary.com/v1_1/resbook/image/upload";
-  // return axios.post(URL, data2)
-  // console.log('array', imageArr)
-  // await imageArr.map(async (d, i) => {
-  // const data = new FormData()
-  // data.append('file', d.data)
-  // data.append("upload_preset", "gohp28zp")
-  // data.append("cloud_name", "resbook")
-  // await fetch("https://api.cloudinary.com/v1_1/resbook/image/upload", {
-  //   method: "post",
-  //   body: data
-  // })
-  //   .then(res => res.json())
-  //   .then(data => {
-  //     // setPhoto(data.secure_url)
-  //     imgdata.push({ name: d.name, url: data.secure_url })
-  //     console.log('res', data.secure_url)
-  //   }).catch(err => {
-  //     console.log('err', err)
-  //     error = { error: true, err: err }
-  //     // Alert.alert("An Error Occured While Uploading")
-  //   })
-
-  // var formdata = new FormData();
-  // formdata.append("image", d.data);
-  // var requestOptions = {
-  //   method: 'POST',
-  //   body: formdata,
-  //   redirect: 'follow'
-  // };
-  // await fetch("https://backend-crowdshipping.herokuapp.com/company/singlepicture", requestOptions)
-  //   .then(res => res.json())
-  //   .then(data => {
-  //     // setPhoto(data.secure_url)
-  //     console.log()
-  //     imgdata.push({ name: d.name, url: data.imageUrl })
-  //     // console.log('res', data.imageUrl)
-  //   }).catch(err => {
-  //     console.log('err', err)
-  //     error.push({ error: true, err: err, name: d.name })
-  //     isError = true
-  //     // Alert.alert("An Error Occured While Uploading")
-  //   })
-  // if (isError) {
-  //   return error
-  // } else {
-  //   // console.log(imgdata)
-  //   return imgdata
-  // }
-  // .then(response => response.text())
-  // .then(result => console.log(result))
-  // .catch(error => console.log('error', error));
-  // })
 };
+/*Air stuff here */
 
-//////api for ge airport from
+export const getFlightLatestPosition = (faFlightId: any) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Cookie", "connect.sid=s%3A6hMX10t8PgFYpxazKNv_NXL1bZOcOZL8.Vxtk7Dra9v6en25MI9MEt5Sksj9jmoGfSbzOxE%2FvfZk");
+
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow'
+  };
+
+  return fetch(`https://backend-crowdshipping.herokuapp.com/customer/flightlatestposition/${faFlightId}`, requestOptions);
+}
+
+
+
+
+
 export const getAirportName = (data: any) => {
   var myHeaders = new Headers();
   myHeaders.append(
@@ -333,7 +260,6 @@ export const getAirportName = (data: any) => {
     requestOptions,
   );
 };
-
 export const addFlight = (data: any) => {
   console.log('addFlightdata', data);
   var myHeaders = new Headers();
@@ -368,7 +294,6 @@ export const addFlight = (data: any) => {
     requestOptions,
   );
 };
-
 export const searchFlight = (
   departureAirportCode: any,
   destinationAirportCode: any,
@@ -419,7 +344,6 @@ export const getRequestsToAllProviders = (userId: any) => {
     requestOptions,
   );
 };
-
 export const setAcceptOrReject = (requestId: any, newStatus: any) => {
   var myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');
@@ -445,8 +369,7 @@ export const setAcceptOrReject = (requestId: any, newStatus: any) => {
     requestOptions,
   );
 };
-
-export const getAllFlightAddedByProvider = userId => {
+export const getAllFlightAddedByProvider = (userId: any) => {
   console.log('providerid from api function ', userId);
   var myHeaders = new Headers();
   myHeaders.append(
@@ -465,7 +388,6 @@ export const getAllFlightAddedByProvider = userId => {
     requestOptions,
   );
 };
-
 export const getFlightsDate = (faFlightId: any) => {
   var myHeaders = new Headers();
   myHeaders.append(
@@ -484,7 +406,6 @@ export const getFlightsDate = (faFlightId: any) => {
     requestOptions,
   );
 };
-
 export const getAllPostRequests = () => {
   var requestOptions = {
     method: 'GET',
@@ -515,8 +436,6 @@ export const changePostRequestStatus = (postRequestId: any, providerId: any) => 
 
   return fetch("https://backend-crowdshipping.herokuapp.com/provider/changepostrequeststatus", requestOptions)
 };
-
-
 export const addFlightAfterPost = (flightDataFromPostRequest: any) => {
   var myHeaders = new Headers();
   myHeaders.append("Cookie", "connect.sid=s%3AU8xqFWhyglrgAoqvsfZ0nifDa86VtpSA.MZnOyFTVT5%2F%2BxQrtKBbN3zjecsYAf7uG7WK8gVXdRzg");
@@ -552,7 +471,6 @@ export const addFlightAfterPost = (flightDataFromPostRequest: any) => {
   return fetch("https://backend-crowdshipping.herokuapp.com/provider/addflightafterpost", requestOptions);
 
 }
-
 export const changeStateByProvider = (state: any, requestId: any) => {
 
   var myHeaders = new Headers();
@@ -574,7 +492,6 @@ export const changeStateByProvider = (state: any, requestId: any) => {
   return fetch("https://backend-crowdshipping.herokuapp.com/provider/setrequeststate", requestOptions);
 
 }
-
 export const verifyBookingForCompletion = (image: any, requestId: any) => {
   console.log("verify booking for completion image requestID ", image, requestId);
   var myHeaders = new Headers();

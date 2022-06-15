@@ -1,159 +1,70 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
-import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import MapView, { PROVIDER_GOOGLE, PROVIDER_DEFAULT } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
+import { heightPercentageToDP, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import CheckBoxState from '../../components/CheckBoxState';
 import CheckBoxState2 from '../../components/CheckBoxState2';
 import HorizontalDivider from '../../components/HorizontalDivider';
 import MapButton from '../../components/MapButton';
 import MyLoader from '../../components/MyLoader';
-import { changeStateByProvider, getFlightsDate } from '../../services';
-// requestData: requestData,
-// flightInfoData: flightInfo,
+import { changeStateByProvider, getFlightLatestPosition, getFlightsDate } from '../../services';
+import BottomSheetModalForAir from '../Air/Components/BottomSheetModalForAir';
+import RequestDetailComponentForAir from '../Air/Components/RequestDetailComponentForAir';
+
 const AcceptBooking = ({ route, navigation }: any) => {
-  const { requestData, flightInfoData } = route.params;
 
+  const [googleMapProvider, setGoogleMapProvider] = React.useState<any>(PROVIDER_DEFAULT);
+  const { requestData, flightInfoData }: any = route.params;
+  const [flightPosition, setFlightPosition] = React.useState<any>({});
+  const [isLoading, setIsLoading] = React.useState<any>(false);
 
-  const [flightInfo, setFlightInfo] = React.useState({});
-  const [isLoading, setIsLoading] = React.useState(false);
-
-  React.useEffect(() => {
-    getFlightsDate(requestData.flight.fa_flight_id)
-      .then(response => response.json())
+  const getFlightPosition = () => {
+    getFlightLatestPosition("SIF122-1655096520-schedule-0697").then(response => response.json())
       .then(result => {
         if (result.success) {
-          setFlightInfo(result.flightInfo);
+          setFlightPosition(result.flightlatestPosition);
           console.log('result from booking ', result);
         }
       })
       .catch(error => console.log('error', error));
+  }
+  //300,000 is 5minutes time
+  React.useEffect(() => {
+    getFlightPosition();
+    const interval = setInterval(() => {
+      getFlightPosition();
+    }, 300000);
+    return () => clearInterval(interval);
   }, []);
-
-  const toAndFromDateFlightInfoData = () => {
-    return <View>
-      <View style={styles.topView}>
-        <Text style={{ fontSize: 20, color: 'grey' }}>From Date</Text>
-        <Text style={{ fontSize: 20, color: 'red' }}>
-          {flightInfoData.scheduled_out &&
-            flightInfoData.scheduled_out.slice(0, -10)}
-        </Text>
-      </View>
-      <HorizontalDivider />
-      <View style={styles.topView}>
-        <Text style={{ fontSize: 20, color: 'grey' }}>To Date</Text>
-        <Text style={{ fontSize: 20, color: 'red' }}>
-          {flightInfoData.scheduled_on &&
-            flightInfoData.scheduled_on.slice(0, -10)}
-        </Text>
-      </View>
-
-    </View>
-
-  }
-  const toAndFromDateFlightInfo = () => {
-    return <View>
-      <View style={styles.topView}>
-        <Text style={{ fontSize: 20, color: 'grey' }}>From Date</Text>
-        <Text style={{ fontSize: 20, color: 'red' }}>
-          {flightInfo.scheduled_out !== undefined &&
-            flightInfo.scheduled_out.slice(0, -10)}
-        </Text>
-      </View>
-      <HorizontalDivider />
-      <View style={styles.topView}>
-        <Text style={{ fontSize: 20, color: 'grey' }}>To Date</Text>
-        <Text style={{ fontSize: 20, color: 'red' }}>
-          {flightInfo.scheduled_on !== undefined &&
-            flightInfo.scheduled_on.slice(0, -10)}
-        </Text>
-      </View>
-
-    </View>
-
-  }
-
-
   return (
     <View style={styles.container}>
       {isLoading ? <MyLoader /> :
         <View style={styles.container}>
           <MapView
-            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+            onMapReady={() => {
+              setGoogleMapProvider(PROVIDER_GOOGLE);
+            }}
+            provider={googleMapProvider} // remove if not using Google Maps
             style={styles.map}
             region={{
-              latitude: 37.78825,
-              longitude: -122.4324,
+              latitude: flightPosition.latitude,
+              longitude: flightPosition.longitude,
               latitudeDelta: 0.015,
               longitudeDelta: 0.0121,
             }}>
           </MapView>
-          <View style={styles.mapInformation}>
-            <View style={styles.topView}>
-              <Text style={{ fontSize: 20, color: 'grey' }}>Pick up city</Text>
-              <Text style={{ fontSize: 20, color: 'red' }}>
-                {requestData.flight.pickupCity}
-              </Text>
-            </View>
-            <HorizontalDivider />
-            <View style={styles.topView}>
-              <Text style={{ fontSize: 20, color: 'grey' }}>Drop off city</Text>
-              <Text style={{ fontSize: 20, color: 'red' }}>
-                {requestData.flight.dropoffCity}
-              </Text>
-            </View>
-            <HorizontalDivider />
-            {flightInfoData ? toAndFromDateFlightInfoData() : toAndFromDateFlightInfo()}
-
-          </View>
-          <View style={styles.mapBottom}>
-            <View style={styles.topPart}>
-              <TouchableOpacity onPress={() => {
-                console.log("from detail caller request data + flightInfoData ", requestData, flightInfoData);
-                navigation.navigate("PACKAGEDETAIL", {
-                  requestData: requestData,
-                })
-              }}>
-                <Text style={styles.topPartText}>View Package Detail</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.bottomPart}>
-              <View style={styles.checkBoxRow}>
-                <CheckBoxState2 text={'Pick up'} />
-                <CheckBoxState2 text={'Transit'} />
-                <CheckBoxState2 text={'Reached'} />
-              </View>
-              <MapButton
-                onPress={() => {
-                  setIsLoading(true);
-                  // navigation.navigate('AcceptBooking2', {
-                  //   requestData: requestData,
-                  //   flightInfoData: flightInfoData ? flightInfoData : flightInfo,
-                  // });
-                  changeStateByProvider("Pickedup", requestData._id)
-                    .then(response => response.json())
-                    .then(result => {
-
-                      if (result.success) {
-                        setIsLoading(false);
-                        navigation.navigate('AcceptBooking2', {
-                          requestData: requestData,
-                          flightInfoData: flightInfoData ? flightInfoData : flightInfo,
-                        });
-                      }
-                    })
-                    .catch(error => {
-                      setIsLoading(false);
-                      console.log('error', error)
-                    });
-                }}
-                text={'PICKED UP'}
-              />
-            </View>
-          </View>
+          <BottomSheetModalForAir
+            navigation={navigation}
+            pickUpAirport={requestData.flight.pickupCity}
+            dropOffAirport={requestData.flight.dropoffCity}
+            fromDate={flightInfoData.scheduled_out.slice(0, -10)}
+            toDate={flightInfoData.scheduled_on.slice(0, -10)}
+            requestData={requestData}
+          />
         </View>
       }
-    </View>
+    </View >
   );
 };
 export default AcceptBooking;
@@ -163,35 +74,26 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
     justifyContent: 'flex-end',
-    height: "100%"
   },
   mapInformation: {
     backgroundColor: 'white',
-    width: wp(95),
-    marginHorizontal: 10,
-
-    borderTopLeftRadius: wp(2),
-    borderTopRightRadius: wp(2),
   },
   topView: {
-    padding: 20,
-    display: 'flex',
     flexDirection: 'row',
+    padding: 10,
     justifyContent: 'space-between',
   },
   mapBottom: {
     backgroundColor: 'white',
-    width: wp(100),
-    height: '37%',
+    width: '100%',
+    height: '35%',
   },
   checkBoxRow: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  topPart: {
-    flex: 1,
-  },
+
   topPartText: {
     color: 'red',
     fontSize: 16,
@@ -199,12 +101,11 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   bottomPart: {
-    flex: 1,
+    height: heightPercentageToDP(20),
     justifyContent: 'space-between',
-    marginVertical: 25,
-    marginHorizontal: 25,
-  },
+    padding: 10,
 
+  },
   map: {
     ...StyleSheet.absoluteFillObject,
   },

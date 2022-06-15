@@ -137,15 +137,7 @@ export default function RegisterScreen(props: any) {
             />
           </View>
           <View style={styles.orContainer}>
-            {/* <View style={styles.orLines} />
-            <Text>OR</Text>
-            <View style={styles.orLines} /> */}
           </View>
-
-          {/* <View style={styles.socialContainer}>
-            <Zocial name="google" size={wp(7)} />
-            <Entypo name="facebook-with-circle" size={wp(8.8)} />
-          </View> */}
           <Button
             loading={loading}
             title="NEXT"
@@ -165,4 +157,3 @@ export default function RegisterScreen(props: any) {
     </KeyboardAvoidingView>
   );
 }
-// export default RegisterScreen;

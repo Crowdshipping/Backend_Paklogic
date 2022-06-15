@@ -98,17 +98,29 @@ const AcceptBooking4 = ({ route, navigation }: any) => {
             }}></MapView>
           <View style={styles.mapInformation}>
             <View style={styles.topView}>
-              <Text style={{ fontSize: 20, color: 'grey' }}>Pick up city</Text>
-              <Text style={{ fontSize: 20, color: 'red' }}>
-                {requestData.flight.pickupCity}
-              </Text>
+              <View>
+                <Text style={{ fontSize: 20, color: 'grey' }}>Pick up Airport</Text>
+              </View>
+              <View style={{ flexDirection: 'row', width: "17%" }}>
+              </View>
+              <View>
+                <Text style={{ flexShrink: 1, flexWrap: 'wrap', fontSize: 20, color: 'red' }}>
+                  {requestData.flight.pickupCity}
+                </Text>
+              </View>
             </View>
             <HorizontalDivider />
             <View style={styles.topView}>
-              <Text style={{ fontSize: 20, color: 'grey' }}>Drop off city</Text>
-              <Text style={{ fontSize: 20, color: 'red' }}>
-                {requestData.flight.dropoffCity}
-              </Text>
+              <View>
+                <Text style={{ fontSize: 20, color: 'grey' }}>Drop off Airport</Text>
+              </View>
+              <View style={{ flexDirection: 'row', width: "17%" }}>
+              </View>
+              <View>
+                <Text style={{ flexShrink: 1, flexWrap: 'wrap', fontSize: 20, color: 'red' }}>
+                  {requestData.flight.dropoffCity}
+                </Text>
+              </View>
             </View>
             <HorizontalDivider />
             <View style={styles.topView}>

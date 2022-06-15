@@ -113,37 +113,38 @@ const AllRequest = ({ navigation, status, myColor, route }: any) => {
       .then(response => response.json())
       .then(result => {
         setIsloading(false);
-        console.log("items of Flights", result.flightInfo)
         if (result.success && result.flightInfo) {
+          // if (item.state === "Pickedup") {
+          //   navigation.navigate('AcceptBooking2', {
+          //     requestData: item,
+          //     flightInfoData: result.flightInfo,
+          //   });
+          // }
+          // else if (item.state === "Transit") {
+          //   navigation.navigate('AcceptBooking3', {
+          //     requestData: item,
+          //     flightInfoData: result.flightInfo,
 
-          if (item.state === "Pickedup") {
-            navigation.navigate('AcceptBooking2', {
-              requestData: item,
-              flightInfoData: result.flightInfo,
-            });
-          }
-          else if (item.state === "Transit") {
-            navigation.navigate('AcceptBooking3', {
-              requestData: item,
-              flightInfoData: result.flightInfo,
+          //   });
+          // }
+          // else if (item.state === "Reached") {
+          //   navigation.replace('AcceptBooking4', {
+          //     requestData: item,
+          //     flightInfoData: result.flightInfo,
+          //   });
 
-            });
-          }
-          else if (item.state === "Reached") {
+          // }
+          // else {
+          //   navigation.navigate('AcceptBooking', {
+          //     requestData: item,
+          //     flightInfoData: result.flightInfo,
+          //   });
+          // }
 
-
-            navigation.replace('AcceptBooking4', {
-              requestData: item,
-              flightInfoData: result.flightInfo,
-            });
-
-          }
-          else {
-            navigation.navigate('AcceptBooking', {
-              requestData: item,
-              flightInfoData: result.flightInfo,
-            });
-          }
+          navigation.navigate('AcceptBooking', {
+            requestData: item,
+            flightInfoData: result.flightInfo,
+          });
         }
       })
       .catch(error => {
@@ -240,7 +241,7 @@ const AllRequest = ({ navigation, status, myColor, route }: any) => {
               destinationAirport={item.destinationPort}
               acceptPress={() => {
                 Alert.alert("",
-                  "You need to register this flight in order to accept this request?",
+                  "You need to register this Ship in order to accept this request?",
                   [
                     {
                       text: 'Yes', onPress: () => {
@@ -280,14 +281,12 @@ const AllRequest = ({ navigation, status, myColor, route }: any) => {
 
   const acceptedTab = (item: any) => {
 
-    console.log("item from accept tab", item);
-
-
     // show only accepted and not completed requests.
     if (item.isverificationComplete) {
       return;
     }
     if (item.status === 'Accepted' && item.type === "Flight") {
+      console.log("accepted things", item);
       if (item.requestedBy !== null && item.flight !== null) {
         if (item.requestedBy.profilepic !== null || item.requestedBy.firstname !== null || item.requestedBy.lastname !== null || item.flight.flightAirline !== null || item.flight.departureAirport !== null || item.flight.destinationAirport !== null || item.flight.flightDate !== null) {
           return (
@@ -312,6 +311,7 @@ const AllRequest = ({ navigation, status, myColor, route }: any) => {
       console.log("item from else tab accepted")
       return (
         <RequestComponentForShip
+          isAccepted={true}
           isPostRequest={true}
           myImage={item.requestedBy.profilepic}
           firstName={item.requestedBy.firstname}

@@ -12,7 +12,6 @@ import SignIn from '../screens/SignIn/SignIn';
 import Splash from '../screens/Splash/Splash';
 import VerifyOtp from '../screens/VerifyOtp/VerifyOtp';
 import Welcome from '../screens/Welcome/Welcome';
-import { View, Text } from 'react-native';
 const Stack = createStackNavigator();
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import AllRequest from '../screens/AllRequest/AllRequest';
@@ -26,16 +25,15 @@ import AllFlight from '../screens/Booking/AllFlight';
 import AddTicketDetails from '../screens/Booking/AddTicketDetails';
 import EditTicketDetail from '../screens/Booking/EditTicketDetail';
 import AvailableFight from '../screens/AvailableFlight/AvailableFlight';
-import { CommonActions } from '@react-navigation/native';
 import LastBookingHistory from '../screens/Booking/LastBookingHistory';
 import PictureDelivery from '../screens/PictureDelivery';
 import AddFlightPostRequest from '../screens/AddFlightPostRequest';
 import DrawerSideScreen from '../screens/DrawerSideScreen';
-import AllShips from '../screens/AllShips';
+import AllShips from '../screens/Ship/AllShips';
 import AddShipTicket from '../screens/AddShipTicket';
 import MyProfile from '../screens/MyProfile';
 import PackageDetail from '../screens/PackageDetail';
-import AddShipPostRequest from '../screens/AddShipPostRequest';
+import AddShipPostRequest from '../screens/Ship/AddShipPostRequest';
 import PickedUpForShip from '../screens/Ship/PickedUpForShip';
 import TransitForShip from '../screens/Ship/TransitForShip';
 import ReachedForShip from '../screens/Ship/ReachedForShip';
@@ -49,27 +47,6 @@ import AddComplain from '../screens/Complain/AddComplain';
 import ComplainDetail from '../screens/Complain/ComplainDetail';
 import AddClaim from '../screens/Claim/AddClaim';
 const Drawer = createDrawerNavigator();
-
-function CustomDrawerContent({ navigation }: any) {
-  return (
-    <Button
-      title="Manage Flights"
-      onPress={() => {
-        // Navigate using the `navigation` prop that you received
-        navigation.navigate('AllFlight');
-        // navigation.dispatch((state: any) => {
-        //   const routes = [{name: 'AllFlight'}, ...state.routes];
-        //   return CommonActions.reset({
-        //     ...state,
-        //     routes,
-        //     index: 0,
-        //   });
-        // });
-      }}
-    />
-  );
-}
-
 const DrawerNavigator = () => {
   return (
     <Drawer.Navigator drawerContent={DrawerSideScreen}>
@@ -522,7 +499,7 @@ export const StackNavigation = () => {
             backgroundColor: 'white',
           },
           headerTitleAlign: 'center',
-          title: 'Attach Images',
+          title: 'Request Details',
         }}
         name="PICKEDUPFORSHIP"
         component={PickedUpForShip}
@@ -537,7 +514,7 @@ export const StackNavigation = () => {
             backgroundColor: 'white',
           },
           headerTitleAlign: 'center',
-          title: 'Attach Images',
+          title: 'Request Details',
         }}
         name="TRANSITFORSHIP"
         component={TransitForShip}
@@ -552,7 +529,7 @@ export const StackNavigation = () => {
             backgroundColor: 'white',
           },
           headerTitleAlign: 'center',
-          title: 'Attach Images',
+          title: 'Request Details',
         }}
         name="REACHEDFORSHIP"
         component={ReachedForShip}
@@ -568,7 +545,7 @@ export const StackNavigation = () => {
             backgroundColor: 'white',
           },
           headerTitleAlign: 'center',
-          title: 'Attach Images',
+          title: 'Request Details',
         }}
         name="COMPLETEFORSHIP"
         component={CompleteForShip}

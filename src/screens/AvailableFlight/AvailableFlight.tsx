@@ -165,17 +165,6 @@ const AvailableFight = ({ route, navigation, status, myColor }: any) => {
     rendering()
   );
 
-
-  // <ScrollView>
-  //   {isLoading ? <MyLoader /> :
-  //     <View style={{ backgroundColor: 'red' }}>
-  //       <View style={{ backgroundColor: "#f0f0f0", height: 250, borderRadius: 10, margin: 20, justifyContent: 'center', alignItems: 'center' }}>
-  //         <Text style={{ color: 'red' }}>No Flights Available</Text>
-  //       </View>
-  //     </View>
-  //   }
-
-  // </ScrollView>
 };
 const styles = StyleSheet.create({
   container: {

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Alert,
   KeyboardAvoidingView,
@@ -8,19 +8,19 @@ import {
   View,
 } from 'react-native';
 import RNDocumentPicker from 'react-native-document-picker';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {launchImageLibrary} from 'react-native-image-picker';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { launchImageLibrary } from 'react-native-image-picker';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {SvgXml} from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
-import {Button, Picker, Textbox} from '../../components';
-import {company, driver, handleUpload} from '../../services';
-import {register1, register7} from '../../theme/assets/svg';
-import {colors} from '../../theme/colors';
+import { Button, Picker, Textbox } from '../../components';
+import { company, driver, handleUpload } from '../../services';
+import { register1, register7 } from '../../theme/assets/svg';
+import { colors } from '../../theme/colors';
 import {
   validateAlphabet,
   validateEmail,
@@ -28,7 +28,7 @@ import {
   validateNumber,
   validatePassword,
 } from '../../validation';
-import {styles} from './style';
+import { styles } from './style';
 
 export default function RegisterDriver(props: any) {
   const [vehicleType, setVehicleType] = useState('');
@@ -62,7 +62,10 @@ export default function RegisterDriver(props: any) {
         mediaType: 'photo',
         quality: 0.5,
       });
-      let data = result.assets[0];
+      if (result.didCancel) {
+        return;
+      }
+      let data: any = result.assets?.[0];
       if (Platform.OS === 'ios') {
         data.uri = data.uri.slice(7);
       }
@@ -252,17 +255,17 @@ export default function RegisterDriver(props: any) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{flex: 1}}>
+      style={{ flex: 1 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{flex: 2}}>
+        <View style={{ flex: 2 }}>
           <SvgXml
-            style={{alignSelf: 'center'}}
+            style={{ alignSelf: 'center' }}
             width={wp(80)}
             height={wp(80)}
             xml={register7}
           />
         </View>
-        <View style={{flex: 2, paddingHorizontal: wp(3)}}>
+        <View style={{ flex: 2, paddingHorizontal: wp(3) }}>
           <Text
             style={{
               marginLeft: wp(5),
@@ -303,7 +306,7 @@ export default function RegisterDriver(props: any) {
           />
 
           <TouchableOpacity
-            style={[styles.imagepicker, {marginTop: hp(3)}]}
+            style={[styles.imagepicker, { marginTop: hp(3) }]}
             onPress={() => pickupDoc('VEHICLE IMAGE')}>
             <Text>UPLOAD VEHICLE IMAGE</Text>
             <EvilIcons name="paperclip" color={'grey'} size={wp(6)} />
@@ -337,10 +340,10 @@ export default function RegisterDriver(props: any) {
             <EvilIcons name="paperclip" color={'grey'} size={wp(6)} />
           </TouchableOpacity>
 
-          <Text style={{alignSelf: 'center', marginTop: hp(5)}}>
+          <Text style={{ alignSelf: 'center', marginTop: hp(5) }}>
             Already have an Account ?
             <Text
-              style={{color: colors.red}}
+              style={{ color: colors.red }}
               onPress={() => props.navigation.navigate('SignIn')}>
               Signin
             </Text>
@@ -352,7 +355,7 @@ export default function RegisterDriver(props: any) {
               validate();
               // console.log(props.route.params.uid)
             }}
-            containerStyle={{marginTop: hp(4)}}
+            containerStyle={{ marginTop: hp(4) }}
           />
         </View>
       </ScrollView>

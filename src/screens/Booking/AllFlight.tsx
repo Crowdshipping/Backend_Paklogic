@@ -68,14 +68,16 @@ const AllFlight = ({ navigation, status, myColor }: any) => {
         {flightResponse &&
           flightResponse.map((item: any) => {
             console.log('entire item from all flight', item);
-            return (
 
+
+            return (
+              // flightDate
               <FlightComponent
                 departureAirport={item.departureAirport}
                 destinationAirport={item.destinationAirport}
                 date={item.flightDate.slice(0, -14)}
-                departureTime={item.departureTime}
-                destinationTime={item.destinationTime}
+                departureTime={(new Date(item.flightDate)).toTimeString().slice(0, -18)}
+                destinationTime={(new Date(item.flightarrivalDate)).toTimeString().slice(0, -18)}
                 flightNumber={item.flightNumber}
                 airline={item.flightAirline}
                 myImage={backendUrl + item.ticketImage}

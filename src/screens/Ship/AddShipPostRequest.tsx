@@ -11,17 +11,17 @@ import {
     ScrollView,
 } from 'react-native';
 import { widthPercentageToDP } from 'react-native-responsive-screen';
-import { Button } from '../components';
+import { Button } from '../../components';
 import { SvgXml } from 'react-native-svg';
-import { dateSvg } from '../theme/assets/svg/dateSvg';
-import { timeSvg } from '../theme/assets/svg/timeSvg';
-import { ImageSvg } from '../theme/assets/svg/ImageSvg';
-import { launchImageLibrary } from 'react-native-image-picker';
+import { dateSvg } from '../../theme/assets/svg/dateSvg';
+import { timeSvg } from '../../theme/assets/svg/timeSvg';
+import { ImageSvg } from '../../theme/assets/svg/ImageSvg';
+import { ImagePickerResponse, launchImageLibrary } from 'react-native-image-picker';
 import DatePicker from 'react-native-date-picker';
 
-import { addFlightAfterPost, addShipAfterPost } from '../services';
+import { addFlightAfterPost, addShipAfterPost } from '../../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import MyLoader from '../components/MyLoader';
+import MyLoader from '../../components/MyLoader';
 const formatAMPM = (date: Date) => {
     let hours = date.getHours();
     let minutes = date.getMinutes();
@@ -136,7 +136,10 @@ const AddShipPostRequest = ({ navigation, route }: any) => {
                 mediaType: 'photo',
                 quality: 0.5,
             });
-            let data = result.assets[0];
+            if (result.didCancel) {
+                return;
+            }
+            let data: any = result.assets?.[0];
             if (Platform.OS === 'ios') {
                 data.uri = data?.uri?.slice(7);
             }

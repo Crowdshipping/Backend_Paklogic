@@ -14,7 +14,7 @@ const BookingRequest = ({ route, navigation }: any) => {
   console.log('class initialized');
   const { requestData } = route.params;
   const [isModalVisible, setModalVisible] = React.useState(false);
-  const [flightInfo, setFlightInfo] = React.useState({});
+  const [flightInfo, setFlightInfo] = React.useState<any>({});
 
 
   const [isLoading, setIsLoading] = React.useState(false);

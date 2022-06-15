@@ -138,7 +138,10 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
                 mediaType: 'photo',
                 quality: 0.5,
             });
-            let data = result.assets[0];
+            if (result.didCancel) {
+                return;
+            }
+            let data: any = result.assets?.[0];
             if (Platform.OS === 'ios') {
                 data.uri = data?.uri?.slice(7);
             }
