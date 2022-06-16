@@ -14,7 +14,7 @@ import MyLoader from '../../../components/MyLoader'
 import { launchImageLibrary } from 'react-native-image-picker'
 import PopupModalOfSuccess from '../../../components/PopupModalOfSuccess'
 
-const RequestDetailComponentForAir = ({ pickUpAirport, dropOffAirport, fromDate, toDate, requestData, navigation }: any) => {
+const RequestDetailComponentForShip = ({ pickUpAirport, dropOffAirport, fromDate, toDate, requestData, navigation }: any) => {
     const [requestStates, setRequestStates] = React.useState(1);
     const [isLoading, setIsLoading] = React.useState(false);
     const [image, setImage] = React.useState<any>({});
@@ -156,6 +156,10 @@ const RequestDetailComponentForAir = ({ pickUpAirport, dropOffAirport, fromDate,
                     navigation.navigate('Drawer');
                 }}
             />
+            <View style={{ flex: 1, justifyContent: 'space-between', padding: 10 }}>
+                {renderStateContainer()}
+            </View>
+            <HorizontalDivider />
             <RequestSingleContainer title="Pick up Airport" value={pickUpAirport} />
             <HorizontalDivider />
             <RequestSingleContainer title="Drop off Airport" value={dropOffAirport} />
@@ -166,9 +170,9 @@ const RequestDetailComponentForAir = ({ pickUpAirport, dropOffAirport, fromDate,
             <HorizontalDivider />
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'space-between', paddingVertical: 20 }}>
                 <TouchableOpacity onPress={() => {
-                    // navigation.navigate("PACKAGEDETAIL", {
-                    //     requestData: requestData,
-                    // })
+                    navigation.navigate("PACKAGEDETAIL", {
+                        requestData: requestData,
+                    })
                 }}>
                     <Text style={styles.outlineButtonText}>View Package Detail</Text>
                 </TouchableOpacity>
@@ -189,14 +193,12 @@ const RequestDetailComponentForAir = ({ pickUpAirport, dropOffAirport, fromDate,
                 }
 
             </View>
-            <View style={{ flex: 1, justifyContent: 'space-between', padding: 10 }}>
-                {renderStateContainer()}
-            </View>
+
         </View>
     )
 }
 
-export default RequestDetailComponentForAir;
+export default RequestDetailComponentForShip;
 
 const styles = StyleSheet.create({
     container: {

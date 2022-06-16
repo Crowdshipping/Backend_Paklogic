@@ -1,44 +1,46 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import MapView, { PROVIDER_GOOGLE, PROVIDER_DEFAULT } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
+import { View, StyleSheet, Text, Alert } from 'react-native';
+import MapView, { PROVIDER_GOOGLE, PROVIDER_DEFAULT, Marker } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import { heightPercentageToDP, widthPercentageToDP as wp } from 'react-native-responsive-screen';
-import CheckBoxState from '../../components/CheckBoxState';
-import CheckBoxState2 from '../../components/CheckBoxState2';
-import HorizontalDivider from '../../components/HorizontalDivider';
-import MapButton from '../../components/MapButton';
 import MyLoader from '../../components/MyLoader';
-import { changeStateByProvider, getFlightLatestPosition, getFlightsDate } from '../../services';
-import BottomSheetModalForAir from '../Air/Components/BottomSheetModalForAir';
-import RequestDetailComponentForAir from '../Air/Components/RequestDetailComponentForAir';
+import { getFlightLatestPosition } from '../../services';
+import BottomSheetModalForAir from './Components/BottomSheetModalForAir';
+import MapViewDirections from 'react-native-maps-directions';
 
-const AcceptBooking = ({ route, navigation }: any) => {
+const origin = { latitude: 37.3318456, longitude: -122.0296002 };
+const destination = { latitude: 37.771707, longitude: -122.4053769 };
+const GOOGLE_MAPS_APIKEY = "@AIzaSyC3vl-jtFGzrBapun1U6sxT-Toena_1ywY";
 
+const AcceptBookingForFlight = ({ route, navigation }: any) => {
   const [googleMapProvider, setGoogleMapProvider] = React.useState<any>(PROVIDER_DEFAULT);
   const { requestData, flightInfoData }: any = route.params;
   const [flightPosition, setFlightPosition] = React.useState<any>({});
   const [isLoading, setIsLoading] = React.useState<any>(false);
 
   const getFlightPosition = () => {
-    getFlightLatestPosition("SIF122-1655096520-schedule-0697").then(response => response.json())
+    getFlightLatestPosition(requestData.flight.fa_flight_id).then(response => response.json())
       .then(result => {
         if (result.success) {
           setFlightPosition(result.flightlatestPosition);
-          console.log('result from booking ', result);
+        } else {
+          Alert.alert(result.message);
         }
       })
       .catch(error => console.log('error', error));
   }
-  //300,000 is 5minutes time
+  //60000 is 1minutes time
   React.useEffect(() => {
+    console.log("k rquest data", requestData);
     getFlightPosition();
     const interval = setInterval(() => {
       getFlightPosition();
-    }, 300000);
+    }, 60000);
     return () => clearInterval(interval);
   }, []);
   return (
     <View style={styles.container}>
+
+      {console.log("flightposition", flightPosition)}
       {isLoading ? <MyLoader /> :
         <View style={styles.container}>
           <MapView
@@ -53,6 +55,11 @@ const AcceptBooking = ({ route, navigation }: any) => {
               latitudeDelta: 0.015,
               longitudeDelta: 0.0121,
             }}>
+            {/* <MapViewDirections
+              origin={origin}
+              destination={destination}
+              apikey={GOOGLE_MAPS_APIKEY}
+            /> */}
           </MapView>
           <BottomSheetModalForAir
             navigation={navigation}
@@ -67,7 +74,7 @@ const AcceptBooking = ({ route, navigation }: any) => {
     </View >
   );
 };
-export default AcceptBooking;
+export default AcceptBookingForFlight;
 
 const styles = StyleSheet.create({
   container: {

@@ -238,11 +238,6 @@ export const getFlightLatestPosition = (faFlightId: any) => {
 
   return fetch(`https://backend-crowdshipping.herokuapp.com/customer/flightlatestposition/${faFlightId}`, requestOptions);
 }
-
-
-
-
-
 export const getAirportName = (data: any) => {
   var myHeaders = new Headers();
   myHeaders.append(
@@ -609,6 +604,19 @@ export const addShipAfterPost = (shipDataFromPostRequest: AddShipPostRequest) =>
   };
 
   return fetch("https://backend-crowdshipping.herokuapp.com/provider/addshipafterpost", requestOptions);
+}
+export const getShipLatestPosition = (mmsi: any) => {
+  console.log("from api mmsi", mmsi);
+  var myHeaders = new Headers();
+  myHeaders.append("Cookie", "connect.sid=s%3AnqLGgVOsKiirs0LvwsPm92d4qg-oVsyc.K%2F3MMwAmoFoAB5PgUl9h93gA4d%2Fd6gQMmf08l5mdAuc");
+
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow'
+  };
+
+  return fetch(`https://backend-crowdshipping.herokuapp.com/customer/shiplatestposition/${mmsi}`, requestOptions);
 }
 
 

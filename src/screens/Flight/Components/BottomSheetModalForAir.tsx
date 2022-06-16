@@ -7,7 +7,7 @@ const BottomSheetModalForAir = ({ pickUpAirport, dropOffAirport, fromDate, toDat
     const bottomSheetRef = React.useRef<BottomSheet>(null);
 
     // variables
-    const snapPoints = React.useMemo(() => ['10%', '60%'], []);
+    const snapPoints = React.useMemo(() => ['18%', '60%'], []);
     // callbacks
     const handleSheetChanges = React.useCallback((index: number) => {
         console.log('handleSheetChanges', index);

@@ -15,12 +15,8 @@ import Welcome from '../screens/Welcome/Welcome';
 const Stack = createStackNavigator();
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import AllRequest from '../screens/AllRequest/AllRequest';
-import AcceptBooking from '../screens/Maps/AcceptBooking';
-import AcceptBooking2 from '../screens/Maps/AcceptBooking2';
-import AcceptBooking3 from '../screens/Maps/AcceptBooking3';
-import AcceptBooking4 from '../screens/Maps/AcceptBooking4';
-import BookingRequest from '../screens/Maps/BookingRequest';
-import { Button } from '../components';
+import AcceptBooking from '../screens/Flight/AcceptBookingForFlight';
+import BookingRequest from '../screens/Flight/BookingRequest';
 import AllFlight from '../screens/Booking/AllFlight';
 import AddTicketDetails from '../screens/Booking/AddTicketDetails';
 import EditTicketDetail from '../screens/Booking/EditTicketDetail';
@@ -34,10 +30,7 @@ import AddShipTicket from '../screens/AddShipTicket';
 import MyProfile from '../screens/MyProfile';
 import PackageDetail from '../screens/PackageDetail';
 import AddShipPostRequest from '../screens/Ship/AddShipPostRequest';
-import PickedUpForShip from '../screens/Ship/PickedUpForShip';
-import TransitForShip from '../screens/Ship/TransitForShip';
-import ReachedForShip from '../screens/Ship/ReachedForShip';
-import CompleteForShip from '../screens/Ship/CompleteForShip';
+import PickedUpForShip from '../screens/Ship/AcceptBookingForShip';
 import ShipDetail from '../screens/Ship/ShipDetail';
 import AcceptRejectForShip from '../screens/Ship/AcceptRejectForShip';
 import Claim from '../screens/Claim/Claim';
@@ -248,51 +241,8 @@ export const StackNavigation = () => {
         name="AcceptBooking"
         component={AcceptBooking}
       />
-      <Stack.Screen
-        options={{
-          headerStyle: {
-            elevation: 0,
-            shadowOpacity: 0,
-          },
-          cardStyle: {
-            backgroundColor: 'white',
-          },
-          headerTitleAlign: 'center',
-          title: 'REQUEST',
-        }}
-        name="AcceptBooking2"
-        component={AcceptBooking2}
-      />
-      <Stack.Screen
-        options={{
-          headerStyle: {
-            elevation: 0,
-            shadowOpacity: 0,
-          },
-          cardStyle: {
-            backgroundColor: 'white',
-          },
-          headerTitleAlign: 'center',
-          title: 'REQUEST',
-        }}
-        name="AcceptBooking3"
-        component={AcceptBooking3}
-      />
-      <Stack.Screen
-        options={{
-          headerStyle: {
-            elevation: 0,
-            shadowOpacity: 0,
-          },
-          cardStyle: {
-            backgroundColor: 'white',
-          },
-          headerTitleAlign: 'center',
-          title: 'REQUEST',
-        }}
-        name="AcceptBooking4"
-        component={AcceptBooking4}
-      />
+
+
       <Stack.Screen
         options={{
           headerStyle: {
@@ -514,53 +464,7 @@ export const StackNavigation = () => {
             backgroundColor: 'white',
           },
           headerTitleAlign: 'center',
-          title: 'Request Details',
-        }}
-        name="TRANSITFORSHIP"
-        component={TransitForShip}
-      />
-      <Stack.Screen
-        options={{
-          headerStyle: {
-            elevation: 0,
-            shadowOpacity: 0,
-          },
-          cardStyle: {
-            backgroundColor: 'white',
-          },
-          headerTitleAlign: 'center',
-          title: 'Request Details',
-        }}
-        name="REACHEDFORSHIP"
-        component={ReachedForShip}
-      />
-
-      <Stack.Screen
-        options={{
-          headerStyle: {
-            elevation: 0,
-            shadowOpacity: 0,
-          },
-          cardStyle: {
-            backgroundColor: 'white',
-          },
-          headerTitleAlign: 'center',
-          title: 'Request Details',
-        }}
-        name="COMPLETEFORSHIP"
-        component={CompleteForShip}
-      />
-      <Stack.Screen
-        options={{
-          headerStyle: {
-            elevation: 0,
-            shadowOpacity: 0,
-          },
-          cardStyle: {
-            backgroundColor: 'white',
-          },
-          headerTitleAlign: 'center',
-          title: 'Attach Images',
+          title: 'Ship Detail',
         }}
         name="SHIPDETAIL"
         component={ShipDetail}

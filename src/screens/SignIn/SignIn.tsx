@@ -19,18 +19,16 @@ import Zocial from 'react-native-vector-icons/Zocial';
 import { StackActions } from '@react-navigation/native';
 import { CommonActions } from '@react-navigation/native';
 
-import { Button, Header, PhoneNumberPickerUI, Textbox } from '../../components';
+import { Button, Textbox } from '../../components';
 import { login, otp, userData } from '../../services';
 import { signIn } from '../../theme/assets/svg';
 import { colors } from '../../theme/colors';
 import { validateEmail, validateEmpty, validatePassword } from '../../validation';
-import { styles } from './style';
-import { NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 export default function SignIn({ navigation }: any) {
-  const [name, setName] = useState('khaliljan924@gmail.com');
-  const [password, setPassword] = useState('Fast1234$');
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
   const [nameError, setNameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [loading, setLoading] = useState(false);

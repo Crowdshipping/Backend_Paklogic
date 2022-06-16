@@ -156,26 +156,29 @@ const AllRequest = ({ navigation, status, myColor, route }: any) => {
   const whenShipDataPressed = (item: any) => {
 
     console.log("function called ", item);
-    if (item.state === "Pickedup") {
-      navigation.navigate('TRANSITFORSHIP', {
-        shipData: item,
-      });
-    }
-    else if (item.state === "Transit") {
-      navigation.navigate('REACHEDFORSHIP', {
-        shipData: item,
-      });
-    }
-    else if (item.state === "Reached") {
-      navigation.navigate('COMPLETEFORSHIP', {
-        shipData: item,
-      });
-    }
-    else {
-      navigation.navigate('PICKEDUPFORSHIP', {
-        shipData: item,
-      });
-    }
+    navigation.navigate('PICKEDUPFORSHIP', {
+      shipData: item,
+    });
+    // if (item.state === "Pickedup") {
+    //   navigation.navigate('TRANSITFORSHIP', {
+    //     shipData: item,
+    //   });
+    // }
+    // else if (item.state === "Transit") {
+    //   navigation.navigate('REACHEDFORSHIP', {
+    //     shipData: item,
+    //   });
+    // }
+    // else if (item.state === "Reached") {
+    //   navigation.navigate('COMPLETEFORSHIP', {
+    //     shipData: item,
+    //   });
+    // }
+    // else {
+    //   navigation.navigate('PICKEDUPFORSHIP', {
+    //     shipData: item,
+    //   });
+    // }
 
   }
   const postRequestTab = () => {
