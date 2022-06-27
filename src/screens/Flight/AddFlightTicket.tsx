@@ -41,7 +41,7 @@ const getMyTime = (date: Date) => {
   return strTime;
 };
 
-const AddTicketDetails = ({ navigation, status, myColor }: any) => {
+const AddFlightTicket = ({ navigation, status, myColor }: any) => {
   //date varibales
   const [date, setDate] = React.useState(new Date());
   const [open, setOpen] = React.useState(false);
@@ -178,13 +178,13 @@ const AddTicketDetails = ({ navigation, status, myColor }: any) => {
   const onChangeTextDeparture = async (text: string) => {
     setDepartureAirport(text);
     let res = await getAirportName(departureAirport);
-    let data: any[] = await res.json();
+    let data: any = await res.json();
     setDepartureData(data.airports);
   };
   const onChangeTextDestination = async (text: string) => {
     setDestinationAirport(text);
     let res = await getAirportName(destinationAirport);
-    let data: any[] = await res.json();
+    let data: any = await res.json();
     setDestinationData(data.airports);
   };
 
@@ -502,4 +502,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddTicketDetails;
+export default AddFlightTicket;

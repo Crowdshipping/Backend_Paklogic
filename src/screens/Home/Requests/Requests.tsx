@@ -3,20 +3,14 @@ import {
   View,
   StyleSheet,
   Text,
-  Image,
-  TouchableOpacity,
   SafeAreaView,
-  ActivityIndicator,
   Alert,
 } from 'react-native';
-import HorizontalDivider from '../../components/HorizontalDivider';
-import { SvgXml } from 'react-native-svg';
-import { LocationSvg } from '../../theme/assets/svg/LocationSvg';
-import VerticalDivider from '../../components/VerticalDivider';
-import { dateSvg } from '../../theme/assets/svg/dateSvg';
-import DateComponent from '../../components/DateComponent';
-import MyDropdown from '../../components/MyDropdown';
-import RequestComponent from '../../components/RequestComponent';
+import VerticalDivider from '../../../components/VerticalDivider';
+import { dateSvg } from '../../../theme/assets/svg/dateSvg';
+import DateComponent from '../../../components/DateComponent';
+import MyDropdown from '../../../components/MyDropdown';
+import RequestComponent from '../../../components/RequestComponent';
 import DatePicker from 'react-native-date-picker';
 import { ScrollView } from 'react-native-gesture-handler';
 import {
@@ -25,15 +19,16 @@ import {
   getFlightsDate,
   getRequestsToAllProviders,
   setAcceptOrReject,
-} from '../../services';
-import { backendUrl } from '../../appConstants';
+} from '../../../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import TabButton from '../../components/TabButton';
-import MyLoader from '../../components/MyLoader';
-import { CommonActions, StackActions } from '@react-navigation/native';
-import RequestComponentForShip from '../../components/RequestComponentForShip';
+import TabButton from '../../../components/TabButton';
+import MyLoader from '../../../components/MyLoader';
+import RequestComponentForShip from '../../../components/RequestComponentForShip';
+import AcceptedTab from './Components/Tabs/AcceptedTab';
+import PendingsTab from './Components/Tabs/PendingsTab';
+import PostRequestsTab from './Components/Tabs/PostRequestsTab';
 
-const AllRequest = ({ navigation, status, myColor, route }: any) => {
+const Requests = ({ navigation, status, myColor, route }: any) => {
   const [fromDate, setFromDate] = React.useState(new Date());
   const [fromDateOpen, setFromDateOpen] = React.useState(false);
   const [isFromDateSet, setIsFromDateSet] = React.useState(false);
@@ -114,33 +109,6 @@ const AllRequest = ({ navigation, status, myColor, route }: any) => {
       .then(result => {
         setIsloading(false);
         if (result.success && result.flightInfo) {
-          // if (item.state === "Pickedup") {
-          //   navigation.navigate('AcceptBooking2', {
-          //     requestData: item,
-          //     flightInfoData: result.flightInfo,
-          //   });
-          // }
-          // else if (item.state === "Transit") {
-          //   navigation.navigate('AcceptBooking3', {
-          //     requestData: item,
-          //     flightInfoData: result.flightInfo,
-
-          //   });
-          // }
-          // else if (item.state === "Reached") {
-          //   navigation.replace('AcceptBooking4', {
-          //     requestData: item,
-          //     flightInfoData: result.flightInfo,
-          //   });
-
-          // }
-          // else {
-          //   navigation.navigate('AcceptBooking', {
-          //     requestData: item,
-          //     flightInfoData: result.flightInfo,
-          //   });
-          // }
-
           navigation.navigate('AcceptBooking', {
             requestData: item,
             flightInfoData: result.flightInfo,
@@ -154,32 +122,10 @@ const AllRequest = ({ navigation, status, myColor, route }: any) => {
   }
 
   const whenShipDataPressed = (item: any) => {
-
     console.log("function called ", item);
     navigation.navigate('PICKEDUPFORSHIP', {
       shipData: item,
     });
-    // if (item.state === "Pickedup") {
-    //   navigation.navigate('TRANSITFORSHIP', {
-    //     shipData: item,
-    //   });
-    // }
-    // else if (item.state === "Transit") {
-    //   navigation.navigate('REACHEDFORSHIP', {
-    //     shipData: item,
-    //   });
-    // }
-    // else if (item.state === "Reached") {
-    //   navigation.navigate('COMPLETEFORSHIP', {
-    //     shipData: item,
-    //   });
-    // }
-    // else {
-    //   navigation.navigate('PICKEDUPFORSHIP', {
-    //     shipData: item,
-    //   });
-    // }
-
   }
   const postRequestTab = () => {
     console.log("post request called")
@@ -294,6 +240,7 @@ const AllRequest = ({ navigation, status, myColor, route }: any) => {
         if (item.requestedBy.profilepic !== null || item.requestedBy.firstname !== null || item.requestedBy.lastname !== null || item.flight.flightAirline !== null || item.flight.departureAirport !== null || item.flight.destinationAirport !== null || item.flight.flightDate !== null) {
           return (
             <RequestComponent
+
               isAccepted={true}
               myImage={item.requestedBy.profilepic}
               firstName={item.requestedBy.firstname}
@@ -311,7 +258,6 @@ const AllRequest = ({ navigation, status, myColor, route }: any) => {
       }
     }
     else if (item.status === 'Accepted' && item.type === "Ship" && item.ship !== null) {
-      console.log("item from else tab accepted")
       return (
         <RequestComponentForShip
           isAccepted={true}
@@ -413,22 +359,21 @@ const AllRequest = ({ navigation, status, myColor, route }: any) => {
   const renderTabs = () => {
     //when post request tab selected this will run
     if (tabSelected === 3) {
-      console.log("tab 3 selected")
-      return postRequestTab()
+      // return postRequestTab()
+      return <PostRequestsTab navigation={navigation} />
     }
     //response used for both accepted and pending thats why written here
     else if (response) {
       return response.map((item: any) => {
-        console.log("full item from render tab", item);
-
-
         //when accepted tab selected this will run
         if (tabSelected === 1) {
-          return acceptedTab(item)
+          // return acceptedTab(item)
+          return <AcceptedTab item={item} navigation={navigation} />
         }
         //when pending tab selected this will run
         else if (tabSelected === 2) {
-          return pendingTab(item)
+          // return pendingTab(item)
+          return <PendingsTab item={item} navigation={navigation} />
         }
       });
     }
@@ -456,10 +401,6 @@ const AllRequest = ({ navigation, status, myColor, route }: any) => {
             <VerticalDivider />
             <MyDropdown />
           </View>
-
-          {/* <VerticalDivider />
-    <MyDropdown /> */}
-
           <DatePicker
             modal
             mode="date"
@@ -559,13 +500,8 @@ const AllRequest = ({ navigation, status, myColor, route }: any) => {
             Available Booking
           </Text>
           {renderTabs()}
-          {/* {renderAcceptAndPendingTab()}
-          {renderPostRequesttab()} */}
         </View>
       </ScrollView>}
-
-
-
     </SafeAreaView>
   );
 };
@@ -653,4 +589,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AllRequest;
+export default Requests;

@@ -1,7 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import ForgetPassword from '../screens/ForgetPassword/ForgetPassword';
-import Landing from '../screens/Landing/Landing';
+import Landing from '../screens/Home/Home';
 import RegisterCompany from '../screens/RegisterCompany/RegisterCompany';
 import RegisterDriver from '../screens/RegisterDriver/RegisterDriver';
 import RegisterOption from '../screens/RegisterOption/RegisterOption';
@@ -14,19 +14,19 @@ import VerifyOtp from '../screens/VerifyOtp/VerifyOtp';
 import Welcome from '../screens/Welcome/Welcome';
 const Stack = createStackNavigator();
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import AllRequest from '../screens/AllRequest/AllRequest';
+import AllRequest from '../screens/Home/Requests/Requests';
 import AcceptBooking from '../screens/Flight/AcceptBookingForFlight';
 import BookingRequest from '../screens/Flight/BookingRequest';
-import AllFlight from '../screens/Booking/AllFlight';
-import AddTicketDetails from '../screens/Booking/AddTicketDetails';
-import EditTicketDetail from '../screens/Booking/EditTicketDetail';
-import AvailableFight from '../screens/AvailableFlight/AvailableFlight';
-import LastBookingHistory from '../screens/Booking/LastBookingHistory';
+import AllFlight from '../screens/Flight/AllFlights';
+import AddTicketDetails from '../screens/Flight/AddFlightTicket';
+import EditTicketDetail from '../screens/Flight/EditFlightTicket';
+import AvailableFight from '../screens/Flight/AvailableFlight';
+import LastBookingHistory from '../screens/Flight/FlightDetail';
 import PictureDelivery from '../screens/PictureDelivery';
-import AddFlightPostRequest from '../screens/AddFlightPostRequest';
+import AddFlightPostRequest from '../screens/Flight/AddFlightPostRequest';
 import DrawerSideScreen from '../screens/DrawerSideScreen';
 import AllShips from '../screens/Ship/AllShips';
-import AddShipTicket from '../screens/AddShipTicket';
+import AddShipTicket from '../screens/Ship/AddShipTicket';
 import MyProfile from '../screens/MyProfile';
 import PackageDetail from '../screens/PackageDetail';
 import AddShipPostRequest from '../screens/Ship/AddShipPostRequest';
@@ -39,6 +39,8 @@ import Complain from '../screens/Complain/Complain';
 import AddComplain from '../screens/Complain/AddComplain';
 import ComplainDetail from '../screens/Complain/ComplainDetail';
 import AddClaim from '../screens/Claim/AddClaim';
+import BookingHistory from '../screens/Home/History/BookingHistory';
+import DriverHome from '../modules/Driver/Screens/Home/DriverHome';
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   return (
@@ -575,7 +577,38 @@ export const StackNavigation = () => {
         name="COMPLAINDETAIL"
         component={ComplainDetail}
       />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'Booking History',
+        }}
+        name="BOOKINGHISTORY"
+        component={BookingHistory}
+      />
+      {/* Driver Screens */}
 
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'Booking History',
+        }}
+        name="DRIVERHOME"
+        component={DriverHome}
+      />
     </Stack.Navigator>
   );
 };

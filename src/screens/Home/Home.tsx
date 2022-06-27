@@ -1,4 +1,4 @@
-import {CommonActions} from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 import React from 'react';
 import {
   SafeAreaView,
@@ -9,17 +9,17 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {SvgXml} from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
 
-import {HeaderOption} from '../../components/header';
-import {earning, history, request} from '../../theme/assets/svg';
+import { HeaderOption } from '../../components/header';
+import { earning, history, request } from '../../theme/assets/svg';
 
-const Landing = ({navigation}: any) => {
+const Home = ({ navigation }: any) => {
   return (
     <View style={styles.container}>
       {/* <HeaderOption
@@ -55,7 +55,10 @@ const Landing = ({navigation}: any) => {
 
         <View>
           <Text style={styles.text}>History</Text>
-          <TouchableOpacity style={styles.tile}>
+          <TouchableOpacity onPress={() => {
+            navigation.navigate('BOOKINGHISTORY');
+
+          }} style={styles.tile}>
             <SvgXml xml={history} width={wp(33)} height={wp(33)} />
           </TouchableOpacity>
         </View>
@@ -94,4 +97,4 @@ export const styles = StyleSheet.create({
   },
 });
 
-export default Landing;
+export default Home;

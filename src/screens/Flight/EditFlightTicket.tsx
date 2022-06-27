@@ -6,17 +6,17 @@ import {
   TextInput,
   StyleSheet,
 } from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
-import {widthPercentageToDP} from 'react-native-responsive-screen';
+import { ScrollView } from 'react-native-gesture-handler';
+import { widthPercentageToDP } from 'react-native-responsive-screen';
 
-import {Button} from '../../components';
-import {SvgXml} from 'react-native-svg';
-import {dateSvg} from '../../theme/assets/svg/dateSvg';
-import {timeSvg} from '../../theme/assets/svg/timeSvg';
-import {ImageSvg} from '../../theme/assets/svg/ImageSvg';
+import { Button } from '../../components';
+import { SvgXml } from 'react-native-svg';
+import { dateSvg } from '../../theme/assets/svg/dateSvg';
+import { timeSvg } from '../../theme/assets/svg/timeSvg';
+import { ImageSvg } from '../../theme/assets/svg/ImageSvg';
 
 import DatePicker from 'react-native-date-picker';
-import {EditSvg} from '../../theme/assets/svg/EditSvg';
+import { EditSvg } from '../../theme/assets/svg/EditSvg';
 const formatAMPM = (date: Date) => {
   let hours = date.getHours();
   let minutes = date.getMinutes();
@@ -28,7 +28,7 @@ const formatAMPM = (date: Date) => {
   return strTime;
 };
 
-const EditTicketDetail = ({status, myColor}: any) => {
+const EditFlightTicket = ({ status, myColor }: any) => {
   //date varibales
   const [date, setDate] = React.useState(new Date());
   const [open, setOpen] = React.useState(false);
@@ -120,7 +120,7 @@ const EditTicketDetail = ({status, myColor}: any) => {
                 setOpen(true);
               }}
               style={styles.inputContainer2}>
-              <Text style={{fontSize: 12, marginLeft: 10}}>
+              <Text style={{ fontSize: 12, marginLeft: 10 }}>
                 {date.toDateString().slice(4)}
               </Text>
               <SvgXml style={styles.icon} xml={dateSvg} width={20} />
@@ -133,7 +133,7 @@ const EditTicketDetail = ({status, myColor}: any) => {
                 setDepartureTimeOpen(true);
               }}
               style={styles.inputContainer2}>
-              <Text style={{fontSize: 12, marginLeft: 10}}>
+              <Text style={{ fontSize: 12, marginLeft: 10 }}>
                 {formatAMPM(departureTime)}
               </Text>
               <SvgXml style={styles.icon} xml={timeSvg} width={20} />
@@ -146,7 +146,7 @@ const EditTicketDetail = ({status, myColor}: any) => {
                 setDestinationTimeOpen(true);
               }}
               style={styles.inputContainer2}>
-              <Text style={{fontSize: 12, marginLeft: 10}}>
+              <Text style={{ fontSize: 12, marginLeft: 10 }}>
                 {formatAMPM(destinationTime)}
               </Text>
               <SvgXml style={styles.icon} xml={timeSvg} width={20} />
@@ -193,7 +193,7 @@ const EditTicketDetail = ({status, myColor}: any) => {
           </View>
         </View>
         <Button
-          containerStyle={{marginHorizontal: widthPercentageToDP(4)}}
+          containerStyle={{ marginHorizontal: widthPercentageToDP(4) }}
           title="SUBMIT VEHICLE REQUEST"
         />
       </View>
@@ -267,4 +267,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditTicketDetail;
+export default EditFlightTicket;

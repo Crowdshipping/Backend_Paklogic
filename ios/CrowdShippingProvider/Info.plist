@@ -37,6 +37,12 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Play using while you are hiking</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Program requires GPS to track vehicles driver</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Program requires GPS to track vehicles driver</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Permission Required for better services</string>
 	<key>NSPhotoLibraryUsageDescription</key>

@@ -16,6 +16,7 @@ const AcceptBookingForShip = ({ route, navigation }: any) => {
     getShipLatestPosition(shipData.ship.mmsiNumber).then(response => response.json())
       .then(result => {
         if (result.success) {
+          console.log("Fship", result)
           setShipPosition(result.shipposition);
           console.log('result of ship position', result.shipposition[0]["$"]);
         } else {

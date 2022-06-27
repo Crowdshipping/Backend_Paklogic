@@ -5,17 +5,10 @@ import {
   Text,
   Image,
   ScrollView,
-  TouchableOpacity,
 } from 'react-native';
-import { SvgXml } from 'react-native-svg';
 import { backendUrl } from '../../appConstants';
-import { ButtonOutline } from '../../components';
-import FlightComponent from '../../components/FlightComponent';
-import FlightImageComponent from '../../components/FlightImageComponent';
-import { getAllFlightAddedByProvider } from '../../services';
-import { airplane } from '../../theme/assets/svg/airplaneSvg';
-import { DeleteSvg } from '../../theme/assets/svg/DeleteSvg';
-const LastBookingHistory = ({ route, navigation, status, myColor }: any) => {
+import FlightImageComponent from './Components/FlightImageComponent';
+const FlightDetail = ({ route, navigation, status, myColor }: any) => {
   const { singleFightData } = route.params;
 
   return (
@@ -72,4 +65,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LastBookingHistory;
+export default FlightDetail;

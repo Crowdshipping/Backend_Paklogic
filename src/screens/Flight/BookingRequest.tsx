@@ -25,22 +25,21 @@ const BookingRequest = ({ route, navigation }: any) => {
     setModalVisible(!isModalVisible);
   };
 
-  React.useEffect(() => {
-    getFlightsDate(requestData.flight.fa_flight_id)
-      .then(response => response.json())
-      .then(result => {
-        if (result.success) {
-          setFlightInfo(result.flightInfo);
-          console.log('result from booking ', result);
-        }
-      })
-      .catch(error => console.log('error', error));
-  }, []);
-
-  // fa_flight_id
+  // React.useEffect(() => {
+  //   getFlightsDate(requestData.flight.fa_flight_id)
+  //     .then(response => response.json())
+  //     .then(result => {
+  //       if (result.success) {
+  //         setFlightInfo(result.flightInfo);
+  //         console.log('result from booking ', result);
+  //       }
+  //     })
+  //     .catch(error => console.log('error', error));
+  // }, []);
 
   return (
     <View style={styles.container}>
+      {console.log("kkbookingrequest", requestData)}
       {isLoading ? <MyLoader /> :
         <View style={styles.container}>
           <Modal isVisible={isModalVisible}>
@@ -88,8 +87,7 @@ const BookingRequest = ({ route, navigation }: any) => {
                 </Text>
                 <Text style={{ fontSize: 18, color: 'black' }}>
                   from
-                  {flightInfo.scheduled_out !== undefined &&
-                    flightInfo.scheduled_out.slice(0, -10)}
+                  {requestData.flight.flightDate.slice(0, -14)}
                 </Text>
                 <Text style={{ fontSize: 20, color: 'grey' }}>Total Distance</Text>
                 <Text style={{ fontSize: 20, color: 'red' }}>100kM</Text>
@@ -101,8 +99,7 @@ const BookingRequest = ({ route, navigation }: any) => {
                 </Text>
                 <Text style={{ fontSize: 18, color: 'black' }}>
                   to
-                  {flightInfo.scheduled_on !== undefined &&
-                    flightInfo.scheduled_on.slice(0, -10)}
+                  {requestData.flight.flightarrivalDate.slice(0, -14)}
                 </Text>
                 <Text style={{ fontSize: 20, color: 'grey' }}>Est. Fare</Text>
                 <Text style={{ fontSize: 20, color: 'red' }}>250$</Text>

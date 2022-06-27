@@ -1,11 +1,12 @@
-import React from 'react';
-import { View, StyleSheet, Text, Alert } from 'react-native';
-import MapView, { PROVIDER_GOOGLE, PROVIDER_DEFAULT, Marker } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
+import React, { useCallback, useRef } from 'react';
+import { View, StyleSheet, Text, Alert, Platform } from 'react-native';
+import MapView, { PROVIDER_GOOGLE, PROVIDER_DEFAULT, Marker, Polyline, LatLng } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import { heightPercentageToDP, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import MyLoader from '../../components/MyLoader';
-import { getFlightLatestPosition } from '../../services';
+import { getAirportName, getFlightLatestPosition } from '../../services';
 import BottomSheetModalForAir from './Components/BottomSheetModalForAir';
 import MapViewDirections from 'react-native-maps-directions';
+import { useFocusEffect } from '@react-navigation/native';
 
 const origin = { latitude: 37.3318456, longitude: -122.0296002 };
 const destination = { latitude: 37.771707, longitude: -122.4053769 };
@@ -17,7 +18,13 @@ const AcceptBookingForFlight = ({ route, navigation }: any) => {
   const [flightPosition, setFlightPosition] = React.useState<any>({});
   const [isLoading, setIsLoading] = React.useState<any>(false);
 
+  const [departureAirportLatLng, setDepartureAirportLatLng] = React.useState<any>({});
+  const [destinationAirportLatLng, setDestinationAirportLatLng] = React.useState<any>({});
+
+  const ref = useRef<MapView>(null);
+
   const getFlightPosition = () => {
+    console.log("repeat")
     getFlightLatestPosition(requestData.flight.fa_flight_id).then(response => response.json())
       .then(result => {
         if (result.success) {
@@ -28,39 +35,141 @@ const AcceptBookingForFlight = ({ route, navigation }: any) => {
       })
       .catch(error => console.log('error', error));
   }
+  const getFlightDepartureAirportLatAndLng = async () => {
+    let res = await getAirportName(requestData.flight.departureAirport);
+    let data: any = await res.json();
+    console.log("kget", data.airports[0].coordinates);
+    setDepartureAirportLatLng(data.airports[0].coordinates);
+  }
+  const getFlightDestinationAirportLatAndLng = async () => {
+    let res = await getAirportName(requestData.flight.destinationAirport);
+    let data: any = await res.json();
+    console.log("kget", data.airports[0].coordinates);
+    setDestinationAirportLatLng(data.airports[0].coordinates);
+  }
   //60000 is 1minutes time
-  React.useEffect(() => {
-    console.log("k rquest data", requestData);
-    getFlightPosition();
-    const interval = setInterval(() => {
-      getFlightPosition();
-    }, 60000);
-    return () => clearInterval(interval);
-  }, []);
-  return (
-    <View style={styles.container}>
+  useFocusEffect(() => {
+    let timer = setInterval(getFlightPosition, 60000);
+    return () => {
+      clearInterval(timer);
+    };
+  });
 
-      {console.log("flightposition", flightPosition)}
-      {isLoading ? <MyLoader /> :
-        <View style={styles.container}>
-          <MapView
-            onMapReady={() => {
-              setGoogleMapProvider(PROVIDER_GOOGLE);
+  React.useEffect(() => {
+    getFlightDepartureAirportLatAndLng();
+    getFlightDestinationAirportLatAndLng();
+    getFlightPosition();
+    // getRegion({25.248665,55.352917}, {29}, 200);
+    // const interval = setInterval(() => {
+    //   getFlightPosition();
+    // }, 60000);
+    // return () => clearInterval(interval);
+  }, []);
+
+
+  const onMapReadyHandler = useCallback(() => {
+    console.log("working on map ready")
+    if (Platform.OS === 'ios') {
+      console.log("working on map ready ios if")
+      ref?.current?.fitToElements({
+        animated: true,
+        edgePadding: {
+          top: 150,
+          right: 50,
+          bottom: 50,
+          left: 50,
+        },
+      });
+    } else if (departureAirportLatLng && destinationAirportLatLng) {
+      ref?.current?.fitToCoordinates([departureAirportLatLng, destinationAirportLatLng], {
+        animated: true,
+        edgePadding: {
+          top: 50,
+          right: 50,
+          bottom: 50,
+          left: 50,
+        },
+      });
+    }
+  }, [ref]);
+
+
+  const renderMap = () => {
+    if (departureAirportLatLng && destinationAirportLatLng && flightPosition) {
+      return (
+        <MapView
+          region={{
+            latitude: departureAirportLatLng.lat,
+            longitude: destinationAirportLatLng.lng,
+            latitudeDelta: 200,
+            longitudeDelta: 220,
+          }}
+          mapType={Platform.OS == "android" ? "none" : "standard"}
+          // onMapReady={onMapReadyHandler}
+          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+          showsUserLocation={false}
+          ref={ref}
+          zoomControlEnabled={false}
+          style={styles.map}>
+          <Polyline
+            coordinates={[
+              {
+                latitude: departureAirportLatLng.lat,
+                longitude: departureAirportLatLng.lon,
+              },
+              {
+                latitude: flightPosition.latitude,
+                longitude: flightPosition.longitude,
+              },
+              {
+                latitude: destinationAirportLatLng.lat,
+                longitude: destinationAirportLatLng.lon,
+              },
+            ]}
+            geodesic={true}
+            strokeWidth={5}
+            lineDashPhase={3}
+
+          />
+          <Marker
+            key={'initial'}
+            coordinate={{
+              latitude: departureAirportLatLng.lat,
+              longitude: departureAirportLatLng.lon,
             }}
-            provider={googleMapProvider} // remove if not using Google Maps
-            style={styles.map}
-            region={{
+            title={'initial'}
+
+          />
+          <Marker
+            key={'middle'}
+            coordinate={{
               latitude: flightPosition.latitude,
               longitude: flightPosition.longitude,
-              latitudeDelta: 0.015,
-              longitudeDelta: 0.0121,
-            }}>
-            {/* <MapViewDirections
-              origin={origin}
-              destination={destination}
-              apikey={GOOGLE_MAPS_APIKEY}
-            /> */}
-          </MapView>
+            }}
+            title={'middle'}
+
+          />
+          <Marker
+            key={'final'}
+            coordinate={{
+              latitude: destinationAirportLatLng.lat,
+              longitude: destinationAirportLatLng.lon,
+            }}
+            title={'final'}
+
+          />
+        </MapView>
+      )
+    }
+  }
+  return (
+    <View style={styles.container}>
+      {console.log("koko", flightPosition.latitude)}
+      {isLoading ? <MyLoader /> :
+        <View style={styles.container}>
+          {
+            renderMap()
+          }
           <BottomSheetModalForAir
             navigation={navigation}
             pickUpAirport={requestData.flight.pickupCity}

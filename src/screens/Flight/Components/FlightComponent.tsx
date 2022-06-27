@@ -2,8 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, Pressable, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SvgXml } from 'react-native-svg';
-import { airplane } from '../theme/assets/svg/airplaneSvg';
-import { DeleteSvg } from '../theme/assets/svg/DeleteSvg';
+import { airplane } from '../../../theme/assets/svg/airplaneSvg';
+import { DeleteSvg } from '../../../theme/assets/svg/DeleteSvg';
 
 const FlightComponent = ({
   onPressEdit,
@@ -86,22 +86,7 @@ const FlightComponent = ({
   );
 };
 const styles = StyleSheet.create({
-  // cardView: {
-  //   paddingHorizontal: 20,
-  //   paddingVertical: 30,
-  //   marginTop: 25,
-  //   width: '100%',
-  //   borderRadius: 12,
-  //   shadowColor: '#000',
-  //   shadowOffset: {
-  //     width: 0,
-  //     height: 2,
-  //   },
-  //   shadowOpacity: 0.25,
-  //   shadowRadius: 3.84,
-  //   elevation: 2,
-  //   marginBottom: 25,
-  // },
+
   cardView: {
     display: 'flex',
     paddingHorizontal: 20,

@@ -618,7 +618,20 @@ export const getShipLatestPosition = (mmsi: any) => {
 
   return fetch(`https://backend-crowdshipping.herokuapp.com/customer/shiplatestposition/${mmsi}`, requestOptions);
 }
+///history
 
+export const providerOrderHistory = (userId: any) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Cookie", "connect.sid=s%3Aml3FT3a4i7mTLhr-9MEKW0EPW1Juc1hF.tuWpCy3GbsBC5RQilZpRTm9YSbL3xxL4KHIwGvYTCTg");
+
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow'
+  };
+
+  return fetch(`https://backend-crowdshipping.herokuapp.com/provider/providerorderhistory/${userId}`, requestOptions);
+}
 
 //users things //
 export const logoutUser = (userId: any) => {
@@ -627,4 +640,105 @@ export const logoutUser = (userId: any) => {
     redirect: 'follow'
   };
   return fetch(`https://backend-crowdshipping.herokuapp.com/user/logout/${userId}`, requestOptions);
-} 
+}
+
+/*
+driver things here
+*/
+
+
+export const getAllVehicles = (driverId: any) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Cookie", "connect.sid=s%3Ac9ap3k_umKtuIkvvcSWsOOyw4qFY1029.VHy%2Fu6zZtHoFIdC8ZWyu0zvgm6JHNlL5D8ZKkJXO7Lw");
+
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow'
+  };
+  return fetch(`https://backend-crowdshipping.herokuapp.com/driver/getallvehicles/${driverId}`, requestOptions)
+}
+export const addVehicle = (vehicle: AddVehicle) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Cookie", "connect.sid=s%3AmzAxQxmim5IE9KvghS8yLZQlZ0nQ_One.%2Bk2uZG0FbSZSRJV%2FExAjvD03998A4K6%2FVfKQO6ctj3U");
+
+  var raw = JSON.stringify({
+    "vehicleType": vehicle.vehicleType,
+    "vehicleName": vehicle.vehicleName,
+    "vehicleColor": vehicle.vehicleColor,
+    "vehicleModel": vehicle.vehicleModel,
+    "licenseNumber": vehicle.licenseNumber,
+    "vehicleImage": vehicle.vehicleImage,
+    "vehicleLicence": vehicle.vehicleLicence,
+    "vehicleInsurance": vehicle.vehicleInsurance,
+    "vehicleResidenceProof": vehicle.vehicleResidence,
+    "driverId": vehicle.driverId
+  });
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+  return fetch("https://backend-crowdshipping.herokuapp.com/driver/addingvehicle", requestOptions);
+  //   .then(response => response.text())
+  // .then(result => console.log(result))
+  // .catch(error => console.log('error', error));
+}
+export const getImageUrlFromServer = async (image: any) => {
+
+  var formdata = new FormData();
+  formdata.append("image", image);
+
+  var requestOptions = {
+    method: 'POST',
+    body: formdata,
+    redirect: 'follow'
+  };
+
+  const response = await fetch("https://backend-crowdshipping.herokuapp.com/company/singlepicture", requestOptions);
+  return await response.json();
+}
+export const getVehicleRequest = (lat: any, lng: any) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Cookie", "connect.sid=s%3A1N3uaP9BKyFPZlE60mSOZaQqZoDfJ74P. 9W1aXW%2Bf2qgeGgZK2DwuCb5RaqQNyhvNw4mjZVcr7YM");
+
+  var raw = JSON.stringify({
+    "driverLocation": {
+      "lat": lat,
+      "lng": lng
+    }
+  });
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+
+  return fetch("https://backend-crowdshipping.herokuapp.com/driver/getdriverrequests", requestOptions);
+}
+export const changeStatusByDriver = (requestId: any, driverId: any, newStatus: any) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Cookie", "connect.sid=s%3A1N3uaP9BKyFPZlE60mSOZaQqZoDfJ74P.9W1aXW%2Bf2qgeGgZK2DwuCb5RaqQNyhvNw4mjZVcr7YM");
+
+  var raw = JSON.stringify({
+    "requestId": requestId,
+    "driverId": driverId,
+    "newStatus": newStatus
+  });
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+
+  return fetch("https://backend-crowdshipping.herokuapp.com/driver/changedriverrequestStatus", requestOptions);
+}

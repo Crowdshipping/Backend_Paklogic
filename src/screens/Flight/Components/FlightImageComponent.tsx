@@ -1,8 +1,8 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
-import {SvgXml} from 'react-native-svg';
-import {airplane} from '../theme/assets/svg/airplaneSvg';
-import {DeleteSvg} from '../theme/assets/svg/DeleteSvg';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import { SvgXml } from 'react-native-svg';
+import { airplane } from '../../../theme/assets/svg/airplaneSvg';
+import { DeleteSvg } from '../../../theme/assets/svg/DeleteSvg';
 const FlightImageComponent = ({
   onPressEdit,
   departureAirport,
@@ -82,7 +82,7 @@ const FlightImageComponent = ({
       </View>
 
       <View style={styles.bottomImage}>
-        <Image style={{width: '80%', height: 100}} source={{uri: myImage}} />
+        <Image style={{ width: '80%', height: 100 }} source={{ uri: myImage }} />
       </View>
     </View>
   );

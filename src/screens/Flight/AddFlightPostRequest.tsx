@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
     View,
     Text,
@@ -7,22 +7,21 @@ import {
     StyleSheet,
     Platform,
     Alert,
-    Pressable,
     SafeAreaView,
-    FlatList,
     ScrollView,
 } from 'react-native';
 import { widthPercentageToDP } from 'react-native-responsive-screen';
-import { Button } from '../components';
+import { Button } from '../../components';
 import { SvgXml } from 'react-native-svg';
-import { dateSvg } from '../theme/assets/svg/dateSvg';
-import { timeSvg } from '../theme/assets/svg/timeSvg';
-import { ImageSvg } from '../theme/assets/svg/ImageSvg';
+import { dateSvg } from '../../theme/assets/svg/dateSvg';
+import { timeSvg } from '../../theme/assets/svg/timeSvg';
+import { ImageSvg } from '../../theme/assets/svg/ImageSvg';
 import { launchImageLibrary } from 'react-native-image-picker';
 import DatePicker from 'react-native-date-picker';
-import { addShipToServer, getAirportName, getSeaportName } from '../services';
+
+import { addFlightAfterPost } from '../../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import MyLoader from '../components/MyLoader';
+import MyLoader from '../../components/MyLoader';
 const formatAMPM = (date: Date) => {
     let hours = date.getHours();
     let minutes = date.getMinutes();
@@ -43,21 +42,23 @@ const getMyTime = (date: Date) => {
     return strTime;
 };
 
-const AddShipTicket = ({ navigation }: any) => {
-
+const AddFlightPostRequest = ({ navigation, route }: any) => {
     const [userId, setUserId] = React.useState('');
 
     const getUserId = async () => {
         const value: any = await AsyncStorage.getItem('@user_Id');
         setUserId(value);
-    }
-    useEffect(() => {
-        getUserId()
-    }, [])
+    };
+
+    React.useEffect(() => {
+        getUserId();
+    }, []);
+
+    const { postRequestData } = route.params;
+    console.log('data from addflightpostrequest', postRequestData);
     //date varibales
     const [date, setDate] = React.useState(new Date());
     const [open, setOpen] = React.useState(false);
-
     //departure time
     const [departureTime, setDepartureTime] = React.useState(new Date());
     const [departureTimeOpen, setDepartureTimeOpen] = React.useState(false);
@@ -65,47 +66,12 @@ const AddShipTicket = ({ navigation }: any) => {
     //destination time
     const [destinationTime, setDestinationTime] = React.useState(new Date());
     const [destinationTimeOpen, setDestinationTimeOpen] = React.useState(false);
-
-    const [destinationSeaport, setDestinationSeaport] = React.useState('');
-    const [destinationSeaportCode, setDestinationSeaportCode] =
-        React.useState('');
     const [image, setImage] = React.useState<any>({});
 
-    const [mmsiNumber, setMMSINumber] = React.useState('');
-
-    const [departureSeaport, setDepartureSeaport] = React.useState('');
-    const [departureSeaportCode, setDepartureSeaportCode] = React.useState('');
-
-    const [departureData, setDepartureData] = React.useState<any[]>([]);
-    const [destinationData, setDestinationData] = React.useState<any[]>([]);
-
-
-    const [dropOffPortUnlocode, setDropOffPortUnlocode] = React.useState('');
-    const [pickupPortUnlocode, setPickupPortUnlocode] = React.useState('');
     //////validation of each varible
-    const [isValidDepartureSeaport, setIsValidDepartureSeaport] =
-        React.useState(true);
-    const [isValidDestinationSeaport, setIsValidDestinationSeaport] =
-        React.useState(true);
-    const [isValidMMSINumber, setIsValidMMSINumber] = React.useState(true);
     const [isValidImage, setIsValidImage] = React.useState(true);
 
-
-
-
-
     const [isLoading, setIsLoading] = React.useState(false);
-
-    const validateMMSINumber = () => {
-        if (mmsiNumber === "") {
-            setIsValidMMSINumber(false);
-            return false;
-        } else {
-            setIsValidMMSINumber(true);
-            return true;
-        }
-    };
-
     const validateImage = () => {
         if (Object.keys(image).length === 0) {
             setIsValidImage(false);
@@ -116,116 +82,56 @@ const AddShipTicket = ({ navigation }: any) => {
         }
     };
 
-    const validateDepartureSeaport = () => {
-        if (departureSeaport === '' || isValidDepartureSeaport === false
-        ) {
-            setIsValidDepartureSeaport(false);
-            return false;
-        } else {
-            setIsValidDepartureSeaport(true);
-            return true;
-        }
-    };
-
-    const validateDestinationSeaport = () => {
-        if (
-            destinationSeaport === '' ||
-            isValidDestinationSeaport === false
-        ) {
-            setIsValidDestinationSeaport(false);
-            return false;
-        } else {
-            setIsValidDestinationSeaport(true);
-            return true;
-        }
-    };
-
     const validateForm = () => {
-        const mmsiValid = validateMMSINumber();
         const imagevalid = validateImage();
-        const destinationvalid = validateDestinationSeaport();
-        const departurevalid = validateDepartureSeaport();
-        console.log("departure code country+ location", pickupPortUnlocode);
-        if (
-            mmsiValid &&
-            imagevalid &&
-            destinationvalid &&
-            departurevalid
-        ) {
-            console.log("validation passed")
-            let shipData: AddShip = {
-                date: date.toISOString().slice(0, -14),
-                departureSeaport: departureSeaport,
-                destinationSeaport: destinationSeaport,
+        if (imagevalid) {
+            let flightData: AddFlightPostRequest = {
+                flightAirline: postRequestData.airline,
+                flightDate: date.toISOString().slice(0, -14),
+                departureAirport: postRequestData.departureAirport,
+                destinationAirport: postRequestData.destinationAirport,
                 departureTime: getMyTime(departureTime),
                 destinationTime: getMyTime(destinationTime),
-                mmsiNumber: mmsiNumber,
-                image: image,
+                flightNumber: postRequestData.flightNumber,
+                ticketImage: image,
                 providerId: userId,
-                departureSeaportCode: departureSeaportCode,
-                destinationSeaportCode: destinationSeaportCode,
-                pickupPortUnlocode: pickupPortUnlocode,
-                dropoffPortUnlocode: dropOffPortUnlocode,
-                pickupCity: departureSeaport,
-                dropoffCity: destinationSeaport
+                pickupCity: postRequestData.pickupCity,
+                dropoffCity: postRequestData.dropoffCity,
+                fa_flight_id: postRequestData.fa_flight_id,
+                pickupIATACityCode: postRequestData.pickupIATACityCode,
+                dropoffIATACityCode: postRequestData.dropoffIATACityCode,
+                postrequestId: postRequestData._id,
+                customerId: postRequestData.requestedBy,
+                bookingId: postRequestData.bookingId,
+                flightarrivalDate: postRequestData.flightarrivalDate,
             };
             setIsLoading(true);
-            addShipToServer(shipData)
+
+            addFlightAfterPost(flightData)
                 .then(response => response.json())
                 .then(result => {
                     setIsLoading(false);
-                    if (result.success) {
-                        Alert.alert('Alert', result.message, [
-                            {
-                                text: 'Ok',
-                                onPress: () => {
-                                    navigation.navigate('ALLSHIPS');
-                                },
-                                style: 'cancel',
+                    //   navigation.navigate('AllRequest');
+                    Alert.alert('', 'Request Accepted', [
+                        {
+                            text: 'Ok',
+                            onPress: () => {
+                                // console.log('knvsldxkn')
+                                navigation.navigate('AllRequest');
+                                // props.navigation.navigate('SignIn')
                             },
-                        ]);
-                    } else {
-                        Alert.alert('Alert', result.message, [
-                            {
-                                text: 'Ok',
-                                onPress: () => {
-                                    navigation.navigate('ALLSHIPS');
-                                },
-                                style: 'cancel',
-                            },
-                        ]);
-                    }
-
-                    console.log(result, "result of ship")
+                            style: 'cancel',
+                        },
+                    ]);
+                    console.log('result of addflightafterpost', result);
                 })
                 .catch(error => {
                     setIsLoading(false);
-                    console.log('error', error)
+                    console.log('error', error);
                 });
         }
     };
-    const onChangeTextDeparture = async (text: string) => {
-        setDepartureSeaport(text);
-        let res = await getSeaportName(departureSeaport);
-        let data: any[] = await res.json();
-        setDepartureData(data.ports);
-    };
-    const onChangeTextDestination = async (text: string) => {
-        setDestinationSeaport(text);
-        let res = await getSeaportName(destinationSeaport);
-        let data: any[] = await res.json();
-        setDestinationData(data.ports);
-    };
 
-    const getItemText = (item: any) => {
-        return (
-            <View style={{ flexDirection: 'row', alignItems: 'center', padding: 15 }}>
-                <View style={{ marginLeft: 10, flexShrink: 1 }}>
-                    <Text style={{ fontWeight: '700' }}>{item.Name}</Text>
-                </View>
-            </View>
-        );
-    };
     const imagePicker = async () => {
         try {
             const result = await launchImageLibrary({
@@ -252,7 +158,9 @@ const AddShipTicket = ({ navigation }: any) => {
     };
     return (
         <SafeAreaView>
-            {isLoading ? <MyLoader /> :
+            {isLoading ? (
+                <MyLoader />
+            ) : (
                 <ScrollView>
                     <View style={styles.container}>
                         <DatePicker
@@ -296,85 +204,30 @@ const AddShipTicket = ({ navigation }: any) => {
                         />
                         <View style={styles.cardView}>
                             <View style={styles.singleItemView}>
-                                <Text style={styles.singleItemText}>Departure Seaport</Text>
+                                <Text style={styles.singleItemText}>Departure Airport</Text>
                                 <TextInput
+                                    editable={false}
                                     style={styles.input}
-                                    onChangeText={onChangeTextDeparture}
-                                    value={departureSeaport}
-                                    placeholder="Enter Seaport"
+                                    value={postRequestData.departureAirport}
+                                    placeholder="Enter Airport"
                                 />
                             </View>
-                            {!isValidDepartureSeaport && (
-                                <Text style={{ color: 'red' }}>Pick Departure Seaport from list</Text>
-                            )}
                             <View style={styles.singleItemView}>
-                                <Text style={styles.singleItemText}>Destination Seaport</Text>
-                                {/* <TextInputSuggestion /> */}
+                                <Text style={styles.singleItemText}>Destination Airport</Text>
                                 <TextInput
-                                    onChangeText={onChangeTextDestination}
-                                    value={destinationSeaport}
+                                    editable={false}
+                                    value={postRequestData.destinationAirport}
                                     style={styles.input}
-                                    placeholder="Enter Seaport"
+                                    placeholder="Enter Airport"
                                 />
                             </View>
-                            {!isValidDestinationSeaport && (
-                                <Text style={{ color: 'red' }}>Pick Destination Seaport from list</Text>
-                            )}
-                            {departureSeaport && departureData.length > 0 ? (
-                                <FlatList
-                                    data={departureData}
-                                    showsVerticalScrollIndicator={false}
-                                    renderItem={({ item, index }) => (
-                                        <Pressable
-                                            style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1 }]}
-                                            onPress={
-                                                () => {
-                                                    setDepartureSeaport(item.Name);
-                                                    setDepartureSeaportCode(item.Location);
-                                                    setIsValidDepartureSeaport(true);
-                                                    setPickupPortUnlocode(item.Country + item.Location)
-                                                    setDepartureData([]);
-                                                }
-
-                                            }>
-                                            {getItemText(item)}
-                                        </Pressable>
-                                    )}
-                                    keyExtractor={(item, index) => item.place_id + index}
-                                />
-                            ) : null}
-                            {destinationSeaport && destinationData.length > 0 ? (
-                                <FlatList
-                                    data={destinationData}
-                                    showsVerticalScrollIndicator={false}
-                                    renderItem={({ item, index }) => (
-                                        <Pressable
-                                            style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1 }]}
-                                            onPress={
-                                                () => {
-                                                    setDestinationSeaport(item.Name);
-                                                    setDestinationSeaportCode(item.Location);
-                                                    setIsValidDestinationSeaport(true);
-                                                    setDropOffPortUnlocode(item.Country + item.Location)
-                                                    setDestinationData([]);
-                                                }
-                                            }>
-                                            {getItemText(item)}
-                                        </Pressable>
-                                    )}
-                                    keyExtractor={(item, index) => item.place_id + index}
-                                />
-                            ) : null}
                             <View style={styles.singleItemView}>
                                 <Text style={styles.singleItemText}>Date</Text>
 
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        setOpen(true);
-                                    }}
-                                    style={styles.inputContainer2}>
+                                <TouchableOpacity disabled style={styles.inputContainer2}>
                                     <Text style={{ fontSize: 12, marginLeft: 10 }}>
-                                        {date.toDateString()}
+                                        {/* {date.toDateString()} */}
+                                        {postRequestData.date.slice(0, -14)}
                                     </Text>
                                     <SvgXml style={styles.icon} xml={dateSvg} width={20} />
                                 </TouchableOpacity>
@@ -407,17 +260,23 @@ const AddShipTicket = ({ navigation }: any) => {
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.singleItemView}>
-                                <Text style={styles.singleItemText}>MMSI Number</Text>
+                                <Text style={styles.singleItemText}>Flight Number</Text>
                                 <TextInput
+                                    editable={false}
                                     style={styles.input}
-                                    onChangeText={setMMSINumber}
-                                    value={mmsiNumber}
+                                    value={postRequestData.flightNumber}
                                     placeholder="1979H6"
                                 />
                             </View>
-                            {!isValidMMSINumber && (
-                                <Text style={{ color: 'red' }}>MMSI Number is require</Text>
-                            )}
+                            <View style={styles.singleItemView}>
+                                <Text style={styles.singleItemText}>Airline</Text>
+                                <TextInput
+                                    editable={false}
+                                    style={styles.input}
+                                    value={postRequestData.airline}
+                                    placeholder="PIA"
+                                />
+                            </View>
                             <View style={styles.singleItemView}>
                                 <Text style={styles.singleItemText}>Ticket Image</Text>
                                 <TouchableOpacity
@@ -426,7 +285,7 @@ const AddShipTicket = ({ navigation }: any) => {
                                     <TextInput
                                         editable={false}
                                         style={styles.input2}
-                                        value={image.name}
+                                        value={image ? image.name : ''}
                                         placeholder="Image"
                                     />
                                     <SvgXml style={styles.icon} xml={ImageSvg} width={20} />
@@ -444,8 +303,8 @@ const AddShipTicket = ({ navigation }: any) => {
                             title="SUBMIT FLIGHT DETAILS"
                         />
                     </View>
-                </ScrollView>}
-
+                </ScrollView>
+            )}
         </SafeAreaView>
     );
 };
@@ -519,4 +378,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default AddShipTicket;
+export default AddFlightPostRequest;

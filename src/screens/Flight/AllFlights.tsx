@@ -9,12 +9,12 @@ import {
 } from 'react-native';
 import { backendUrl } from '../../appConstants';
 import { ButtonOutline } from '../../components';
-import FlightComponent from '../../components/FlightComponent';
+import FlightComponent from './Components/FlightComponent';
 import MyLoader from '../../components/MyLoader';
 import { deleleFlightRecord, getAllFlightAddedByProvider } from '../../services';
 import { airplane } from '../../theme/assets/svg/airplaneSvg';
 
-const AllFlight = ({ navigation, status, myColor }: any) => {
+const AllFlights = ({ navigation, status, myColor }: any) => {
   const [flightResponse, setFlightResponse] = React.useState([]);
   const [isLoading, setIsloading] = React.useState(false);
   const getData = async () => {
@@ -171,4 +171,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AllFlight;
+export default AllFlights;

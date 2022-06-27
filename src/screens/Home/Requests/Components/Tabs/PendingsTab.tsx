@@ -1,0 +1,95 @@
+import { Alert, StyleSheet, Text, View } from 'react-native'
+import React from 'react'
+import RequestCard from '../RequestCard'
+import { setAcceptOrReject } from '../../../../../services'
+import MyLoader from '../../../../../components/MyLoader'
+
+const PendingsTab = ({ item, navigation }: any) => {
+    console.log("Check the item", item);
+    const [isLoading, setIsLoading] = React.useState(false);
+    const renderPendingTab = () => {
+        if (item.status === 'Pending') {
+            if (item.type === "Ship") {
+                return <RequestCard
+                    isForShip={true}
+                    isPostRequest={false}
+                    myImage={item.requestedBy.profilepic}
+                    firstName={item.requestedBy.firstname}
+                    lastName={item.requestedBy.lastname}
+                    mmsiOrFlightNumber={item.ship.mmsiNumber}
+                    departurePort={item.ship.departurePort}
+                    destinationPort={item.ship.destinationPort}
+                    acceptPress={() => {
+                        navigation.navigate('ACCEPTREJECTFORSHIP', {
+                            shipData: item,
+                        });
+                    }}
+                    rejectPress={() => {
+                        console.log("rejected")
+                    }}
+                    date={item.ship.shipDate.slice(0, -14)}
+                />
+            }
+            if (item.flight === undefined || item.flight === null) {
+                return;
+            }
+            return (
+                <RequestCard
+                    myImage={item.requestedBy.profilepic}
+                    firstName={item.requestedBy.firstname}
+                    lastName={item.requestedBy.lastname}
+                    mmsiOrflightNumber={item.flight.flightNumber}
+                    departurePort={item.flight.departureAirport}
+                    destinationPort={item.flight.destinationAirport}
+                    acceptPress={() => {
+                        navigation.navigate('BookingRequest', {
+                            requestData: item,
+                        });
+                    }}
+                    rejectPress={() => {
+                        Alert.alert("",
+                            "You need to register this flight in order to accept this request?",
+                            [
+                                {
+                                    text: 'Yes', onPress: () => {
+                                        // setIsloading(true);
+                                        setAcceptOrReject(item._id, 'Rejected').then(response =>
+                                            response
+                                                .json()
+                                                .then(res => {
+                                                    setIsLoading(false)
+                                                    navigation.navigate("AllRequest");
+                                                })
+                                                .catch(e => {
+                                                    setIsLoading(false)
+                                                }),
+                                        );
+                                    },
+                                    style: 'default',
+                                },
+                                { text: 'No' },
+                            ],
+                            { cancelable: false }
+                        )
+
+                    }}
+                    date={item.flight.flightDate.slice(0, -14)}
+                    onPress={() => {
+                        navigation.navigate('BookingRequest', {
+                            requestData: item,
+                        });
+                    }}
+                />
+            );
+        }
+    }
+    return (
+        <View>
+            {isLoading ? <MyLoader /> : renderPendingTab()}
+        </View>
+    )
+}
+
+export default PendingsTab;
+
+const styles = StyleSheet.create({})

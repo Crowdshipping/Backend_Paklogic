@@ -15,63 +15,61 @@ const PackageDetail = ({ navigation, route }: any) => {
   const { requestData } = route.params;
   return (
     <SafeAreaView>
-      {console.log("data form package detail", requestData)}
-      <Header
-        title="Package Details "
-      // pressMethod={() => navigation.goBack()}
-      //   menu={true}
-      />
+      <View style={styles.viewdetailbox}>
+        <Text style={styles.txtheading}>Product Details</Text>
+        <View style={styles.viewdetail}>
+          <Text style={styles.txtdetailbox}>Category</Text>
+          <Text style={styles.txtdetailbox}>
+            {requestData.bookingId.category}
 
-      {/* available booking view */}
-      <View >
-        <View style={styles.detailsbox}>
-          <View style={styles.detailsboxinner}>
-            {/* 2ndView */}
-            <View style={styles.viewdetailbox}>
-              <View style={styles.viewdetail}>
-                <Text style={styles.txtdetailbox}>Category</Text>
-                <Text style={styles.txtdetailbox}>{requestData.bookingId.category}</Text>
-              </View>
-              <View style={styles.viewdetail}>
-                <Text style={styles.txtdetailbox}>Product Type</Text>
-                <Text style={styles.txtdetailbox}>{requestData.bookingId.productType}</Text>
-              </View>
-              <View style={styles.viewdetail}>
-                <Text style={styles.txtdetailbox}>Product Weight</Text>
-                <Text style={styles.txtdetailbox}>{requestData.bookingId.productWeight}</Text>
-              </View>
-              <Text style={styles.txtheading}>Attached Photos</Text>
-              <View style={styles.imgpicker}>
-                {console.log("my image from package detail", backendUrl + requestData.bookingId.productImage)}
-                {requestData.bookingId.productImage ? (
-                  <Image
-                    style={{ width: "100%", height: "100%" }}
-                    source={{ uri: backendUrl + requestData.bookingId.productImage }}
-                  />
-                ) : (
-                  <Image
-                    style={{ width: "100%", height: "100%" }}
-                    source={require('../assets/aeroplane.png')}
-                  />
-                )}
+          </Text>
+        </View>
+        <View style={styles.viewdetail}>
+          <Text style={styles.txtdetailbox}>Product Type</Text>
+          <Text style={styles.txtdetailbox}>
+            {requestData.bookingId.productType}
 
-              </View>
-              <Text style={styles.txtheading}>Receiver Details</Text>
-              <View style={styles.viewdetail}>
-                <Text style={styles.txtdetailbox}>Name</Text>
-                <Text style={styles.txtdetailbox}>{requestData.bookingId.recieverName}</Text>
-              </View>
-              <View style={styles.viewdetail}>
-                <Text style={styles.txtdetailbox}>Phone Number</Text>
-                <Text style={styles.txtdetailbox}>{requestData.bookingId.recieverPhoneno}</Text>
-              </View>
-            </View>
-          </View>
+          </Text>
+        </View>
+        <View style={styles.viewdetail}>
+          <Text style={styles.txtdetailbox}>Product Weight</Text>
+          <Text style={styles.txtdetailbox}>
+            {requestData.bookingId.productWeight}
+
+          </Text>
+        </View>
+
+        <Text style={styles.txtheading}>Receiver Details</Text>
+        <View style={styles.viewdetail}>
+          <Text style={styles.txtdetailbox}>Name</Text>
+          <Text style={styles.txtdetailbox}>
+            {requestData.bookingId.recieverName}
+
+          </Text>
+        </View>
+        <View style={styles.viewdetail}>
+          <Text style={styles.txtdetailbox}>Phone Number</Text>
+          <Text style={styles.txtdetailbox}>
+            {requestData.bookingId.recieverPhoneno}
+
+          </Text>
+        </View>
+        <Text style={styles.txtheading}>Attached Photos</Text>
+        <View style={styles.imgpicker}>
+          {console.log("my image from package detail", backendUrl + requestData.bookingId.productImage)}
+          {requestData.bookingId.productImage ? (
+            <Image
+              style={{ width: "100%", height: "100%" }}
+              source={{ uri: backendUrl + requestData.bookingId.productImage }}
+            />
+          ) : (
+            <Image
+              style={{ width: "100%", height: "100%" }}
+              source={require('../assets/aeroplane.png')}
+            />
+          )}
         </View>
       </View>
-      {/* 3rd View  */}
-
-      {/* //available booking viewend */}
     </SafeAreaView>
   );
 };
@@ -115,8 +113,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   viewdetailbox: {
-    paddingHorizontal: wp(3),
-    paddingTop: hp(3),
+    paddingHorizontal: 15
   },
 
   txtdetailbox: {

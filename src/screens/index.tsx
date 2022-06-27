@@ -1,5 +1,5 @@
 import ForgetPassword from './ForgetPassword/ForgetPassword';
-import Landing from './Landing/Landing';
+import Landing from './Home/Home';
 import RegisterProvider from './RegisterProvider/RegisterProvider';
 import RegisterDriver from './RegisterDriver/RegisterDriver';
 import RegisterOption from './RegisterOption/RegisterOption';
