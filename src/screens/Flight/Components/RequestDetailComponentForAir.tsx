@@ -60,7 +60,6 @@ const RequestDetailComponentForAir = ({ pickUpAirport, dropOffAirport, fromDate,
         }
     };
     const initializeTheState = () => {
-        console.log("request state", requestData.state);
         if (requestData.state === "Pickedup") {
             setRequestStates(2)
         }
@@ -72,10 +71,6 @@ const RequestDetailComponentForAir = ({ pickUpAirport, dropOffAirport, fromDate,
         }
         else {
             setRequestStates(1)
-            // navigation.navigate('AcceptBooking', {
-            //   requestData: item,
-            //   flightInfoData: result.flightInfo,
-            // });
         }
     }
     const changeStateOfRequest = (myState: any) => {

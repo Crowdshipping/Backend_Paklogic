@@ -13,6 +13,8 @@ import VehicleDetail from '../modules/Driver/Screens/Vehicle/Components/VehicleD
 import AddVehicle from '../modules/Driver/Screens/Vehicle/AddVehicle';
 import VechicleRequests from '../modules/Driver/Screens/Home/Requests/VehicleRequests';
 import AcceptBookingForVehicle from '../modules/Driver/Screens/Home/Requests/AcceptOrRejectForVehicle';
+import VehicleHistory from '../modules/Driver/Screens/Home/History/VehicleHistory';
+import TrackingVehicle from '../modules/Driver/Screens/Vehicle/TrackingVehicle';
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
     return (
@@ -136,6 +138,36 @@ export const DriverNavigation = () => {
                 }}
                 name="ACCEPTORREJECTFORVEHICLE"
                 component={AcceptBookingForVehicle}
+            />
+            <Stack.Screen
+                options={{
+                    headerStyle: {
+                        elevation: 0,
+                        shadowOpacity: 0,
+                    },
+                    cardStyle: {
+                        backgroundColor: 'white',
+                    },
+                    headerTitleAlign: 'center',
+                    title: 'History',
+                }}
+                name="VEHICLEHISTORY"
+                component={VehicleHistory}
+            />
+            <Stack.Screen
+                options={{
+                    headerStyle: {
+                        elevation: 0,
+                        shadowOpacity: 0,
+                    },
+                    cardStyle: {
+                        backgroundColor: 'white',
+                    },
+                    headerTitleAlign: 'center',
+                    title: 'History',
+                }}
+                name="TRACKINGVEHICLE"
+                component={TrackingVehicle}
             />
         </Stack.Navigator>
     );

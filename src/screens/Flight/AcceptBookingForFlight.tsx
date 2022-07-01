@@ -66,34 +66,6 @@ const AcceptBookingForFlight = ({ route, navigation }: any) => {
     // return () => clearInterval(interval);
   }, []);
 
-
-  const onMapReadyHandler = useCallback(() => {
-    console.log("working on map ready")
-    if (Platform.OS === 'ios') {
-      console.log("working on map ready ios if")
-      ref?.current?.fitToElements({
-        animated: true,
-        edgePadding: {
-          top: 150,
-          right: 50,
-          bottom: 50,
-          left: 50,
-        },
-      });
-    } else if (departureAirportLatLng && destinationAirportLatLng) {
-      ref?.current?.fitToCoordinates([departureAirportLatLng, destinationAirportLatLng], {
-        animated: true,
-        edgePadding: {
-          top: 50,
-          right: 50,
-          bottom: 50,
-          left: 50,
-        },
-      });
-    }
-  }, [ref]);
-
-
   const renderMap = () => {
     if (departureAirportLatLng && destinationAirportLatLng && flightPosition) {
       return (

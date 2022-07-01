@@ -13,30 +13,32 @@ const CompleteState = ({ onPress }: any) => {
                 <CheckBoxState isDisabled={true} text={'Transit'} whenPressed={() => { }} />
                 <CheckBoxState isDisabled={true} text={'Reached'} whenPressed={() => { }} />
             </View>
-            <MapButton
-                onPress={onPress}
-                // onPress={() => {
-                //     // setIsLoading(true);
+            <View style={{ marginTop: 20 }}>
+                <MapButton
+                    onPress={onPress}
+                    // onPress={() => {
+                    //     // setIsLoading(true);
 
-                //     // changeStateByProvider("Pickedup", requestData._id)
-                //     //     .then(response => response.json())
-                //     //     .then(result => {
+                    //     // changeStateByProvider("Pickedup", requestData._id)
+                    //     //     .then(response => response.json())
+                    //     //     .then(result => {
 
-                //     //         if (result.success) {
-                //     //             setIsLoading(false);
-                //     //             navigation.navigate('AcceptBooking2', {
-                //     //                 requestData: requestData,
-                //     //                 flightInfoData: flightInfoData ? flightInfoData : flightInfo,
-                //     //             });
-                //     //         }
-                //     //     })
-                //     //     .catch(error => {
-                //     //         setIsLoading(false);
-                //     //         console.log('error', error)
-                //     //     });
-                // }}
-                text={'COMPLETE'}
-            />
+                    //     //         if (result.success) {
+                    //     //             setIsLoading(false);
+                    //     //             navigation.navigate('AcceptBooking2', {
+                    //     //                 requestData: requestData,
+                    //     //                 flightInfoData: flightInfoData ? flightInfoData : flightInfo,
+                    //     //             });
+                    //     //         }
+                    //     //     })
+                    //     //     .catch(error => {
+                    //     //         setIsLoading(false);
+                    //     //         console.log('error', error)
+                    //     //     });
+                    // }}
+                    text={'COMPLETE'}
+                />
+            </View>
         </>
     )
 }

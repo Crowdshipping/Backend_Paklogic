@@ -12,7 +12,7 @@ const BottomSheetContentForVehicle = ({ item, onPress }: any) => {
 
     return (
         <View style={styles.container}>
-            {console.log("popopo", item.bookingId.category)}
+            {console.log("kokomo", item.bookingId.pickupType)}
             <View style={{ marginHorizontal: 10, marginVertical: 10 }}>
                 <MapButton
                     text="Accept"
@@ -26,9 +26,9 @@ const BottomSheetContentForVehicle = ({ item, onPress }: any) => {
             <HorizontalDivider />
             {item.bookingId.pickupType !== "Instant" &&
                 <>
-                    <RequestSingleContainer title="From Date" value={item.bookingId.fromdate.slice(0, -14)} />
+                    <RequestSingleContainer title="From Date" value={item.bookingId.fromdate?.slice(0, -14)} />
                     <HorizontalDivider />
-                    <RequestSingleContainer title="To Date" value={item.bookingId.todate.slice(0, -14)} />
+                    <RequestSingleContainer title="To Date" value={item.bookingId.todate?.slice(0, -14)} />
                     <HorizontalDivider />
                 </>
             }

@@ -3,11 +3,11 @@ import React from 'react'
 import BottomSheet from '@gorhom/bottom-sheet';
 // import RequestDetailComponentForAir from './RequestDetailComponentForAir';
 
-const MapBottomSheet = ({ children }: any) => {
+const MapBottomSheet = ({ children, minValue, maxValue }: any) => {
     const bottomSheetRef = React.useRef<BottomSheet>(null);
 
     // variables
-    const snapPoints = React.useMemo(() => ['14%', '72%'], []);
+    const snapPoints = React.useMemo(() => [minValue, maxValue], []);
     // callbacks
     const handleSheetChanges = React.useCallback((index: number) => {
         console.log('handleSheetChanges', index);

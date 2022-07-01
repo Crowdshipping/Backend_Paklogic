@@ -1,81 +1,93 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import VehicleRequestCard from './Components/VehicleRequestCard';
 import Geolocation from '@react-native-community/geolocation';
-import { changeStatusByDriver, getVehicleRequest } from '../../../../../services';
+import { getDriverHistory, getVehicleRequest } from '../../../../../services';
 import { ScrollView } from 'react-native-gesture-handler';
 import MyLoader from '../../../../../components/MyLoader';
+import VerticalDivider from '../../../../../components/VerticalDivider';
+import TabButton from '../../../../../components/TabButton';
+import InProgress from './Components/Tabs/InProgress';
+import Pending from './Components/Tabs/Pending';
 
 const VehicleRequests = ({ navigation }: any) => {
-    const [vehicleResponse, setVehicleResponse] = useState<any>([]);
     const [isLoading, setIsLoading] = useState(false);
-
-    const getDataOfVehicle = () => {
-        setIsLoading(true);
-        getVehicleRequest(33.7008114, 73.0634073)
-            .then(response => response.json())
-            .then(result => {
-                setIsLoading(false);
-                console.log("rr", result.DriverRequests)
-                setVehicleResponse(result.DriverRequests);
-            }).catch((error) => {
-                setIsLoading(false);
-                console.log(error)
-            });
-    }
-
-
+    const [tabSelected, setTabSelected] = React.useState(1);
     const getVehicleLocation = () => {
         let crd = {}
         Geolocation.getCurrentPosition((pos) => {
             crd = pos.coords;
         })
     }
-
     useEffect(() => {
-        getDataOfVehicle();
         getVehicleLocation();
         const willFocusSubscription = navigation.addListener('focus', () => {
             console.log("from back navigation all flight")
-            getDataOfVehicle();
         });
         return willFocusSubscription;
     }, []);
-
-
+    const renderTabs = () => {
+        if (tabSelected === 1) {
+            return <InProgress navigation={navigation} />
+        }
+        else if (tabSelected === 2) {
+            return <Pending navigation={navigation} />
+        }
+    }
     return (
         <ScrollView>
-            {isLoading ? <MyLoader /> : <View style={styles.container}>
-                {vehicleResponse && vehicleResponse.map((item: any) => {
-                    console.log("pp", item);
-                    if (item.status !== "Accepted") {
-                        return <VehicleRequestCard
-                            acceptPress={() => {
-                                navigation.navigate('ACCEPTORREJECTFORVEHICLE', {
-                                    vehicleData: item
-                                });
-                                // acceptRequestToServer(item);
-                            }}
-                            isAccepted={false}
-                            myImage={item.requestedBy.profilepic}
-                            firstName={item.requestedBy.firstname}
-                            lastName={item.requestedBy.lastname}
-                            pickupType={item.bookingId.pickupType}
-                            departurePort={"Adiyla rd rawalpindi pakistan"}
-                            destinationPort={"Quettaasdasdasdasdasdasasdasdasddadasdasdsd"}
-                            date={"2-2-2022"}
-                        />
-                    }
-                })}
-            </View>}
+            {isLoading ? <MyLoader /> :
+                <View style={styles.container}>
+                    <View style={styles.tabStyle}>
+                        <View
+                            style={[
+                                styles.acceptedTabStyle,
+                                { borderBottomColor: tabSelected === 1 ? 'black' : '#f0f0f0' },
+                            ]}>
+                            <TabButton
+                                isFontBold={tabSelected === 1 && true}
+                                onPress={() => {
+                                    setTabSelected(1);
+                                }}
+                                text="InProgress"
+                            />
+                        </View>
+                        <VerticalDivider width={7} />
+                        <View
+                            style={[
+                                styles.pendingTabStyle,
+                                { borderBottomColor: tabSelected === 2 ? 'black' : '#f0f0f0' },
+                            ]}>
+                            <TabButton
+                                isFontBold={tabSelected === 2 && true}
+                                onPress={() => {
+                                    setTabSelected(2);
+                                }}
+                                text="Pendings"
+                            />
+                        </View>
+                    </View>
+                    {renderTabs()}
+                </View>}
         </ScrollView>
     )
 }
-
 export default VehicleRequests;
-
 const styles = StyleSheet.create({
     container: {
         marginHorizontal: 15
-    }
+    },
+    tabStyle: {
+        display: 'flex',
+        flexDirection: 'row',
+        marginTop: 20,
+    },
+    acceptedTabStyle: {
+        flex: 1,
+        borderBottomWidth: 2,
+    },
+    pendingTabStyle: {
+        flex: 1,
+        borderBottomColor: 'red',
+        borderBottomWidth: 2,
+    },
 })

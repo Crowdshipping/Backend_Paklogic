@@ -742,3 +742,17 @@ export const changeStatusByDriver = (requestId: any, driverId: any, newStatus: a
 
   return fetch("https://backend-crowdshipping.herokuapp.com/driver/changedriverrequestStatus", requestOptions);
 }
+
+
+export const getDriverHistory = (driverId: any) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Cookie", "connect.sid=s%3AyulJxLavmCWWcJPfR99ffsX-tEGgaRKa.k6L4OXZAX1lq%2F2ROv%2BFgg9%2Bj6zBXf3OWrH1HooexOaU");
+
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow'
+  };
+
+  return fetch(`https://backend-crowdshipping.herokuapp.com/driver/driverorderhistory/${driverId}`, requestOptions);
+}

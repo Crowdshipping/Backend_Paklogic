@@ -15,6 +15,7 @@ import { StackNavigation } from './src/navigation';
 import PackageDetail from './src/screens/PackageDetail';
 import DriverHome from './src/modules/Driver/Screens/Home/DriverHome';
 import { DriverNavigation } from './src/navigation/DriverNavigation';
+import { MyTest } from './src/MyTest';
 const App = () => {
   StatusBar.setBarStyle('light-content', true);
   const isDarkMode = useColorScheme() === 'dark';
@@ -24,6 +25,7 @@ const App = () => {
   };
 
   return (
+    // <MyTest />
     <NavigationContainer>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       {/* <StackNavigation /> */}

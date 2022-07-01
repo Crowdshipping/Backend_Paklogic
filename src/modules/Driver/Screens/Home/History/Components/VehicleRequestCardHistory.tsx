@@ -5,16 +5,14 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { backendUrl } from '../../../../../../appConstants';
 import HorizontalDivider from '../../../../../../components/HorizontalDivider';
 import { LocationSvg } from '../../../../../../theme/assets/svg/LocationSvg';
-const VehicleRequestCard = ({
+const VehicleRequestCardHistory = ({
     onPress,
     firstName,
     lastName,
     pickupType,
     departurePort,
     destinationPort,
-    acceptPress,
     myImage,
-    isAccepted,
     text
 }: any) => {
     return (
@@ -59,15 +57,10 @@ const VehicleRequestCard = ({
                 </View>
                 <View style={styles.lastPart}>
                     <View style={styles.acceptAndRejectContainer}>
-                        <TouchableOpacity onPress={acceptPress}>
-                            {text ? <Text style={styles.acceptText} >
-                                {text}
-                            </Text> :
-                                <Text style={styles.acceptText} >
-                                    {isAccepted ? 'Accepted' : 'Accept'}
-                                </Text>
-                            }
-                        </TouchableOpacity>
+                        <Text style={styles.acceptText} >
+                            {text}
+                        </Text>
+
                     </View>
 
                 </View>
@@ -148,4 +141,4 @@ const styles = StyleSheet.create({
         fontSize: 17,
     },
 });
-export default VehicleRequestCard;
+export default VehicleRequestCardHistory;

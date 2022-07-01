@@ -11,30 +11,32 @@ const PickUpState = ({ onPress }: any) => {
                 <CheckBoxState2 text={'Transit'} />
                 <CheckBoxState2 text={'Reached'} />
             </View>
-            <MapButton
-                onPress={onPress}
-                // onPress={() => {
-                //     // setIsLoading(true);
+            <View style={{ marginTop: 20 }}>
+                <MapButton
+                    onPress={onPress}
+                    // onPress={() => {
+                    //     // setIsLoading(true);
 
-                //     // changeStateByProvider("Pickedup", requestData._id)
-                //     //     .then(response => response.json())
-                //     //     .then(result => {
+                    //     // changeStateByProvider("Pickedup", requestData._id)
+                    //     //     .then(response => response.json())
+                    //     //     .then(result => {
 
-                //     //         if (result.success) {
-                //     //             setIsLoading(false);
-                //     //             navigation.navigate('AcceptBooking2', {
-                //     //                 requestData: requestData,
-                //     //                 flightInfoData: flightInfoData ? flightInfoData : flightInfo,
-                //     //             });
-                //     //         }
-                //     //     })
-                //     //     .catch(error => {
-                //     //         setIsLoading(false);
-                //     //         console.log('error', error)
-                //     //     });
-                // }}
-                text={'PICKED UP'}
-            />
+                    //     //         if (result.success) {
+                    //     //             setIsLoading(false);
+                    //     //             navigation.navigate('AcceptBooking2', {
+                    //     //                 requestData: requestData,
+                    //     //                 flightInfoData: flightInfoData ? flightInfoData : flightInfo,
+                    //     //             });
+                    //     //         }
+                    //     //     })
+                    //     //     .catch(error => {
+                    //     //         setIsLoading(false);
+                    //     //         console.log('error', error)
+                    //     //     });
+                    // }}
+                    text={'PICKED UP'}
+                />
+            </View>
         </>
     )
 }

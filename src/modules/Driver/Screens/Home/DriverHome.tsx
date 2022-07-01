@@ -14,6 +14,7 @@ const DriverHome = ({ navigation }: any) => {
       <HomeContainer onPress={() => {
       }} title={"Earning"} mySvg={earning} />
       <HomeContainer onPress={() => {
+        navigation.navigate("VEHICLEHISTORY")
       }} title={"History"} mySvg={history} />
     </View>
   );
