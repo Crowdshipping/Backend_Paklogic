@@ -19,6 +19,7 @@ const VehicleTrackingContent = ({ item, navigation }: any) => {
     const [image, setImage] = React.useState<any>({});
 
 
+
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
     };
@@ -66,6 +67,10 @@ const VehicleTrackingContent = ({ item, navigation }: any) => {
     }
 
     const initializeTheState = () => {
+
+        console.log("fffff", item.state);
+
+
         if (item.state === "Pickedup") {
             setRequestStates(2)
         }
