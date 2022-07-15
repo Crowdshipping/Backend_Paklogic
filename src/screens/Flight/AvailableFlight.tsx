@@ -141,7 +141,7 @@ const AvailableFight = ({ route, navigation, status, myColor }: any) => {
     return (
       <View style={{ height: '100%', justifyContent: 'center' }}>
         <View style={{ backgroundColor: "#f0f0f0", height: 250, borderRadius: 10, margin: 20, justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ color: 'red' }}>No Flights Available</Text>
+          <Text style={{ color: 'red' }}>no flights registered</Text>
         </View>
       </View>
     )

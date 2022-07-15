@@ -3,6 +3,15 @@ import React from 'react'
 import { SvgXml } from 'react-native-svg'
 
 const VehicleImageRow = ({ onPress, title, svgImage, isValid, validMessage }: any) => {
+
+    const conditionallyRender = () => {
+        if (!isValid && validMessage) {
+            return <Text style={{ color: 'red', }}>{validMessage}</Text>
+        }
+    }
+
+
+
     return (
         <>
             <View style={styles.container}>
@@ -13,14 +22,12 @@ const VehicleImageRow = ({ onPress, title, svgImage, isValid, validMessage }: an
                     </View>
                 </TouchableOpacity>
             </View>
-            {!isValid && (
-                <Text style={{ color: 'red' }}>{validMessage}</Text>
-            )}
+            {conditionallyRender()}
         </>
     )
 }
 
-export default VehicleImageRow
+export default VehicleImageRow;
 
 const styles = StyleSheet.create({
     container: {

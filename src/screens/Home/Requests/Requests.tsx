@@ -383,125 +383,126 @@ const Requests = ({ navigation, status, myColor, route }: any) => {
 
     <SafeAreaView>
 
-      {isLoading ? <MyLoader /> : <ScrollView>
+      {isLoading ? <MyLoader /> :
+        <ScrollView>
 
-        <View style={styles.container}>
+          <View style={styles.container}>
 
 
-          {/* <MyDropdown /> */}
-          <View
-            style={{
-              width: '47.5%',
-              display: 'flex',
-              flexDirection: 'row',
-              marginBottom: 20,
-              zIndex: 1,
-            }}>
-            <MyDropdown />
-            <VerticalDivider />
-            <MyDropdown />
-          </View>
-          <DatePicker
-            modal
-            mode="date"
-            open={fromDateOpen}
-            date={fromDate}
-            onConfirm={date => {
-              setFromDateOpen(false);
-              setIsFromDateSet(true);
-              setFromDate(date);
-            }}
-            onCancel={() => {
-              setFromDateOpen(false);
-            }}
-          />
-
-          <DatePicker
-            modal
-            mode="date"
-            open={toDateOpen}
-            date={toDate}
-            onConfirm={date => {
-              setToDateOpen(false);
-              setIsToDateSet(true);
-              setToDate(date);
-            }}
-            onCancel={() => {
-              setToDateOpen(false);
-            }}
-          />
-
-          <View
-            style={{
-              height: 45,
-              flexDirection: 'row',
-            }}>
-            <DateComponent
-              text={isFromDateSet ? fromDate.toDateString() : 'From'}
-              onPress={() => {
-                setFromDateOpen(true);
+            {/* <MyDropdown /> */}
+            <View
+              style={{
+                width: '47.5%',
+                display: 'flex',
+                flexDirection: 'row',
+                marginBottom: 20,
+                zIndex: 1,
+              }}>
+              <MyDropdown />
+              <VerticalDivider />
+              <MyDropdown />
+            </View>
+            <DatePicker
+              modal
+              mode="date"
+              open={fromDateOpen}
+              date={fromDate}
+              onConfirm={date => {
+                setFromDateOpen(false);
+                setIsFromDateSet(true);
+                setFromDate(date);
+              }}
+              onCancel={() => {
+                setFromDateOpen(false);
               }}
             />
-            <VerticalDivider />
-            <DateComponent
-              text={isToDateSet ? toDate.toDateString() : 'To'}
-              onPress={() => {
-                setToDateOpen(true);
+
+            <DatePicker
+              modal
+              mode="date"
+              open={toDateOpen}
+              date={toDate}
+              onConfirm={date => {
+                setToDateOpen(false);
+                setIsToDateSet(true);
+                setToDate(date);
+              }}
+              onCancel={() => {
+                setToDateOpen(false);
               }}
             />
-          </View>
-          <View style={styles.tabStyle}>
-            <View
-              style={[
-                styles.acceptedTabStyle,
-                { borderBottomColor: tabSelected === 1 ? 'black' : '#f0f0f0' },
-              ]}>
-              <TabButton
-                isFontBold={tabSelected === 1 && true}
-                onPress={() => {
-                  setTabSelected(1);
-                }}
-                text="Accepted"
-              />
-            </View>
-            <VerticalDivider width={7} />
-            <View
-              style={[
-                styles.pendingTabStyle,
-                { borderBottomColor: tabSelected === 2 ? 'black' : '#f0f0f0' },
-              ]}>
-              <TabButton
-                isFontBold={tabSelected === 2 && true}
-                onPress={() => {
-                  setTabSelected(2);
-                }}
-                text="Pendings"
-              />
-            </View>
-            <VerticalDivider width={7} />
-            <View
-              style={[
-                styles.acceptedTabStyle,
-                {
-                  borderBottomColor: tabSelected === 3 ? 'black' : '#f0f0f0',
-                },
-              ]}>
-              <TabButton
-                isFontBold={tabSelected === 3 && true}
-                onPress={() => {
-                  setTabSelected(3);
-                }}
-                text="Post Requests"
-              />
-            </View>
-          </View>
 
-          <Text style={{ textAlign: 'center', color: 'green', marginTop: 24 }}>
-            Available Booking
-          </Text>
-          {renderTabs()}
-        </View>
-      </ScrollView>}
+            <View
+              style={{
+                height: 45,
+                flexDirection: 'row',
+              }}>
+              <DateComponent
+                text={isFromDateSet ? fromDate.toDateString() : 'From'}
+                onPress={() => {
+                  setFromDateOpen(true);
+                }}
+              />
+              <VerticalDivider />
+              <DateComponent
+                text={isToDateSet ? toDate.toDateString() : 'To'}
+                onPress={() => {
+                  setToDateOpen(true);
+                }}
+              />
+            </View>
+            <View style={styles.tabStyle}>
+              <View
+                style={[
+                  styles.acceptedTabStyle,
+                  { borderBottomColor: tabSelected === 1 ? 'black' : '#f0f0f0' },
+                ]}>
+                <TabButton
+                  isFontBold={tabSelected === 1 && true}
+                  onPress={() => {
+                    setTabSelected(1);
+                  }}
+                  text="Accepted"
+                />
+              </View>
+              <VerticalDivider width={7} />
+              <View
+                style={[
+                  styles.pendingTabStyle,
+                  { borderBottomColor: tabSelected === 2 ? 'black' : '#f0f0f0' },
+                ]}>
+                <TabButton
+                  isFontBold={tabSelected === 2 && true}
+                  onPress={() => {
+                    setTabSelected(2);
+                  }}
+                  text="Pendings"
+                />
+              </View>
+              <VerticalDivider width={7} />
+              <View
+                style={[
+                  styles.acceptedTabStyle,
+                  {
+                    borderBottomColor: tabSelected === 3 ? 'black' : '#f0f0f0',
+                  },
+                ]}>
+                <TabButton
+                  isFontBold={tabSelected === 3 && true}
+                  onPress={() => {
+                    setTabSelected(3);
+                  }}
+                  text="Post Requests"
+                />
+              </View>
+            </View>
+
+            <Text style={{ textAlign: 'center', color: 'green', marginTop: 24 }}>
+              Available Booking
+            </Text>
+            {renderTabs()}
+          </View>
+        </ScrollView>}
     </SafeAreaView>
   );
 };

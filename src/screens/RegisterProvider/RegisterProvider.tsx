@@ -79,9 +79,10 @@ export default function RegisterProvider(props: any) {
         fname: firstName,
         lname: lastName,
         email: email.toLowerCase(),
-        addr: address,
         pass: password,
+        addr: address,
         phone: props.route.params.phoneno,
+        role: props.route.params.option,
         dialcode: props.route.params.countrycode.dial_code,
       })
         .then(response => response.json())
@@ -194,7 +195,7 @@ export default function RegisterProvider(props: any) {
             <Text
               style={{ color: colors.red }}
               onPress={() => props.navigation.navigate('SIGNIN')}>
-              Signin
+              Sign In
             </Text>
           </Text>
           <Button

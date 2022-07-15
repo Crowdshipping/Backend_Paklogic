@@ -23,6 +23,7 @@ export default VehicleInputRow;
 
 const styles = StyleSheet.create({
     singleItemView: {
+        zIndex: -1,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',

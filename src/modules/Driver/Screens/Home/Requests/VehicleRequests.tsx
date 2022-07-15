@@ -48,7 +48,7 @@ const VehicleRequests = ({ navigation }: any) => {
                                 onPress={() => {
                                     setTabSelected(1);
                                 }}
-                                text="InProgress"
+                                text="In Progress"
                             />
                         </View>
                         <VerticalDivider width={7} />

@@ -1,6 +1,6 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, {AxiosRequestConfig} from 'axios';
 
-import { backendUrl } from '../appConstants';
+import {backendUrl} from '../appConstants';
 
 export const userData = () => {
   // var body = JSON.stringify(data);
@@ -107,9 +107,10 @@ export const register = (data: any) => {
   formdata.append('firstname', data.fname);
   formdata.append('lastname', data.lname);
   formdata.append('email', data.email);
-  formdata.append('address', data.addr);
   formdata.append('password', data.pass);
+  formdata.append('address', data.addr);
   formdata.append('phoneno', data.phone);
+  formdata.append('role', data.role);
   formdata.append('countrycode', data.dialcode);
 
   var requestOptions: RequestInit = {
@@ -222,22 +223,27 @@ export const handleUpload = async (image: any) => {
     'https://backend-crowdshipping.herokuapp.com/company/singlepicture',
     requestOptions,
   );
-
 };
 /*Air stuff here */
 
 export const getFlightLatestPosition = (faFlightId: any) => {
   var myHeaders = new Headers();
-  myHeaders.append("Cookie", "connect.sid=s%3A6hMX10t8PgFYpxazKNv_NXL1bZOcOZL8.Vxtk7Dra9v6en25MI9MEt5Sksj9jmoGfSbzOxE%2FvfZk");
+  myHeaders.append(
+    'Cookie',
+    'connect.sid=s%3A6hMX10t8PgFYpxazKNv_NXL1bZOcOZL8.Vxtk7Dra9v6en25MI9MEt5Sksj9jmoGfSbzOxE%2FvfZk',
+  );
 
   var requestOptions = {
     method: 'GET',
     headers: myHeaders,
-    redirect: 'follow'
+    redirect: 'follow',
   };
 
-  return fetch(`https://backend-crowdshipping.herokuapp.com/customer/flightlatestposition/${faFlightId}`, requestOptions);
-}
+  return fetch(
+    `https://backend-crowdshipping.herokuapp.com/customer/flightlatestposition/${faFlightId}`,
+    requestOptions,
+  );
+};
 export const getAirportName = (data: any) => {
   var myHeaders = new Headers();
   myHeaders.append(
@@ -293,7 +299,7 @@ export const searchFlight = (
   departureAirportCode: any,
   destinationAirportCode: any,
   flightNumber: any,
-  myDate: any
+  myDate: any,
 ) => {
   var myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');
@@ -306,8 +312,7 @@ export const searchFlight = (
     departCode: departureAirportCode,
     arrivalCode: destinationAirportCode,
     flightnumber: flightNumber,
-    date: myDate
-
+    date: myDate,
   });
   console.log('raw bodyfrom apis', raw);
 
@@ -412,347 +417,474 @@ export const getAllPostRequests = () => {
     requestOptions,
   );
 };
-export const changePostRequestStatus = (postRequestId: any, providerId: any) => {
+export const changePostRequestStatus = (
+  postRequestId: any,
+  providerId: any,
+) => {
   var myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Cookie", "connect.sid=s%3AU8xqFWhyglrgAoqvsfZ0nifDa86VtpSA.MZnOyFTVT5%2F%2BxQrtKBbN3zjecsYAf7uG7WK8gVXdRzg");
+  myHeaders.append('Content-Type', 'application/json');
+  myHeaders.append(
+    'Cookie',
+    'connect.sid=s%3AU8xqFWhyglrgAoqvsfZ0nifDa86VtpSA.MZnOyFTVT5%2F%2BxQrtKBbN3zjecsYAf7uG7WK8gVXdRzg',
+  );
 
   var raw = JSON.stringify({
-    "postrequestId": postRequestId,
-    "providerId": providerId
+    postrequestId: postRequestId,
+    providerId: providerId,
   });
 
   var requestOptions = {
     method: 'POST',
     headers: myHeaders,
     body: raw,
-    redirect: 'follow'
+    redirect: 'follow',
   };
 
-  return fetch("https://backend-crowdshipping.herokuapp.com/provider/changepostrequeststatus", requestOptions)
+  return fetch(
+    'https://backend-crowdshipping.herokuapp.com/provider/changepostrequeststatus',
+    requestOptions,
+  );
 };
 export const addFlightAfterPost = (flightDataFromPostRequest: any) => {
   var myHeaders = new Headers();
-  myHeaders.append("Cookie", "connect.sid=s%3AU8xqFWhyglrgAoqvsfZ0nifDa86VtpSA.MZnOyFTVT5%2F%2BxQrtKBbN3zjecsYAf7uG7WK8gVXdRzg");
+  myHeaders.append(
+    'Cookie',
+    'connect.sid=s%3AU8xqFWhyglrgAoqvsfZ0nifDa86VtpSA.MZnOyFTVT5%2F%2BxQrtKBbN3zjecsYAf7uG7WK8gVXdRzg',
+  );
 
   var formdata = new FormData();
-  formdata.append("providerId", flightDataFromPostRequest.providerId);
-  formdata.append("pickupCity", flightDataFromPostRequest.pickupCity);
-  formdata.append("dropoffCity", flightDataFromPostRequest.dropoffCity);
-  formdata.append("flightDate", flightDataFromPostRequest.flightDate);
-  formdata.append("departureAirport", flightDataFromPostRequest.departureAirport);
-  formdata.append("destinationAirport", flightDataFromPostRequest.destinationAirport);
-  formdata.append("departureTime", flightDataFromPostRequest.departureTime);
-  formdata.append("destinationTime", flightDataFromPostRequest.destinationTime);
-  formdata.append("flightNumber", flightDataFromPostRequest.flightNumber);
-  formdata.append("flightAirline", flightDataFromPostRequest.flightAirline);
-  formdata.append("ticketImage", flightDataFromPostRequest.ticketImage);
-  formdata.append("fa_flight_id", flightDataFromPostRequest.fa_flight_id);
-  formdata.append("pickupIATACityCode", flightDataFromPostRequest.pickupIATACityCode);
-  formdata.append("dropoffIATACityCode", flightDataFromPostRequest.dropoffIATACityCode);
-  formdata.append("postrequestId", flightDataFromPostRequest.postrequestId);
-  formdata.append("customerId", flightDataFromPostRequest.customerId);
-  formdata.append("bookingId", flightDataFromPostRequest.bookingId);
-  formdata.append("flightarrivalDate", flightDataFromPostRequest.flightarrivalDate);
-
+  formdata.append('providerId', flightDataFromPostRequest.providerId);
+  formdata.append('pickupCity', flightDataFromPostRequest.pickupCity);
+  formdata.append('dropoffCity', flightDataFromPostRequest.dropoffCity);
+  formdata.append('flightDate', flightDataFromPostRequest.flightDate);
+  formdata.append(
+    'departureAirport',
+    flightDataFromPostRequest.departureAirport,
+  );
+  formdata.append(
+    'destinationAirport',
+    flightDataFromPostRequest.destinationAirport,
+  );
+  formdata.append('departureTime', flightDataFromPostRequest.departureTime);
+  formdata.append('destinationTime', flightDataFromPostRequest.destinationTime);
+  formdata.append('flightNumber', flightDataFromPostRequest.flightNumber);
+  formdata.append('flightAirline', flightDataFromPostRequest.flightAirline);
+  formdata.append('ticketImage', flightDataFromPostRequest.ticketImage);
+  formdata.append('fa_flight_id', flightDataFromPostRequest.fa_flight_id);
+  formdata.append(
+    'pickupIATACityCode',
+    flightDataFromPostRequest.pickupIATACityCode,
+  );
+  formdata.append(
+    'dropoffIATACityCode',
+    flightDataFromPostRequest.dropoffIATACityCode,
+  );
+  formdata.append('postrequestId', flightDataFromPostRequest.postrequestId);
+  formdata.append('customerId', flightDataFromPostRequest.customerId);
+  formdata.append('bookingId', flightDataFromPostRequest.bookingId);
+  formdata.append(
+    'flightarrivalDate',
+    flightDataFromPostRequest.flightarrivalDate,
+  );
 
   var requestOptions = {
     method: 'POST',
     headers: myHeaders,
     body: formdata,
-    redirect: 'follow'
+    redirect: 'follow',
   };
 
-  return fetch("https://backend-crowdshipping.herokuapp.com/provider/addflightafterpost", requestOptions);
-
-}
+  return fetch(
+    'https://backend-crowdshipping.herokuapp.com/provider/addflightafterpost',
+    requestOptions,
+  );
+};
 export const changeStateByProvider = (state: any, requestId: any) => {
-
   var myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Cookie", "connect.sid=s%3AO0hdh4M60sPg4fyfkl3hiJQ4QV-SDmtp.9vDASPjdRAnclaACJt0TRhCqyZ%2B03rrqfqfN3fRXeEg");
+  myHeaders.append('Content-Type', 'application/json');
+  myHeaders.append(
+    'Cookie',
+    'connect.sid=s%3AO0hdh4M60sPg4fyfkl3hiJQ4QV-SDmtp.9vDASPjdRAnclaACJt0TRhCqyZ%2B03rrqfqfN3fRXeEg',
+  );
 
   var raw = JSON.stringify({
-    "requestId": requestId,
-    "state": state
+    requestId: requestId,
+    state: state,
   });
 
   var requestOptions = {
     method: 'POST',
     headers: myHeaders,
     body: raw,
-    redirect: 'follow'
+    redirect: 'follow',
   };
 
-  return fetch("https://backend-crowdshipping.herokuapp.com/provider/setrequeststate", requestOptions);
-
-}
+  return fetch(
+    'https://backend-crowdshipping.herokuapp.com/provider/setrequeststate',
+    requestOptions,
+  );
+};
 export const verifyBookingForCompletion = (image: any, requestId: any) => {
-  console.log("verify booking for completion image requestID ", image, requestId);
+  console.log(
+    'verify booking for completion image requestID ',
+    image,
+    requestId,
+  );
   var myHeaders = new Headers();
-  myHeaders.append("Cookie", "connect.sid=s%3AO0hdh4M60sPg4fyfkl3hiJQ4QV-SDmtp.9vDASPjdRAnclaACJt0TRhCqyZ%2B03rrqfqfN3fRXeEg");
+  myHeaders.append(
+    'Cookie',
+    'connect.sid=s%3AO0hdh4M60sPg4fyfkl3hiJQ4QV-SDmtp.9vDASPjdRAnclaACJt0TRhCqyZ%2B03rrqfqfN3fRXeEg',
+  );
   var formdata = new FormData();
-  formdata.append("verificationImage", image);
-  formdata.append("requestId", requestId);
+  formdata.append('verificationImage', image);
+  formdata.append('requestId', requestId);
 
   var requestOptions = {
     method: 'POST',
     headers: myHeaders,
     body: formdata,
-    redirect: 'follow'
+    redirect: 'follow',
   };
-  return fetch("https://backend-crowdshipping.herokuapp.com/provider/verifyingbookingcompletion", requestOptions);
-}
-
-
+  return fetch(
+    'https://backend-crowdshipping.herokuapp.com/provider/verifyingbookingcompletion',
+    requestOptions,
+  );
+};
 
 /* SHIP Things */
-/////get seaaport 
+/////get seaaport
 export const getSeaportName = (data: any) => {
   var myHeaders = new Headers();
-  myHeaders.append("Cookie", "connect.sid=s%3AMTbRbdlC1iXSx9uxn1XZDaWEE3JCq_6O.d5R7tQ6BZvLY9WTgUMB8bE08GIg1M32vZIwcmDlhSk0");
+  myHeaders.append(
+    'Cookie',
+    'connect.sid=s%3AMTbRbdlC1iXSx9uxn1XZDaWEE3JCq_6O.d5R7tQ6BZvLY9WTgUMB8bE08GIg1M32vZIwcmDlhSk0',
+  );
 
   var requestOptions = {
     method: 'GET',
     headers: myHeaders,
-    redirect: 'follow'
+    redirect: 'follow',
   };
 
-  return fetch(`https://backend-crowdshipping.herokuapp.com/provider/searchport/${data}`, requestOptions)
+  return fetch(
+    `https://backend-crowdshipping.herokuapp.com/provider/searchport/${data}`,
+    requestOptions,
+  );
 };
 
 export const addShipToServer = (shipData: AddShip) => {
   var myHeaders = new Headers();
-  myHeaders.append("Cookie", "connect.sid=s%3AMTbRbdlC1iXSx9uxn1XZDaWEE3JCq_6O.d5R7tQ6BZvLY9WTgUMB8bE08GIg1M32vZIwcmDlhSk0");
+  myHeaders.append(
+    'Cookie',
+    'connect.sid=s%3AMTbRbdlC1iXSx9uxn1XZDaWEE3JCq_6O.d5R7tQ6BZvLY9WTgUMB8bE08GIg1M32vZIwcmDlhSk0',
+  );
 
   var formdata = new FormData();
-  formdata.append("providerId", shipData.providerId);
-  formdata.append("pickupCity", shipData.pickupCity);
-  formdata.append("dropoffCity", shipData.dropoffCity);
-  formdata.append("shipDate", shipData.date);
-  formdata.append("departurePort", shipData.departureSeaport);
-  formdata.append("destinationPort", shipData.destinationSeaport);
-  formdata.append("departureTime", shipData.departureTime);
-  formdata.append("mmsiNumber", shipData.mmsiNumber);
-  formdata.append("ticketImage", shipData.image);
-  formdata.append("pickupPortUnlocode", shipData.pickupPortUnlocode);
-  formdata.append("dropoffPortUnlocode", shipData.dropoffPortUnlocode);
-  formdata.append("destinationTime", shipData.destinationTime);
+  formdata.append('providerId', shipData.providerId);
+  formdata.append('pickupCity', shipData.pickupCity);
+  formdata.append('dropoffCity', shipData.dropoffCity);
+  formdata.append('shipDate', shipData.date);
+  formdata.append('departurePort', shipData.departureSeaport);
+  formdata.append('destinationPort', shipData.destinationSeaport);
+  formdata.append('departureTime', shipData.departureTime);
+  formdata.append('mmsiNumber', shipData.mmsiNumber);
+  formdata.append('ticketImage', shipData.image);
+  formdata.append('pickupPortUnlocode', shipData.pickupPortUnlocode);
+  formdata.append('dropoffPortUnlocode', shipData.dropoffPortUnlocode);
+  formdata.append('destinationTime', shipData.destinationTime);
   var requestOptions = {
     method: 'POST',
     headers: myHeaders,
     body: formdata,
-    redirect: 'follow'
+    redirect: 'follow',
   };
 
-  return fetch("https://backend-crowdshipping.herokuapp.com/provider/addship", requestOptions);
-}
+  return fetch(
+    'https://backend-crowdshipping.herokuapp.com/provider/addship',
+    requestOptions,
+  );
+};
 export const getAllShipAddedByProvider = (userId: any) => {
   var myHeaders = new Headers();
-  myHeaders.append("Cookie", "connect.sid=s%3ATxYIr2uWFt93Y0scgBAxxu5462TN4hbE.V4I5S6FdwvvgAYBxAdhXXsJ26w21uE87EnhC%2BsxD9Ro");
+  myHeaders.append(
+    'Cookie',
+    'connect.sid=s%3ATxYIr2uWFt93Y0scgBAxxu5462TN4hbE.V4I5S6FdwvvgAYBxAdhXXsJ26w21uE87EnhC%2BsxD9Ro',
+  );
 
   var requestOptions = {
     method: 'GET',
     headers: myHeaders,
-    redirect: 'follow'
+    redirect: 'follow',
   };
 
-  return fetch(`https://backend-crowdshipping.herokuapp.com/provider/getproviderships/${userId}`, requestOptions);
-}
+  return fetch(
+    `https://backend-crowdshipping.herokuapp.com/provider/getproviderships/${userId}`,
+    requestOptions,
+  );
+};
 export const deleleFlightRecord = (flightId: any) => {
   var requestOptions = {
     method: 'DELETE',
-    redirect: 'follow'
+    redirect: 'follow',
   };
-  return fetch(`https://backend-crowdshipping.herokuapp.com/provider/deleteflight/${flightId}`, requestOptions)
-}
+  return fetch(
+    `https://backend-crowdshipping.herokuapp.com/provider/deleteflight/${flightId}`,
+    requestOptions,
+  );
+};
 export const deleteShipRecord = (shipId: any) => {
   var myHeaders = new Headers();
-  myHeaders.append("Cookie", "connect.sid=s%3Awls0FQ5Goy7QXzmUmdahX5QUxCxuDpN7.Fjd1n2Z%2BOPlJSJucFJlo0PtlmL4zjNQzhCG2nQorpdY");
+  myHeaders.append(
+    'Cookie',
+    'connect.sid=s%3Awls0FQ5Goy7QXzmUmdahX5QUxCxuDpN7.Fjd1n2Z%2BOPlJSJucFJlo0PtlmL4zjNQzhCG2nQorpdY',
+  );
 
   var requestOptions = {
     method: 'DELETE',
     headers: myHeaders,
-    redirect: 'follow'
+    redirect: 'follow',
   };
 
-  return fetch(`https://backend-crowdshipping.herokuapp.com/provider/deleteship/${shipId}`, requestOptions)
-
-}
-export const addShipAfterPost = (shipDataFromPostRequest: AddShipPostRequest) => {
+  return fetch(
+    `https://backend-crowdshipping.herokuapp.com/provider/deleteship/${shipId}`,
+    requestOptions,
+  );
+};
+export const addShipAfterPost = (
+  shipDataFromPostRequest: AddShipPostRequest,
+) => {
   var formdata = new FormData();
-  formdata.append("providerId", shipDataFromPostRequest.providerId);
-  formdata.append("pickupCity", shipDataFromPostRequest.pickupCity);
-  formdata.append("dropoffCity", shipDataFromPostRequest.dropoffCity);
-  formdata.append("departureTime", shipDataFromPostRequest.departureTime);
-  formdata.append("destinationTime", shipDataFromPostRequest.destinationTime);
-  formdata.append("mmsiNumber", shipDataFromPostRequest.mmsiNumber);
-  formdata.append("ticketImage", shipDataFromPostRequest.ticketImage);
-  formdata.append("pickupPortUnlocode", shipDataFromPostRequest.pickupPortUnlocode);
-  formdata.append("dropoffPortUnlocode", shipDataFromPostRequest.dropoffPortUnlocode);
-  formdata.append("postrequestId", shipDataFromPostRequest.postrequestId);
-  formdata.append("customerId", shipDataFromPostRequest.customerId);
-  formdata.append("bookingId", shipDataFromPostRequest.bookingId);
-  formdata.append("shipArrivaldate", shipDataFromPostRequest.shipArrivaldate);
-  formdata.append("departurePort", shipDataFromPostRequest.departurePort);
-  formdata.append("destinationPort", shipDataFromPostRequest.destinationPort);
+  formdata.append('providerId', shipDataFromPostRequest.providerId);
+  formdata.append('pickupCity', shipDataFromPostRequest.pickupCity);
+  formdata.append('dropoffCity', shipDataFromPostRequest.dropoffCity);
+  formdata.append('departureTime', shipDataFromPostRequest.departureTime);
+  formdata.append('destinationTime', shipDataFromPostRequest.destinationTime);
+  formdata.append('mmsiNumber', shipDataFromPostRequest.mmsiNumber);
+  formdata.append('ticketImage', shipDataFromPostRequest.ticketImage);
+  formdata.append(
+    'pickupPortUnlocode',
+    shipDataFromPostRequest.pickupPortUnlocode,
+  );
+  formdata.append(
+    'dropoffPortUnlocode',
+    shipDataFromPostRequest.dropoffPortUnlocode,
+  );
+  formdata.append('postrequestId', shipDataFromPostRequest.postrequestId);
+  formdata.append('customerId', shipDataFromPostRequest.customerId);
+  formdata.append('bookingId', shipDataFromPostRequest.bookingId);
+  formdata.append('shipArrivaldate', shipDataFromPostRequest.shipArrivaldate);
+  formdata.append('departurePort', shipDataFromPostRequest.departurePort);
+  formdata.append('destinationPort', shipDataFromPostRequest.destinationPort);
 
   var requestOptions = {
     method: 'POST',
     body: formdata,
-    redirect: 'follow'
+    redirect: 'follow',
   };
 
-  return fetch("https://backend-crowdshipping.herokuapp.com/provider/addshipafterpost", requestOptions);
-}
+  return fetch(
+    'https://backend-crowdshipping.herokuapp.com/provider/addshipafterpost',
+    requestOptions,
+  );
+};
 export const getShipLatestPosition = (mmsi: any) => {
-  console.log("from api mmsi", mmsi);
+  console.log('from api mmsi', mmsi);
   var myHeaders = new Headers();
-  myHeaders.append("Cookie", "connect.sid=s%3AnqLGgVOsKiirs0LvwsPm92d4qg-oVsyc.K%2F3MMwAmoFoAB5PgUl9h93gA4d%2Fd6gQMmf08l5mdAuc");
+  myHeaders.append(
+    'Cookie',
+    'connect.sid=s%3AnqLGgVOsKiirs0LvwsPm92d4qg-oVsyc.K%2F3MMwAmoFoAB5PgUl9h93gA4d%2Fd6gQMmf08l5mdAuc',
+  );
 
   var requestOptions = {
     method: 'GET',
     headers: myHeaders,
-    redirect: 'follow'
+    redirect: 'follow',
   };
 
-  return fetch(`https://backend-crowdshipping.herokuapp.com/customer/shiplatestposition/${mmsi}`, requestOptions);
-}
+  return fetch(
+    `https://backend-crowdshipping.herokuapp.com/customer/shiplatestposition/${mmsi}`,
+    requestOptions,
+  );
+};
 ///history
 
 export const providerOrderHistory = (userId: any) => {
   var myHeaders = new Headers();
-  myHeaders.append("Cookie", "connect.sid=s%3Aml3FT3a4i7mTLhr-9MEKW0EPW1Juc1hF.tuWpCy3GbsBC5RQilZpRTm9YSbL3xxL4KHIwGvYTCTg");
+  myHeaders.append(
+    'Cookie',
+    'connect.sid=s%3Aml3FT3a4i7mTLhr-9MEKW0EPW1Juc1hF.tuWpCy3GbsBC5RQilZpRTm9YSbL3xxL4KHIwGvYTCTg',
+  );
 
   var requestOptions = {
     method: 'GET',
     headers: myHeaders,
-    redirect: 'follow'
+    redirect: 'follow',
   };
 
-  return fetch(`https://backend-crowdshipping.herokuapp.com/provider/providerorderhistory/${userId}`, requestOptions);
-}
+  return fetch(
+    `https://backend-crowdshipping.herokuapp.com/provider/providerorderhistory/${userId}`,
+    requestOptions,
+  );
+};
 
 //users things //
 export const logoutUser = (userId: any) => {
   var requestOptions = {
     method: 'GET',
-    redirect: 'follow'
+    redirect: 'follow',
   };
-  return fetch(`https://backend-crowdshipping.herokuapp.com/user/logout/${userId}`, requestOptions);
-}
+  return fetch(
+    `https://backend-crowdshipping.herokuapp.com/user/logout/${userId}`,
+    requestOptions,
+  );
+};
 
 /*
 driver things here
 */
 
-
 export const getAllVehicles = (driverId: any) => {
   var myHeaders = new Headers();
-  myHeaders.append("Cookie", "connect.sid=s%3Ac9ap3k_umKtuIkvvcSWsOOyw4qFY1029.VHy%2Fu6zZtHoFIdC8ZWyu0zvgm6JHNlL5D8ZKkJXO7Lw");
+  myHeaders.append(
+    'Cookie',
+    'connect.sid=s%3Ac9ap3k_umKtuIkvvcSWsOOyw4qFY1029.VHy%2Fu6zZtHoFIdC8ZWyu0zvgm6JHNlL5D8ZKkJXO7Lw',
+  );
 
   var requestOptions = {
     method: 'GET',
     headers: myHeaders,
-    redirect: 'follow'
+    redirect: 'follow',
   };
-  return fetch(`https://backend-crowdshipping.herokuapp.com/driver/getallvehicles/${driverId}`, requestOptions)
-}
+  return fetch(
+    `https://backend-crowdshipping.herokuapp.com/driver/getallvehicles/${driverId}`,
+    requestOptions,
+  );
+};
 export const addVehicle = (vehicle: AddVehicle) => {
   var myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Cookie", "connect.sid=s%3AmzAxQxmim5IE9KvghS8yLZQlZ0nQ_One.%2Bk2uZG0FbSZSRJV%2FExAjvD03998A4K6%2FVfKQO6ctj3U");
+  myHeaders.append('Content-Type', 'application/json');
+  myHeaders.append(
+    'Cookie',
+    'connect.sid=s%3AmzAxQxmim5IE9KvghS8yLZQlZ0nQ_One.%2Bk2uZG0FbSZSRJV%2FExAjvD03998A4K6%2FVfKQO6ctj3U',
+  );
 
   var raw = JSON.stringify({
-    "vehicleType": vehicle.vehicleType,
-    "vehicleName": vehicle.vehicleName,
-    "vehicleColor": vehicle.vehicleColor,
-    "vehicleModel": vehicle.vehicleModel,
-    "licenseNumber": vehicle.licenseNumber,
-    "vehicleImage": vehicle.vehicleImage,
-    "vehicleLicence": vehicle.vehicleLicence,
-    "vehicleInsurance": vehicle.vehicleInsurance,
-    "vehicleResidenceProof": vehicle.vehicleResidence,
-    "driverId": vehicle.driverId
+    vehicleType: vehicle.vehicleType,
+    vehicleName: vehicle.vehicleName,
+    vehicleColor: vehicle.vehicleColor,
+    vehicleModel: vehicle.vehicleModel,
+    licenseNumber: vehicle.licenseNumber,
+    vehicleImage: vehicle.vehicleImage,
+    vehicleLicence: vehicle.vehicleLicence,
+    vehicleInsurance: vehicle.vehicleInsurance,
+    vehicleResidenceProof: vehicle.vehicleResidence,
+    driverId: vehicle.driverId,
   });
 
   var requestOptions = {
     method: 'POST',
     headers: myHeaders,
     body: raw,
-    redirect: 'follow'
+    redirect: 'follow',
   };
-  return fetch("https://backend-crowdshipping.herokuapp.com/driver/addingvehicle", requestOptions);
+  return fetch(
+    'https://backend-crowdshipping.herokuapp.com/driver/addingvehicle',
+    requestOptions,
+  );
   //   .then(response => response.text())
   // .then(result => console.log(result))
   // .catch(error => console.log('error', error));
-}
+};
 export const getImageUrlFromServer = async (image: any) => {
-
   var formdata = new FormData();
-  formdata.append("image", image);
+  formdata.append('image', image);
 
   var requestOptions = {
     method: 'POST',
     body: formdata,
-    redirect: 'follow'
+    redirect: 'follow',
   };
 
-  const response = await fetch("https://backend-crowdshipping.herokuapp.com/company/singlepicture", requestOptions);
+  const response = await fetch(
+    'https://backend-crowdshipping.herokuapp.com/company/singlepicture',
+    requestOptions,
+  );
   return await response.json();
-}
+};
 export const getVehicleRequest = (lat: any, lng: any) => {
   var myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Cookie", "connect.sid=s%3A1N3uaP9BKyFPZlE60mSOZaQqZoDfJ74P. 9W1aXW%2Bf2qgeGgZK2DwuCb5RaqQNyhvNw4mjZVcr7YM");
+  myHeaders.append('Content-Type', 'application/json');
+  myHeaders.append(
+    'Cookie',
+    'connect.sid=s%3A1N3uaP9BKyFPZlE60mSOZaQqZoDfJ74P. 9W1aXW%2Bf2qgeGgZK2DwuCb5RaqQNyhvNw4mjZVcr7YM',
+  );
 
   var raw = JSON.stringify({
-    "driverLocation": {
-      "lat": lat,
-      "lng": lng
-    }
+    driverLocation: {
+      lat: lat,
+      lng: lng,
+    },
   });
 
   var requestOptions = {
     method: 'POST',
     headers: myHeaders,
     body: raw,
-    redirect: 'follow'
+    redirect: 'follow',
   };
+  console.log({requestOptions});
 
-  return fetch("https://backend-crowdshipping.herokuapp.com/driver/getdriverrequests", requestOptions);
-}
-export const changeStatusByDriver = (requestId: any, driverId: any, newStatus: any) => {
+  return fetch(
+    'https://backend-crowdshipping.herokuapp.com/driver/getdriverrequests',
+    requestOptions,
+  );
+};
+export const changeStatusByDriver = (
+  requestId: any,
+  driverId: any,
+  newStatus: any,
+) => {
   var myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Cookie", "connect.sid=s%3A1N3uaP9BKyFPZlE60mSOZaQqZoDfJ74P.9W1aXW%2Bf2qgeGgZK2DwuCb5RaqQNyhvNw4mjZVcr7YM");
+  myHeaders.append('Content-Type', 'application/json');
+  myHeaders.append(
+    'Cookie',
+    'connect.sid=s%3A1N3uaP9BKyFPZlE60mSOZaQqZoDfJ74P.9W1aXW%2Bf2qgeGgZK2DwuCb5RaqQNyhvNw4mjZVcr7YM',
+  );
 
   var raw = JSON.stringify({
-    "requestId": requestId,
-    "driverId": driverId,
-    "newStatus": newStatus
+    requestId: requestId,
+    driverId: driverId,
+    newStatus: newStatus,
   });
 
   var requestOptions = {
     method: 'POST',
     headers: myHeaders,
     body: raw,
-    redirect: 'follow'
+    redirect: 'follow',
   };
 
-  return fetch("https://backend-crowdshipping.herokuapp.com/driver/changedriverrequestStatus", requestOptions);
-}
-
+  return fetch(
+    'https://backend-crowdshipping.herokuapp.com/driver/changedriverrequestStatus',
+    requestOptions,
+  );
+};
 
 export const getDriverHistory = (driverId: any) => {
   var myHeaders = new Headers();
-  myHeaders.append("Cookie", "connect.sid=s%3AyulJxLavmCWWcJPfR99ffsX-tEGgaRKa.k6L4OXZAX1lq%2F2ROv%2BFgg9%2Bj6zBXf3OWrH1HooexOaU");
+  myHeaders.append(
+    'Cookie',
+    'connect.sid=s%3AyulJxLavmCWWcJPfR99ffsX-tEGgaRKa.k6L4OXZAX1lq%2F2ROv%2BFgg9%2Bj6zBXf3OWrH1HooexOaU',
+  );
 
   var requestOptions = {
     method: 'GET',
     headers: myHeaders,
-    redirect: 'follow'
+    redirect: 'follow',
   };
 
-  return fetch(`https://backend-crowdshipping.herokuapp.com/driver/driverorderhistory/${driverId}`, requestOptions);
-}
+  return fetch(
+    `https://backend-crowdshipping.herokuapp.com/driver/driverorderhistory/${driverId}`,
+    requestOptions,
+  );
+};

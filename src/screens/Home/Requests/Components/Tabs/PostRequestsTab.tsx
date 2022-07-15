@@ -40,7 +40,7 @@ const PostRequestsTab = ({ navigation }: any) => {
                             myImage={item.requestedBy.profilepic}
                             firstName={item.requestedBy.firstname}
                             lastName={item.requestedBy.lastname}
-                            mmsiOrflightNumber={item.flightNumber}
+                            mmsiOrFlightNumber={item.flightNumber}
                             departurePort={item.departureAirport}
                             destinationPort={item.destinationAirport}
                             acceptPress={() => {

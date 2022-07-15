@@ -41,7 +41,7 @@ const BookingHistory = ({ navigation }: any) => {
       myImage={item.requestedBy.profilepic}
       firstName={item.requestedBy.firstname}
       lastName={item.requestedBy.lastname}
-      mmsiNumber={item.flight.flightNumber}
+      mmsiOrFlightNumber={item.flight.flightNumber}
       departurePort={item.flight.departureAirport}
       destinationPort={item.flight.destinationAirport}
       onPress={() => {
@@ -53,6 +53,8 @@ const BookingHistory = ({ navigation }: any) => {
     />
   }
   const renderShipComponent = (item: any, status: any) => {
+    console.log("ship numebr", item.ship)
+
     if (item.ship === null) {
       return;
     }
@@ -62,7 +64,7 @@ const BookingHistory = ({ navigation }: any) => {
       myImage={item.requestedBy.profilepic}
       firstName={item.requestedBy.firstname}
       lastName={item.requestedBy.lastname}
-      mmsiNumber={item.ship.flightNumber}
+      mmsiOrFlightNumber={item.ship.mmsiNumber}
       departurePort={item.ship.departurePort}
       destinationPort={item.ship.destinationPort}
       onPress={() => {

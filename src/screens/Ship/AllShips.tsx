@@ -32,7 +32,7 @@ const AllShips = ({ navigation }: any) => {
             return (
                 <View style={{ height: heightPercentageToDP(75), alignItems: 'center', justifyContent: 'center' }}>
                     <View style={{ backgroundColor: '#f0f0f0', height: "40%", width: '100%', justifyContent: 'center', alignItems: 'center', borderRadius: 20 }}>
-                        <Text style={{ color: 'red' }}>No Ships Available</Text>
+                        <Text style={{ color: 'red' }}>no ships registered</Text>
                     </View>
 
                 </View>)

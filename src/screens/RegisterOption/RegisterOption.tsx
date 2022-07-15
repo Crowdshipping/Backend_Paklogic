@@ -34,7 +34,7 @@ const RegisterOption = props => {
         containerStyle={{width: wp(90)}}
         // onPress={() => props.navigation.navigate('Register', { option: 'company' })}
         onPress={() =>
-          props.navigation.navigate('Register', {option: 'company'})
+          props.navigation.navigate('Register', {option: 'Company'})
         }
       />
 
@@ -43,7 +43,7 @@ const RegisterOption = props => {
         containerStyle={{width: wp(90)}}
         // onPress={() => props.navigation.navigate('Register', { option: 'driver' })}
         onPress={() =>
-          props.navigation.navigate('Register', {option: 'driver'})
+          props.navigation.navigate('Register', {option: 'Driver'})
         }
       />
 
@@ -52,7 +52,7 @@ const RegisterOption = props => {
         color={'#6399C2'}
         containerStyle={{width: wp(90)}}
         onPress={() =>
-          props.navigation.navigate('Register', {option: 'provider'})
+          props.navigation.navigate('Register', {option: 'Provider'})
         }
       />
     </View>

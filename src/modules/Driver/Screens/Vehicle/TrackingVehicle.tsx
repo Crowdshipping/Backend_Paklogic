@@ -182,7 +182,7 @@ const TrackingVehicle = ({ route, navigation }: any) => {
                             latitude: driverLiveLocation.latitude,
                             longitude: driverLiveLocation.longitude
                         }}>
-                        <Image source={require('../../../../assets/car.png')} style={{ width: 30, height: 30 }} />
+                        <Image source={require('../../../../assets/car.png')} style={{ width: 15, height: 15 }} />
                     </Marker>
                 }
                 {coordinates[1] &&
@@ -191,7 +191,7 @@ const TrackingVehicle = ({ route, navigation }: any) => {
                             latitude: coordinates[1].latitude,
                             longitude: coordinates[1].longitude
                         }}>
-                        <Image source={require('../../../../assets/end.png')} style={{ width: 30, height: 30 }} />
+                        <Image source={require('../../../../assets/end.png')} style={{ width: 15, height: 15 }} />
                     </Marker>
                 }
                 {(coordinates.length >= 2) &&
@@ -202,7 +202,7 @@ const TrackingVehicle = ({ route, navigation }: any) => {
                             destination={coordinates[coordinates.length - 1]}
                             apikey={GOOGLE_MAPS_APIKEY}
                             strokeWidth={5}
-                            strokeColor="#D83025"
+                            strokeColor="black"
                             optimizeWaypoints={true}
                             onStart={(params) => {
                                 console.log(`Started routing between "${params.origin}" and "${params.destination}"`);

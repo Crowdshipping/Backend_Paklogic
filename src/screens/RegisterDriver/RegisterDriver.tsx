@@ -345,7 +345,7 @@ export default function RegisterDriver(props: any) {
             <Text
               style={{ color: colors.red }}
               onPress={() => props.navigation.navigate('SignIn')}>
-              Signin
+              Sign In
             </Text>
           </Text>
           <Button

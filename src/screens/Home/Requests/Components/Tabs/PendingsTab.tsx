@@ -38,7 +38,7 @@ const PendingsTab = ({ item, navigation }: any) => {
                     myImage={item.requestedBy.profilepic}
                     firstName={item.requestedBy.firstname}
                     lastName={item.requestedBy.lastname}
-                    mmsiOrflightNumber={item.flight.flightNumber}
+                    mmsiOrFlightNumber={item.flight.flightNumber}
                     departurePort={item.flight.departureAirport}
                     destinationPort={item.flight.destinationAirport}
                     acceptPress={() => {

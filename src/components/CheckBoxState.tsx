@@ -1,7 +1,6 @@
 import React from 'react';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { StyleSheet, View, Text } from 'react-native';
-import MyButton from './MyButton';
 
 const CheckBoxState = ({ text, onPress, isDisabled }: any) => {
   const [toggleCheckBox, setToggleCheckBox] = React.useState(false);
@@ -12,12 +11,12 @@ const CheckBoxState = ({ text, onPress, isDisabled }: any) => {
         isChecked={isDisabled ? true : false}
         textStyle={{
           textDecorationLine: 'none',
-          color: toggleCheckBox ? 'black' : '#38EA28',
+          color: toggleCheckBox ? 'black' : 'black',
         }}
         text={text}
         size={20}
-        fillColor="lime"
-        iconStyle={{ borderColor: toggleCheckBox ? 'grey' : '#38EA28' }}
+        fillColor="black"
+        iconStyle={{ borderColor: toggleCheckBox ? 'grey' : 'black' }}
         onPress={onPress}
       />
     </View>

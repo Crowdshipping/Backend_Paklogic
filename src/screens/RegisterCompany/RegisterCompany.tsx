@@ -326,7 +326,7 @@ export default function RegisterCompany(props: any) {
             <Text
               style={{ color: colors.red }}
               onPress={() => props.navigation.navigate('SignIn')}>
-              Signin
+              Sign In
             </Text>
           </Text>
           <Button
