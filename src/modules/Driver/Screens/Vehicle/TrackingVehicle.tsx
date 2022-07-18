@@ -182,7 +182,7 @@ const TrackingVehicle = ({ route, navigation }: any) => {
                             latitude: driverLiveLocation.latitude,
                             longitude: driverLiveLocation.longitude
                         }}>
-                        <Image source={require('../../../../assets/car.png')} style={{ width: 15, height: 15 }} />
+                        <Image source={require('../../../../assets/car.png')} style={{ width: 30, height: 30 }} />
                     </Marker>
                 }
                 {coordinates[1] &&
@@ -191,7 +191,7 @@ const TrackingVehicle = ({ route, navigation }: any) => {
                             latitude: coordinates[1].latitude,
                             longitude: coordinates[1].longitude
                         }}>
-                        <Image source={require('../../../../assets/end.png')} style={{ width: 15, height: 15 }} />
+                        <Image source={require('../../../../assets/end.png')} style={{ width: 30, height: 30 }} />
                     </Marker>
                 }
                 {(coordinates.length >= 2) &&

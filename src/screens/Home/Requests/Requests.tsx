@@ -390,7 +390,7 @@ const Requests = ({ navigation, status, myColor, route }: any) => {
 
 
             {/* <MyDropdown /> */}
-            <View
+            {/* <View
               style={{
                 width: '47.5%',
                 display: 'flex',
@@ -430,9 +430,9 @@ const Requests = ({ navigation, status, myColor, route }: any) => {
               onCancel={() => {
                 setToDateOpen(false);
               }}
-            />
+            /> */}
 
-            <View
+            {/* <View
               style={{
                 height: 45,
                 flexDirection: 'row',
@@ -450,7 +450,7 @@ const Requests = ({ navigation, status, myColor, route }: any) => {
                   setToDateOpen(true);
                 }}
               />
-            </View>
+            </View> */}
             <View style={styles.tabStyle}>
               <View
                 style={[
@@ -497,9 +497,9 @@ const Requests = ({ navigation, status, myColor, route }: any) => {
               </View>
             </View>
 
-            <Text style={{ textAlign: 'center', color: 'green', marginTop: 24 }}>
+            {/* <Text style={{ textAlign: 'center', color: 'green', marginTop: 24 }}>
               Available Booking
-            </Text>
+            </Text> */}
             {renderTabs()}
           </View>
         </ScrollView>}

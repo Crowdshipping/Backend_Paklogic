@@ -2,7 +2,7 @@ import React from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 const VehicleDropDown = () => {
     const [open, setOpen] = React.useState(false);
-    const [value, setValue] = React.useState(null);
+    const [value, setValue] = React.useState("");
     const [items, setItems] = React.useState([
         { label: 'Car', value: 'car' },
         { label: 'Bike', value: 'bike' },
@@ -20,7 +20,9 @@ const VehicleDropDown = () => {
             value={value}
             items={items}
             setOpen={setOpen}
-            setValue={setValue}
+            setValue={(val) => {
+                setValue(val);
+            }}
             setItems={setItems}
             containerStyle={{
                 borderColor: '#ccc',

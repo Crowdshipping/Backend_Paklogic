@@ -68,7 +68,7 @@ const AllVehicles = ({ navigation, status, myColor }: any) => {
   }
   const noVehicleAvailable = () => {
     return (
-      <View style={{ height: '100%', justifyContent: 'center' }}>
+      <View style={{ height: '75%', justifyContent: 'center' }}>
         <View style={{ backgroundColor: "#f0f0f0", height: 250, borderRadius: 10, margin: 20, justifyContent: 'center', alignItems: 'center' }}>
           <Text style={{ color: 'red' }}>No vehicle registered</Text>
         </View>

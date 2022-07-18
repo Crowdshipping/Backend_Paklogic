@@ -1,15 +1,15 @@
-import React, {useRef} from 'react';
-import {View, StyleSheet, Alert, Platform, Dimensions} from 'react-native';
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import React, { useRef } from 'react';
+import { View, StyleSheet, Alert, Platform, Dimensions } from 'react-native';
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import MyLoader from '../../../../../components/MyLoader';
-import {changeStatusByDriver} from '../../../../../services';
-import MapView, {Marker, MarkerAnimated} from 'react-native-maps';
+import { changeStatusByDriver } from '../../../../../services';
+import MapView, { Marker, MarkerAnimated } from 'react-native-maps';
 import MapBottomSheet from './Components/MapBottomSheet';
 import BottomSheetContentForVehicle from './Components/BottomSheetContentForVehicle';
 import MapViewDirections from 'react-native-maps-directions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE = 37.771707;
 const LONGITUDE = -122.4053769;
@@ -18,8 +18,8 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const GOOGLE_MAPS_APIKEY = 'AIzaSyBnzRyirdu4C6br2saqLU0ExTV2U7qxVLg';
 
-const AcceptBookingForVehicle = ({route, navigation}: any) => {
-  const {vehicleData} = route.params;
+const AcceptBookingForVehicle = ({ route, navigation }: any) => {
+  const { vehicleData } = route.params;
   const [isLoading, setIsLoading] = React.useState(false);
 
   const ref = useRef<MapView>(null);
@@ -61,7 +61,7 @@ const AcceptBookingForVehicle = ({route, navigation}: any) => {
             destination={coordinates[coordinates.length - 1]}
             apikey={GOOGLE_MAPS_APIKEY}
             strokeWidth={5}
-            strokeColor="fuchsia"
+            strokeColor="black"
             optimizeWaypoints={true}
             onStart={params => {
               console.log(
@@ -80,7 +80,7 @@ const AcceptBookingForVehicle = ({route, navigation}: any) => {
                 },
               });
             }}
-            onError={errorMessage => {}}
+            onError={errorMessage => { }}
           />
         )}
       </MapView>
@@ -121,7 +121,7 @@ const AcceptBookingForVehicle = ({route, navigation}: any) => {
                             style: 'default',
                           },
                         ],
-                        {cancelable: false},
+                        { cancelable: false },
                       );
                       // console.log("repsonse from if", result)
                       // navigation.navigate('VEHICLEREQUEST');
@@ -138,7 +138,7 @@ const AcceptBookingForVehicle = ({route, navigation}: any) => {
                             style: 'default',
                           },
                         ],
-                        {cancelable: false},
+                        { cancelable: false },
                       );
                     }
                   })

@@ -10,7 +10,6 @@ import HistoryRequestCard from './Components/HistoryRequestCard';
 import RequestCard from '../Requests/Components/RequestCard';
 import MyLoader from '../../../components/MyLoader';
 const BookingHistory = ({ navigation }: any) => {
-
   const [requestResponse, setRequestResponse] = React.useState([]);
   const [isInprogress, setIsInProgress] = React.useState(false);
   const [isRejected, setIsRejected] = React.useState(false);
@@ -76,12 +75,13 @@ const BookingHistory = ({ navigation }: any) => {
     />
   }
   const renderContent = () => {
-    if (requestResponse) {
+    if (requestResponse && requestResponse.length !== 0) {
       return requestResponse.map((item: any) => {
         let status = "";
-        if (item.status === "Accepted" && (item.state === "Transit" || item.state === "Picked")) {
-          status = "InProgress"
-        } else if (item.status === "Accepted" && item.state === "Reached") {
+        // if (item.status === "Accepted" && (item.state === "Transit" || item.state === "Picked")) {
+        //   status = "InProgress"
+        // }
+        if (item.status === "Accepted" && item.state === "Reached") {
           status = "Completed"
         } else if (item.status === "Accepted") {
           status = "Rejected"
@@ -101,7 +101,18 @@ const BookingHistory = ({ navigation }: any) => {
           return renderShipOrFlight(item, status);
         }
       })
+    } else {
+      return noVehicleAvailable();
     }
+  }
+  const noVehicleAvailable = () => {
+    return (
+      <View style={{ height: '90%', justifyContent: 'center' }}>
+        <View style={{ backgroundColor: "#f0f0f0", height: 250, borderRadius: 10, margin: 20, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ color: 'red' }}>No request available for now</Text>
+        </View>
+      </View>
+    )
   }
   const renderShipOrFlight = (item: any, status: any) => {
     if (item.type === "Ship" && item.status !== "Pending") {
@@ -123,23 +134,23 @@ const BookingHistory = ({ navigation }: any) => {
             style={{
               display: 'flex',
               flexDirection: 'row',
-              justifyContent: 'space-between',
               marginTop: 15,
             }}>
-            <CheckBoxState text={'InProgress'} onPress={() => {
+            {/* <CheckBoxState text={'In Progress'} onPress={() => {
               setIsInProgress(!isInprogress);
-            }} />
+            }} /> */}
             <CheckBoxState text={'Rejected'} onPress={() => {
               setIsRejected(!isRejected);
             }} />
-            <CheckBoxState text={'Completed'} onPress={() => {
-              setIsCompleted(!isCompleted);
-            }} />
+            <View style={{ marginLeft: 15 }}>
+              <CheckBoxState text={'Completed'} onPress={() => {
+                setIsCompleted(!isCompleted);
+              }} />
+            </View>
           </View>
           {renderContent()}
         </View>
       }
-
     </ScrollView>
   );
 };

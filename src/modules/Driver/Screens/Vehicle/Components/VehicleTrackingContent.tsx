@@ -156,6 +156,8 @@ const VehicleTrackingContent = ({ item, navigation }: any) => {
             <HorizontalDivider />
             <RequestSingleContainer title="Drop Off" value={"working"} />
             <HorizontalDivider />
+            <RequestSingleContainer title="Pickup Type" value={item.bookingId.pickupType} />
+            <HorizontalDivider />
             {item.bookingId.pickupType !== "Instant" &&
                 <>
                     <RequestSingleContainer title="From Date" value={item.bookingId.fromdate?.slice(0, -14)} />
@@ -164,10 +166,14 @@ const VehicleTrackingContent = ({ item, navigation }: any) => {
                     <HorizontalDivider />
                 </>
             }
+            <RequestSingleContainer title="Name" value={item.requestedBy.firstname + " " + item.requestedBy.lastname} />
+            <HorizontalDivider />
+            <RequestSingleContainer title="Number" value={item.requestedBy.phoneno} />
+
 
             <View style={{ height: "20%", alignItems: 'center', justifyContent: 'space-between', paddingVertical: 20 }}>
                 <TouchableOpacity onPress={() => {
-                    navigation.navigate("PACKAGEDETAIL", {
+                    navigation.navigate("VEHICLEPACKAGEDETAIL", {
                         requestData: item,
                     })
                 }}>

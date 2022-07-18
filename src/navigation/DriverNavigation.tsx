@@ -1,12 +1,12 @@
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import Landing from '../screens/Home/Home';
 import Splash from '../screens/Splash/Splash';
 const Stack = createStackNavigator();
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import DrawerSideScreen from '../screens/DrawerSideScreen';
 import DriverHome from '../modules/Driver/Screens/Home/DriverHome';
-import {Welcome} from '../screens';
+import { Welcome } from '../screens';
 import DriverDrawer from '../modules/Driver/Screens/Drawer/DriverDrawer';
 import AllVehicles from '../modules/Driver/Screens/Vehicle/AllVehicles';
 import VehicleDetail from '../modules/Driver/Screens/Vehicle/Components/VehicleDetail/VehicleDetail';
@@ -16,6 +16,7 @@ import AcceptBookingForVehicle from '../modules/Driver/Screens/Home/Requests/Acc
 import VehicleHistory from '../modules/Driver/Screens/Home/History/VehicleHistory';
 import TrackingVehicle from '../modules/Driver/Screens/Vehicle/TrackingVehicle';
 import MyProfile from '../screens/MyProfile';
+import VehiclePackageDetail from '../modules/Driver/Screens/Vehicle/VehiclePackageDetail';
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   return (
@@ -41,7 +42,7 @@ export const DriverNavigation = () => {
   return (
     <Stack.Navigator
       initialRouteName="Drawer"
-      screenOptions={{gestureEnabled: false}}>
+      screenOptions={{ gestureEnabled: false }}>
       <Stack.Screen
         options={{
           headerShown: false,
@@ -53,7 +54,7 @@ export const DriverNavigation = () => {
       <Stack.Screen
         name="Splash"
         component={Splash}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       {/* Driver Screens */}
       <Stack.Screen
@@ -171,7 +172,7 @@ export const DriverNavigation = () => {
             backgroundColor: 'white',
           },
           headerTitleAlign: 'center',
-          title: 'History',
+          title: 'Tracking Vehicle',
         }}
         name="TRACKINGVEHICLE"
         component={TrackingVehicle}
@@ -192,6 +193,22 @@ export const DriverNavigation = () => {
         name="MYPROFILE"
         component={MyProfile}
       />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'Package Details',
+        }}
+        name="VEHICLEPACKAGEDETAIL"
+        component={VehiclePackageDetail}
+      />
+
     </Stack.Navigator>
   );
 };

@@ -24,6 +24,8 @@ const BottomSheetContentForVehicle = ({ item, onPress }: any) => {
             <HorizontalDivider />
             <RequestSingleContainer title="Drop Off" value={"working"} />
             <HorizontalDivider />
+            <RequestSingleContainer title="Pickup Type" value={item.bookingId.pickupType} />
+            <HorizontalDivider />
             {item.bookingId.pickupType !== "Instant" &&
                 <>
                     <RequestSingleContainer title="From Date" value={item.bookingId.fromdate?.slice(0, -14)} />
@@ -32,15 +34,11 @@ const BottomSheetContentForVehicle = ({ item, onPress }: any) => {
                     <HorizontalDivider />
                 </>
             }
-            <RequestSingleContainer title="Fare" value={"30$"} />
-            <HorizontalDivider />
+
             <RequestSingleContainer title="Name" value={item.requestedBy.firstname + " " + item.requestedBy.lastname} />
             <HorizontalDivider />
             <RequestSingleContainer title="Number" value={item.requestedBy.phoneno} />
-            <HorizontalDivider />
-            <RequestSingleContainer title="Product type" value={item.bookingId.productType} />
-            <HorizontalDivider />
-            <RequestSingleContainer title="Product Catagory" value={item.bookingId.category} />
+
             <HorizontalDivider />
         </View>
     )

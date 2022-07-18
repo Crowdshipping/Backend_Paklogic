@@ -11,9 +11,9 @@ import MyLoader from '../../../../components/MyLoader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyDropdown from '../../../../components/MyDropdown';
 import VehicleDropDown from './Components/VehicleDropDown';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const AddVehicle = ({ navigation }: any) => {
-  const [vehicleType, setVehicleType] = React.useState('');
   const [isVehicleType, setIsVehicleType] = React.useState(true);
 
   const [vehicleName, setVehicleName] = React.useState('');
@@ -39,6 +39,21 @@ const AddVehicle = ({ navigation }: any) => {
   const [vehicleResidence, setVehicleResidence] = React.useState<any>({});
   const [isVehicleResidence, setIsVehicleResidence] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(false);
+
+
+
+  /////drop down states////
+  const [open, setOpen] = React.useState(false);
+  const [vehicleType, setVehicleType] = React.useState('');
+
+  const [items, setItems] = React.useState([
+    { label: 'Car', value: 'car' },
+    { label: 'Bike', value: 'bike' },
+    { label: 'Cycle', value: 'cycle' },
+  ]);
+
+
+
 
   const validateVehicleType = () => {
     if (vehicleType) {
@@ -166,6 +181,12 @@ const AddVehicle = ({ navigation }: any) => {
       uploadDataToServer(response);
     });
   };
+
+
+
+
+
+
   const validForm = () => {
     const type = validateVehicleType();
     const name = validateVehicleName();
@@ -190,7 +211,6 @@ const AddVehicle = ({ navigation }: any) => {
   };
   const uploadDataToServer = async (response: any) => {
     const value = await AsyncStorage.getItem('@user_Id');
-    console.log('value here', value);
     let insuranceValue = '';
     if (response.length === 4) {
       insuranceValue = response[3].imageUrl;
@@ -208,6 +228,7 @@ const AddVehicle = ({ navigation }: any) => {
         vehicleResidence: response[2].imageUrl,
         vehicleType: vehicleType,
       };
+      console.log("check vehicle", vehicle);
       setIsLoading(true);
       addVehicle(vehicle)
         .then(response => response.json())
@@ -235,9 +256,29 @@ const AddVehicle = ({ navigation }: any) => {
               flexDirection: 'row',
               marginBottom: 20,
             }}>
-              <VehicleDropDown />
+              <DropDownPicker
+                zIndex={1000}
+                style={{
+                  backgroundColor: '#f0f0f0',
+                  borderWidth: 0,
+                }}
+                open={open}
+                value={vehicleType}
+                items={items}
+                setOpen={setOpen}
+                setValue={setVehicleType}
+                setItems={setItems}
+                containerStyle={{
+                  borderColor: '#ccc',
+                  borderWidth: 1,
+                  borderRadius: 5,
+                }}
+              />
+              {/* <VehicleDropDown /> */}
             </View>
+
           </View>
+          {!isVehicleType && (<Text style={{ color: 'red', zIndex: -1 }}>Vehicle Type is required</Text>)}
           <VehicleInputRow
             title={'Vehicle Name'}
             placeHolder={'Vitz'}

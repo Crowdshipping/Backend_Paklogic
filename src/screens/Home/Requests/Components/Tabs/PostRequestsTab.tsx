@@ -4,6 +4,7 @@ import { changePostRequestStatus, getAllPostRequests } from '../../../../../serv
 import RequestCard from '../RequestCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyLoader from '../../../../../components/MyLoader';
+import { heightPercentageToDP } from 'react-native-responsive-screen';
 
 const PostRequestsTab = ({ navigation }: any) => {
     const [userId, setUserId] = React.useState("");
@@ -126,9 +127,33 @@ const PostRequestsTab = ({ navigation }: any) => {
             });
         }
     }
+    const noVehicleAvailable = () => {
+        return (
+            <View style={{ justifyContent: 'center', height: heightPercentageToDP("70%") }}>
+                <View style={{ backgroundColor: "#f0f0f0", height: 250, borderRadius: 10, margin: 20, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ color: 'red' }}>No request available for now</Text>
+                </View>
+            </View>
+        )
+    }
+
+
+    const renderContent = () => {
+        if (isLoading) {
+            return <MyLoader />
+        } else if (postRequestResponse && postRequestResponse.length !== 0) {
+            return renderPostRequest();
+        } else {
+            return noVehicleAvailable();
+        }
+
+    }
+
+
     return (
         <View>
-            {isLoading ? <MyLoader /> : renderPostRequest()}
+            {renderContent()}
+            {/* {isLoading ? <MyLoader /> : renderPostRequest()} */}
         </View>
     )
 }

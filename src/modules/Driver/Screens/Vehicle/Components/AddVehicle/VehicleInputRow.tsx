@@ -14,7 +14,7 @@ const VehicleInputRow = ({ title, value, placeHolder, onChangeText, isValid, val
                 />
             </View>
             {!isValid && (
-                <Text style={{ color: 'red' }}>{validMessage}</Text>
+                <Text style={{ color: 'red', zIndex: -1 }}>{validMessage}</Text>
             )}
         </>
     )

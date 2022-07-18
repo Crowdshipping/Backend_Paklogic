@@ -26,8 +26,8 @@ const App = () => {
   return (
     <NavigationContainer>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      {/* <StackNavigation /> */}
-      <DriverNavigation />
+      <StackNavigation />
+      {/* <DriverNavigation /> */}
     </NavigationContainer>
   );
 };

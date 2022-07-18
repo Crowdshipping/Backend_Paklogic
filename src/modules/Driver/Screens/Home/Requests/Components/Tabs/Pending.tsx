@@ -57,6 +57,11 @@ const Pending = ({ navigation }: any) => {
         console.log("parteee", item.bookingId.pickupAddress.lat);
         return (
           <VehicleRequestCard
+            onPress={() => {
+              navigation.navigate('ACCEPTORREJECTFORVEHICLE', {
+                vehicleData: item,
+              });
+            }}
             acceptPress={() => {
               navigation.navigate('ACCEPTORREJECTFORVEHICLE', {
                 vehicleData: item,

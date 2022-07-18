@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import CountDown from 'react-native-countdown-component';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP,
@@ -182,154 +183,157 @@ const VerifyOtp = (props: any) => {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}>
+
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ alignItems: 'center' }}>
-          <SvgXml
-            xml={register5}
-            width={widthPercentageToDP(90)}
-            height={hp(50)}
-          />
-          <Text>
-            Enter the OTP code send to you at
-            {isEmail
-              ? props.route.params.email
-              : props.route.params.countrycode.dial_code +
-              props.route.params.phoneno}
-          </Text>
-          <View style={styles.codeContainer}>
-            <TextInput
-              ref={refNum1}
-              autoCapitalize={'none'}
-              value={num1}
-              style={styles.textInput}
-              placeholder="-"
-              placeholderTextColor={'grey'}
-              onChangeText={text => {
-                if (text.length <= 1) {
-                  setNum1(text);
-                  refNum2.current.focus();
-                }
-              }}
+        <KeyboardAwareScrollView>
+          <View style={{ alignItems: 'center' }}>
+            <SvgXml
+              xml={register5}
+              width={widthPercentageToDP(90)}
+              height={hp(50)}
             />
+            <Text>
+              Enter the OTP code send to you at
+              {isEmail
+                ? props.route.params.email
+                : props.route.params.countrycode.dial_code +
+                props.route.params.phoneno}
+            </Text>
+            <View style={styles.codeContainer}>
+              <TextInput
+                ref={refNum1}
+                autoCapitalize={'none'}
+                value={num1}
+                style={styles.textInput}
+                placeholder="-"
+                placeholderTextColor={'grey'}
+                onChangeText={text => {
+                  if (text.length <= 1) {
+                    setNum1(text);
+                    refNum2.current.focus();
+                  }
+                }}
+              />
 
-            <TextInput
-              ref={refNum2}
-              autoCapitalize={'none'}
-              value={num2}
-              style={styles.textInput}
-              placeholder="-"
-              placeholderTextColor={'grey'}
-              onChangeText={text => {
-                if (text.length <= 1) {
-                  setNum2(text);
-                  refNum3.current.focus();
-                }
-              }}
-            />
+              <TextInput
+                ref={refNum2}
+                autoCapitalize={'none'}
+                value={num2}
+                style={styles.textInput}
+                placeholder="-"
+                placeholderTextColor={'grey'}
+                onChangeText={text => {
+                  if (text.length <= 1) {
+                    setNum2(text);
+                    refNum3.current.focus();
+                  }
+                }}
+              />
 
-            <TextInput
-              ref={refNum3}
-              autoCapitalize={'none'}
-              value={num3}
-              style={styles.textInput}
-              placeholder="-"
-              placeholderTextColor={'grey'}
-              onChangeText={text => {
-                if (text.length <= 1) {
-                  setNum3(text);
-                  refNum4.current.focus();
-                }
-              }}
-            />
+              <TextInput
+                ref={refNum3}
+                autoCapitalize={'none'}
+                value={num3}
+                style={styles.textInput}
+                placeholder="-"
+                placeholderTextColor={'grey'}
+                onChangeText={text => {
+                  if (text.length <= 1) {
+                    setNum3(text);
+                    refNum4.current.focus();
+                  }
+                }}
+              />
 
-            <TextInput
-              ref={refNum4}
-              autoCapitalize={'none'}
-              value={num4}
-              style={styles.textInput}
-              placeholder="-"
-              placeholderTextColor={'grey'}
-              onChangeText={text => {
-                if (text.length <= 1) {
-                  setNum4(text);
-                  refNum5.current.focus();
-                }
-              }}
-            />
+              <TextInput
+                ref={refNum4}
+                autoCapitalize={'none'}
+                value={num4}
+                style={styles.textInput}
+                placeholder="-"
+                placeholderTextColor={'grey'}
+                onChangeText={text => {
+                  if (text.length <= 1) {
+                    setNum4(text);
+                    refNum5.current.focus();
+                  }
+                }}
+              />
 
-            <TextInput
-              ref={refNum5}
-              autoCapitalize={'none'}
-              value={num5}
-              style={styles.textInput}
-              placeholder="-"
-              placeholderTextColor={'grey'}
-              onChangeText={text => {
-                if (text.length <= 1) {
-                  setNum5(text);
-                  refNum6.current.focus();
-                }
-              }}
-            />
+              <TextInput
+                ref={refNum5}
+                autoCapitalize={'none'}
+                value={num5}
+                style={styles.textInput}
+                placeholder="-"
+                placeholderTextColor={'grey'}
+                onChangeText={text => {
+                  if (text.length <= 1) {
+                    setNum5(text);
+                    refNum6.current.focus();
+                  }
+                }}
+              />
 
-            <TextInput
-              ref={refNum6}
-              autoCapitalize={'none'}
-              value={num6}
-              style={styles.textInput}
-              placeholder="-"
-              placeholderTextColor={'grey'}
-              onChangeText={text => {
-                if (text.length > 1) return;
-                setNum6(text);
+              <TextInput
+                ref={refNum6}
+                autoCapitalize={'none'}
+                value={num6}
+                style={styles.textInput}
+                placeholder="-"
+                placeholderTextColor={'grey'}
+                onChangeText={text => {
+                  if (text.length > 1) return;
+                  setNum6(text);
+                }}
+              />
+            </View>
+            {disabled ? (
+              <CountDown
+                key={random}
+                until={counter}
+                size={12}
+                onFinish={() => {
+                  setDisabled(false);
+                }}
+                separatorStyle={{ color: colors.red }}
+                digitStyle={{}}
+                digitTxtStyle={{ color: colors.red }}
+                timeToShow={['M', 'S']}
+                showSeparator
+                timeLabels={{ m: '', s: '' }}
+                style={{ marginVertical: hp(3) }}
+              />
+            ) : (
+              <Text
+                style={{ alignSelf: 'center', marginVertical: hp(3) }}
+                onPress={() => {
+                  resendCode();
+                }}>
+                Resend Code
+              </Text>
+            )}
+
+            <Button
+              loading={loading}
+              title="NEXT"
+              onPress={() => {
+                Validate();
+                // console.log('jjnlnjk',props.route.params.email ===undefined)
+                // console.log(props.route.params.phoneno,props.route.params.countrycode)
+                // props.navigation.navigate('RegisterProvider', {
+                //   phoneno: props.route.params.phoneno,
+                //   countrycode: props.route.params.countrycode,
+                //   option: props.route.params.option,
+                // });
+                // props.navigation.navigate('ResetPassword', {
+                //   uid: 123456,
+                // });
               }}
+              containerStyle={{ width: widthPercentageToDP(80) }}
             />
           </View>
-          {disabled ? (
-            <CountDown
-              key={random}
-              until={counter}
-              size={12}
-              onFinish={() => {
-                setDisabled(false);
-              }}
-              separatorStyle={{ color: colors.red }}
-              digitStyle={{}}
-              digitTxtStyle={{ color: colors.red }}
-              timeToShow={['M', 'S']}
-              showSeparator
-              timeLabels={{ m: '', s: '' }}
-              style={{ marginVertical: hp(3) }}
-            />
-          ) : (
-            <Text
-              style={{ alignSelf: 'center', marginVertical: hp(3) }}
-              onPress={() => {
-                resendCode();
-              }}>
-              Resend Code
-            </Text>
-          )}
-
-          <Button
-            loading={loading}
-            title="NEXT"
-            onPress={() => {
-              Validate();
-              // console.log('jjnlnjk',props.route.params.email ===undefined)
-              // console.log(props.route.params.phoneno,props.route.params.countrycode)
-              // props.navigation.navigate('RegisterProvider', {
-              //   phoneno: props.route.params.phoneno,
-              //   countrycode: props.route.params.countrycode,
-              //   option: props.route.params.option,
-              // });
-              // props.navigation.navigate('ResetPassword', {
-              //   uid: 123456,
-              // });
-            }}
-            containerStyle={{ width: widthPercentageToDP(80) }}
-          />
-        </View>
+        </KeyboardAwareScrollView>
       </ScrollView>
     </KeyboardAvoidingView>
   );

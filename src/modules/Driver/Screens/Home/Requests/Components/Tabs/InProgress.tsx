@@ -13,6 +13,7 @@ const InProgress = ({ navigation }: any) => {
     const value = await AsyncStorage.getItem('@user_Id');
     // if (value !== null) {
     setIsLoading(true);
+    console.log("mydriver", value)
     getDriverHistory(value)
       .then(response => response.json())
       .then((result: any) => {

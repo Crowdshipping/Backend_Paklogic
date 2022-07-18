@@ -1,4 +1,4 @@
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import ForgetPassword from '../screens/ForgetPassword/ForgetPassword';
 import Landing from '../screens/Home/Home';
@@ -13,7 +13,7 @@ import Splash from '../screens/Splash/Splash';
 import VerifyOtp from '../screens/VerifyOtp/VerifyOtp';
 import Welcome from '../screens/Welcome/Welcome';
 const Stack = createStackNavigator();
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import AllRequest from '../screens/Home/Requests/Requests';
 import AcceptBooking from '../screens/Flight/AcceptBookingForFlight';
 import BookingRequest from '../screens/Flight/BookingRequest';
@@ -41,7 +41,7 @@ import ComplainDetail from '../screens/Complain/ComplainDetail';
 import AddClaim from '../screens/Claim/AddClaim';
 import BookingHistory from '../screens/Home/History/BookingHistory';
 import DriverHome from '../modules/Driver/Screens/Home/DriverHome';
-import {DriverNavigation} from './DriverNavigation';
+import { DriverNavigation } from './DriverNavigation';
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   return (
@@ -67,7 +67,7 @@ export const StackNavigation = () => {
   return (
     <Stack.Navigator
       initialRouteName="Splash"
-      screenOptions={{gestureEnabled: false}}>
+      screenOptions={{ gestureEnabled: false }}>
       <Stack.Screen
         options={{
           headerShown: false,
@@ -87,7 +87,7 @@ export const StackNavigation = () => {
       <Stack.Screen
         name="Splash"
         component={Splash}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         options={{
@@ -151,7 +151,7 @@ export const StackNavigation = () => {
       />
       <Stack.Screen
         name="ResetPassword"
-        options={{headerLeft: () => null}}
+        options={{ headerLeft: () => null }}
         component={ResetPassword}
       />
       {/* <Stack.Screen name="Landing" component={Landing} /> */}
@@ -439,7 +439,7 @@ export const StackNavigation = () => {
             backgroundColor: 'white',
           },
           headerTitleAlign: 'center',
-          title: 'PACKAGE DETAILS',
+          title: 'Package Details',
         }}
         name="PACKAGEDETAIL"
         component={PackageDetail}

@@ -11,6 +11,7 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -132,88 +133,90 @@ export default function RegisterProvider(props: any) {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{ flex: 1, paddingHorizontal: wp(6) }}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ flex: 2 }}>
-          <SvgXml
-            style={{ alignSelf: 'center' }}
-            width={wp(80)}
-            height={wp(80)}
-            xml={register1}
-          />
-        </View>
-        <View style={{ flex: 2 }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Textbox
-              title="FIRST NAME"
-              placeholder="First Name"
-              onChangeValue={(text: string) => setFirstName(text)}
-              containerStyle={{ width: wp(45) }}
-              errorMessage={'First Name is required'}
-              isError={firstNameError}
-            />
-            <Textbox
-              title="LAST NAME"
-              placeholder="Last Name"
-              onChangeValue={(text: string) => setLastName(text)}
-              containerStyle={{ width: wp(45) }}
-              errorMessage={'Last Name is required'}
-              isError={lastNameError}
+        <KeyboardAwareScrollView>
+          <View style={{ flex: 2 }}>
+            <SvgXml
+              style={{ alignSelf: 'center' }}
+              width={wp(80)}
+              height={wp(80)}
+              xml={register1}
             />
           </View>
-          <Textbox
-            title="EMAIL"
-            placeholder="Email Address"
-            onChangeValue={(text: string) => setEmail(text)}
-            containerStyle={{}}
-            errorMessage={'Email address is required'}
-            isError={emailError}
-          />
-          <PhoneNumberPicker
-            disabled={true}
-            country={props.route.params.countrycode}
-            number={props.route.params.phoneno}
-            onChange={(country: any, text: string) => setPhone(text)}
-            isError={phoneError}
-          />
-          <Address
-            onChange={(country: any, text: string) => setAddress(text)}
-            isError={addressError}
-          />
-          <Textbox
-            title="PASSWORD"
-            placeholder="Password"
-            password={true}
-            onChangeValue={(text: string) => setPassword(text)}
-            containerStyle={{}}
-            errorMessage={
-              'password should contain atleast 8 character, number, Alphabet, Capital aphabet, and special characters including !@#$%^&*.,% '
-            }
-            isError={passwordError}
-          />
+          <View style={{ flex: 2 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Textbox
+                title="FIRST NAME"
+                placeholder="First Name"
+                onChangeValue={(text: string) => setFirstName(text)}
+                containerStyle={{ width: wp(45) }}
+                errorMessage={'First Name is required'}
+                isError={firstNameError}
+              />
+              <Textbox
+                title="LAST NAME"
+                placeholder="Last Name"
+                onChangeValue={(text: string) => setLastName(text)}
+                containerStyle={{ width: wp(45) }}
+                errorMessage={'Last Name is required'}
+                isError={lastNameError}
+              />
+            </View>
+            <Textbox
+              title="EMAIL"
+              placeholder="Email Address"
+              onChangeValue={(text: string) => setEmail(text)}
+              containerStyle={{}}
+              errorMessage={'Email address is required'}
+              isError={emailError}
+            />
+            <PhoneNumberPicker
+              disabled={true}
+              country={props.route.params.countrycode}
+              number={props.route.params.phoneno}
+              onChange={(country: any, text: string) => setPhone(text)}
+              isError={phoneError}
+            />
+            <Address
+              onChange={(country: any, text: string) => setAddress(text)}
+              isError={addressError}
+            />
+            <Textbox
+              title="PASSWORD"
+              placeholder="Password"
+              password={true}
+              onChangeValue={(text: string) => setPassword(text)}
+              containerStyle={{}}
+              errorMessage={
+                'password should contain atleast 8 character, number, Alphabet, Capital aphabet, and special characters including !@#$%^&*.,% '
+              }
+              isError={passwordError}
+            />
 
-          <Text style={{ alignSelf: 'center' }}>
-            Already have an Account ?
-            <Text
-              style={{ color: colors.red }}
-              onPress={() => props.navigation.navigate('SIGNIN')}>
-              Sign In
+            <Text style={{ alignSelf: 'center' }}>
+              Already have an Account ?
+              <Text
+                style={{ color: colors.red }}
+                onPress={() => props.navigation.navigate('SIGNIN')}>
+                Sign In
+              </Text>
             </Text>
-          </Text>
-          <Button
-            loading={loading}
-            title="NEXT"
-            onPress={() => {
-              validate();
-              // Alert.alert(props.route.params.option)
-              // props.navigation.navigate('RegisterDriver', {
-              //   uid: '625fce9a524a45000483eb88',
-              // });
-              // props.navigation.navigate('RegisterCompany', {
-              //   uid: '625fce9a524a45000483eb88',
-              // });
-            }}
-            containerStyle={{ marginTop: hp(4) }}
-          />
-        </View>
+            <Button
+              loading={loading}
+              title="NEXT"
+              onPress={() => {
+                validate();
+                // Alert.alert(props.route.params.option)
+                // props.navigation.navigate('RegisterDriver', {
+                //   uid: '625fce9a524a45000483eb88',
+                // });
+                // props.navigation.navigate('RegisterCompany', {
+                //   uid: '625fce9a524a45000483eb88',
+                // });
+              }}
+              containerStyle={{ marginTop: hp(4) }}
+            />
+          </View>
+        </KeyboardAwareScrollView>
       </ScrollView>
     </KeyboardAvoidingView>
   );
