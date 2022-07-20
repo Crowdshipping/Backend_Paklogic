@@ -7,8 +7,9 @@ import MapBottomSheet from '../Home/Requests/Components/MapBottomSheet';
 import MapViewDirections from 'react-native-maps-directions';
 import VehicleTrackingContent from './Components/VehicleTrackingContent';
 import { io, Socket } from 'socket.io-client';
-import Geolocation from '@react-native-community/geolocation';
+// import Geolocation from '@react-native-community/geolocation';
 
+import Geolocation from 'react-native-geolocation-service';
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE = 37.771707;
@@ -68,25 +69,48 @@ const TrackingVehicle = ({ route, navigation }: any) => {
 
 
     const getCurrentLocationDriver = () => {
-        Geolocation.getCurrentPosition(info => {
+
+        Geolocation.getCurrentPosition((position) => {
+            console.log("khalil ibrahim", position.coords.latitude);
+            console.log("khalil ibrahim2", position.coords.longitude);
             setDriverLiveLocation(
                 {
-                    latitude: Number(info.coords.latitude.toFixed(6)),
-                    longitude: Number(info.coords.longitude.toFixed(6)),
+                    latitude: Number(position.coords.latitude),
+                    longitude: Number(position.coords.longitude),
                 })
             setRegion({
-                latitude: Number(info.coords.latitude.toFixed(6)),
-                longitude: Number(info.coords.longitude.toFixed(6)),
+                latitude: Number(position.coords.latitude),
+                longitude: Number(position.coords.longitude),
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA
             })
-        });
+        },
+            (error) => {
+                // See error code charts below.
+                console.log(error.code, error.message);
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        );
+        // Geolocation.getCurrentPosition(info => {
+        //     setDriverLiveLocation(
+        //         {
+        //             latitude: Number(info.coords.latitude.toFixed(6)),
+        //             longitude: Number(info.coords.longitude.toFixed(6)),
+        //         })
+        //     setRegion({
+        //         latitude: Number(info.coords.latitude.toFixed(6)),
+        //         longitude: Number(info.coords.longitude.toFixed(6)),
+        //         latitudeDelta: LATITUDE_DELTA,
+        //         longitudeDelta: LONGITUDE_DELTA
+        //     })
+        // });
     }
     const useWebsocket = (url: any) => {
         const [connected, setConnected] = React.useState(false);
         const [socket, setSocket] = React.useState<Socket>();
         React.useEffect(() => {
             getCurrentLocationDriver();
+            getLiveLocation();
             const interval = setInterval(() => {
                 getLiveLocation();
                 console.log('After 3 Seconds');
@@ -106,30 +130,51 @@ const TrackingVehicle = ({ route, navigation }: any) => {
         }
     }
     const getLiveLocation = () => {
+
         const watchId = Geolocation.watchPosition((position) => {
-            console.log("newposition", position);
             const newRegion = {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
+                latitude: Number(position.coords.latitude),
+                longitude: Number(position.coords.longitude),
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA
             }
             onRegionChange(newRegion);
             setDriverLiveLocation(
                 {
-                    latitude: Number(position.coords.latitude.toFixed(6)),
-                    longitude: Number(position.coords.longitude.toFixed(6)),
+                    latitude: Number(position.coords.latitude),
+                    longitude: Number(position.coords.longitude),
                 }
             )
 
-        }, (e) => console.log('watch poistion error', e),
-            {
-                enableHighAccuracy: true,
-                maximumAge: 3000,
-                timeout: 3000
-            }
-        );
-        Geolocation.clearWatch(watchId)
+        }, (error) => console.log('watch poistion error', error),
+            { enableHighAccuracy: true, distanceFilter: 1 }
+        )
+        // Geolocation.clearWatch(watchId)
+
+        // const watchId = Geolocation.watchPosition((position) => {
+        //     console.log("newposition", position);
+        //     const newRegion = {
+        //         latitude: position.coords.latitude,
+        //         longitude: position.coords.longitude,
+        //         latitudeDelta: LATITUDE_DELTA,
+        //         longitudeDelta: LONGITUDE_DELTA
+        //     }
+        //     onRegionChange(newRegion);
+        //     setDriverLiveLocation(
+        //         {
+        //             latitude: Number(position.coords.latitude.toFixed(6)),
+        //             longitude: Number(position.coords.longitude.toFixed(6)),
+        //         }
+        //     )
+
+        // }, (e) => console.log('watch poistion error', e),
+        //     {
+        //         enableHighAccuracy: true,
+        //         maximumAge: 3000,
+        //         timeout: 3000
+        //     }
+        // );
+        // Geolocation.clearWatch(watchId)
     }
     const mySocket = useWebsocket("ws://driver-live-socket.herokuapp.com/");
 
@@ -357,8 +402,8 @@ const TrackingVehicle = ({ route, navigation }: any) => {
             {isLoading ? <MyLoader /> :
                 <View style={styles.container}>
                     {whichMap()}
-                    <Text style={{ backgroundColor: "yellow", }}>{driverLiveLocation.latitude}</Text>
-                    <Text style={{ backgroundColor: "yellow", }}>{driverLiveLocation.longitude}</Text>
+                    <Text style={{ backgroundColor: "yellow" }}>{driverLiveLocation.latitude}</Text>
+                    <Text style={{ backgroundColor: "yellow" }}>{driverLiveLocation.longitude}</Text>
 
                     {/* <MapBottomSheet maxValue={"75%"} minValue={"20%"}>
                         <VehicleTrackingContent navigation={navigation} item={vehicleData} />
