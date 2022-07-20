@@ -1,5 +1,6 @@
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native'
 import React from 'react'
+import { heightPercentageToDP } from 'react-native-responsive-screen'
 
 const MyLoader = () => {
     return (
@@ -12,7 +13,7 @@ const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
         alignItems: 'center',
-        width: '100%', height: '80%'
+        height: heightPercentageToDP(80)
     },
 })
 export default MyLoader;

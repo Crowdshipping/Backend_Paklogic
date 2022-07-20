@@ -1,6 +1,6 @@
-import axios, {AxiosRequestConfig} from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 
-import {backendUrl} from '../appConstants';
+import { backendUrl } from '../appConstants';
 
 export const userData = () => {
   // var body = JSON.stringify(data);
@@ -553,6 +553,22 @@ export const verifyBookingForCompletion = (image: any, requestId: any) => {
 
 /* SHIP Things */
 /////get seaaport
+
+export const getShipFromDate = (mmsi: any, pickupPortUnlocode: any, eta: any) => {
+  console.log("data of api, ", mmsi, pickupPortUnlocode, eta);
+
+  var myHeaders = new Headers();
+  myHeaders.append("Cookie", "connect.sid=s%3A1ua6t4NsGVvH0z9una33ulhUJMKiKva3.67X8mwYHpQylO7GEpM6qNS6hQHd5TBMOE3pkZkh5R6A");
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow'
+  };
+  return fetch(`https://backend-crowdshipping.herokuapp.com/provider/getdeparturetime/{${mmsi}/${pickupPortUnlocode}/${eta}`, requestOptions);
+}
+
+
+
 export const getSeaportName = (data: any) => {
   var myHeaders = new Headers();
   myHeaders.append(
@@ -832,7 +848,7 @@ export const getVehicleRequest = (lat: any, lng: any) => {
     body: raw,
     redirect: 'follow',
   };
-  console.log({requestOptions});
+  console.log({ requestOptions });
 
   return fetch(
     'https://backend-crowdshipping.herokuapp.com/driver/getdriverrequests',
@@ -888,3 +904,24 @@ export const getDriverHistory = (driverId: any) => {
     requestOptions,
   );
 };
+
+
+
+export const cancelRequestByDriver = (requestId: any) => {
+  console.log("yes here we go", requestId);
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Cookie", "connect.sid=s%3AE06OkH6IkGlxFRcP6w3fA_gc72UR3h43.y67Yewm2LSPGxD%2Fbk7zIhHj%2FL2vt2TdgeE2jlmaNAEc");
+
+  var raw = JSON.stringify({
+    "requestId": requestId,
+  });
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+  return fetch("https://backend-crowdshipping.herokuapp.com/driver/cancelrequest", requestOptions);
+}

@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { getDriverHistory } from '../../../../../../../services';
+import { cancelRequestByDriver, getDriverHistory } from '../../../../../../../services';
 import VehicleRequestCard from '../VehicleRequestCard';
 import MyLoader from '../../../../../../../components/MyLoader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ScrollView, Text, View } from 'react-native';
+import { Alert, ScrollView, Text, View } from 'react-native';
 
 const InProgress = ({ navigation }: any) => {
   const [isLoading, setIsLoading] = React.useState(false);
@@ -17,6 +17,7 @@ const InProgress = ({ navigation }: any) => {
     getDriverHistory(value)
       .then(response => response.json())
       .then((result: any) => {
+        console.log("fffffffff:", result.requests);
         setIsLoading(false);
         setRequestResponse(result.requests);
       })
@@ -64,8 +65,39 @@ const InProgress = ({ navigation }: any) => {
               firstName={item.requestedBy.firstname}
               lastName={item.requestedBy.lastname}
               pickupType={item.bookingId.pickupType}
-              departurePort={'Adiyla rd rawalpindi pakistan'}
-              destinationPort={'Quettaasdasdasdasdasdasasdasdasddadasdasdsd'}
+              departurePort={item.bookingId.dropAddressText}
+              destinationPort={item.bookingId.pickupAddressText}
+              cancelOrRejectText={"Cancel"}
+              cancelOrRejectPress={() => {
+                setIsLoading(true);
+                cancelRequestByDriver(item._id).then(response => response.json())
+                  .then((result) => {
+                    setIsLoading(false);
+                    if (result.success) {
+                      console.log("yes true", result)
+                      Alert.alert("", "Successfully Canceled", [
+                        {
+                          text: 'Ok',
+                          onPress: () => {
+                            getData();
+                          },
+                          style: 'cancel',
+                        },
+                      ]);
+                    } else {
+                      console.log("yes false", result)
+                      Alert.alert("", result.message, [
+                        {
+                          text: 'Ok',
+                          style: 'cancel',
+                        },
+                      ]);
+                    }
+                  })
+                  .catch(error => {
+                    setIsLoading(false);
+                  });
+              }}
             />
           );
         }
@@ -92,7 +124,6 @@ const InProgress = ({ navigation }: any) => {
     } else {
       return noVehicleAvailable();
     }
-
   }
   return (
     renderContents()

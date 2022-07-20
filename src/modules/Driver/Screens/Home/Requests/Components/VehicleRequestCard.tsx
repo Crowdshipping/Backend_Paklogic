@@ -15,7 +15,9 @@ const VehicleRequestCard = ({
     acceptPress,
     myImage,
     isAccepted,
-    text
+    text,
+    cancelOrRejectText,
+    cancelOrRejectPress,
 }: any) => {
     return (
         <TouchableOpacity onPress={onPress}>
@@ -67,6 +69,12 @@ const VehicleRequestCard = ({
                                     {isAccepted ? 'Accepted' : 'Accept'}
                                 </Text>
                             }
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={cancelOrRejectPress}>
+                            <Text style={styles.rejectText} >
+                                {cancelOrRejectText}
+                            </Text>
+
                         </TouchableOpacity>
                     </View>
 
@@ -132,10 +140,6 @@ const styles = StyleSheet.create({
         color: '#DC3E3E',
         fontSize: 15,
         fontWeight: 'bold'
-    },
-    dateText: {
-        color: '#A19B9B',
-        fontSize: 15,
     },
     countryText: {
         fontSize: 15,

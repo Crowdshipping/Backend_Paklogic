@@ -25,7 +25,12 @@ const TrackingVehicle = ({ route, navigation }: any) => {
         longitudeDelta: LONGITUDE_DELTA,
     })
 
-    const [driverLiveLocation, setDriverLiveLocation] = useState<LatLng>();
+    const [driverLiveLocation, setDriverLiveLocation] = useState<LatLng>(
+        {
+            latitude: 33.6467957,
+            longitude: 73.0375761,
+        }
+    );
 
     const { vehicleData } = route.params;
     const [isLoading, setIsLoading] = React.useState(false);
@@ -39,9 +44,28 @@ const TrackingVehicle = ({ route, navigation }: any) => {
         {
             latitude: vehicleData.bookingId.dropAddress.lat,
             longitude: vehicleData.bookingId.dropAddress.lng,
-        }
+        },
+
 
     ]);
+    const [coordinates2, setCoordinates2] = React.useState([
+
+        {
+            latitude: vehicleData.bookingId.pickupAddress.lat,
+            longitude: vehicleData.bookingId.pickupAddress.lng,
+        },
+        {
+            latitude: 33.738045,
+            longitude: 73.084488,
+        },
+        {
+            latitude: vehicleData.bookingId.dropAddress.lat,
+            longitude: vehicleData.bookingId.dropAddress.lng,
+        },
+
+
+    ]);
+
 
     const getCurrentLocationDriver = () => {
         Geolocation.getCurrentPosition(info => {
@@ -63,10 +87,10 @@ const TrackingVehicle = ({ route, navigation }: any) => {
         const [socket, setSocket] = React.useState<Socket>();
         React.useEffect(() => {
             getCurrentLocationDriver();
-            // const interval = setInterval(() => {
-            getLiveLocation();
-            console.log('After 3 Seconds');
-            // }, 10000);
+            const interval = setInterval(() => {
+                getLiveLocation();
+                console.log('After 3 Seconds');
+            }, 3000);
             const newSocket = io(url, {
                 secure: true,
                 transports: ['websocket'],
@@ -74,7 +98,7 @@ const TrackingVehicle = ({ route, navigation }: any) => {
             newSocket.on('disconnect', () => setConnected(false));
             newSocket.on('connect', () => setConnected(true));
             setSocket(newSocket);
-            // return () => clearInterval(interval)
+            return () => clearInterval(interval)
         }, [])
         return {
             connected,
@@ -83,6 +107,7 @@ const TrackingVehicle = ({ route, navigation }: any) => {
     }
     const getLiveLocation = () => {
         const watchId = Geolocation.watchPosition((position) => {
+            console.log("newposition", position);
             const newRegion = {
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude,
@@ -94,14 +119,14 @@ const TrackingVehicle = ({ route, navigation }: any) => {
                 {
                     latitude: Number(position.coords.latitude.toFixed(6)),
                     longitude: Number(position.coords.longitude.toFixed(6)),
-                })
+                }
+            )
 
         }, (e) => console.log('watch poistion error', e),
             {
-                distanceFilter: 0,
                 enableHighAccuracy: true,
-                timeout: 30000,
-                maximumAge: 0
+                maximumAge: 3000,
+                timeout: 3000
             }
         );
         Geolocation.clearWatch(watchId)
@@ -151,7 +176,7 @@ const TrackingVehicle = ({ route, navigation }: any) => {
     const onRegionChange = (region: any) => {
         setRegion(region);
     }
-    const renderMap = () => {
+    const renderMapBeforeDriverPick = () => {
 
         return (
             <MapView
@@ -197,6 +222,8 @@ const TrackingVehicle = ({ route, navigation }: any) => {
                 {(coordinates.length >= 2) &&
                     (
                         <MapViewDirections
+                            splitWaypoints={true}
+                            mode='DRIVING'
                             origin={coordinates[0]}
                             waypoints={(coordinates.length > 2) ? coordinates.slice(1, -1) : undefined}
                             destination={coordinates[coordinates.length - 1]}
@@ -227,18 +254,115 @@ const TrackingVehicle = ({ route, navigation }: any) => {
             </MapView>
         )
     }
+
+
+    const renderMapAfterDriverPick = () => {
+        console.log("intial point", coordinates[0].latitude)
+        console.log("end point", coordinates[0].longitude)
+        return (
+            <MapView
+                initialRegion={region}
+                style={StyleSheet.absoluteFill}
+                ref={ref}
+                onRegionChange={onRegionChange}
+            >
+                {/* {coordinates.map((coordinate, index) =>
+                    <Marker
+                        image={require('../../../../assets/googlemap.png')}
+                        key={`coordinate_${index}`}
+                        coordinate={coordinate} />
+                )} */}
+                {coordinates2[0] &&
+                    <Marker
+                        coordinate={{
+                            latitude: coordinates2[0].latitude,
+                            longitude: coordinates2[0].longitude
+                        }}>
+                        <Image source={require('../../../../assets/start.png')} style={{ width: 30, height: 30 }} />
+                    </Marker>
+                }
+                {coordinates2[1] &&
+                    <Marker
+                        coordinate={{
+                            latitude: coordinates2[1].latitude,
+                            longitude: coordinates2[1].longitude
+                        }}>
+                        <Image source={require('../../../../assets/car.png')} style={{ width: 30, height: 30 }} />
+                    </Marker>
+                }
+                {coordinates2[2] &&
+                    <Marker
+                        coordinate={{
+                            latitude: coordinates2[2].latitude,
+                            longitude: coordinates2[2].longitude
+                        }}>
+                        <Image source={require('../../../../assets/end.png')} style={{ width: 30, height: 30 }} />
+                    </Marker>
+                }
+                {(coordinates2.length >= 2) &&
+                    (
+                        <MapViewDirections
+                            splitWaypoints={true}
+                            mode='DRIVING'
+                            origin={coordinates2[0]}
+                            waypoints={(coordinates2.length > 2) ? coordinates2.slice(1, -1) : undefined}
+                            destination={coordinates2[coordinates2.length - 1]}
+                            apikey={GOOGLE_MAPS_APIKEY}
+                            strokeWidth={5}
+                            strokeColor="black"
+                            optimizeWaypoints={true}
+                            onStart={(params) => {
+                                console.log(`Started routing between "${params.origin}" and "${params.destination}"`);
+                            }}
+                            onReady={result => {
+                                console.log(`Distance: ${result.distance} km`)
+                                console.log(`Duration: ${result.duration} min.`)
+                                ref.current?.fitToCoordinates(result.coordinates, {
+                                    edgePadding: {
+                                        right: (width / 20),
+                                        bottom: (height / 20),
+                                        left: (width / 20),
+                                        top: (height / 20),
+                                    }
+                                });
+                            }}
+                            onError={(errorMessage) => {
+                            }}
+                        />
+                    )
+                }
+            </MapView>
+        )
+    }
+
+
+    const whichMap = () => {
+        console.log("driver  latitude ", driverLiveLocation.latitude)
+        console.log("driver  longitude ", driverLiveLocation.longitude)
+        console.log("pickup  latitude ", coordinates[0].latitude)
+        console.log("pickup  longitude ", coordinates[0].longitude)
+
+        if (driverLiveLocation.latitude === coordinates[0].latitude && driverLiveLocation.longitude === coordinates[0].longitude) {
+            console.log("if check worked")
+            return renderMapAfterDriverPick();
+        } else {
+            console.log("else check worked")
+            return renderMapBeforeDriverPick();
+        }
+
+    }
     return (
         <View style={styles.container}>
-            {console.log("patanai", vehicleData.state)}
             {/* {console.log("banana", mySocket)} */}
             {isLoading ? <MyLoader /> :
                 <View style={styles.container}>
-                    {renderMap()}
-                    {/* <Text style={{ fontSize: 20, backgroundColor: 'yellow' }}>{coordinates[1]?.latitude}</Text>
-                    <Text style={{ fontSize: 20, backgroundColor: 'yellow' }}>{coordinates[1]?.longitude}</Text> */}
-                    <MapBottomSheet maxValue={"75%"} minValue={"20%"}>
+                    {whichMap()}
+                    <Text style={{ backgroundColor: "yellow", }}>{driverLiveLocation.latitude}</Text>
+                    <Text style={{ backgroundColor: "yellow", }}>{driverLiveLocation.longitude}</Text>
+
+                    {/* <MapBottomSheet maxValue={"75%"} minValue={"20%"}>
                         <VehicleTrackingContent navigation={navigation} item={vehicleData} />
-                    </MapBottomSheet>
+                    </MapBottomSheet> */}
                 </View>
             }
 

@@ -378,7 +378,7 @@ export const StackNavigation = () => {
             backgroundColor: 'white',
           },
           headerTitleAlign: 'center',
-          title: 'Attach Images',
+          title: 'ADD TICKET DETAILS',
         }}
         name="AddFlightPostRequest"
         component={AddFlightPostRequest}

@@ -20,9 +20,9 @@ const BottomSheetContentForVehicle = ({ item, onPress }: any) => {
                 />
             </View>
             <HorizontalDivider />
-            <RequestSingleContainer title="Pick Up" value={"working"} />
+            <RequestSingleContainer title="Pick Up" value={item.bookingId.pickupAddressText} />
             <HorizontalDivider />
-            <RequestSingleContainer title="Drop Off" value={"working"} />
+            <RequestSingleContainer title="Drop Off" value={item.bookingId.dropAddressText} />
             <HorizontalDivider />
             <RequestSingleContainer title="Pickup Type" value={item.bookingId.pickupType} />
             <HorizontalDivider />

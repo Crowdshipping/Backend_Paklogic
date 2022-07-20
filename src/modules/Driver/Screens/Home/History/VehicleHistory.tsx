@@ -1,11 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, {useEffect} from 'react';
-import {View, Image, Text, TouchableOpacity} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import React, { useEffect } from 'react';
+import { View, Image, Text, TouchableOpacity } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import CheckBoxState from '../../../../../components/CheckBoxState';
 import MyLoader from '../../../../../components/MyLoader';
 import HistoryRequestCard from '../../../../../screens/Home/History/Components/HistoryRequestCard';
-import {getDriverHistory} from '../../../../../services';
+import { getDriverHistory } from '../../../../../services';
 import VehicleRequestCard from '../Requests/Components/VehicleRequestCard';
 import VehicleRequestCardHistory from './Components/VehicleRequestCardHistory';
 // import CheckBoxState from '../../../components/CheckBoxState';
@@ -15,7 +15,7 @@ import VehicleRequestCardHistory from './Components/VehicleRequestCardHistory';
 // import HistoryRequestCard from './Components/HistoryRequestCard';
 // import RequestCard from '../Requests/Components/RequestCard';
 // import MyLoader from '../../../components/MyLoader';
-const VehicleHistory = ({navigation}: any) => {
+const VehicleHistory = ({ navigation }: any) => {
   const [requestResponse, setRequestResponse] = React.useState([]);
   const [isInprogress, setIsInProgress] = React.useState(false);
   const [isRejected, setIsRejected] = React.useState(false);
@@ -47,8 +47,8 @@ const VehicleHistory = ({navigation}: any) => {
         firstName={item.requestedBy.firstname}
         lastName={item.requestedBy.lastname}
         pickupType={item.bookingId.pickupType}
-        departurePort={'Adiyla rd rawalpindi pakistan'}
-        destinationPort={'Quettaasdasdasdasdasdasasdasdasddadasdasdsd'}
+        departurePort={item.bookingId.pickupAddressText}
+        destinationPort={item.bookingId.dropAddressText}
       />
     );
   };
@@ -100,7 +100,7 @@ const VehicleHistory = ({navigation}: any) => {
       {isLoading ? (
         <MyLoader />
       ) : (
-        <View style={{marginHorizontal: 12}}>
+        <View style={{ marginHorizontal: 12 }}>
           <View
             style={{
               display: 'flex',
