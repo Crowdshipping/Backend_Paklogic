@@ -54,6 +54,7 @@ const PostRequestsTab = ({ navigation }: any) => {
                                                 changePostRequestStatus(item._id, userId)
                                                     .then(response => response.json())
                                                     .then((result) => {
+                                                        console.log("fromposteeeeeee", result)
                                                         setIsLoading(false);
                                                         navigation.navigate('AddFlightPostRequest', {
                                                             postRequestData: result.updatedPostRequest

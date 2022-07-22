@@ -14,7 +14,7 @@ import MyLoader from '../../../components/MyLoader'
 import { launchImageLibrary } from 'react-native-image-picker'
 import PopupModalOfSuccess from '../../../components/PopupModalOfSuccess'
 
-const RequestDetailComponentForAir = ({ pickUpAirport, dropOffAirport, fromDate, toDate, requestData, navigation }: any) => {
+const RequestDetailComponentForAir = ({ flightInfoData, isOtpVerify, pickUpAirport, dropOffAirport, fromDate, toDate, requestData, navigation }: any) => {
     const [requestStates, setRequestStates] = React.useState(1);
     const [isLoading, setIsLoading] = React.useState(false);
     const [image, setImage] = React.useState<any>({});
@@ -124,16 +124,33 @@ const RequestDetailComponentForAir = ({ pickUpAirport, dropOffAirport, fromDate,
     }
     const validate = () => {
         if (Object.keys(image).length !== 0) {
-            setIsLoading(true);
-            verifyBookingForCompletion(image, requestData._id).then(response => response.json())
-                .then(result => {
-                    setIsLoading(false);
-                    toggleModal();
-                })
-                .catch(error => {
-                    setIsLoading(false);
-                    console.log('error', error)
-                });
+
+            if (isOtpVerify) {
+                setIsLoading(true);
+                verifyBookingForCompletion(image, requestData._id).then(response => response.json())
+                    .then(result => {
+                        setIsLoading(false);
+                        toggleModal();
+                    })
+                    .catch(error => {
+                        setIsLoading(false);
+                        console.log('error', error)
+                    });
+                // console.log("from contents", isOtpVerify);
+                // setIsLoading(true);
+                // verifyBookingForCompletion(image, item._id).then((response: any) => response.json())
+                //     .then((result: any) => {
+                //         setIsLoading(false);
+                //         toggleModal();
+                //     })
+                //     .catch((error: any) => {
+                //         setIsLoading(false);
+                //         console.log('error', error)
+                //     });
+            } else {
+                setIsLoading(false);
+                Alert.alert("Error", "Please Verify the otp");
+            }
         } else {
             setIsLoading(false);
             Alert.alert("Error", "Please Upload Image For Verification")
@@ -173,9 +190,10 @@ const RequestDetailComponentForAir = ({ pickUpAirport, dropOffAirport, fromDate,
                 </TouchableOpacity>
                 {requestStates === 4 && <>
                     <TouchableOpacity onPress={() => {
-                        // navigation.navigate("PACKAGEDETAIL", {
-                        //     requestData: requestData,
-                        // })
+                        navigation.navigate("FLIGHTVERIFYOTP", {
+                            requestData: requestData,
+                            flightInfoData: flightInfoData
+                        })
                     }}>
                         <Text style={styles.outlineButtonText}>Verify otp</Text>
                     </TouchableOpacity>

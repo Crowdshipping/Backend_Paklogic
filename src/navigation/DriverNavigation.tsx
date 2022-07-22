@@ -17,6 +17,7 @@ import VehicleHistory from '../modules/Driver/Screens/Home/History/VehicleHistor
 import TrackingVehicle from '../modules/Driver/Screens/Vehicle/TrackingVehicle';
 import MyProfile from '../screens/MyProfile';
 import VehiclePackageDetail from '../modules/Driver/Screens/Vehicle/VehiclePackageDetail';
+import VehicleVerifyOtp from '../screens/Common/VehicleVerifyOtp';
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   return (
@@ -208,7 +209,21 @@ export const DriverNavigation = () => {
         name="VEHICLEPACKAGEDETAIL"
         component={VehiclePackageDetail}
       />
-
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'Verify OTP',
+        }}
+        name="VEHICLEVERIFYOTP"
+        component={VehicleVerifyOtp}
+      />
     </Stack.Navigator>
   );
 };

@@ -925,3 +925,46 @@ export const cancelRequestByDriver = (requestId: any) => {
   };
   return fetch("https://backend-crowdshipping.herokuapp.com/driver/cancelrequest", requestOptions);
 }
+
+
+
+export const vehicleVerifyOtp = (otp: any) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Cookie", "connect.sid=s%3AH471m4z_5IV7LTnf4zQNcxDmm8tH4L1G.wgNppXzHMCwnDaG1SmpqN%2Feb%2FyVObUE8aYLsUrNPonI");
+
+  var raw = JSON.stringify({
+    "completionOtp": otp
+  });
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+
+  return fetch("https://backend-crowdshipping.herokuapp.com/provider/verifyingbookingotp", requestOptions);
+
+}
+
+
+export const vehicleResendOtp = (requestId: any) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Cookie", "connect.sid=s%3AzW5VbEp1OuLvAfaKRM7G5LSjnAWyC3yN.06nf25L6XCFpUDSTkcfxgV64DbiCJJvVc7KrCB7SJcM");
+
+  var raw = JSON.stringify({
+    "requestId": requestId
+  });
+
+  var requestOptions = {
+    method: 'PATCH',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+
+  return fetch("https://backend-crowdshipping.herokuapp.com/provider/resendotp", requestOptions);
+
+}

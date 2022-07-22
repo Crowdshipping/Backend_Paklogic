@@ -55,7 +55,7 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
     }, []);
 
     const { postRequestData } = route.params;
-    console.log('data from addflightpostrequest', postRequestData);
+    console.log('coooooool', postRequestData);
     //date varibales
     const [date, setDate] = React.useState(new Date());
     const [open, setOpen] = React.useState(false);
@@ -236,6 +236,7 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
                             <View style={styles.singleItemView}>
                                 <Text style={styles.singleItemText}>Departure Time</Text>
                                 <TouchableOpacity
+                                    disabled
                                     onPress={() => {
                                         setDepartureTimeOpen(true);
                                     }}
@@ -249,6 +250,7 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
                             <View style={styles.singleItemView}>
                                 <Text style={styles.singleItemText}>Destination Time</Text>
                                 <TouchableOpacity
+                                    disabled
                                     onPress={() => {
                                         setDestinationTimeOpen(true);
                                     }}

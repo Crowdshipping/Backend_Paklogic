@@ -234,6 +234,7 @@ const AddShipPostRequest = ({ navigation, route }: any) => {
                             <View style={styles.singleItemView}>
                                 <Text style={styles.singleItemText}>Departure Time</Text>
                                 <TouchableOpacity
+                                    disabled
                                     onPress={() => {
                                         setDepartureTimeOpen(true);
                                     }}
@@ -247,6 +248,7 @@ const AddShipPostRequest = ({ navigation, route }: any) => {
                             <View style={styles.singleItemView}>
                                 <Text style={styles.singleItemText}>Destination Time</Text>
                                 <TouchableOpacity
+                                    disabled
                                     onPress={() => {
                                         setDestinationTimeOpen(true);
                                     }}

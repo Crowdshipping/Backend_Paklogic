@@ -14,7 +14,7 @@ const GOOGLE_MAPS_APIKEY = "@AIzaSyC3vl-jtFGzrBapun1U6sxT-Toena_1ywY";
 
 const AcceptBookingForFlight = ({ route, navigation }: any) => {
   const [googleMapProvider, setGoogleMapProvider] = React.useState<any>(PROVIDER_DEFAULT);
-  const { requestData, flightInfoData }: any = route.params;
+  const { requestData, flightInfoData, isOtpVerify }: any = route.params;
   const [flightPosition, setFlightPosition] = React.useState<any>({});
   const [isLoading, setIsLoading] = React.useState<any>(false);
 
@@ -143,11 +143,13 @@ const AcceptBookingForFlight = ({ route, navigation }: any) => {
             renderMap()
           }
           <BottomSheetModalForAir
+            isOtpVerify={isOtpVerify}
             navigation={navigation}
             pickUpAirport={requestData.flight.pickupCity}
             dropOffAirport={requestData.flight.dropoffCity}
             fromDate={flightInfoData.scheduled_out.slice(0, -10)}
             toDate={flightInfoData.scheduled_on.slice(0, -10)}
+            flightInfoData={flightInfoData}
             requestData={requestData}
           />
         </View>

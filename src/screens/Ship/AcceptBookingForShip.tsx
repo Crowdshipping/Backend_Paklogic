@@ -16,7 +16,7 @@ const AcceptBookingForShip = ({ route, navigation }: any) => {
   const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
   //////google maps things////
-  const { shipData } = route.params;
+  const { shipData, isOtpVerify } = route.params;
   const [isLoading, setIsLoading] = React.useState(false);
   const [shipPosition, setShipPosition] = React.useState<any>({})
   const [shipFromDate, setShipFromDate] = React.useState("");
@@ -37,9 +37,11 @@ const AcceptBookingForShip = ({ route, navigation }: any) => {
   }
 
   const getShipFromDateApi = (mmsi: any, pickupPortUnlocode: any, eta: any) => {
-    getShipFromDate(mmsi, pickupPortUnlocode, eta).then(response => response.json())
+    getShipFromDate(mmsi, pickupPortUnlocode, eta)
+      .then(response => response.json())
       .then(result => {
-        console.log("ololololo", result.TIMESTAMP_UTC);
+        console.log("tryagain", result);
+        // console.log("00000000099999", result.TIMESTAMP_UTC);
         setShipFromDate(result.TIMESTAMP_UTC);
       })
       .catch(error => console.log('error', error));
@@ -55,7 +57,11 @@ const AcceptBookingForShip = ({ route, navigation }: any) => {
     return () => clearInterval(interval);
   }, []);
   const renderMap = () => {
-    if (shipData.bookingId.dropAddress && shipData.bookingId.pickupAddress && shipPosition) {
+    if (shipData.bookingId.dropAddress && shipData.bookingId.pickupAddress && shipPosition[0]) {
+      //   latitude: shipPosition.latitude,
+      console.log("ship dollar data lat", shipPosition[0].$.LAT)
+      console.log("ship dollar data lng", shipPosition[0].$.LON)
+
       return (
         <MapView
           region={{
@@ -75,15 +81,15 @@ const AcceptBookingForShip = ({ route, navigation }: any) => {
             coordinates={[
               {
                 latitude: shipData.bookingId.pickupAddress.lat,
-                longitude: shipData.bookingId.pickupAddress.lon,
+                longitude: shipData.bookingId.pickupAddress.lng,
               },
               {
-                latitude: shipPosition.latitude,
-                longitude: shipPosition.longitude,
+                latitude: shipPosition[0].$.LAT,
+                longitude: shipPosition[0].$.LON,
               },
               {
                 latitude: shipData.bookingId.dropAddress.lat,
-                longitude: shipData.bookingId.dropAddress.lon,
+                longitude: shipData.bookingId.dropAddress.lng,
               },
             ]}
             geodesic={true}
@@ -97,7 +103,7 @@ const AcceptBookingForShip = ({ route, navigation }: any) => {
 
               {
                 latitude: shipData.bookingId.pickupAddress.lat,
-                longitude: shipData.bookingId.pickupAddress.lon,
+                longitude: shipData.bookingId.pickupAddress.lng,
               }
             }
             title={'initial'}
@@ -106,8 +112,8 @@ const AcceptBookingForShip = ({ route, navigation }: any) => {
           <Marker
             key={'middle'}
             coordinate={{
-              latitude: shipPosition.latitude,
-              longitude: shipPosition.longitude,
+              latitude: shipPosition[0].$.LAT,
+              longitude: shipPosition[0].$.LON,
             }}
             title={'middle'}
 
@@ -116,7 +122,7 @@ const AcceptBookingForShip = ({ route, navigation }: any) => {
             key={'final'}
             coordinate={{
               latitude: shipData.bookingId.dropAddress.lat,
-              longitude: shipData.bookingId.dropAddress.lon,
+              longitude: shipData.bookingId.dropAddress.lng,
             }}
             title={'final'}
 
@@ -133,6 +139,7 @@ const AcceptBookingForShip = ({ route, navigation }: any) => {
         <View style={styles.container}>
           {renderMap()}
           <BottomSheetModalForShip
+            isOtpVerify={isOtpVerify}
             navigation={navigation}
             pickUpAirport={shipData.ship.pickupCity}
             dropOffAirport={shipData.ship.dropoffCity}
@@ -140,7 +147,8 @@ const AcceptBookingForShip = ({ route, navigation }: any) => {
             toDate={shipData.ship.shipDate.slice(0, -14)}
             requestData={shipData}
           />
-        </View>}
+        </View>
+      }
     </View>
   );
 };

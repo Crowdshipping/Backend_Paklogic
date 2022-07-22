@@ -3,7 +3,7 @@ import React from 'react'
 import BottomSheet from '@gorhom/bottom-sheet';
 import RequestDetailComponentForAir from './RequestDetailComponentForAir';
 
-const BottomSheetModalForAir = ({ pickUpAirport, dropOffAirport, fromDate, toDate, requestData, navigation }: any) => {
+const BottomSheetModalForAir = ({ flightInfoData, isOtpVerify, pickUpAirport, dropOffAirport, fromDate, toDate, requestData, navigation }: any) => {
     const bottomSheetRef = React.useRef<BottomSheet>(null);
 
     // variables
@@ -17,6 +17,8 @@ const BottomSheetModalForAir = ({ pickUpAirport, dropOffAirport, fromDate, toDat
             snapPoints={snapPoints}
             onChange={handleSheetChanges}>
             <RequestDetailComponentForAir
+                flightInfoData={flightInfoData}
+                isOtpVerify={isOtpVerify}
                 navigation={navigation}
                 pickUpAirport={pickUpAirport}
                 dropOffAirport={dropOffAirport}

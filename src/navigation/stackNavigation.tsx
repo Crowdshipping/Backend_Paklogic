@@ -42,6 +42,8 @@ import AddClaim from '../screens/Claim/AddClaim';
 import BookingHistory from '../screens/Home/History/BookingHistory';
 import DriverHome from '../modules/Driver/Screens/Home/DriverHome';
 import { DriverNavigation } from './DriverNavigation';
+import ShipVerifyOtp from '../screens/Common/ShipVerifyOtp';
+import FlightVerifyOtp from '../screens/Common/FlightVerifyOtp';
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   return (
@@ -626,6 +628,36 @@ export const StackNavigation = () => {
         }}
         name="DRIVERHOME"
         component={DriverHome}
+      />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'Verify Otp',
+        }}
+        name="SHIPVERIFYOTP"
+        component={ShipVerifyOtp}
+      />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'Verify Otp',
+        }}
+        name="FLIGHTVERIFYOTP"
+        component={FlightVerifyOtp}
       />
     </Stack.Navigator>
   );

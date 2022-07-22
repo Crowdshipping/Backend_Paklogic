@@ -10,6 +10,7 @@ import { io, Socket } from 'socket.io-client';
 // import Geolocation from '@react-native-community/geolocation';
 
 import Geolocation from 'react-native-geolocation-service';
+import { changeStateByProvider } from '../../../../services';
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE = 37.771707;
@@ -33,9 +34,16 @@ const TrackingVehicle = ({ route, navigation }: any) => {
         }
     );
 
-    const { vehicleData } = route.params;
+    const { vehicleData, isOtpVerify } = route.params;
+    console.log("fgfgfgfgfg", vehicleData);
+
+
     const [isLoading, setIsLoading] = React.useState(false);
     const ref = useRef<MapView>(null);
+
+
+    const [updatedState, setUpdatedState] = React.useState("");
+
     const [coordinates, setCoordinates] = React.useState([
 
         {
@@ -56,8 +64,8 @@ const TrackingVehicle = ({ route, navigation }: any) => {
             longitude: vehicleData.bookingId.pickupAddress.lng,
         },
         {
-            latitude: 33.738045,
-            longitude: 73.084488,
+            latitude: driverLiveLocation.latitude,
+            longitude: driverLiveLocation.longitude,
         },
         {
             latitude: vehicleData.bookingId.dropAddress.lat,
@@ -77,7 +85,8 @@ const TrackingVehicle = ({ route, navigation }: any) => {
                 {
                     latitude: Number(position.coords.latitude),
                     longitude: Number(position.coords.longitude),
-                })
+                }
+            )
             setRegion({
                 latitude: Number(position.coords.latitude),
                 longitude: Number(position.coords.longitude),
@@ -110,11 +119,15 @@ const TrackingVehicle = ({ route, navigation }: any) => {
         const [socket, setSocket] = React.useState<Socket>();
         React.useEffect(() => {
             getCurrentLocationDriver();
+
+
+
+            ///////uncomment this interval when you done tracking part/////
             getLiveLocation();
-            const interval = setInterval(() => {
-                getLiveLocation();
-                console.log('After 3 Seconds');
-            }, 3000);
+            // const interval = setInterval(() => {
+            getLiveLocation();
+            console.log('After 3 Seconds');
+            // }, 3000);
             const newSocket = io(url, {
                 secure: true,
                 transports: ['websocket'],
@@ -122,7 +135,7 @@ const TrackingVehicle = ({ route, navigation }: any) => {
             newSocket.on('disconnect', () => setConnected(false));
             newSocket.on('connect', () => setConnected(true));
             setSocket(newSocket);
-            return () => clearInterval(interval)
+            // return () => clearInterval(interval)
         }, [])
         return {
             connected,
@@ -382,32 +395,70 @@ const TrackingVehicle = ({ route, navigation }: any) => {
 
 
     const whichMap = () => {
-        console.log("driver  latitude ", driverLiveLocation.latitude)
-        console.log("driver  longitude ", driverLiveLocation.longitude)
-        console.log("pickup  latitude ", coordinates[0].latitude)
-        console.log("pickup  longitude ", coordinates[0].longitude)
-
-        if (driverLiveLocation.latitude === coordinates[0].latitude && driverLiveLocation.longitude === coordinates[0].longitude) {
+        if (updatedState === "Pickedup") {
             console.log("if check worked")
             return renderMapAfterDriverPick();
-        } else {
+        }
+        // if (driverLiveLocation.latitude === 33.6590386 && driverLiveLocation.longitude === 73.0577619) {
+        //     console.log("if check worked")
+        //     return renderMapAfterDriverPick();
+        // }
+        else {
             console.log("else check worked")
             return renderMapBeforeDriverPick();
         }
 
     }
+
+
+    // const changeStateOfRequest = (myState: any) => {
+    //     console.log("state passed as parameter", myState)
+    //     setIsLoading(true);
+    //     changeStateByProvider(myState, vehicleData._id)
+    //         .then((response: any) => response.json())
+    //         .then((result: any) => {
+    //             setIsLoading(false);
+    //             console.log("krossers", result.updatedRequest.state);
+    //             setUpdatedState(result.updatedRequest.state);
+    //             // if (result.success) {
+    //             //     console.log("state changed", result)
+    //             //     setIsLoading(false);
+    //             //     if (requestStates === 1) {
+    //             //         setRequestStates(2)
+    //             //     } else if (requestStates === 2) {
+    //             //         setRequestStates(3)
+    //             //     } else if (requestStates === 3) {
+    //             //         setRequestStates(4)
+    //             //     } else if (requestStates === 4) {
+    //             //         setRequestStates(1)
+    //             //     }
+    //             // }
+    //         })
+    //         .catch((error: any) => {
+    //             setIsLoading(false);
+    //             console.log('error', error)
+    //         });
+    // }
+
+
+
     return (
         <View style={styles.container}>
-            {/* {console.log("banana", mySocket)} */}
+            {console.log("apples", updatedState)}
             {isLoading ? <MyLoader /> :
                 <View style={styles.container}>
-                    {whichMap()}
-                    <Text style={{ backgroundColor: "yellow" }}>{driverLiveLocation.latitude}</Text>
-                    <Text style={{ backgroundColor: "yellow" }}>{driverLiveLocation.longitude}</Text>
 
-                    {/* <MapBottomSheet maxValue={"75%"} minValue={"20%"}>
-                        <VehicleTrackingContent navigation={navigation} item={vehicleData} />
-                    </MapBottomSheet> */}
+                    {whichMap()}
+                    {/* <Text style={{ backgroundColor: "yellow" }}>{driverLiveLocation.latitude}</Text>
+                    <Text style={{ backgroundColor: "yellow" }}>{driverLiveLocation.longitude}</Text> */}
+                    {/* Platform.OS ? "75%" : "100%" */}
+                    <MapBottomSheet maxValue={Platform.OS === "ios" ? "75%" : "80%"} minValue={"20%"}>
+                        <VehicleTrackingContent
+                            // changeStateOfRequest={(value: any) => {
+                            //     changeStateOfRequest(value);
+                            // }}
+                            navigation={navigation} item={vehicleData} isOtpVerify={isOtpVerify} />
+                    </MapBottomSheet>
                 </View>
             }
 

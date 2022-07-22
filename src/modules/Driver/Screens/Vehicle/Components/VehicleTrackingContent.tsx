@@ -12,7 +12,7 @@ import CompleteState from '../../../../../screens/Flight/Components/CompleteStat
 import { launchImageLibrary } from 'react-native-image-picker';
 import PopupModalOfSuccess from '../../../../../components/PopupModalOfSuccess';
 
-const VehicleTrackingContent = ({ item, navigation }: any) => {
+const VehicleTrackingContent = ({ item, navigation, isOtpVerify }: any) => {
     const [requestStates, setRequestStates] = React.useState(1);
     const [isLoading, setIsLoading] = React.useState(false);
     const [isModalVisible, setModalVisible] = React.useState(false);
@@ -50,16 +50,23 @@ const VehicleTrackingContent = ({ item, navigation }: any) => {
     }
     const validate = () => {
         if (Object.keys(image).length !== 0) {
-            setIsLoading(true);
-            verifyBookingForCompletion(image, item._id).then((response: any) => response.json())
-                .then((result: any) => {
-                    setIsLoading(false);
-                    toggleModal();
-                })
-                .catch((error: any) => {
-                    setIsLoading(false);
-                    console.log('error', error)
-                });
+            if (isOtpVerify) {
+                console.log("from contents", isOtpVerify);
+                setIsLoading(true);
+                verifyBookingForCompletion(image, item._id).then((response: any) => response.json())
+                    .then((result: any) => {
+                        setIsLoading(false);
+                        toggleModal();
+                    })
+                    .catch((error: any) => {
+                        setIsLoading(false);
+                        console.log('error', error)
+                    });
+            } else {
+                setIsLoading(false);
+                Alert.alert("Error", "Please Verify the otp");
+            }
+
         } else {
             setIsLoading(false);
             Alert.alert("Error", "Please Upload Image For Verification")
@@ -67,9 +74,6 @@ const VehicleTrackingContent = ({ item, navigation }: any) => {
     }
 
     const initializeTheState = () => {
-
-        console.log("fffff", item.state);
-
 
         if (item.state === "Pickedup") {
             setRequestStates(2)
@@ -181,9 +185,9 @@ const VehicleTrackingContent = ({ item, navigation }: any) => {
                 </TouchableOpacity>
                 {requestStates === 4 && <>
                     <TouchableOpacity onPress={() => {
-                        // navigation.navigate("PACKAGEDETAIL", {
-                        //     requestData: requestData,
-                        // })
+                        navigation.navigate("VEHICLEVERIFYOTP", {
+                            vehicleData: item
+                        })
                     }}>
                         <Text style={styles.outlineButtonText}>Verify otp</Text>
                     </TouchableOpacity>
