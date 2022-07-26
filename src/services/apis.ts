@@ -968,3 +968,18 @@ export const vehicleResendOtp = (requestId: any) => {
   return fetch("https://backend-crowdshipping.herokuapp.com/provider/resendotp", requestOptions);
 
 }
+
+export const vehicleDelete = (requestId: any, driverId: any) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Cookie", "connect.sid=s%3AFZsOLF5nt9g8ecQHsFGdy_LWpj644Jyr.OVXtEEAj%2F27d2u1N9v9R9RVlUZW%2BboWWE8%2BrQwGuQsM");
+
+  var requestOptions = {
+    method: 'DELETE',
+    headers: myHeaders,
+    redirect: 'follow'
+  };
+
+  return fetch(`https://backend-crowdshipping.herokuapp.com/driver/deletevehicle/${requestId}/${driverId}`, requestOptions);
+
+}
+

@@ -19,7 +19,7 @@ import { ImageSvg } from '../../theme/assets/svg/ImageSvg';
 import { launchImageLibrary } from 'react-native-image-picker';
 import DatePicker from 'react-native-date-picker';
 
-import { addFlightAfterPost } from '../../services';
+import { addFlightAfterPost, changePostRequestStatus } from '../../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyLoader from '../../components/MyLoader';
 const formatAMPM = (date: Date) => {
@@ -106,28 +106,35 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
                 flightarrivalDate: postRequestData.flightarrivalDate,
             };
             setIsLoading(true);
-
-            addFlightAfterPost(flightData)
+            changePostRequestStatus(postRequestData._id, userId)
                 .then(response => response.json())
-                .then(result => {
+                .then((result) => {
                     setIsLoading(false);
-                    //   navigation.navigate('AllRequest');
-                    Alert.alert('', 'Request Accepted', [
-                        {
-                            text: 'Ok',
-                            onPress: () => {
-                                // console.log('knvsldxkn')
-                                navigation.navigate('AllRequest');
-                                // props.navigation.navigate('SignIn')
-                            },
-                            style: 'cancel',
-                        },
-                    ]);
-                    console.log('result of addflightafterpost', result);
+                    addFlightAfterPost(flightData)
+                        .then(response => response.json())
+                        .then(result => {
+                            setIsLoading(false);
+                            //   navigation.navigate('AllRequest');
+                            Alert.alert('', 'Request Accepted', [
+                                {
+                                    text: 'Ok',
+                                    onPress: () => {
+                                        // console.log('knvsldxkn')
+                                        navigation.navigate('AllRequest');
+                                        // props.navigation.navigate('SignIn')
+                                    },
+                                    style: 'cancel',
+                                },
+                            ]);
+                        })
+                        .catch(error => {
+                            setIsLoading(false);
+                            console.log('error', error);
+                        });
                 })
                 .catch(error => {
+                    console.log("error", error);
                     setIsLoading(false);
-                    console.log('error', error);
                 });
         }
     };

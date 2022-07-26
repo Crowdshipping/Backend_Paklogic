@@ -5,6 +5,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { backendUrl } from '../../../../appConstants';
 import HorizontalDivider from '../../../../components/HorizontalDivider';
 import { LocationSvg } from '../../../../theme/assets/svg/LocationSvg';
+import MineCard from '../../../Common/MineCard';
 const HistoryRequestCard = ({
     onPress,
     firstName,
@@ -36,53 +37,55 @@ const HistoryRequestCard = ({
         }
     }
     return (
-        <TouchableOpacity onPress={onPress}>
-            <View style={styles.card}>
-                {console.log('requestcomimag', myImage)}
-                <View style={styles.top}>
-                    <View style={styles.topLeft}>
-                        {myImage ? (
-                            <Image
-                                style={{ width: 50, height: 50, borderRadius: 50, marginRight: 10 }}
-                                source={{ uri: backendUrl + myImage }}
-                            />
-                        ) : (
-                            <Image
-                                style={{ width: 50, height: 50, borderRadius: 50, marginRight: 10 }}
-                                source={require('../../../../assets/aeroplane.png')}
-                            />
-                        )}
+        <MineCard>
+            <TouchableOpacity onPress={onPress}>
+                <View>
+                    {console.log('requestcomimag', myImage)}
+                    <View style={styles.top}>
+                        <View style={styles.topLeft}>
+                            {myImage ? (
+                                <Image
+                                    style={{ width: 50, height: 50, borderRadius: 50, marginRight: 10 }}
+                                    source={{ uri: backendUrl + myImage }}
+                                />
+                            ) : (
+                                <Image
+                                    style={{ width: 50, height: 50, borderRadius: 50, marginRight: 10 }}
+                                    source={require('../../../../assets/aeroplane.png')}
+                                />
+                            )}
+                        </View>
+                        <View style={styles.topRight}>
+                            <View
+                                style={{
+                                    flex: 1,
+                                }}>
+                                <Text style={styles.titleText}>
+                                    {firstName + '\t' + lastName}
+                                </Text>
+                                {isForShip ? <Text style={styles.subTitleText}>MMSINumber: {mmsiOrFlightNumber}</Text> :
+                                    <Text style={styles.subTitleText}>FlightNumber: {mmsiOrFlightNumber}</Text>
+                                }
+                            </View>
+                        </View>
                     </View>
-                    <View style={styles.topRight}>
-                        <View
-                            style={{
-                                flex: 1,
-                            }}>
-                            <Text style={styles.titleText}>
-                                {firstName + '\t' + lastName}
-                            </Text>
-                            {isForShip ? <Text style={styles.subTitleText}>MMSINumber: {mmsiOrFlightNumber}</Text> :
-                                <Text style={styles.subTitleText}>FlightNumber: {mmsiOrFlightNumber}</Text>
-                            }
+                    <HorizontalDivider />
+                    <View style={styles.bottom}>
+                        <View style={styles.bottomLeft}>
+                            <SvgXml xml={LocationSvg} width={50} height={80} />
+                        </View>
+                        <View style={styles.bottomMid}>
+                            <Text style={styles.countryText}>{departurePort}</Text>
+                            <Text style={styles.countryText}>{destinationPort}</Text>
+                        </View>
+                        <View style={styles.bottomRight}>
+                            {renderStatus()}
+                            <Text style={styles.dateText}>{date}</Text>
                         </View>
                     </View>
                 </View>
-                <HorizontalDivider />
-                <View style={styles.bottom}>
-                    <View style={styles.bottomLeft}>
-                        <SvgXml xml={LocationSvg} width={50} height={80} />
-                    </View>
-                    <View style={styles.bottomMid}>
-                        <Text style={styles.countryText}>{departurePort}</Text>
-                        <Text style={styles.countryText}>{destinationPort}</Text>
-                    </View>
-                    <View style={styles.bottomRight}>
-                        {renderStatus()}
-                        <Text style={styles.dateText}>{date}</Text>
-                    </View>
-                </View>
-            </View>
-        </TouchableOpacity>
+            </TouchableOpacity>
+        </MineCard>
     );
 };
 const styles = StyleSheet.create({

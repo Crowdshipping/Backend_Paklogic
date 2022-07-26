@@ -12,7 +12,7 @@ import CompleteState from '../../../../../screens/Flight/Components/CompleteStat
 import { launchImageLibrary } from 'react-native-image-picker';
 import PopupModalOfSuccess from '../../../../../components/PopupModalOfSuccess';
 
-const VehicleTrackingContent = ({ item, navigation, isOtpVerify }: any) => {
+const VehicleTrackingContent = ({ changeState, item, navigation, isOtpVerify }: any) => {
     const [requestStates, setRequestStates] = React.useState(1);
     const [isLoading, setIsLoading] = React.useState(false);
     const [isModalVisible, setModalVisible] = React.useState(false);
@@ -98,7 +98,8 @@ const VehicleTrackingContent = ({ item, navigation, isOtpVerify }: any) => {
             .then((response: any) => response.json())
             .then((result: any) => {
                 if (result.success) {
-                    console.log("state changed", result)
+                    // console.log("mystate11", result.updatedRequest.state);
+                    changeState(result.updatedRequest.state)
                     setIsLoading(false);
                     if (requestStates === 1) {
                         setRequestStates(2)

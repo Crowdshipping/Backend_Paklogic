@@ -24,12 +24,7 @@ const ShipDetail = ({ route, navigation, status, myColor }: any) => {
             {console.log("shipdata from ship detail", shipData)}
             <View style={styles.container}>
 
-                <View
-                    style={{
-                        marginTop: 10,
-                        display: 'flex',
-                        flexDirection: 'row',
-                    }}>
+                <View>
                     {shipData.provider.profilepic ? (
                         <Image
                             style={{ width: 50, height: 50, borderRadius: 50, marginRight: 10 }}

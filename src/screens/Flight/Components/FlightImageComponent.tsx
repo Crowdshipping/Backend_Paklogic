@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { airplane } from '../../../theme/assets/svg/airplaneSvg';
 import { DeleteSvg } from '../../../theme/assets/svg/DeleteSvg';
+import MineCard from '../../Common/MineCard';
 const FlightImageComponent = ({
   onPressEdit,
   departureAirport,
@@ -15,76 +16,78 @@ const FlightImageComponent = ({
   myImage,
 }: any) => {
   return (
-    <View style={styles.cardView}>
-      <View style={styles.singleRow}>
-        <View style={styles.rowKey}>
-          <Text>Departure Airport </Text>
+    <MineCard>
+      <View>
+        <View style={styles.singleRow}>
+          <View style={styles.rowKey}>
+            <Text>Departure Airport </Text>
+          </View>
+          <View style={styles.rowValue}>
+            <Text> {departureAirport} </Text>
+          </View>
         </View>
-        <View style={styles.rowValue}>
-          <Text> {departureAirport} </Text>
+        <View style={styles.singleRow}>
+          <View style={styles.rowKey}>
+            <Text>Destination Airport </Text>
+          </View>
+          <View style={styles.rowValue}>
+            <Text> {destinationAirport} </Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.singleRow}>
-        <View style={styles.rowKey}>
-          <Text>Destination Airport </Text>
+        <View style={styles.singleRow}>
+          <View style={styles.rowKey}>
+            <Text>Ticket No. </Text>
+          </View>
+          <View style={styles.rowValue}>
+            <Text> DF586 </Text>
+          </View>
         </View>
-        <View style={styles.rowValue}>
-          <Text> {destinationAirport} </Text>
+        <View style={styles.singleRow}>
+          <View style={styles.rowKey}>
+            <Text>Date</Text>
+          </View>
+          <View style={styles.rowValue}>
+            <Text> {date} </Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.singleRow}>
-        <View style={styles.rowKey}>
-          <Text>Ticket No. </Text>
+        <View style={styles.singleRow}>
+          <View style={styles.rowKey}>
+            <Text>Departure Time</Text>
+          </View>
+          <View style={styles.rowValue}>
+            <Text> {departureTime} </Text>
+          </View>
         </View>
-        <View style={styles.rowValue}>
-          <Text> DF586 </Text>
+        <View style={styles.singleRow}>
+          <View style={styles.rowKey}>
+            <Text>Destination Time</Text>
+          </View>
+          <View style={styles.rowValue}>
+            <Text>{destinationTime}</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.singleRow}>
-        <View style={styles.rowKey}>
-          <Text>Date</Text>
+        <View style={styles.singleRow}>
+          <View style={styles.rowKey}>
+            <Text>Flight No.</Text>
+          </View>
+          <View style={styles.rowValue}>
+            <Text> {flightNumber} </Text>
+          </View>
         </View>
-        <View style={styles.rowValue}>
-          <Text> {date} </Text>
+        <View style={styles.singleRow}>
+          <View style={styles.rowKey}>
+            <Text>Airline </Text>
+          </View>
+          <View style={styles.rowValue}>
+            <Text> {airline} </Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.singleRow}>
-        <View style={styles.rowKey}>
-          <Text>Departure Time</Text>
-        </View>
-        <View style={styles.rowValue}>
-          <Text> {departureTime} </Text>
-        </View>
-      </View>
-      <View style={styles.singleRow}>
-        <View style={styles.rowKey}>
-          <Text>Destination Time</Text>
-        </View>
-        <View style={styles.rowValue}>
-          <Text>{destinationTime}</Text>
-        </View>
-      </View>
-      <View style={styles.singleRow}>
-        <View style={styles.rowKey}>
-          <Text>Flight No.</Text>
-        </View>
-        <View style={styles.rowValue}>
-          <Text> {flightNumber} </Text>
-        </View>
-      </View>
-      <View style={styles.singleRow}>
-        <View style={styles.rowKey}>
-          <Text>Airline </Text>
-        </View>
-        <View style={styles.rowValue}>
-          <Text> {airline} </Text>
-        </View>
-      </View>
 
-      <View style={styles.bottomImage}>
-        <Image style={{ width: '80%', height: 100 }} source={{ uri: myImage }} />
+        <View style={styles.bottomImage}>
+          <Image style={{ width: '80%', height: 100 }} source={{ uri: myImage }} />
+        </View>
       </View>
-    </View>
+    </MineCard>
   );
 };
 const styles = StyleSheet.create({

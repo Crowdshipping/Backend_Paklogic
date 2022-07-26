@@ -3,37 +3,40 @@ import { View, Text, StyleSheet, Image, Pressable, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SvgXml } from 'react-native-svg';
 import HorizontalDivider from '../../../../../components/HorizontalDivider';
+import MineCard from '../../../../../screens/Common/MineCard';
 import { DeleteSvg } from '../../../../../theme/assets/svg/DeleteSvg';
 import { vehicleSvg } from '../../../../../theme/assets/svg/vehicleSvg';
 import VehicleRow from './VehicleRow';
 
-const VehicleContainer = ({ vehicleType, vehicleName, vehicleColor, vehicleModel, licenceNumber, onPress, state }: any) => {
+const VehicleContainer = ({ deletePress, vehicleType, vehicleName, vehicleColor, vehicleModel, licenceNumber, onPress, state }: any) => {
     return (
-        <TouchableOpacity onPress={onPress}>
-            <View style={styles.cardView}>
-                <View style={styles.deleteSvgContainer}>
-                    <TouchableOpacity >
-                        <SvgXml xml={DeleteSvg} width={20} height={20} />
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.topView}>
-                    <View style={styles.left}>
-                        <SvgXml xml={vehicleSvg} width={60} />
+        <MineCard>
+            <TouchableOpacity onPress={onPress}>
+                <View >
+                    <View style={styles.deleteSvgContainer}>
+                        <TouchableOpacity onPress={deletePress} >
+                            <SvgXml xml={DeleteSvg} width={20} height={20} />
+                        </TouchableOpacity>
                     </View>
-                    <View style={styles.right}>
-                        <VehicleRow title={"Vehicle Type"} value={vehicleType} />
-                        <VehicleRow title={"Vehicle Name"} value={vehicleName} />
-                        <VehicleRow title={"Vehicle Color"} value={vehicleColor} />
-                        <VehicleRow title={"Vehicle Model"} value={vehicleModel} />
-                        <VehicleRow title={"Licence Number"} value={licenceNumber} />
-                    </View>
+                    <View style={styles.topView}>
+                        <View style={styles.left}>
+                            <SvgXml xml={vehicleSvg} width={60} />
+                        </View>
+                        <View style={styles.right}>
+                            <VehicleRow title={"Vehicle Type"} value={vehicleType} />
+                            <VehicleRow title={"Vehicle Name"} value={vehicleName} />
+                            <VehicleRow title={"Vehicle Color"} value={vehicleColor} />
+                            <VehicleRow title={"Vehicle Model"} value={vehicleModel} />
+                            <VehicleRow title={"Licence Number"} value={licenceNumber} />
+                        </View>
 
+                    </View>
+                    <View style={styles.bottomView}>
+                        <Text style={styles.adminText}>{state}</Text>
+                    </View>
                 </View>
-                <View style={styles.bottomView}>
-                    <Text style={styles.adminText}>{state}</Text>
-                </View>
-            </View>
-        </TouchableOpacity>
+            </TouchableOpacity>
+        </MineCard>
     );
 };
 const styles = StyleSheet.create({

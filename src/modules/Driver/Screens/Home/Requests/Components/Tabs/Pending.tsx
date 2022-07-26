@@ -28,6 +28,11 @@ const Pending = ({ navigation }: any) => {
   };
   React.useEffect(() => {
     getDataOfVehicle();
+    const willFocusSubscription = navigation.addListener('focus', () => {
+      console.log("from back navigation all flight")
+      getDataOfVehicle();
+    });
+    return willFocusSubscription;
   }, []);
 
   const noVehicleAvailable = () => {

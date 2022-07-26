@@ -17,6 +17,7 @@ import MyLoader from '../../components/MyLoader';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { heightPercentageToDP } from 'react-native-responsive-screen';
+import MineCard from '../Common/MineCard';
 
 const AllShips = ({ navigation }: any) => {
 
@@ -40,56 +41,57 @@ const AllShips = ({ navigation }: any) => {
         }
         if (shipResponse) {
             return shipResponse.map((item: any) => {
-                console.log('entire item from all flight', item);
                 return (
-                    <TouchableOpacity
-                        onPress={() => {
-                            navigation.navigate('SHIPDETAIL', {
-                                shipData: item,
-                            });
-                        }}>
-                        <ShipComponent
-                            departureSeaPort={item.departurePort}
-                            destinationSeaPort={item.destinationPort}
-                            date={item.shipDate.slice(0, -14)}
-                            departureTime={item.departureTime}
-                            destinationTime={item.destinationTime}
-                            mmsiNumber={item.mmsiNumber}
-                            myImage={backendUrl + item.ticketImage}
-                            leftSvg={ship}
-                            onPressEdit={() => {
-                                // navigation.navigate('EditTicket');
-                            }}
-                            onDeletePress={() => {
-                                Alert.alert("",
-                                    "Are you sure to Delete?",
-                                    [
-                                        {
-                                            text: 'Yes', onPress: () => {
+                    <MineCard>
+                        <TouchableOpacity
+                            onPress={() => {
+                                navigation.navigate('SHIPDETAIL', {
+                                    shipData: item,
+                                });
+                            }}>
+                            <ShipComponent
+                                departureSeaPort={item.departurePort}
+                                destinationSeaPort={item.destinationPort}
+                                date={item.shipDate.slice(0, -14)}
+                                departureTime={item.departureTime}
+                                destinationTime={item.destinationTime}
+                                mmsiNumber={item.mmsiNumber}
+                                myImage={backendUrl + item.ticketImage}
+                                leftSvg={ship}
+                                onPressEdit={() => {
+                                    // navigation.navigate('EditTicket');
+                                }}
+                                onDeletePress={() => {
+                                    Alert.alert("",
+                                        "Are you sure to Delete?",
+                                        [
+                                            {
+                                                text: 'Yes', onPress: () => {
 
-                                                setIsLoading(true);
-                                                deleteShipRecord(item._id)
-                                                    .then(response => response.json())
-                                                    .then((result) => {
-                                                        getData();
-                                                        console.log("delete ship", result);
-                                                        // postRequestData
-                                                    })
-                                                    .catch(error => {
-                                                        console.log("error", error);
-                                                        setIsLoading(false);
-                                                    });
+                                                    setIsLoading(true);
+                                                    deleteShipRecord(item._id)
+                                                        .then(response => response.json())
+                                                        .then((result) => {
+                                                            getData();
+                                                            console.log("delete ship", result);
+                                                            // postRequestData
+                                                        })
+                                                        .catch(error => {
+                                                            console.log("error", error);
+                                                            setIsLoading(false);
+                                                        });
+                                                },
+                                                style: 'default',
                                             },
-                                            style: 'default',
-                                        },
-                                        { text: 'No' },
-                                    ],
-                                    { cancelable: false }
-                                )
+                                            { text: 'No' },
+                                        ],
+                                        { cancelable: false }
+                                    )
 
-                            }}
-                        />
-                    </TouchableOpacity>
+                                }}
+                            />
+                        </TouchableOpacity>
+                    </MineCard>
                 );
             })
         }

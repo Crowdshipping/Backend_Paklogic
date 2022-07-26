@@ -39,7 +39,6 @@ const VehicleHistory = ({ navigation }: any) => {
     // }
   };
   const renderVehicle = (item: any, status: any) => {
-    console.log('mueee', item);
     return (
       <VehicleRequestCardHistory
         text={status}
@@ -55,39 +54,19 @@ const VehicleHistory = ({ navigation }: any) => {
   const renderContent = () => {
     if (requestResponse) {
       return requestResponse.map((item: any) => {
-        console.log('kklloo', item);
-        let status = '';
-        if (
-          item.status === 'Accepted' &&
-          item.state === 'Reached' &&
-          item.isverificationComplete
-        ) {
-          status = 'Completed';
-        } else if (
-          item.status === 'Accepted' &&
-          (item.state === 'Transit' ||
-            item.state === 'Picked' ||
-            item.state === 'Reached')
-        ) {
-          status = 'InProgress';
-        } else if (item.status === 'Cancelled') {
-          status = 'Cancelled';
-        } else if (item.status === 'Accepted') {
-          status = 'InProgress';
-        } else {
-          return;
+        if (isCompleted && item.state === 'Completed') {
+          console.log("completed item contents", item);
+          return renderVehicle(item, "Completed");
         }
-        //////////////render based on checked///////////////
-
-        if (isInprogress && status === 'InProgress') {
-          console.log('progress select');
-          return renderVehicle(item, status);
-        } else if (isCompleted && status === 'Completed') {
-          return renderVehicle(item, status);
-        } else if (isRejected && status === 'Cancelled') {
-          return renderVehicle(item, status);
-        } else if (!isCompleted && !isInprogress && !isRejected) {
-          return renderVehicle(item, status);
+        else if (isRejected && item.status === 'Cancelled') {
+          return renderVehicle(item, "Cancelled");
+        } else if (!isCompleted && !isRejected) {
+          if (item.state === 'Completed' && item.status === 'Accepted') {
+            return renderVehicle(item, "Completed");
+          }
+          if (item.status === 'Cancelled' && item.state !== 'Completed') {
+            return renderVehicle(item, "Cancelled");
+          }
         }
       });
     }
@@ -105,27 +84,23 @@ const VehicleHistory = ({ navigation }: any) => {
             style={{
               display: 'flex',
               flexDirection: 'row',
-              justifyContent: 'space-between',
               marginTop: 15,
             }}>
-            <CheckBoxState
-              text={'InProgress'}
-              onPress={() => {
-                setIsInProgress(!isInprogress);
-              }}
-            />
             <CheckBoxState
               text={'Canceled'}
               onPress={() => {
                 setIsRejected(!isRejected);
               }}
             />
-            <CheckBoxState
-              text={'Completed'}
-              onPress={() => {
-                setIsCompleted(!isCompleted);
-              }}
-            />
+
+            <View style={{ marginLeft: 15 }}>
+              <CheckBoxState
+                text={'Completed'}
+                onPress={() => {
+                  setIsCompleted(!isCompleted);
+                }}
+              />
+            </View>
           </View>
           {renderContent()}
         </View>

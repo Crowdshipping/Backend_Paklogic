@@ -37,7 +37,6 @@ const TrackingVehicle = ({ route, navigation }: any) => {
     const { vehicleData, isOtpVerify } = route.params;
     console.log("fgfgfgfgfg", vehicleData);
 
-
     const [isLoading, setIsLoading] = React.useState(false);
     const ref = useRef<MapView>(null);
 
@@ -395,19 +394,14 @@ const TrackingVehicle = ({ route, navigation }: any) => {
 
 
     const whichMap = () => {
-        if (updatedState === "Pickedup") {
-            console.log("if check worked")
+        if (updatedState === "Pickedup" || vehicleData.state === "Pickedup") {
+            console.log("after map")
             return renderMapAfterDriverPick();
         }
-        // if (driverLiveLocation.latitude === 33.6590386 && driverLiveLocation.longitude === 73.0577619) {
-        //     console.log("if check worked")
-        //     return renderMapAfterDriverPick();
-        // }
         else {
-            console.log("else check worked")
+            console.log("before map")
             return renderMapBeforeDriverPick();
         }
-
     }
 
 
@@ -441,23 +435,21 @@ const TrackingVehicle = ({ route, navigation }: any) => {
     // }
 
 
-
     return (
         <View style={styles.container}>
             {console.log("apples", updatedState)}
             {isLoading ? <MyLoader /> :
                 <View style={styles.container}>
-
                     {whichMap()}
                     {/* <Text style={{ backgroundColor: "yellow" }}>{driverLiveLocation.latitude}</Text>
                     <Text style={{ backgroundColor: "yellow" }}>{driverLiveLocation.longitude}</Text> */}
                     {/* Platform.OS ? "75%" : "100%" */}
                     <MapBottomSheet maxValue={Platform.OS === "ios" ? "75%" : "80%"} minValue={"20%"}>
                         <VehicleTrackingContent
-                            // changeStateOfRequest={(value: any) => {
-                            //     changeStateOfRequest(value);
-                            // }}
-                            navigation={navigation} item={vehicleData} isOtpVerify={isOtpVerify} />
+                            changeState={(value: any) => {
+                                setUpdatedState(value);
+                            }}
+                            navigation={navigation} item={vehicleData} isOtpVerify={isOtpVerify} updateState={updatedState} />
                     </MapBottomSheet>
                 </View>
             }

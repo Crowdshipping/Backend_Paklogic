@@ -49,21 +49,22 @@ const PostRequestsTab = ({ navigation }: any) => {
                                     "You need to register this flight in order to accept this request?",
                                     [
                                         {
-                                            text: 'Yes', onPress: () => {
-                                                setIsLoading(true);
-                                                changePostRequestStatus(item._id, userId)
-                                                    .then(response => response.json())
-                                                    .then((result) => {
-                                                        console.log("fromposteeeeeee", result)
-                                                        setIsLoading(false);
-                                                        navigation.navigate('AddFlightPostRequest', {
-                                                            postRequestData: result.updatedPostRequest
-                                                        });
-                                                    })
-                                                    .catch(error => {
-                                                        console.log("error", error);
-                                                        setIsLoading(false);
-                                                    });
+                                            text: 'Yes',
+                                            onPress: () => {
+                                                // setIsLoading(true);
+                                                // changePostRequestStatus(item._id, userId)
+                                                //     .then(response => response.json())
+                                                //     .then((result) => {
+                                                //         console.log("fromposteeeeeee", result)
+                                                //         setIsLoading(false);
+                                                navigation.navigate('AddFlightPostRequest', {
+                                                    postRequestData: item
+                                                });
+                                                //     })
+                                                //     .catch(error => {
+                                                //         console.log("error", error);
+                                                //         setIsLoading(false);
+                                                //     });
                                             },
                                             style: 'default',
                                         },

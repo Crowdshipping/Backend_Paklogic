@@ -5,6 +5,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { backendUrl } from '../../../../../../appConstants';
 import HorizontalDivider from '../../../../../../components/HorizontalDivider';
 import { LocationSvg } from '../../../../../../theme/assets/svg/LocationSvg';
+import MineCard from '../../../../../../screens/Common/MineCard';
 const VehicleRequestCardHistory = ({
     onPress,
     firstName,
@@ -16,56 +17,58 @@ const VehicleRequestCardHistory = ({
     text
 }: any) => {
     return (
-        <TouchableOpacity onPress={onPress}>
-            <View style={styles.card}>
-                {console.log('requestcomimag', myImage)}
-                <View style={styles.top}>
-                    <View style={styles.topLeft}>
-                        {myImage ? (
-                            <Image
-                                style={{ width: 50, height: 50, borderRadius: 50, marginRight: 10 }}
-                                source={{ uri: backendUrl + myImage }}
-                            />
-                        ) : (
-                            <Image
-                                style={{ width: 50, height: 50, borderRadius: 50, marginRight: 10 }}
-                                source={require('../../../../../../assets/aeroplane.png')}
-                            />
-                        )}
-                    </View>
-                    <View style={styles.topRight}>
-                        <View
-                            style={{
-                                flex: 1,
-                            }}>
-                            <Text style={styles.titleText}>
-                                {firstName + '\t' + lastName}
-                            </Text>
-                            <Text style={styles.subTitleText}>Pickup Type: {pickupType}</Text>
+        <MineCard>
+            <TouchableOpacity onPress={onPress}>
+                <View>
+                    {console.log('requestcomimag', myImage)}
+                    <View style={styles.top}>
+                        <View style={styles.topLeft}>
+                            {myImage ? (
+                                <Image
+                                    style={{ width: 50, height: 50, borderRadius: 50, marginRight: 10 }}
+                                    source={{ uri: backendUrl + myImage }}
+                                />
+                            ) : (
+                                <Image
+                                    style={{ width: 50, height: 50, borderRadius: 50, marginRight: 10 }}
+                                    source={require('../../../../../../assets/aeroplane.png')}
+                                />
+                            )}
+                        </View>
+                        <View style={styles.topRight}>
+                            <View
+                                style={{
+                                    flex: 1,
+                                }}>
+                                <Text style={styles.titleText}>
+                                    {firstName + '\t' + lastName}
+                                </Text>
+                                <Text style={styles.subTitleText}>Pickup Type: {pickupType}</Text>
+                            </View>
                         </View>
                     </View>
-                </View>
-                <HorizontalDivider />
-                <View style={styles.bottom}>
-                    <View style={styles.bottomLeft}>
-                        <SvgXml xml={LocationSvg} width={50} height={80} />
+                    <HorizontalDivider />
+                    <View style={styles.bottom}>
+                        <View style={styles.bottomLeft}>
+                            <SvgXml xml={LocationSvg} width={50} height={80} />
+                        </View>
+                        <View style={styles.bottomMid}>
+                            <Text style={styles.countryText}>{departurePort}</Text>
+                            <Text style={styles.countryText}>{destinationPort}</Text>
+                        </View>
                     </View>
-                    <View style={styles.bottomMid}>
-                        <Text style={styles.countryText}>{departurePort}</Text>
-                        <Text style={styles.countryText}>{destinationPort}</Text>
-                    </View>
-                </View>
-                <View style={styles.lastPart}>
-                    <View style={styles.acceptAndRejectContainer}>
-                        <Text style={styles.acceptText} >
-                            {text}
-                        </Text>
+                    <View style={styles.lastPart}>
+                        <View style={styles.acceptAndRejectContainer}>
+                            <Text style={styles.acceptText} >
+                                {text}
+                            </Text>
+
+                        </View>
 
                     </View>
-
                 </View>
-            </View>
-        </TouchableOpacity>
+            </TouchableOpacity>
+        </MineCard>
     );
 };
 const styles = StyleSheet.create({

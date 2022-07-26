@@ -19,7 +19,7 @@ const ShipComponent = ({
 }: any) => {
     { console.log("myimagefrom ship component", myImage); }
     return (
-        <View style={styles.cardView}>
+        <View>
             <TouchableOpacity onPress={onDeletePress}>
                 <View style={{ flexDirection: 'row-reverse', marginBottom: 10 }}>
                     <SvgXml xml={DeleteSvg} width={20} height={20} />

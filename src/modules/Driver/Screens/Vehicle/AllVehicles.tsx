@@ -1,20 +1,23 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
-import { View, StyleSheet, ScrollView, Text } from 'react-native';
+import { View, StyleSheet, ScrollView, Text, Alert } from 'react-native';
 import { ButtonOutline } from '../../../../components';
 import MyLoader from '../../../../components/MyLoader';
-import { getAllVehicles } from '../../../../services';
+import { getAllVehicles, vehicleDelete } from '../../../../services';
 import VehicleContainer from './Components/VehicleContainer';
 
 const AllVehicles = ({ navigation, status, myColor }: any) => {
   const [vehicleResponse, setVehicleResponse] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [userId, setUserId] = React.useState<any>("");
   const getData = async () => {
     setIsLoading(true);
     try {
       const value = await AsyncStorage.getItem('@user_Id');
-      console.log('value of getdata function', value);
+
+      setUserId(value);
       if (value !== null) {
+        console.log("userID", userId);
         // getAllVehicles("625510f2d8e3e400045de1bf")
         getAllVehicles(value)
           .then(response => response.json())
@@ -43,11 +46,38 @@ const AllVehicles = ({ navigation, status, myColor }: any) => {
   }, []);
 
   const renderVehicle = () => {
-    return <View style={styles.container}>
+    return <View >
       {vehicleResponse &&
         vehicleResponse.map((item: any) => {
+          console.log("itemitemitem12233", item);
           return (
             <VehicleContainer
+              deletePress={() => {
+                Alert.alert("",
+                  "Are you sure to Delete?",
+                  [
+                    {
+                      text: 'Yes', onPress: () => {
+                        setIsLoading(true);
+                        vehicleDelete(item._id, userId)
+                          .then(response => response.json())
+                          .then(result => {
+                            setIsLoading(false);
+                            if (result.success) {
+                              getData();
+                            }
+                            // console.log("result====>", result);
+                          }).catch(error => {
+                            console.log("error", error);
+                          })
+                      },
+                      style: 'default',
+                    },
+                    { text: 'No' },
+                  ],
+                  { cancelable: false }
+                )
+              }}
               vehicleType={item.vehicleType}
               vehicleName={item.vehicleName}
               vehicleColor={item.vehicleColor}
@@ -60,7 +90,6 @@ const AllVehicles = ({ navigation, status, myColor }: any) => {
                   vehicleData: item,
                 });
               }}
-
             />
           );
         })}
@@ -85,50 +114,6 @@ const AllVehicles = ({ navigation, status, myColor }: any) => {
     } else {
       return noVehicleAvailable();
     }
-    // return < ScrollView >
-    //   {
-    //     isLoading ? (
-    //       <MyLoader />
-    //     ) : (
-    //       <View style={styles.container}>
-    //         <ButtonOutline
-    //           onPress={() => {
-    //             navigation.navigate('ADDVEHICLE');
-    //           }}
-    //           buttonStyle={{ borderRadius: 18 }}
-    //           fontSize={18}
-    //           containerStyle={{
-    //             paddingHorizontal: 0,
-    //             width: 145,
-    //             alignSelf: 'flex-end',
-    //             marginBottom: 0,
-    //           }}
-    //           title="Add New"
-    //           color="black"
-    //         />
-    //         {vehicleResponse &&
-    //           vehicleResponse.map((item: any) => {
-    //             return (
-    //               <VehicleContainer
-    //                 vehicleType={item.vehicleType}
-    //                 vehicleName={item.vehicleName}
-    //                 vehicleColor={item.vehicleColor}
-    //                 vehicleModel={item.vehicleModel}
-    //                 licenceNumber={item.licenseNumber}
-    //                 state={'When admin will complete'}
-    //                 onPress={() => {
-    //                   console.log('container pressed');
-    //                   navigation.navigate('VEHICLEDETAIL', {
-    //                     vehicleData: item,
-    //                   });
-    //                 }}
-
-    //               />
-    //             );
-    //           })}
-    //       </View>
-    //     )}
-    // </ScrollView >
   }
   return (
     <View style={styles.container}>
