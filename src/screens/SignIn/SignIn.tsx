@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import {
   Alert,
+  Platform,
   ScrollView,
+  StyleSheet,
   Text,
   View,
 } from 'react-native';
@@ -105,15 +107,6 @@ export default function SignIn({ navigation }: any) {
             } else if (result.user.role === 'Driver') {
               navigation.navigate('DriverNavigation');
             } else Alert.alert('Only driver and provider can access');
-
-            // navigation.dispatch((state: any) => {
-            //   const routes = [{name: 'Drawer'}, ...state.routes];
-            //   return CommonActions.reset({
-            //     ...state,
-            //     routes,
-            //     index: 0,
-            //   });
-            // });
           } else {
             setLoading(false);
             Alert.alert('ERROR', result.message);
@@ -141,11 +134,12 @@ export default function SignIn({ navigation }: any) {
             <View style={{ flex: 1, paddingVertical: 15, paddingHorizontal: 25 }}>
               <Text style={{ fontSize: wp(4), color: 'black' }}>EMAIL</Text>
               <TextInput
+
                 ref={emailRef}
                 placeholderTextColor={'grey'}
                 onChangeText={setEmail}
                 placeholder='Enter Email'
-                style={{ width: '100%', marginTop: 10, marginBottom: 18 }}
+                style={Platform.OS === "ios" ? styles.iosTextInput : styles.androidTextInput}
               />
               <HorizontalDivider />
               {!isEmailValid && <Text style={{ color: colors.red }}>{emailErroMessage}</Text>}
@@ -158,30 +152,12 @@ export default function SignIn({ navigation }: any) {
                 placeholderTextColor={'grey'}
                 onChangeText={setPassword}
                 placeholder='Enter Password'
-                style={{ width: '100%', marginTop: 10, marginBottom: 18 }}
+                style={Platform.OS === "ios" ? styles.iosTextInput : styles.androidTextInput}
               />
               <HorizontalDivider />
               {!isPasswordValid && <Text style={{ color: colors.red }}>{passwordErrorMessage}</Text>}
             </View>
-            {/* <Textbox
-            title="EMAIL"
-            placeholder="Enter Email"
-            onChangeValue={(text: string) => setName(text)}
-            containerStyle={{ paddingHorizontal: wp(8) }}
-            errorMessage={name === '' ? 'Email is required' : 'Invalid Email'}
-            isError={nameError}
-          /> */}
-            {/* <Textbox
-            title="PASSWORD"
-            placeholder="Enter Password"
-            password={true}
-            onChangeValue={(text: string) => setPassword(text)}
-            containerStyle={{ paddingHorizontal: wp(8) }}
-            errorMessage={
-              password === '' ? 'Password is required' : 'Invalid Password'
-            }
-          // isError={passwordError}
-          /> */}
+
             <TouchableOpacity
               onPress={() => navigation.navigate('ForgetPassword')}>
               <Text
@@ -228,3 +204,12 @@ export default function SignIn({ navigation }: any) {
     </View >
   );
 }
+const styles = StyleSheet.create({
+  iosTextInput: {
+    width: '100%', marginTop: 10, marginBottom: 18
+  },
+  androidTextInput: {
+    color: 'black',
+    width: '100%'
+  }
+})

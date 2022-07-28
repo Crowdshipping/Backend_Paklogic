@@ -49,8 +49,8 @@ const ShipDetail = ({ route, navigation, status, myColor }: any) => {
                     departureSeaport={shipData.departurePort}
                     destinationSeaport={shipData.destinationPort}
                     date={shipData.shipDate.slice(0, -14)}
-                    departureTime={shipData.departureTime}
-                    destinationTime={shipData.destinationTime}
+                    departureTime={(new Date(shipData.shipDate)).toTimeString().slice(0, -18)}
+                    destinationTime={(new Date(shipData.eta)).toTimeString().slice(0, -18)}
                     myTicketImage={shipData.ticketImage}
                     mmsiNumber={shipData.mmsiNumber}
                 />

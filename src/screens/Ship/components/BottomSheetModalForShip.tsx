@@ -2,11 +2,11 @@ import React from 'react'
 import BottomSheet from '@gorhom/bottom-sheet';
 import RequestDetailComponentForShip from './RequestDetailComponentForShip';
 
-const BottomSheetModalForShip = ({ isOtpVerify, pickUpAirport, dropOffAirport, fromDate, toDate, requestData, navigation }: any) => {
+const BottomSheetModalForShip = ({ minValue, maxValue, isOtpVerify, pickUpAirport, dropOffAirport, fromDate, toDate, requestData, navigation }: any) => {
     const bottomSheetRef = React.useRef<BottomSheet>(null);
 
     // variables
-    const snapPoints = React.useMemo(() => ['18%', '60%'], []);
+    const snapPoints = React.useMemo(() => [minValue, maxValue], []);
     // callbacks
     const handleSheetChanges = React.useCallback((index: number) => {
         console.log('handleSheetChanges', index);

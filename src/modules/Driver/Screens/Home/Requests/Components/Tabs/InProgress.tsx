@@ -17,7 +17,7 @@ const InProgress = ({ navigation }: any) => {
     getDriverHistory(value)
       .then(response => response.json())
       .then((result: any) => {
-        console.log("fffffffff:", result.requests);
+        console.log("fffffffff1212:", result.requests);
         setIsLoading(false);
         setRequestResponse(result.requests);
       })
@@ -30,10 +30,8 @@ const InProgress = ({ navigation }: any) => {
     getData();
   }, []);
   const renderContent = () => {
-    console.log('trydata', requestResponse);
     if (requestResponse) {
       return requestResponse.map((item: any) => {
-        console.log('freshdata', item);
         const stateInProgress =
           item.status === 'Accepted' &&
           (item.state === 'Transit' ||
@@ -47,7 +45,7 @@ const InProgress = ({ navigation }: any) => {
           item.state === 'Reached';
 
         if (!isCompleted && (stateInProgress || stateInProgressToo)) {
-          console.log(" kkkitem", item.bookingId.pickupAddress.lat)
+
           return (
             <VehicleRequestCard
               onPress={() => {

@@ -33,6 +33,7 @@ const Complain = ({ navigation }: any) => {
                     }} style={styles.addbtn}>
                         <Text style={styles.txt}>ADD NEW</Text>
                     </TouchableOpacity>
+
                     <ComplainSingleCard onPress={() => {
                         navigation.navigate("COMPLAINDETAIL")
                     }} title={'Complain title'} date={"29-12-2022"} status={'Pending'} />

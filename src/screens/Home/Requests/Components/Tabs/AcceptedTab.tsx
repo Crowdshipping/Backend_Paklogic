@@ -67,6 +67,12 @@ const AcceptedTab = ({ item, navigation }: any) => {
                 else if (item.status === 'Accepted' && item.type === "Ship" && item.ship !== null) {
                     return (
                         <RequestCard
+                            onPress={() => {
+                                navigation.navigate('PICKEDUPFORSHIP',
+                                    {
+                                        shipData: item,
+                                    });
+                            }}
                             isForShip={true}
                             isAccepted={true}
                             isPostRequest={true}
@@ -107,6 +113,6 @@ const AcceptedTab = ({ item, navigation }: any) => {
     )
 }
 
-export default AcceptedTab
+export default AcceptedTab;
 
 const styles = StyleSheet.create({})

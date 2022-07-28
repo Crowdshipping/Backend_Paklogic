@@ -42,9 +42,9 @@ const AcceptBookingForFlight = ({ route, navigation }: any) => {
     setDepartureAirportLatLng(data.airports[0].coordinates);
   }
   const getFlightDestinationAirportLatAndLng = async () => {
+    console.log("destinationflightkkkkk", requestData.flight.destinationAirport);
     let res = await getAirportName(requestData.flight.destinationAirport);
     let data: any = await res.json();
-    console.log("kget", data.airports[0].coordinates);
     setDestinationAirportLatLng(data.airports[0].coordinates);
   }
   //60000 is 1minutes time
@@ -67,7 +67,8 @@ const AcceptBookingForFlight = ({ route, navigation }: any) => {
   }, []);
 
   const renderMap = () => {
-    if (departureAirportLatLng && destinationAirportLatLng && flightPosition) {
+
+    if (departureAirportLatLng && destinationAirportLatLng) {
       return (
         <MapView
           region={{
@@ -83,26 +84,41 @@ const AcceptBookingForFlight = ({ route, navigation }: any) => {
           ref={ref}
           zoomControlEnabled={false}
           style={styles.map}>
-          <Polyline
-            coordinates={[
-              {
-                latitude: departureAirportLatLng.lat,
-                longitude: departureAirportLatLng.lon,
-              },
-              {
-                latitude: flightPosition.latitude,
-                longitude: flightPosition.longitude,
-              },
-              {
-                latitude: destinationAirportLatLng.lat,
-                longitude: destinationAirportLatLng.lon,
-              },
-            ]}
-            geodesic={true}
-            strokeWidth={5}
-            lineDashPhase={3}
-
-          />
+          {flightPosition ?
+            <Polyline
+              coordinates={[
+                {
+                  latitude: departureAirportLatLng.lat,
+                  longitude: departureAirportLatLng.lon,
+                },
+                {
+                  latitude: flightPosition.latitude,
+                  longitude: flightPosition.longitude,
+                },
+                {
+                  latitude: destinationAirportLatLng.lat,
+                  longitude: destinationAirportLatLng.lon,
+                },
+              ]}
+              geodesic={true}
+              strokeWidth={5}
+              lineDashPhase={3}
+            /> : <Polyline
+              coordinates={[
+                {
+                  latitude: departureAirportLatLng.lat,
+                  longitude: departureAirportLatLng.lon,
+                },
+                {
+                  latitude: destinationAirportLatLng.lat,
+                  longitude: destinationAirportLatLng.lon,
+                },
+              ]}
+              geodesic={true}
+              strokeWidth={5}
+              lineDashPhase={3}
+            />
+          }
           <Marker
             key={'initial'}
             coordinate={{
@@ -112,15 +128,16 @@ const AcceptBookingForFlight = ({ route, navigation }: any) => {
             title={'initial'}
 
           />
-          <Marker
-            key={'middle'}
-            coordinate={{
-              latitude: flightPosition.latitude,
-              longitude: flightPosition.longitude,
-            }}
-            title={'middle'}
-
-          />
+          {flightPosition &&
+            <Marker
+              key={'middle'}
+              coordinate={{
+                latitude: flightPosition.latitude,
+                longitude: flightPosition.longitude,
+              }}
+              title={'middle'}
+            />
+          }
           <Marker
             key={'final'}
             coordinate={{
@@ -136,13 +153,13 @@ const AcceptBookingForFlight = ({ route, navigation }: any) => {
   }
   return (
     <View style={styles.container}>
-      {console.log("koko", flightPosition.latitude)}
       {isLoading ? <MyLoader /> :
         <View style={styles.container}>
           {
             renderMap()
           }
           <BottomSheetModalForAir
+            maxValue={Platform.OS === "ios" ? "75%" : "65%"} minValue={"20%"}
             isOtpVerify={isOtpVerify}
             navigation={navigation}
             pickUpAirport={requestData.flight.pickupCity}

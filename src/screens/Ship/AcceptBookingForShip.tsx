@@ -56,19 +56,16 @@ const AcceptBookingForShip = ({ route, navigation }: any) => {
     }, 300000);
     return () => clearInterval(interval);
   }, []);
-  const renderMap = () => {
-    if (shipData.bookingId.dropAddress && shipData.bookingId.pickupAddress && shipPosition[0]) {
-      //   latitude: shipPosition.latitude,
-      console.log("ship dollar data lat", shipPosition[0].$.LAT)
-      console.log("ship dollar data lng", shipPosition[0].$.LON)
-
+  const renderUselessMap = () => {
+    console.log("k drop add1", shipData.bookingId.dropAddress)
+    if (shipData.bookingId.dropAddress && shipData.bookingId.pickupAddress) {
       return (
         <MapView
           region={{
             latitude: shipData.bookingId.pickupAddress.lat,
             longitude: shipData.bookingId.dropAddress.lng,
             latitudeDelta: 40,
-            longitudeDelta: LONGITUDE_DELTA,
+            longitudeDelta: 20,
           }}
           mapType={Platform.OS == "android" ? "none" : "standard"}
           // onMapReady={onMapReadyHandler}
@@ -76,27 +73,44 @@ const AcceptBookingForShip = ({ route, navigation }: any) => {
           showsUserLocation={false}
           ref={ref}
           zoomControlEnabled={false}
-          style={styles.map}>
-          <Polyline
-            coordinates={[
-              {
-                latitude: shipData.bookingId.pickupAddress.lat,
-                longitude: shipData.bookingId.pickupAddress.lng,
-              },
-              {
-                latitude: shipPosition[0].$.LAT,
-                longitude: shipPosition[0].$.LON,
-              },
-              {
-                latitude: shipData.bookingId.dropAddress.lat,
-                longitude: shipData.bookingId.dropAddress.lng,
-              },
-            ]}
-            geodesic={true}
-            strokeWidth={5}
-            lineDashPhase={3}
-
-          />
+          style={styles.map}
+        >
+          {shipPosition[0] ?
+            <Polyline
+              coordinates={[
+                {
+                  latitude: shipData.bookingId.pickupAddress.lat,
+                  longitude: shipData.bookingId.pickupAddress.lng,
+                },
+                {
+                  latitude: Number(shipPosition[0]?.$.LAT),
+                  longitude: Number(shipPosition[0]?.$.LON),
+                },
+                {
+                  latitude: shipData.bookingId.dropAddress.lat,
+                  longitude: shipData.bookingId.dropAddress.lng,
+                },
+              ]}
+              geodesic={true}
+              strokeWidth={5}
+              lineDashPhase={3}
+            /> :
+            <Polyline
+              coordinates={[
+                {
+                  latitude: shipData.bookingId.pickupAddress.lat,
+                  longitude: shipData.bookingId.pickupAddress.lng,
+                },
+                {
+                  latitude: shipData.bookingId.dropAddress.lat,
+                  longitude: shipData.bookingId.dropAddress.lng,
+                },
+              ]}
+              geodesic={true}
+              strokeWidth={5}
+              lineDashPhase={3}
+            />
+          }
           <Marker
             key={'initial'}
             coordinate={
@@ -107,17 +121,15 @@ const AcceptBookingForShip = ({ route, navigation }: any) => {
               }
             }
             title={'initial'}
-
           />
-          <Marker
+          {shipPosition[0] && <Marker
             key={'middle'}
             coordinate={{
-              latitude: shipPosition[0].$.LAT,
-              longitude: shipPosition[0].$.LON,
+              latitude: shipPosition[0]?.$.LAT,
+              longitude: shipPosition[0]?.$.LON,
             }}
             title={'middle'}
-
-          />
+          />}
           <Marker
             key={'final'}
             coordinate={{
@@ -125,20 +137,102 @@ const AcceptBookingForShip = ({ route, navigation }: any) => {
               longitude: shipData.bookingId.dropAddress.lng,
             }}
             title={'final'}
-
           />
         </MapView>
       )
     }
   }
 
+  const renderShipMap = () => {
+    return <MapView
+      style={styles.map}
+      initialRegion={{
+        latitude: shipData.bookingId.pickupAddress.lat,
+        longitude: shipData.bookingId.dropAddress.lng,
+        latitudeDelta: 40,
+        longitudeDelta: 20,
+      }}
+    >
+      {shipPosition[0] ?
+        <Polyline
+          coordinates={[
+            {
+              latitude: shipData.bookingId.pickupAddress.lat,
+              longitude: shipData.bookingId.pickupAddress.lng,
+            },
+            {
+              latitude: Number(shipPosition[0]?.$.LAT),
+              longitude: Number(shipPosition[0]?.$.LON),
+            },
+            {
+              latitude: shipData.bookingId.dropAddress.lat,
+              longitude: shipData.bookingId.dropAddress.lng,
+            },
+          ]}
+          geodesic={true}
+          strokeWidth={5}
+          lineDashPhase={3}
+        /> :
+        <Polyline
+          coordinates={[
+            {
+              latitude: shipData.bookingId.pickupAddress.lat,
+              longitude: shipData.bookingId.pickupAddress.lng,
+            },
+            {
+              latitude: shipData.bookingId.dropAddress.lat,
+              longitude: shipData.bookingId.dropAddress.lng,
+            },
+          ]}
+          geodesic={true}
+          strokeWidth={5}
+          lineDashPhase={3}
+        />
+      }
+      <Marker
+        key={'initial'}
+        coordinate={
+
+          {
+            latitude: shipData.bookingId.pickupAddress.lat,
+            longitude: shipData.bookingId.pickupAddress.lng,
+          }
+        }
+        title={'initial'}
+      />
+      {shipPosition[0] && <Marker
+        key={'middle'}
+        coordinate={{
+          latitude: shipPosition[0]?.$.LAT,
+          longitude: shipPosition[0]?.$.LON,
+        }}
+        title={'middle'}
+      />}
+      <Marker
+        key={'final'}
+        coordinate={{
+          latitude: shipData.bookingId.dropAddress.lat,
+          longitude: shipData.bookingId.dropAddress.lng,
+        }}
+        title={'final'}
+      />
+    </MapView>
+  }
+
+
+
   return (
     <View style={styles.container}>
-      {console.log("kshipdata", shipData)}
+      {/* {console.log("pick1a", shipData.bookingId.pickupAddress.lat)}
+      {console.log("pick1b", shipData.bookingId.pickupAddress.lng)}
+      {console.log("drop1a", shipData.bookingId.dropAddress.lat)}
+      {console.log("drop1b", shipData.bookingId.dropAddress.lng)} */}
       {isLoading ? <MyLoader /> :
         <View style={styles.container}>
-          {renderMap()}
+          {/* {renderMap()} */}
+          {renderShipMap()}
           <BottomSheetModalForShip
+            maxValue={Platform.OS === "ios" ? "75%" : "65%"} minValue={"20%"}
             isOtpVerify={isOtpVerify}
             navigation={navigation}
             pickUpAirport={shipData.ship.pickupCity}

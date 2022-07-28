@@ -305,7 +305,7 @@ export const StackNavigation = () => {
             backgroundColor: 'white',
           },
           headerTitleAlign: 'center',
-          title: 'ADD TICKET DETAILS',
+          title: 'ADD FLIGHT DETAILS',
         }}
         name="AddTicket"
         component={AddTicketDetails}
@@ -380,7 +380,7 @@ export const StackNavigation = () => {
             backgroundColor: 'white',
           },
           headerTitleAlign: 'center',
-          title: 'ADD TICKET DETAILS',
+          title: 'ADD FLIGHT DETAILS',
         }}
         name="AddFlightPostRequest"
         component={AddFlightPostRequest}
@@ -410,7 +410,7 @@ export const StackNavigation = () => {
             backgroundColor: 'white',
           },
           headerTitleAlign: 'center',
-          title: 'ADD TICKET DETAILS',
+          title: 'ADD SHIP DETAILS',
         }}
         name="ADDSHIP"
         component={AddShipTicket}
@@ -456,7 +456,7 @@ export const StackNavigation = () => {
             backgroundColor: 'white',
           },
           headerTitleAlign: 'center',
-          title: 'Attach Images',
+          title: 'ADD SHIP DETAILS',
         }}
         name="AddShipPostRequest"
         component={AddShipPostRequest}
