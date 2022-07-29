@@ -37,6 +37,11 @@ const PendingsTab = ({ item, navigation }: any) => {
         if (item.status === 'Pending') {
             if (item.type === "Ship") {
                 return <RequestCard
+                    onPress={() => {
+                        navigation.navigate('ACCEPTREJECTFORSHIP', {
+                            shipData: item,
+                        });
+                    }}
                     isForShip={true}
                     isPostRequest={false}
                     myImage={item.requestedBy.profilepic}
@@ -61,6 +66,11 @@ const PendingsTab = ({ item, navigation }: any) => {
             }
             return (
                 <RequestCard
+                    onPress={() => {
+                        navigation.navigate('BookingRequest', {
+                            requestData: item,
+                        });
+                    }}
                     myImage={item.requestedBy.profilepic}
                     firstName={item.requestedBy.firstname}
                     lastName={item.requestedBy.lastname}
@@ -100,11 +110,7 @@ const PendingsTab = ({ item, navigation }: any) => {
 
                     }}
                     date={item.flight.flightDate.slice(0, -14)}
-                    onPress={() => {
-                        navigation.navigate('BookingRequest', {
-                            requestData: item,
-                        });
-                    }}
+
                 />
             );
         }

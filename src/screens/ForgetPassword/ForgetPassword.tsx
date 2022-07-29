@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
+import { Alert, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
@@ -28,13 +29,13 @@ export default function ForgetPassword(props: any) {
           if (result.success) {
             props.navigation.navigate('VerifyOtp', { email: email.toLowerCase() });
           } else {
-            alert(result.message);
+            Alert.alert(result.message);
           }
           console.log(result);
         })
         .catch(error => {
           setLoading(false);
-          alert('something went wrong');
+          Alert.alert('something went wrong');
           console.log('error', error);
         });
       // props.navigation.navigate('ResetPassword');
@@ -42,8 +43,9 @@ export default function ForgetPassword(props: any) {
   };
   // alert('lsjdc')
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
-      <ScrollView>
+
+    <ScrollView>
+      <KeyboardAwareScrollView>
         <View style={{ height: hp(45) }}>
           <AntDesign
             name="question"
@@ -65,7 +67,7 @@ export default function ForgetPassword(props: any) {
           </Text>
           <Textbox
             placeholder="Enter Email"
-            onChangeValue={text => setEmail(text)}
+            onChangeValue={(text: any) => setEmail(text)}
             containerStyle={{ paddingHorizontal: wp(8) }}
             errorMessage={'Invalid Email'}
             isError={isvalid}
@@ -77,8 +79,8 @@ export default function ForgetPassword(props: any) {
             containerStyle={{ marginTop: hp(7) }}
           />
         </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
+    </ScrollView>
   );
 }
 // export default RegisterScreen;

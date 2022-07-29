@@ -3,11 +3,11 @@ import React from 'react'
 import BottomSheet from '@gorhom/bottom-sheet';
 import RequestDetailComponentForAir from './RequestDetailComponentForAir';
 
-const BottomSheetModalForAir = ({ flightInfoData, isOtpVerify, pickUpAirport, dropOffAirport, fromDate, toDate, requestData, navigation }: any) => {
+const BottomSheetModalForAir = ({ minValue, maxValue, flightInfoData, isOtpVerify, pickUpAirport, dropOffAirport, fromDate, toDate, requestData, navigation }: any) => {
     const bottomSheetRef = React.useRef<BottomSheet>(null);
 
     // variables
-    const snapPoints = React.useMemo(() => ['21%', '60%'], []);
+    const snapPoints = React.useMemo(() => [minValue, maxValue], []);
     // callbacks
     const handleSheetChanges = React.useCallback((index: number) => {
         console.log('handleSheetChanges', index);

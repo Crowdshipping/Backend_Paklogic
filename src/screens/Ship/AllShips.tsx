@@ -20,13 +20,9 @@ import { heightPercentageToDP } from 'react-native-responsive-screen';
 import MineCard from '../Common/MineCard';
 
 const AllShips = ({ navigation }: any) => {
-
     const [shipResponse, setShipResponse] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(false);
     const [noShip, setNoShip] = React.useState(false);
-
-
-
     const renderAllShips = () => {
         console.log("no ship", noShip)
         if (noShip) {
@@ -53,8 +49,10 @@ const AllShips = ({ navigation }: any) => {
                                 departureSeaPort={item.departurePort}
                                 destinationSeaPort={item.destinationPort}
                                 date={item.shipDate.slice(0, -14)}
-                                departureTime={item.departureTime}
-                                destinationTime={item.destinationTime}
+                                // departureTime={item.departureTime}
+                                // destinationTime={item.destinationTime}
+                                departureTime={(new Date(item.shipDate)).toTimeString().slice(0, -18)}
+                                destinationTime={(new Date(item.eta)).toTimeString().slice(0, -18)}
                                 mmsiNumber={item.mmsiNumber}
                                 myImage={backendUrl + item.ticketImage}
                                 leftSvg={ship}
@@ -106,7 +104,7 @@ const AllShips = ({ navigation }: any) => {
                     .then(response => response.json())
                     .then(result => {
                         if (result.success) {
-                            console.log("result of all ships response", result);
+                            console.log("ship data1", result.ships);
                             setIsLoading(false);
                             setShipResponse(result.ships)
                         } else if (result.success == false) {
@@ -135,30 +133,29 @@ const AllShips = ({ navigation }: any) => {
     }, []);
     return (
         <ScrollView>
-            {isLoading ? <MyLoader /> : <View style={styles.container}>
-                <ButtonOutline
-                    onPress={() => {
-                        navigation.navigate('ADDSHIP');
-                    }}
-                    buttonStyle={{ borderRadius: 18 }}
-                    fontSize={18}
-                    containerStyle={{
-                        paddingHorizontal: 0,
-                        width: 145,
-                        alignSelf: 'flex-end',
-                        marginBottom: 0,
-                    }}
-                    title="Add New"
-                    color="black"
-                />
-                {renderAllShips()}
-
-            </View>}
-
+            {
+                isLoading ? <MyLoader /> : <View style={styles.container}>
+                    <ButtonOutline
+                        onPress={() => {
+                            navigation.navigate('ADDSHIP');
+                        }}
+                        buttonStyle={{ borderRadius: 18 }}
+                        fontSize={18}
+                        containerStyle={{
+                            paddingHorizontal: 0,
+                            width: 145,
+                            alignSelf: 'flex-end',
+                            marginBottom: 0,
+                        }}
+                        title="Add New"
+                        color="black"
+                    />
+                    {renderAllShips()}
+                </View>
+            }
         </ScrollView>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         height: '100%',

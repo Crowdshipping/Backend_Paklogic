@@ -37,6 +37,24 @@ const PostRequestsTab = ({ navigation }: any) => {
                 if (item.requestedBy && item.type === "Flight") {
                     return (
                         <RequestCard
+                            onPress={() => {
+                                Alert.alert("",
+                                    "You need to register this flight in order to accept this request?",
+                                    [
+                                        {
+                                            text: 'Yes',
+                                            onPress: () => {
+                                                navigation.navigate('AddFlightPostRequest', {
+                                                    postRequestData: item
+                                                });
+                                            },
+                                            style: 'default',
+                                        },
+                                        { text: 'No' },
+                                    ],
+                                    { cancelable: false }
+                                )
+                            }}
                             isPostRequest={true}
                             myImage={item.requestedBy.profilepic}
                             firstName={item.requestedBy.firstname}
@@ -72,16 +90,45 @@ const PostRequestsTab = ({ navigation }: any) => {
                                     ],
                                     { cancelable: false }
                                 )
-
                             }}
                             date={item.date.slice(0, -14)}
-
                         />
                     );
                 }
                 else if (item.type === "Ship") {
                     return (
                         <RequestCard
+                            onPress={() => {
+                                Alert.alert("",
+                                    "You need to register this Ship in order to accept this request?",
+                                    [
+                                        {
+                                            text: 'Yes', onPress: () => {
+                                                setIsLoading(true);
+                                                changePostRequestStatus(item._id, userId)
+                                                    .then(response => response.json())
+                                                    .then((result) => {
+                                                        setIsLoading(false);
+                                                        if (result.success) {
+                                                            navigation.navigate('AddShipPostRequest', {
+                                                                postRequestData: result.updatedPostRequest
+                                                            });
+                                                        }
+                                                        console.log("result from all request ship", result)
+
+                                                    })
+                                                    .catch(error => {
+                                                        console.log("error", error);
+                                                        setIsLoading(false);
+                                                    });
+                                            },
+                                            style: 'default',
+                                        },
+                                        { text: 'No' },
+                                    ],
+                                    { cancelable: false }
+                                )
+                            }}
                             isForShip={true}
                             isPostRequest={true}
                             myImage={item.requestedBy.profilepic}
@@ -120,7 +167,6 @@ const PostRequestsTab = ({ navigation }: any) => {
                                     ],
                                     { cancelable: false }
                                 )
-
                             }}
                             date={item.shipArrivaldate.slice(0, -14)}
                         />
@@ -155,7 +201,6 @@ const PostRequestsTab = ({ navigation }: any) => {
     return (
         <View>
             {renderContent()}
-            {/* {isLoading ? <MyLoader /> : renderPostRequest()} */}
         </View>
     )
 }

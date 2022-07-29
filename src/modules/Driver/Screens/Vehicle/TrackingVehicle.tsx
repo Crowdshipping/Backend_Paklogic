@@ -33,16 +33,10 @@ const TrackingVehicle = ({ route, navigation }: any) => {
             longitude: 73.0375761,
         }
     );
-
     const { vehicleData, isOtpVerify } = route.params;
-    console.log("fgfgfgfgfg", vehicleData);
-
     const [isLoading, setIsLoading] = React.useState(false);
     const ref = useRef<MapView>(null);
-
-
     const [updatedState, setUpdatedState] = React.useState("");
-
     const [coordinates, setCoordinates] = React.useState([
 
         {
@@ -73,8 +67,6 @@ const TrackingVehicle = ({ route, navigation }: any) => {
 
 
     ]);
-
-
     const getCurrentLocationDriver = () => {
 
         Geolocation.getCurrentPosition((position) => {
@@ -99,19 +91,6 @@ const TrackingVehicle = ({ route, navigation }: any) => {
             },
             { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
         );
-        // Geolocation.getCurrentPosition(info => {
-        //     setDriverLiveLocation(
-        //         {
-        //             latitude: Number(info.coords.latitude.toFixed(6)),
-        //             longitude: Number(info.coords.longitude.toFixed(6)),
-        //         })
-        //     setRegion({
-        //         latitude: Number(info.coords.latitude.toFixed(6)),
-        //         longitude: Number(info.coords.longitude.toFixed(6)),
-        //         latitudeDelta: LATITUDE_DELTA,
-        //         longitudeDelta: LONGITUDE_DELTA
-        //     })
-        // });
     }
     const useWebsocket = (url: any) => {
         const [connected, setConnected] = React.useState(false);
@@ -189,10 +168,6 @@ const TrackingVehicle = ({ route, navigation }: any) => {
         // Geolocation.clearWatch(watchId)
     }
     const mySocket = useWebsocket("ws://driver-live-socket.herokuapp.com/");
-
-
-
-
 
     // if (mySocket.connected) {
     //     mySocket.socket?.emit('userinfo', {
@@ -311,8 +286,6 @@ const TrackingVehicle = ({ route, navigation }: any) => {
             </MapView>
         )
     }
-
-
     const renderMapAfterDriverPick = () => {
         console.log("intial point", coordinates[0].latitude)
         console.log("end point", coordinates[0].longitude)
@@ -391,8 +364,6 @@ const TrackingVehicle = ({ route, navigation }: any) => {
             </MapView>
         )
     }
-
-
     const whichMap = () => {
         if (updatedState === "Pickedup" || vehicleData.state === "Pickedup") {
             console.log("after map")
@@ -403,38 +374,6 @@ const TrackingVehicle = ({ route, navigation }: any) => {
             return renderMapBeforeDriverPick();
         }
     }
-
-
-    // const changeStateOfRequest = (myState: any) => {
-    //     console.log("state passed as parameter", myState)
-    //     setIsLoading(true);
-    //     changeStateByProvider(myState, vehicleData._id)
-    //         .then((response: any) => response.json())
-    //         .then((result: any) => {
-    //             setIsLoading(false);
-    //             console.log("krossers", result.updatedRequest.state);
-    //             setUpdatedState(result.updatedRequest.state);
-    //             // if (result.success) {
-    //             //     console.log("state changed", result)
-    //             //     setIsLoading(false);
-    //             //     if (requestStates === 1) {
-    //             //         setRequestStates(2)
-    //             //     } else if (requestStates === 2) {
-    //             //         setRequestStates(3)
-    //             //     } else if (requestStates === 3) {
-    //             //         setRequestStates(4)
-    //             //     } else if (requestStates === 4) {
-    //             //         setRequestStates(1)
-    //             //     }
-    //             // }
-    //         })
-    //         .catch((error: any) => {
-    //             setIsLoading(false);
-    //             console.log('error', error)
-    //         });
-    // }
-
-
     return (
         <View style={styles.container}>
             {console.log("apples", updatedState)}
