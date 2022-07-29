@@ -47,7 +47,7 @@ const InProgress = ({ navigation }: any) => {
           item.state === 'Reached';
 
         if (!isCompleted && (stateInProgress || stateInProgressToo)) {
-          console.log(" kkkitem", item.bookingId.pickupAddress.lat)
+          console.log(" kkkitem", item?.bookingId?.pickupAddress?.lat)
           return (
             <VehicleRequestCard
               onPress={() => {
@@ -64,9 +64,9 @@ const InProgress = ({ navigation }: any) => {
               myImage={item.requestedBy.profilepic}
               firstName={item.requestedBy.firstname}
               lastName={item.requestedBy.lastname}
-              pickupType={item.bookingId.pickupType}
-              departurePort={item.bookingId.dropAddressText}
-              destinationPort={item.bookingId.pickupAddressText}
+              pickupType={item?.bookingId?.pickupType}
+              departurePort={item?.bookingId?.dropAddressText}
+              destinationPort={item?.bookingId?.pickupAddressText}
               cancelOrRejectText={"Cancel"}
               cancelOrRejectPress={() => {
                 setIsLoading(true);

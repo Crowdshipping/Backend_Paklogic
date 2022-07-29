@@ -982,4 +982,87 @@ export const vehicleDelete = (requestId: any, driverId: any) => {
   return fetch(`https://backend-crowdshipping.herokuapp.com/driver/deletevehicle/${requestId}/${driverId}`, requestOptions);
 
 }
+export const inviteDriver = async (countrycode: string,phoneno:number,companyId:string) => {
+  return new Promise((resolve, reject) => {
+    const config: AxiosRequestConfig = {
+      method: 'post',
+      url: `${backendUrl}/company/invitedriver`,
+      data: {
+        countrycode:countrycode,
+        phoneno:phoneno,
+        companyId: companyId
+        
+      },
+    };
+    axios(config)
+      .then(response => {
+        resolve(response.data);
+      })
+      .catch(error => {
+        reject(error.response.data);
+      });
+  });
+};
 
+export const addVehicleCompany = (vehicle: AddVehicleCompany) => {
+  var myHeaders = new Headers();
+  myHeaders.append('Content-Type', 'application/json');
+  myHeaders.append(
+    'Cookie',
+    'connect.sid=s%3AmzAxQxmim5IE9KvghS8yLZQlZ0nQ_One.%2Bk2uZG0FbSZSRJV%2FExAjvD03998A4K6%2FVfKQO6ctj3U',
+  );
+
+  var raw = JSON.stringify({
+    vehicleType: vehicle.vehicleType,
+    vehicleName: vehicle.vehicleName,
+    vehicleColor: vehicle.vehicleColor,
+    vehicleModel: vehicle.vehicleModel,
+    licenseNumber: vehicle.licenseNumber,
+    vehicleImage: vehicle.vehicleImage,
+    vehicleLicence: vehicle.vehicleLicence,
+    vehicleInsurance: vehicle.vehicleInsurance,
+    vehicleResidenceProof: vehicle.vehicleResidence,
+    companyId: vehicle.companyId,
+  });
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow',
+  };
+  return fetch(
+    "https://backend-crowdshipping.herokuapp.com/company/addvehicle",
+    requestOptions,
+  );
+  }
+  export const getAllVehiclesCompany = (companyId: any) => {
+    var myHeaders = new Headers();
+    myHeaders.append(
+      'Cookie',
+      'connect.sid=s%3Ac9ap3k_umKtuIkvvcSWsOOyw4qFY1029.VHy%2Fu6zZtHoFIdC8ZWyu0zvgm6JHNlL5D8ZKkJXO7Lw',
+    );
+  
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow',
+    };
+    return fetch(
+      `https://backend-crowdshipping.herokuapp.com/company/getvehicles/${companyId}`,
+      requestOptions,
+    );
+  };
+  export const vehicleDeleteCompany = (requestId: any, companyId: any) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Cookie", "connect.sid=s%3AFZsOLF5nt9g8ecQHsFGdy_LWpj644Jyr.OVXtEEAj%2F27d2u1N9v9R9RVlUZW%2BboWWE8%2BrQwGuQsM");
+  
+    var requestOptions = {
+      method: 'DELETE',
+      headers: myHeaders,
+      redirect: 'follow'
+    };
+  
+    return fetch(`https://backend-crowdshipping.herokuapp.com/company/deletevehicle/${requestId}/${companyId}`, requestOptions);
+  
+  }

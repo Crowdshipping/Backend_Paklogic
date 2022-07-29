@@ -15,7 +15,7 @@ const CheckBoxState = ({ text, onPress, isDisabled }: any) => {
         }}
         text={text}
         size={20}
-        fillColor="black"
+        fillColor="green"
         iconStyle={{ borderColor: toggleCheckBox ? 'grey' : 'black' }}
         onPress={onPress}
       />
@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    marginRight:10
   },
   textCheckBox: {
     fontSize: 12,

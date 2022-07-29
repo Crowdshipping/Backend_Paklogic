@@ -45,9 +45,9 @@ const VehicleHistory = ({ navigation }: any) => {
         myImage={''}
         firstName={item.requestedBy.firstname}
         lastName={item.requestedBy.lastname}
-        pickupType={item.bookingId.pickupType}
-        departurePort={item.bookingId.pickupAddressText}
-        destinationPort={item.bookingId.dropAddressText}
+        pickupType={item?.bookingId?.pickupType}
+        departurePort={item?.bookingId?.pickupAddressText}
+        destinationPort={item?.bookingId?.dropAddressText}
       />
     );
   };

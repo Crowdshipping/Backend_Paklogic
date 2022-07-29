@@ -42,6 +42,7 @@ import AddClaim from '../screens/Claim/AddClaim';
 import BookingHistory from '../screens/Home/History/BookingHistory';
 import DriverHome from '../modules/Driver/Screens/Home/DriverHome';
 import { DriverNavigation } from './DriverNavigation';
+import { CompanyNavigation } from './CompanyNavigation';
 import ShipVerifyOtp from '../screens/Common/ShipVerifyOtp';
 import FlightVerifyOtp from '../screens/Common/FlightVerifyOtp';
 const Drawer = createDrawerNavigator();
@@ -85,6 +86,14 @@ export const StackNavigation = () => {
         }}
         name="DriverNavigation"
         component={DriverNavigation}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+          title: 'Back',
+        }}
+        name="CompanyNavigation"
+        component={CompanyNavigation}
       />
       <Stack.Screen
         name="Splash"

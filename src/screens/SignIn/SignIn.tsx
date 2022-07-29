@@ -104,7 +104,10 @@ export default function SignIn({ navigation }: any) {
               navigation.navigate('Drawer');
             } else if (result.user.role === 'Driver') {
               navigation.navigate('DriverNavigation');
-            } else Alert.alert('Only driver and provider can access');
+            }else if (result.user.role === 'Company'){
+              navigation.navigate('CompanyNavigation');
+             }
+             else Alert.alert('Only driver and provider can access');
 
             // navigation.dispatch((state: any) => {
             //   const routes = [{name: 'Drawer'}, ...state.routes];

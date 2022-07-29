@@ -43,7 +43,7 @@ export const Button = (props: IButton) => {
         {isLoading ? (
           <ActivityIndicator size={'small'} color={'white'} />
         ) : (
-          <Text style={{fontSize: wp(5), color: 'white'}}>{title}</Text>
+          <Text style={{fontSize: wp(4), color: 'white'}}>{title}</Text>
         )}
       </TouchableOpacity>
     </View>

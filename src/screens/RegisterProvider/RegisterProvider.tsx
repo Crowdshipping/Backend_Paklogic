@@ -96,7 +96,7 @@ export default function RegisterProvider(props: any) {
                 uid: result.data._id,
               });
             }
-            if (props.route.params.option == 'company') {
+             else if (props.route.params.option == 'company') {
               props.navigation.navigate('RegisterCompany', {
                 uid: result.data._id,
               });
