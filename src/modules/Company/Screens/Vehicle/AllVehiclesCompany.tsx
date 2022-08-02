@@ -51,20 +51,23 @@ const AllVehiclesCompany = ({ navigation, status, myColor }: any) => {
 
   const renderVehicle = () => {
     return <View >
+      <View style={{flexDirection:'row',marginTop:20}}>
+          <CheckBoxState  text={'With Driver'} onPress={()=>{}} isDisabled={isDisabled} />
+          <CheckBoxState  text={'Without Driver'} onPress={()=>{}} isDisabled={isDisabled} />
+      </View>
       {vehicleResponse &&
         vehicleResponse.map((item: any) => {
           console.log("itemitemitem12233", item);
           return (
-            <View>
-              <View style={{flexDirection:'row',marginTop:20}}>
-              <CheckBoxState  text={'With Driver'} onPress={()=>{}} isDisabled={isDisabled} />
-              <CheckBoxState  text={'Without Driver'} onPress={()=>{}} isDisabled={isDisabled} />
-              </View>
+            <View>  
             <VehicleContainer
             editPress={()=>{
               navigation.navigate('EditVehicle',{item})
 
             }}  
+            assignPress={()=>{
+              navigation.navigate('AssignDrivers',{item})
+            }}
             deletePress={() => {
                 Alert.alert("",
                   "Are you sure to Delete?",

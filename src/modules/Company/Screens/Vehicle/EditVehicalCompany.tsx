@@ -6,16 +6,16 @@ import { widthPercentageToDP } from 'react-native-responsive-screen';
 import { ImagePickerSvg } from '../../../../theme/assets/svg/ImagePickerSvg';
 import VehicleImageRow from './Components/AddVehicle/VehicleImageRow';
 import { launchImageLibrary } from 'react-native-image-picker';
-import{getImageUrlFromServer,addVehicleCompany} from '../../../../services'
+import{getImageUrlFromServer,updateVehicleCompany} from '../../../../services'
 import MyLoader from '../../../../components/MyLoader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyDropdown from '../../../../components/MyDropdown';
 import VehicleDropDown from './Components/VehicleDropDown';
 import DropDownPicker from 'react-native-dropdown-picker';
+import PopupModalOfSuccess from '../../../../components/PopupModalOfSuccess';
 
-const EditVehicleCompany = ({ navigation }: any) => {
+const EditVehicleCompany = ({ navigation,route }: any) => {
   const [isVehicleType, setIsVehicleType] = React.useState(true);
-
   const [vehicleName, setVehicleName] = React.useState('');
   const [isVehicleName, setIsVehicleName] = React.useState(true);
 
@@ -39,7 +39,7 @@ const EditVehicleCompany = ({ navigation }: any) => {
   const [vehicleResidence, setVehicleResidence] = React.useState<any>({});
   const [isVehicleResidence, setIsVehicleResidence] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(false);
-
+  const [isModalVisible, setModalVisible] = React.useState(false);
 
 
   /////drop down states////
@@ -169,20 +169,21 @@ const EditVehicleCompany = ({ navigation }: any) => {
     }
   };
 
-//   const getAllImagesUrlByPromise = () => {
-//     setIsLoading(true);
-//     Promise.all([
-//       getImageUrlFromServer(vehicleImage),
-//       getImageUrlFromServer(vehicleLicence),
-//       getImageUrlFromServer(vehicleResidence),
-//       isVehicleInsurance && getImageUrlFromServer(vehicleInsurance),
-//     ]).then(response => {
-//       setIsLoading(false);
-//       uploadDataToServer(response);
-//     });
-//   };
-
-
+  const getAllImagesUrlByPromise = () => {
+    setIsLoading(true);
+    Promise.all([
+      getImageUrlFromServer(vehicleImage),
+      getImageUrlFromServer(vehicleLicence),
+      getImageUrlFromServer(vehicleResidence),
+      isVehicleInsurance && getImageUrlFromServer(vehicleInsurance),
+    ]).then(response => {
+      setIsLoading(false);
+        uploadDataToServer(response);
+    });
+  };
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+};
 
 
 
@@ -206,39 +207,40 @@ const EditVehicleCompany = ({ navigation }: any) => {
       vLicence &&
       vResidence
     ) {
-    //   getAllImagesUrlByPromise();
+      getAllImagesUrlByPromise();
     }
   };
-//   const uploadDataToServer = async (response: any) => {
-//     const value = await AsyncStorage.getItem('@user_Id');
-//     let insuranceValue = '';
-//     if (response.length === 4) {
-//       insuranceValue = response[3].imageUrl;
-//     }
-//     if (value) {
-//       let vehicle: AddVehicleCompany = {
-//         companyId: value,
-//         licenseNumber: licenseNumber,
-//         vehicleColor: vehicleColor,
-//         vehicleImage: response[0].imageUrl,
-//         vehicleInsurance: insuranceValue,
-//         vehicleLicence: response[1].imageUrl,
-//         vehicleModel: vehicleModel,
-//         vehicleName: vehicleName,
-//         vehicleResidence: response[2].imageUrl,
-//         vehicleType: vehicleType,
-//       };
-//       console.log("check vehicle", vehicle);
-//       setIsLoading(true);
-//       addVehicleCompany(vehicle)
-//      .then((response) => response.json())
-//           .then((result:any) => {
-//             setIsLoading(false);
-//             Alert.alert("Success")
-//             console.log('vechical added', result);
-//           });
-//     }
-//   };
+  const uploadDataToServer = async (response: any) => {
+    const value = await AsyncStorage.getItem('@user_Id');
+    let insuranceValue = '';
+    if (response.length === 4) {
+      insuranceValue = response[3].imageUrl;
+    }
+    if (value) {
+     
+      let vehicle: AddVehicleCompany = {
+        companyId: value,
+        licenseNumber: licenseNumber,
+        vehicleColor: vehicleColor,
+        vehicleImage: response[0].imageUrl,
+        vehicleInsurance: insuranceValue,
+        vehicleLicence: response[1].imageUrl,
+        vehicleModel: vehicleModel,
+        vehicleName: vehicleName,
+        vehicleResidence: response[2].imageUrl,
+        vehicleType: vehicleType,
+      };
+      console.log("check vehicle", vehicle);
+      setIsLoading(true);
+      updateVehicleCompany(vehicle,route.params.item._id)
+     .then((response) => response.json())
+          .then((result:any) => {
+            setIsLoading(false);
+            toggleModal();
+            console.log('vechical Edited', result);
+          });
+    }
+  };
   return (
     <>
       {isLoading ? (
@@ -365,10 +367,17 @@ const EditVehicleCompany = ({ navigation }: any) => {
             }}
             svgImage={ImagePickerSvg}
           />
+           <PopupModalOfSuccess
+                firstText={"Vehicle Details"}
+                secondText={"are edited"}
+                isModalVisible={isModalVisible}
+                closeButtonOnPressed={() => {
+                    navigation.goBack();
+                }}/>
           <Button
             onPress={validForm}
             containerStyle={{ marginHorizontal: widthPercentageToDP(2) }}
-            title="SUBMIT VEHICLE DETAILS"
+            title="SAVE CHANGES"
           />
         </ScrollView>
       )

@@ -8,6 +8,8 @@ import AddDriver from '../modules/Company/Screens/Driver/AddDriver';
 import AddVehicleCompany from '../modules/Company/Screens/Vehicle/AddVehicleCompany';
 import AllVehiclesCompany from '../modules/Company/Screens/Vehicle/AllVehiclesCompany';
 import EditVehicleCompany from '../modules/Company/Screens/Vehicle/EditVehicalCompany';
+import AllDriverCompany from '../modules/Company/Screens/Driver/AllDriverCompany';
+import AssignDriverCompany from '../modules/Company/Screens/Driver/AssignDriverCompany';
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   return (
@@ -68,6 +70,18 @@ const DrawerNavigator = () => {
           name="EditVehicle"
           component={EditVehicleCompany}
           options={{ headerShown: false }}
+      />
+      <Stack.Screen
+          name="AllDrivers"
+          component={AllDriverCompany}
+          options={{ headerShown: false }}
+      />
+      <Stack.Screen
+          name="AssignDrivers"
+          component={AssignDriverCompany}
+          options={{ 
+            headerTitle: "All Drivers",
+            headerTitleAlign: 'center' }}
       />
         </Stack.Navigator>
         )

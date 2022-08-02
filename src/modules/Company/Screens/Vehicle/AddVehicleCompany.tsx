@@ -12,6 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyDropdown from '../../../../components/MyDropdown';
 import VehicleDropDown from './Components/VehicleDropDown';
 import DropDownPicker from 'react-native-dropdown-picker';
+import PopupModalOfSuccess from '../../../../components/PopupModalOfSuccess';
 
 const AddVehicleCompany = ({ navigation }: any) => {
   const [isVehicleType, setIsVehicleType] = React.useState(true);
@@ -39,7 +40,7 @@ const AddVehicleCompany = ({ navigation }: any) => {
   const [vehicleResidence, setVehicleResidence] = React.useState<any>({});
   const [isVehicleResidence, setIsVehicleResidence] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(false);
-
+  const [isModalVisible, setModalVisible] = React.useState(false);
 
 
   /////drop down states////
@@ -181,10 +182,9 @@ const AddVehicleCompany = ({ navigation }: any) => {
       uploadDataToServer(response);
     });
   };
-
-
-
-
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+};
 
 
   const validForm = () => {
@@ -234,7 +234,7 @@ const AddVehicleCompany = ({ navigation }: any) => {
      .then((response) => response.json())
           .then((result:any) => {
             setIsLoading(false);
-            Alert.alert("Success")
+            toggleModal();
             console.log('vechical added', result);
           });
     }
@@ -365,6 +365,13 @@ const AddVehicleCompany = ({ navigation }: any) => {
             }}
             svgImage={ImagePickerSvg}
           />
+           <PopupModalOfSuccess
+                firstText={"Add new vehicle request"}
+                secondText={"has been send to admin"}
+                isModalVisible={isModalVisible}
+                closeButtonOnPressed={() => {
+                    navigation.goBack();
+                }}/>
           <Button
             onPress={validForm}
             containerStyle={{ marginHorizontal: widthPercentageToDP(2) }}

@@ -19,7 +19,7 @@ const Pending = ({ navigation }: any) => {
         .then(result => {
           setIsLoading(false);
           setVehicleResponse(result.DriverRequests);
-          console.log("gggggggggggggg", result.DriverRequests)
+          // console.log("gggggggggggggg", result.DriverRequests)
         })
         .catch(error => {
           setIsLoading(false);
@@ -74,14 +74,17 @@ const Pending = ({ navigation }: any) => {
     if (isLoading) {
       return <MyLoader />
     } else if (vehicleResponse && vehicleResponse.length !== 0) {
+      let isPendingLocal = false;
       return vehicleResponse.map((item: any) => {
-
         if (item.status === 'Pending') {
+          isPendingLocal = true;
           return (
             <ScrollView>
               {renderVechicle(item)}
             </ScrollView>
           )
+        } else if(!isPendingLocal){
+          return noVehicleAvailable();
         }
       })
     } else {

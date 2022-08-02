@@ -121,7 +121,8 @@ const CompanyDrawer = ({ navigation }: any) => {
                    />
                    <Text style={styles.txtdetail}>State of Employees</Text> 
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.viewunderline}>
+                <TouchableOpacity onPress={()=>{navigation.navigate('AllDrivers')}}
+                style={styles.viewunderline}>
                    <SvgXml
                    xml={notificationSvg} width={25}
                    />

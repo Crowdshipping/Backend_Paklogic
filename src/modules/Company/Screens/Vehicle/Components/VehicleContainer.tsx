@@ -13,7 +13,7 @@ import {
   
 import VehicleRow from './VehicleRow';
 
-const VehicleContainer = ({ deletePress,editPress, vehicleType, vehicleName, vehicleColor, vehicleModel, licenceNumber, onPress, state,Status }: any) => {
+const VehicleContainer = ({ assignPress,deletePress,editPress, vehicleType, vehicleName, vehicleColor, vehicleModel, licenceNumber, onPress, state,Status }: any) => {
     return (
         <MineCard>
             <TouchableOpacity onPress={onPress}>
@@ -45,7 +45,8 @@ const VehicleContainer = ({ deletePress,editPress, vehicleType, vehicleName, veh
 
                     </View>
                     <View style={{alignItems:'center',marginTop:10}}>
-                        <TouchableOpacity style={styles.assignButton}>
+                        <TouchableOpacity  onPress={assignPress}
+                        style={styles.assignButton}>
                             <Text style={{color:'white',marginTop:2}}>Assign</Text>
                         </TouchableOpacity>
                     </View>

@@ -1066,3 +1066,70 @@ export const addVehicleCompany = (vehicle: AddVehicleCompany) => {
     return fetch(`https://backend-crowdshipping.herokuapp.com/company/deletevehicle/${requestId}/${companyId}`, requestOptions);
   
   }
+
+  export const updateVehicleCompany = (vehicle: AddVehicleCompany,vehicleId:string) => {
+    var myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    myHeaders.append(
+      'Cookie',
+      'connect.sid=s%3AmzAxQxmim5IE9KvghS8yLZQlZ0nQ_One.%2Bk2uZG0FbSZSRJV%2FExAjvD03998A4K6%2FVfKQO6ctj3U',
+    );
+  
+    var raw = JSON.stringify({
+      vehicleType: vehicle.vehicleType,
+      vehicleName: vehicle.vehicleName,
+      vehicleColor: vehicle.vehicleColor,
+      vehicleModel: vehicle.vehicleModel,
+      licenseNumber: vehicle.licenseNumber,
+      vehicleImage: vehicle.vehicleImage,
+      vehicleLicence: vehicle.vehicleLicence,
+      vehicleInsurance: vehicle.vehicleInsurance,
+      vehicleResidenceProof: vehicle.vehicleResidence,
+      companyId: vehicle.companyId,
+    });
+  
+    var requestOptions = {
+      method: 'PATCH',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow',
+    };
+    return fetch(
+      `https://backend-crowdshipping.herokuapp.com/company/editvehicle/${vehicleId}`,
+      requestOptions,
+    );
+    }
+    export const getAllDriversCompany = (companyId: any) => {
+      var myHeaders = new Headers();
+      myHeaders.append(
+        'Cookie',
+        'connect.sid=s%3Ac9ap3k_umKtuIkvvcSWsOOyw4qFY1029.VHy%2Fu6zZtHoFIdC8ZWyu0zvgm6JHNlL5D8ZKkJXO7Lw',
+      );
+    
+      var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow',
+      };
+      return fetch(
+        `https://backend-crowdshipping.herokuapp.com/company/getdrivers/${companyId}`,
+        requestOptions,
+      );
+    };
+    export const assignDriversCompany = (driverId: any,vehicleId:any) => {
+      var myHeaders = new Headers();
+      myHeaders.append(
+        'Cookie',
+        'connect.sid=s%3Ac9ap3k_umKtuIkvvcSWsOOyw4qFY1029.VHy%2Fu6zZtHoFIdC8ZWyu0zvgm6JHNlL5D8ZKkJXO7Lw',
+      );
+    
+      var requestOptions = {
+        method: 'PATCH',
+        headers: myHeaders,
+        redirect: 'follow',
+      };
+      return fetch(
+        `https://backend-crowdshipping.herokuapp.com/company/assignvehicle/${driverId}/${vehicleId}`,
+        requestOptions,
+      );
+    };
