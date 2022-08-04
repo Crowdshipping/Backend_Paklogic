@@ -6,7 +6,7 @@ const MineCard = ({ children }: any) => {
         <View style={{
             marginTop: 20,
             borderRadius: 10,
-            margin: 5,
+            margin: 7,
             padding: 12,
             backgroundColor: "white",
             shadowColor: "#000",

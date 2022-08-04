@@ -10,6 +10,8 @@ import AllVehiclesCompany from '../modules/Company/Screens/Vehicle/AllVehiclesCo
 import EditVehicleCompany from '../modules/Company/Screens/Vehicle/EditVehicalCompany';
 import AllDriverCompany from '../modules/Company/Screens/Driver/AllDriverCompany';
 import AssignDriverCompany from '../modules/Company/Screens/Driver/AssignDriverCompany';
+import DriverBookingHistory from '../modules/Company/Screens/History/DriverBookingHistory';
+import DriverDetailsCompany from '../modules/Company/Screens/Driver/DriverDetailsCompany';
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   return (
@@ -17,16 +19,44 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         options={{
           headerTitleAlign: 'center',
-          headerTintColor: 'white',
+          headerTintColor: 'black',
           headerStyle: {
             elevation: 0,
             shadowOpacity: 0,
-            backgroundColor: '#DB3F34',
+         
           },
+
         }}
-        name="CrowdShipping"
+        name="CROWDSHIPPING"
         component={CompanyDashboard}
       />
+      <Drawer.Screen
+          options={{
+            headerTitleAlign: 'center',
+            headerTintColor: 'black',
+            headerStyle: {
+              elevation: 0,
+              shadowOpacity: 0,
+            },
+            headerTitle:'ALL VEHICLE'
+          }}
+          name="AllVehicle"
+          component={AllVehiclesCompany}
+      />
+      <Drawer.Screen
+          options={{
+            headerTitleAlign: 'center',
+            headerTintColor: 'black',
+            headerStyle: {
+              elevation: 0,
+              shadowOpacity: 0,
+            },
+            headerTitle:'ALL DRIVER'
+          }}
+          name="AllDrivers"
+          component={AllDriverCompany}
+      />
+      
     </Drawer.Navigator>
   );
 };
@@ -34,7 +64,7 @@ const DrawerNavigator = () => {
 
   export const CompanyNavigation = () => {
     return (
-      <Stack.Navigator
+      <Stack.Navigator 
         screenOptions={{ gestureEnabled: false }}
         initialRouteName="Drawer"
         >
@@ -47,42 +77,82 @@ const DrawerNavigator = () => {
           component={DrawerNavigator}
         />
         <Stack.Screen
-          name="CompanyDashboard"
-          component={CompanyDashboard}
-          options={{ headerShown: false }}
-      />
-        <Stack.Screen
           name="AddDriver"
           component={AddDriver}
-          options={{ headerShown: false }}
+          options={{
+            headerTitleAlign: 'center',
+            headerTintColor: 'black',
+            headerStyle: {
+              elevation: 0,
+              shadowOpacity: 0,
+            },
+            headerTitle:'ADD DRIVER'
+
+          }}
       />
       <Stack.Screen
           name="AddVehicle"
           component={AddVehicleCompany}
-          options={{ headerShown: false }}
-      />
-      <Stack.Screen
-          name="AllVehicle"
-          component={AllVehiclesCompany}
-          options={{ headerShown: false }}
+          options={{
+            headerTitleAlign: 'center',
+            headerTintColor: 'black',
+            headerStyle: {
+              elevation: 0,
+              shadowOpacity: 0,
+            },
+            headerTitle:'ADD VEHICLE'
+
+          }}
       />
       <Stack.Screen
           name="EditVehicle"
           component={EditVehicleCompany}
-          options={{ headerShown: false }}
-      />
-      <Stack.Screen
-          name="AllDrivers"
-          component={AllDriverCompany}
-          options={{ headerShown: false }}
+          options={{
+            headerTitleAlign: 'center',
+            headerTintColor: 'black',
+            headerStyle: {
+              elevation: 0,
+              shadowOpacity: 0,
+            },
+            headerTitle:'EDIT VEHICLE'
+
+          }}
       />
       <Stack.Screen
           name="AssignDrivers"
           component={AssignDriverCompany}
           options={{ 
-            headerTitle: "All Drivers",
+            headerTitle: "ASSIGN DRIVER",
             headerTitleAlign: 'center' }}
       />
+      <Stack.Screen
+          name="DriversBookingHistory"
+          component={DriverBookingHistory}
+          options={{
+            headerTitleAlign: 'center',
+            headerTintColor: 'black',
+            headerStyle: {
+              elevation: 0,
+              shadowOpacity: 0,
+            },
+            headerTitle:'BOOKING HISTORY'
+
+          }}
+          />
+          <Stack.Screen
+            name="DriverDetailScreen"
+            component={DriverDetailsCompany}
+            options={{
+            headerTitleAlign: 'center',
+            headerTintColor: 'black',
+            headerStyle: {
+              elevation: 0,
+              shadowOpacity: 0,
+            },
+            headerTitle:'Driver Details'
+
+            }}
+          />
         </Stack.Navigator>
         )
         }

@@ -50,7 +50,7 @@ const PackageDetail = ({ navigation, route }: any) => {
         <View style={styles.viewdetail}>
           <Text style={styles.txtdetailbox}>Phone Number</Text>
           <Text style={styles.txtdetailbox}>
-            {requestData.bookingId.recieverPhoneno}
+          {requestData.bookingId.recieverPhoneno.countrycode+''+requestData.bookingId.recieverPhoneno.phoneno}
 
           </Text>
         </View>

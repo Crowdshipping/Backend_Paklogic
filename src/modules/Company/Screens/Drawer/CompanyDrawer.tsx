@@ -98,12 +98,13 @@ const CompanyDrawer = ({ navigation }: any) => {
             </View>
             <View style={styles.ViewDetails}>
                 <TouchableOpacity onPress={() => {
-                    navigation.goBack()
+                    navigation.navigate('CROWDSHIPPING')
                 }} style={styles.viewunderline}>
                     <SvgXml xml={homeSvg} width={25} />
                     <Text style={styles.txtdetail}>Home</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.viewunderline}>
+                <TouchableOpacity
+                style={styles.viewunderline}>
                    <SvgXml
                    xml={history} width={25}
                    />

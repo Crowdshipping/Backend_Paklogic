@@ -33,18 +33,21 @@ const AllDriverCompany = ({ navigation }: any) => {
       });
     }
   };
-  const renderDriver = (item:any) => {
+  const renderDriver = (item:any,show:any) => {
     return (
       <View>
         <AllDriverCompanyCard
-        onPress={()=>{}}
+        onPress={()=>{
+
+        }}
         status={item.vehicles.length===0?'Pending':'Assigned'}
         myImage={item.profilepic}
         firstName={item.firstname}
         lastName={item.lastname}
         email={item.email}
-
         show={show}
+        bookingDetailsPress={()=>{navigation.navigate('DriversBookingHistory',{item})}}
+        viewDriverDetailsPress={()=>{navigation.navigate('DriverDetailScreen',{item})}}
       />
       </View>
       
@@ -54,12 +57,12 @@ const AllDriverCompany = ({ navigation }: any) => {
     if (requestResponse) {
       return requestResponse.map((item: any) => {  
          if( withoutCar===true &&  item.vehicles.length===0){
-              return renderDriver(item);
+              return renderDriver(item,false);
            }
            else if(withCar===true && item.vehicles.length!==0){
-            return renderDriver(item);
+            return renderDriver(item,true);
            }else if(withoutCar===true &&  item.vehicles.length===0 && withCar===true && item.vehicles.length!==0 ){
-              return renderDriver(item);
+              return renderDriver(item,null);
            }else {
              
            }

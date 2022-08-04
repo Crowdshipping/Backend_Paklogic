@@ -16,11 +16,15 @@ export const AllDriverCompanyCard= ({
     deletePress,
     status,
     show,
-    assignPress
+    assignPress,
+    bookingDetailsPress,
+    viewDriverDetailsPress,
+    assignShow
 }: any) => {
     console.log("nothing")
     return (
-        <MineCard>
+        <View>
+        <View style={styles.mainContainer}>
             <TouchableOpacity onPress={onPress}>
                 <View>
                 <View style={{flexDirection:'row',justifyContent:'flex-end'}}>
@@ -29,11 +33,13 @@ export const AllDriverCompanyCard= ({
                         <TouchableOpacity onPress={deletePress} >
                             <Text>Delete</Text>
                         </TouchableOpacity>
-                        :
+                        :null
+                        }
+                        {assignShow ?
                         <TouchableOpacity onPress={assignPress}
                         style={{backgroundColor:'red',width:70,alignItems:'center',borderRadius:25,height:25}} >
                             <Text style={{color:'white'}}>Assign</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity>:null
                         }
                         
                     </View>
@@ -69,30 +75,63 @@ export const AllDriverCompanyCard= ({
                             
                         </View>
                     </View>
-                    {/* <View style={styles.bottom}>
-                        <View style={styles.bottomLeft}>
-                            <SvgXml xml={LocationSvg} width={50} height={80} />
-                        </View>
-                        <View style={styles.bottomMid}>
-                            <Text style={styles.countryText}>{departurePort}</Text>
-                            <Text style={styles.countryText}>{destinationPort}</Text>
-                        </View>
-                    </View> */}
                     <View style={styles.lastPart}>
                         <View style={styles.acceptAndRejectContainer}>
                             <Text style={styles.acceptText} >
                                 {status}
                             </Text>
-
                         </View>
-
+                        <View>
+                        {show?
+                        <TouchableOpacity onPress={viewDriverDetailsPress}>
+                                <Text style={{color:'green'}}>Driver Details</Text>
+                            </TouchableOpacity>
+                        :null}
+                        </View>
+                        
                     </View>
+                    
                 </View>
+                
             </TouchableOpacity>
-        </MineCard>
+ 
+     </View>
+     <View>
+        {show ?
+            <TouchableOpacity onPress={bookingDetailsPress}
+            style={styles.buttonContainer}>
+                <Text style={styles.detailsText}>
+                    VIEW DETAILS
+                </Text>
+            </TouchableOpacity>:null
+        
+        }
+        
+    </View>
+    </View>
     );
 };
 const styles = StyleSheet.create({
+   mainContainer:{
+            marginTop: 20,
+            borderRadius: 10,
+            margin: 5,
+            marginBottom:0,
+            padding: 12,
+            backgroundColor: "white",
+            shadowColor: "#000",
+            shadowOffset: {
+                width: 0,
+                height: 3,
+            },
+            shadowOpacity: 0.27,
+            shadowRadius: 4.65,
+
+            elevation: 6,
+            borderBottomLeftRadius:0,
+            borderBottomRightRadius:0
+
+   },
     card: {
         display: 'flex',
         paddingHorizontal: 20,
@@ -172,5 +211,28 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         marginLeft:10
     },
+    buttonContainer:{
+        backgroundColor:'red',
+        alignItems:'center',
+        borderBottomStartRadius:15,
+        borderBottomEndRadius:15,
+        height:50,
+        marginHorizontal:5, 
+        shadowColor: "#000",
+            shadowOffset: {
+                width: 0,
+                height: 3,
+            },
+            shadowOpacity: 0.27,
+            shadowRadius: 4.65,
+            elevation: 6,
+    },
+    detailsText:{
+        color:'white',
+        fontSize:18,
+        fontWeight:'bold',
+        marginTop:6
+    }
+    
 });
 // export default AllDriverCompanyCard;

@@ -15,7 +15,7 @@ const AssignDriverCompany = ({ navigation,route }: any) => {
   const[vehicleId,setVehicleId]=React.useState(route.params.item._id)
   const[driverId,setDriveId]=React.useState()
   const [isModalVisible, setModalVisible] = React.useState(false);
-  const [show, setShow] = React.useState(false);
+  const [assignShow, setAssignShow] = React.useState(true);
   const getData = async () => {
     const value = await AsyncStorage.getItem('@user_Id');
     if (value !== null) {
@@ -59,7 +59,7 @@ const AssignDriverCompany = ({ navigation,route }: any) => {
         firstName={item.firstname}
         lastName={item.lastname}
         email={item.email}
-        show={show}
+        assignShow={assignShow}
       />
       </View>
       

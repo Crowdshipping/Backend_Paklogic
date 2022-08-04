@@ -5,13 +5,16 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ButtonOutline } from '../../../../components';
 import CheckBoxState from '../../../../components/CheckBoxState';
 import MyLoader from '../../../../components/MyLoader';
-import { getAllVehiclesCompany, vehicleDeleteCompany } from '../../../../services';
+import { driver, getAllVehiclesCompany, vehicleDeleteCompany } from '../../../../services';
 import VehicleContainer from './Components/VehicleContainer';
 
 const AllVehiclesCompany = ({ navigation, status, myColor }: any) => {
   const [vehicleResponse, setVehicleResponse] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
+  const[assignShow,setAssignShow]=React.useState(false);
   const [isDisabled, setDisabled] = React.useState(false);
+  const [withCar, setWithCar] = React.useState(true);
+  const [withoutCar, setWithoutCar] = React.useState(false);
   const [userId, setUserId] = React.useState<any>("");
   const getData = async () => {
     setIsLoading(true);
@@ -49,17 +52,9 @@ const AllVehiclesCompany = ({ navigation, status, myColor }: any) => {
     return willFocusSubscription;
   }, []);
 
-  const renderVehicle = () => {
-    return <View >
-      <View style={{flexDirection:'row',marginTop:20}}>
-          <CheckBoxState  text={'With Driver'} onPress={()=>{}} isDisabled={isDisabled} />
-          <CheckBoxState  text={'Without Driver'} onPress={()=>{}} isDisabled={isDisabled} />
-      </View>
-      {vehicleResponse &&
-        vehicleResponse.map((item: any) => {
-          console.log("itemitemitem12233", item);
-          return (
-            <View>  
+  const renderVehicle = (item:any,status:any,show:any) => {
+    return( 
+           <View>  
             <VehicleContainer
             editPress={()=>{
               navigation.navigate('EditVehicle',{item})
@@ -100,7 +95,9 @@ const AllVehiclesCompany = ({ navigation, status, myColor }: any) => {
               vehicleModel={item.vehicleModel}
               licenceNumber={item.licenseNumber}
               state={item.isApproved===false ? "Waiting for admin approval" : "Your request has been approved by admin "}
-              Status={item.isApproved===false ? "Pending" : "pending"}
+              Status={status}
+              driverName={item?.driverId?.firstname+'\t'+item?.driverId?.lastname}
+              show={show}
               onPress={() => {
                 console.log('container pressed');
                 // navigation.navigate('VEHICLEDETAIL', {
@@ -110,7 +107,21 @@ const AllVehiclesCompany = ({ navigation, status, myColor }: any) => {
               
             />
             </View>
-          );
+       )}
+  
+  
+  
+  const renderVehicleCheck = () => {
+    return <View >
+      {vehicleResponse &&
+        vehicleResponse.map((item: any) => {
+          console.log("itemitemitem12233", item);
+          if(withCar===true && item?.driverId && item.driverId.length!==0){  
+            return renderVehicle(item,'Assigned',false)
+          }
+          else if(withoutCar===true && !item?.driverId){
+            return renderVehicle(item,'Pending',true)
+          }
         })}
     </View>
   }
@@ -127,9 +138,9 @@ const AllVehiclesCompany = ({ navigation, status, myColor }: any) => {
     if (isLoading) {
       return <MyLoader />
     } else if (vehicleResponse && vehicleResponse.length !== 0) {
-      return <ScrollView>
-        {renderVehicle()}
-      </ScrollView>
+          return <ScrollView>
+            {renderVehicleCheck()}
+          </ScrollView>
     } else {
       return noVehicleAvailable();
     }
@@ -151,6 +162,13 @@ const AllVehiclesCompany = ({ navigation, status, myColor }: any) => {
         title="Add New"
         color="black"
       />
+       <View style={{flexDirection:'row',marginTop:20}}>
+          <CheckBoxState  text={'With Driver'} 
+          checked={true}
+          onPress={()=>{setWithCar(!withCar)
+          }}  />
+          <CheckBoxState  text={'Without Driver'} onPress={()=>{setWithoutCar(!withoutCar)}}  />
+      </View>
       {renderContents()}
     </View>
   );
