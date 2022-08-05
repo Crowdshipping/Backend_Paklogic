@@ -37,9 +37,6 @@ const AllDriverCompany = ({ navigation }: any) => {
     return (
       <View>
         <AllDriverCompanyCard
-        onPress={()=>{
-
-        }}
         status={item.vehicles.length===0?'Pending':'Assigned'}
         myImage={item.profilepic}
         firstName={item.firstname}

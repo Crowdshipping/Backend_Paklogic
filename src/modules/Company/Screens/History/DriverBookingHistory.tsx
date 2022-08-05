@@ -43,7 +43,8 @@ const DriverBookingHistory= ({ navigation,route }: any) => {
   const renderVehicle = (item:any,status:any) => {
     return (
       <DriverBookingCardHistory
-        text={status}
+        onPress={()=>{navigation.navigate('DriverBookingHistoryDetails',{item})}}
+       text={status}
         myImage={''}
         firstName={item.requestedBy.firstname}
         lastName={item.requestedBy.lastname}

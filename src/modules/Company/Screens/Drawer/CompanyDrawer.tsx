@@ -24,6 +24,9 @@ import { flightSvg } from '../../../../theme/assets/svg/flightSvg';
 import { ship2Svg } from '../../../../theme/assets/svg/ship2Svg';
 import { history } from '../../../../theme/assets/svg/history';
 import { logoutUser } from '../../../../services';
+import {  StateOfEmployeeSyg} from '../../../../theme/assets/svg/StateOfEmployeeSyg';
+import {  DriversDetailSvg} from '../../../../theme/assets/svg/DriversDetailSvg';
+import {  vehicleSvg} from '../../../../theme/assets/svg/vehicleSvg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const CompanyDrawer = ({ navigation }: any) => {
     const [userId, setUserId] = React.useState<any>('');
@@ -118,14 +121,14 @@ const CompanyDrawer = ({ navigation }: any) => {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.viewunderline}>
                    <SvgXml
-                   xml={notificationSvg} width={25}
+                   xml={StateOfEmployeeSyg} width={25}
                    />
                    <Text style={styles.txtdetail}>State of Employees</Text> 
                 </TouchableOpacity>
                 <TouchableOpacity onPress={()=>{navigation.navigate('AllDrivers')}}
                 style={styles.viewunderline}>
                    <SvgXml
-                   xml={notificationSvg} width={25}
+                   xml={DriversDetailSvg} width={25}
                    />
                    <Text style={styles.txtdetail}>Drivers Details</Text> 
                 </TouchableOpacity>
@@ -138,7 +141,7 @@ const CompanyDrawer = ({ navigation }: any) => {
                 <TouchableOpacity onPress={()=>navigation.navigate('AllVehicle')} 
                 style={styles.viewunderline}>
                    <SvgXml
-                   xml={notificationSvg} width={25}
+                   xml={vehicleSvg} width={25}
                    />
                    <Text style={styles.txtdetail}>Vehicles</Text> 
                 </TouchableOpacity>

@@ -12,6 +12,7 @@ import AllDriverCompany from '../modules/Company/Screens/Driver/AllDriverCompany
 import AssignDriverCompany from '../modules/Company/Screens/Driver/AssignDriverCompany';
 import DriverBookingHistory from '../modules/Company/Screens/History/DriverBookingHistory';
 import DriverDetailsCompany from '../modules/Company/Screens/Driver/DriverDetailsCompany';
+import DriverBookingHistoryDetail from '../modules/Company/Screens/History/DriverBookingHistoryDetails';
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   return (
@@ -150,6 +151,20 @@ const DrawerNavigator = () => {
               shadowOpacity: 0,
             },
             headerTitle:'Driver Details'
+
+            }}
+          />
+          <Stack.Screen
+            name="DriverBookingHistoryDetails"
+            component={DriverBookingHistoryDetail}
+            options={{
+            headerTitleAlign: 'center',
+            headerTintColor: 'black',
+            headerStyle: {
+              elevation: 0,
+              shadowOpacity: 0,
+            },
+            headerTitle:'Booking Details'
 
             }}
           />
