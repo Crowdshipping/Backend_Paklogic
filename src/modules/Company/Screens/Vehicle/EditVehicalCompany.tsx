@@ -15,28 +15,29 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import PopupModalOfSuccess from '../../../../components/PopupModalOfSuccess';
 
 const EditVehicleCompany = ({ navigation,route }: any) => {
+  console.log(route.params.item)
   const [isVehicleType, setIsVehicleType] = React.useState(true);
-  const [vehicleName, setVehicleName] = React.useState('');
+  const [vehicleName, setVehicleName] = React.useState(route.params.item.vehicleName);
   const [isVehicleName, setIsVehicleName] = React.useState(true);
 
-  const [vehicleColor, setVehicleColor] = React.useState('');
+  const [vehicleColor, setVehicleColor] = React.useState(route.params.item.vehicleColor);
   const [isVehicleColor, setIsVehicleColor] = React.useState(true);
 
-  const [vehicleModel, setVehicleModel] = React.useState('');
+  const [vehicleModel, setVehicleModel] = React.useState(route.params.item.vehicleModel);
   const [isVehicleModel, setIsVehicleModel] = React.useState(true);
 
-  const [licenseNumber, setLicenceNumber] = React.useState('');
+  const [licenseNumber, setLicenceNumber] = React.useState(route.params.item.licenseNumber);
   const [isLicenceNumber, setIsLicenceNumber] = React.useState(true);
 
   /* Images of app */
-  const [vehicleImage, setVehicleImage] = React.useState<any>({});
+  const [vehicleImage, setVehicleImage] = React.useState<any>({vehicleImage: route.params.item.vehicleImage});
   const [isVehicleImage, setIsVehicleImage] = React.useState(true);
 
-  const [vehicleInsurance, setVehicleInsurance] = React.useState<any>({});
+  const [vehicleInsurance, setVehicleInsurance] = React.useState<any>({vehicleInsurance: route.params.item.vehicleInsurance});
   const [isVehicleInsurance, setIsVehicleInsurance] = React.useState(true);
-  const [vehicleLicence, setVehicleLicence] = React.useState<any>({});
+  const [vehicleLicence, setVehicleLicence] = React.useState<any>({vehicleLicence: route.params.item.vehicleLicence});
   const [isVehicleLicence, setIsVehicleLicence] = React.useState(true);
-  const [vehicleResidence, setVehicleResidence] = React.useState<any>({});
+  const [vehicleResidence, setVehicleResidence] = React.useState<any>({vehicleResidenceProof: route.params.item.vehicleResidenceProof});
   const [isVehicleResidence, setIsVehicleResidence] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isModalVisible, setModalVisible] = React.useState(false);
@@ -44,7 +45,7 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
 
   /////drop down states////
   const [open, setOpen] = React.useState(false);
-  const [vehicleType, setVehicleType] = React.useState('');
+  const [vehicleType, setVehicleType] = React.useState(route.params.item.vehicleType);
 
   const [items, setItems] = React.useState([
     { label: 'Car', value: 'car' },
@@ -170,7 +171,9 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
   };
 
   const getAllImagesUrlByPromise = () => {
-    setIsLoading(true);
+    setIsLoading(true)
+    console.log(vehicleImage,vehicleInsurance,vehicleLicence,vehicleResidence)
+    
     Promise.all([
       getImageUrlFromServer(vehicleImage),
       getImageUrlFromServer(vehicleLicence),
@@ -179,7 +182,12 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
     ]).then(response => {
       setIsLoading(false);
         uploadDataToServer(response);
+    }).catch(error=>{
+      setIsLoading(false);
+      console.log(error)
+      console.log(error?.response?.data)
     });
+    
   };
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -238,7 +246,12 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
             setIsLoading(false);
             toggleModal();
             console.log('vechical Edited', result);
-          });
+          }).catch(error=>{
+            console.log(error?.response?.data)
+            console.log(error)
+            setIsLoading(false);
+          }
+          )
     }
   };
   return (
@@ -283,7 +296,7 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
           {!isVehicleType && (<Text style={{ color: 'red', zIndex: -1 }}>Vehicle Type is required</Text>)}
           <VehicleInputRow
             title={'Vehicle Name'}
-            placeHolder={'Vitz'}
+            placeHolder={route.params.item.vehicleName}
             isValid={isVehicleName}
             validMessage={'Vehicle Name is Required'}
             onChangeText={(value: any) => {
@@ -292,7 +305,7 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
           />
           <VehicleInputRow
             title={'Vehicle Color'}
-            placeHolder={'Blue'}
+            placeHolder={route.params.item.vehicleColor}
             validMessage={'Vehicle Color is Required'}
             isValid={isVehicleColor}
             onChangeText={(value: any) => {
@@ -301,7 +314,7 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
           />
           <VehicleInputRow
             title={'Vehicle Model'}
-            placeHolder={'2020'}
+            placeHolder={route.params.item.vehicleColor}
             isValid={isVehicleModel}
             validMessage={'Vehicle Model is Required'}
             onChangeText={(value: any) => {
@@ -310,7 +323,7 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
           />
           <VehicleInputRow
             title={'License Number'}
-            placeHolder={'GHZ-2009'}
+            placeHolder={route.params.item.vehicleColor}
             isValid={isLicenceNumber}
             validMessage={'Licence Number is Required'}
             onChangeText={(value: any) => {
@@ -321,8 +334,8 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
             isValid={isVehicleImage}
             validMessage={'Vehicle Image is Required'}
             title={
-              Object.keys(vehicleImage).length === 0
-                ? 'VEHICLE IMAGE'
+              Object.keys(vehicleImage).length === 1
+                ? route.params.item.vehicleImage
                 : vehicleImage.name
             }
             onPress={() => {
@@ -332,8 +345,8 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
           />
           <VehicleImageRow
             title={
-              Object.keys(vehicleInsurance).length === 0
-                ? 'VEHICLE INSURANCE'
+              Object.keys(vehicleInsurance).length === 1
+                ? route.params.item.vehicleInsurance
                 : vehicleInsurance.name
             }
             onPress={() => {
@@ -345,8 +358,8 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
             isValid={isVehicleLicence}
             validMessage={'Vehicle Licence is Required'}
             title={
-              Object.keys(vehicleLicence).length === 0
-                ? 'VEHICLE LICENCE'
+              Object.keys(vehicleLicence).length === 1
+                ? route.params.item.vehicleLicence
                 : vehicleLicence.name
             }
             onPress={() => {
@@ -354,12 +367,12 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
             }}
             svgImage={ImagePickerSvg}
           />
-          <VehicleImageRow
+          <VehicleImageRow 
             isValid={isVehicleResidence}
             validMessage={'Vehicle Residence is Required'}
             title={
-              Object.keys(vehicleResidence).length === 0
-                ? 'VEHICLE RESIDENCE'
+              Object.keys(vehicleResidence).length === 1
+                ?  route.params.item.vehicleResidenceProof
                 : vehicleResidence.name
             }
             onPress={() => {

@@ -183,6 +183,7 @@ export default function RegisterCompany(props: any) {
         setLoading(false);
         console.log('jhnkjh', result);
         if (result.success) {
+          Alert.alert("CrowdShipping",result.message)
           props.navigation.navigate('SIGNIN');
           // Alert.alert('skc', result.message)
         }

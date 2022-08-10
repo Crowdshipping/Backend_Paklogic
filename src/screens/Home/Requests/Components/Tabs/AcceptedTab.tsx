@@ -28,7 +28,7 @@ const AcceptedTab = ({ item, navigation }: any) => {
             });
     }
     const renderAcceptTabs = () => {
-        if (item) {
+        if (item && item.length !== 0 && item.status==='Accepted') {
             if (isLoading) {
                 console.log("place of loader")
                 return <MyLoader />

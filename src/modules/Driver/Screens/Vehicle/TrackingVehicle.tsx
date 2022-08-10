@@ -5,6 +5,7 @@ import MyLoader from '../../../../components/MyLoader';
 import MapView, { LatLng, Marker } from 'react-native-maps';
 import MapBottomSheet from '../Home/Requests/Components/MapBottomSheet';
 import MapViewDirections from 'react-native-maps-directions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import VehicleTrackingContent from './Components/VehicleTrackingContent';
 import { io, Socket } from 'socket.io-client';
 // import Geolocation from '@react-native-community/geolocation';
@@ -20,6 +21,9 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const GOOGLE_MAPS_APIKEY = 'AIzaSyBnzRyirdu4C6br2saqLU0ExTV2U7qxVLg';
 
 const TrackingVehicle = ({ route, navigation }: any) => {
+    console.log("aaaaaaaaaaaaaaaaaaaaa")
+    const [userId, setUserId] = React.useState<any>('');
+    
     const [region, setRegion] = useState({
         latitude: LATITUDE,
         longitude: LONGITUDE,
@@ -67,6 +71,37 @@ const TrackingVehicle = ({ route, navigation }: any) => {
 
 
     ]);
+    const getUserId = async () => {
+        try {
+            const value = await AsyncStorage.getItem('@user_Id');
+            setUserId(value);
+        } catch (e) {
+            console.log(e)
+        }
+    }
+    React.useEffect(()=>{
+        console.log('you got here')
+        console.log("kcrossing", driverLiveLocation,userId)
+        setInterval(() => {
+             console.log("kcrossing", driverLiveLocation,userId)
+            if (mySocket.connected) {
+            //     setCurrentLocationLatitude(prevValue => prevValue + 0.1111);
+                mySocket.socket?.emit('sendLocation', {
+                    location: {
+                        "lat": driverLiveLocation.latitude,
+                        "lng": driverLiveLocation.longitude
+                    },
+                    driverID: userId
+                })
+                mySocket.socket?.on('getLocation', (r) => {
+                    console.log("socketLiveLocation", r);
+                })
+    
+            }
+        }, 10000)
+    },[])
+
+
     const getCurrentLocationDriver = () => {
 
         Geolocation.getCurrentPosition((position) => {
@@ -96,15 +131,17 @@ const TrackingVehicle = ({ route, navigation }: any) => {
         const [connected, setConnected] = React.useState(false);
         const [socket, setSocket] = React.useState<Socket>();
         React.useEffect(() => {
+            getUserId();
             getCurrentLocationDriver();
 
 
 
             ///////uncomment this interval when you done tracking part/////
-            getLiveLocation();
+            // getLiveLocation();
             // const interval = setInterval(() => {
             getLiveLocation();
             console.log('After 3 Seconds');
+        
             // }, 3000);
             const newSocket = io(url, {
                 secure: true,
@@ -120,6 +157,7 @@ const TrackingVehicle = ({ route, navigation }: any) => {
             socket,
         }
     }
+    
     const getLiveLocation = () => {
 
         const watchId = Geolocation.watchPosition((position) => {
@@ -189,15 +227,15 @@ const TrackingVehicle = ({ route, navigation }: any) => {
 
     // }
     // setInterval(() => {
-    //     { console.log("kcrossing", currentLocationLatitude) }
+    //     { console.log("kcrossing", driverLiveLocation) }
     //     if (mySocket.connected) {
-    //         setCurrentLocationLatitude(prevValue => prevValue + 0.1111);
+    //     //     setCurrentLocationLatitude(prevValue => prevValue + 0.1111);
     //         mySocket.socket?.emit('sendLocation', {
     //             location: {
-    //                 "lat": 33.675787,
-    //                 "lng": 73.053271
+    //                 "lat": driverLiveLocation.latitude,
+    //                 "lng": driverLiveLocation.longitude
     //             },
-    //             driverID: "62554fe8d2206f00040f82cc"
+    //             driverID: userId
     //         })
     //         mySocket.socket?.on('getLocation', (r) => {
     //             console.log("socketLiveLocation", r);

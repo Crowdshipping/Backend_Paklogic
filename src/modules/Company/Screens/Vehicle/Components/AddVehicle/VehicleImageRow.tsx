@@ -31,6 +31,7 @@ export default VehicleImageRow;
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 20
+        marginTop: 20,
+        paddingRight:22
     }
 })

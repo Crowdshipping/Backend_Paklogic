@@ -101,8 +101,8 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
                 pickupIATACityCode: postRequestData.pickupIATACityCode,
                 dropoffIATACityCode: postRequestData.dropoffIATACityCode,
                 postrequestId: postRequestData._id,
-                customerId: postRequestData.requestedBy,
-                bookingId: postRequestData.bookingId,
+                customerId: postRequestData.requestedBy._id,
+                bookingId: postRequestData.bookingId._id,
                 flightarrivalDate: postRequestData.flightarrivalDate,
             };
             setIsLoading(true);
@@ -114,6 +114,7 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
                         .then(response => response.json())
                         .then(result => {
                             setIsLoading(false);
+                            console.log("response araha ha")
                             //   navigation.navigate('AllRequest');
                             Alert.alert('', 'Request Accepted', [
                                 {
@@ -129,11 +130,11 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
                         })
                         .catch(error => {
                             setIsLoading(false);
-                            console.log('error', error);
+                            console.log('message', error?.response?.data);
                         });
                 })
                 .catch(error => {
-                    console.log("error", error);
+                    console.log("error", error?.response?.data);
                     setIsLoading(false);
                 });
         }
@@ -149,6 +150,7 @@ const AddFlightPostRequest = ({ navigation, route }: any) => {
                 return;
             }
             let data: any = result.assets?.[0];
+            console.log('any',data)
             if (Platform.OS === 'ios') {
                 data.uri = data?.uri?.slice(7);
             }

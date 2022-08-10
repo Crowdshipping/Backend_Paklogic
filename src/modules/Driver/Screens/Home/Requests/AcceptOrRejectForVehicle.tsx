@@ -8,6 +8,9 @@ import MapBottomSheet from './Components/MapBottomSheet';
 import BottomSheetContentForVehicle from './Components/BottomSheetContentForVehicle';
 import MapViewDirections from 'react-native-maps-directions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { io, Socket } from 'socket.io-client';
+import Geolocation from 'react-native-geolocation-service';
+import  { LatLng } from 'react-native-maps';
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -21,7 +24,10 @@ const GOOGLE_MAPS_APIKEY = 'AIzaSyBnzRyirdu4C6br2saqLU0ExTV2U7qxVLg';
 const AcceptBookingForVehicle = ({ route, navigation }: any) => {
   const { vehicleData } = route.params;
   const [isLoading, setIsLoading] = React.useState(false);
-
+  const [userId, setUserId] = React.useState<any>('');
+  const [connected, setConnected] = React.useState(false);
+  const [socket, setSocket] = React.useState<Socket>();
+    
   const ref = useRef<MapView>(null);
   const [coordinates, setCoordinates] = React.useState([
     {
@@ -33,6 +39,86 @@ const AcceptBookingForVehicle = ({ route, navigation }: any) => {
       longitude: vehicleData.bookingId.dropAddress.lng,
     },
   ]);
+
+  const [driverLiveLocation, setDriverLiveLocation] = React.useState<LatLng>(
+    {
+        latitude: 33.6467957,
+        longitude: 73.0375761,
+    }
+);
+const getUserId = async () => {
+  try {
+      const value = await AsyncStorage.getItem('@user_Id');
+      setUserId(value);
+  } catch (e) {
+      console.log(e)
+  }
+}
+const getCurrentLocationDriver = () => {
+
+  Geolocation.getCurrentPosition((position) => {
+      console.log("khalil ibrahim", position.coords.latitude);
+      console.log("khalil ibrahim2", position.coords.longitude);
+      setDriverLiveLocation(
+          {
+              latitude: Number(position.coords.latitude),
+              longitude: Number(position.coords.longitude),
+          }
+      )
+     
+  },
+      (error) => {
+          // See error code charts below.
+          console.log(error.code, error.message);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+  );
+}
+
+  
+  React.useEffect(() => {
+      getUserId();
+      getCurrentLocationDriver();
+      ///////uncomment this interval when you done tracking part/////
+      // getLiveLocation();
+      // const interval = setInterval(() => {
+      // getLiveLocation();
+      console.log('After 3 Seconds');
+  
+      // }, 3000);
+      const newSocket = io("ws://driver-live-socket.herokuapp.com/", {
+          secure: true,
+          transports: ['websocket'],
+      });
+      newSocket.on('disconnect', () => setConnected(false));
+      newSocket.on('connect', () => setConnected(true));
+      setSocket(newSocket);
+      // return () => clearInterval(interval)
+  }, [])
+  
+
+React.useEffect(()=>{
+  // console.log('you got here')
+  // console.log("kcrossing", driverLiveLocation,userId)
+  setInterval(() => {
+       console.log("kcrossing", driverLiveLocation,userId)
+       console.log('userId',userId)
+      if (connected) {
+      //     setCurrentLocationLatitude(prevValue => prevValue + 0.1111);
+          socket?.emit('sendLocation', {
+              location: {
+                  "lat": driverLiveLocation.latitude,
+                  "lng": driverLiveLocation.longitude
+              },
+              driverID: userId
+          })
+          socket?.on('getLocation', (r) => {
+              console.log("socketLiveLocation", r);
+          })
+
+      }
+  }, 10000)
+},[])
 
   const renderMap = () => {
     return (

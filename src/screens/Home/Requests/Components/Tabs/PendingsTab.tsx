@@ -24,7 +24,8 @@ const PendingsTab = ({ item, navigation }: any) => {
     const renderContents = () => {
         if (isLoading) {
             return <MyLoader />;
-        } else if (item && item.length !== 0) {
+            console.log("araha")
+        } else if (item && item.length !== 0 && item.status==='Pending') {
             return renderPendingTab();
         } else {
             return noVehicleAvailable();

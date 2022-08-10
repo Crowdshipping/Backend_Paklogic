@@ -5,6 +5,7 @@ import {
 import { earning, history, request } from '../../../../theme/assets/svg';
 import HomeContainer from './Components/HomeContainer';
 
+
 const DriverHome = ({ navigation }: any) => {
   return (
     <View style={styles.container}>
