@@ -147,8 +147,8 @@ const AcceptBookingForShip = ({ route, navigation }: any) => {
     return <MapView
       style={styles.map}
       initialRegion={{
-        latitude: shipData.bookingId.pickupAddress.lat,
-        longitude: shipData.bookingId.dropAddress.lng,
+        latitude: shipData?.bookingId?.pickupAddress?.lat,
+        longitude: shipData?.bookingId?.dropAddress?.lng,
         latitudeDelta: 40,
         longitudeDelta: 20,
       }}

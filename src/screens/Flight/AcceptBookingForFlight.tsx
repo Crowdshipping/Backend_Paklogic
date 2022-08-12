@@ -15,8 +15,8 @@ const GOOGLE_MAPS_APIKEY = "@AIzaSyC3vl-jtFGzrBapun1U6sxT-Toena_1ywY";
 const AcceptBookingForFlight = ({ route, navigation }: any) => {
   const [googleMapProvider, setGoogleMapProvider] = React.useState<any>(PROVIDER_DEFAULT);
   const { requestData, flightInfoData, isOtpVerify }: any = route.params;
-  const [flightPosition, setFlightPosition] = React.useState<any>({});
-  const [isLoading, setIsLoading] = React.useState<any>(false);
+  const [flightPosition, setFlightPosition] = React.useState<any>();
+  const [isLoading, setIsLoading] = React.useState<any>(true);
 
   const [departureAirportLatLng, setDepartureAirportLatLng] = React.useState<any>({});
   const [destinationAirportLatLng, setDestinationAirportLatLng] = React.useState<any>({});
@@ -24,28 +24,41 @@ const AcceptBookingForFlight = ({ route, navigation }: any) => {
   const ref = useRef<MapView>(null);
 
   const getFlightPosition = () => {
-    console.log("repeat")
+    console.log("repeat",requestData.flight.fa_flight_id)
     getFlightLatestPosition(requestData.flight.fa_flight_id).then(response => response.json())
       .then(result => {
+        console.log("resukt after flight data ",result)
         if (result.success) {
           setFlightPosition(result.flightlatestPosition);
+          setIsLoading(false)
         } else {
           Alert.alert(result.message);
+          setIsLoading(false)
+
         }
       })
       .catch(error => console.log('error', error));
   }
   const getFlightDepartureAirportLatAndLng = async () => {
+    
+    console.log(" nothingDe",requestData.flight.departureAirport)
     let res = await getAirportName(requestData.flight.departureAirport);
     let data: any = await res.json();
-    console.log("kget", data.airports[0].coordinates);
-    setDepartureAirportLatLng(data.airports[0].coordinates);
+    console.log("DataDe",data)
+      console.log("kget", data.airports[0].coordinates);
+      setDepartureAirportLatLng(data.airports[0].coordinates);
+   
   }
   const getFlightDestinationAirportLatAndLng = async () => {
-    console.log("destinationflightkkkkk", requestData.flight.destinationAirport);
+    
+   
+   console.log(" nothing",requestData.flight.destinationAirport)
     let res = await getAirportName(requestData.flight.destinationAirport);
     let data: any = await res.json();
-    setDestinationAirportLatLng(data.airports[0].coordinates);
+    console.log("Data",data)
+        console.log("destinationflightkkkkk", data.airports[0].coordinates);
+        setDestinationAirportLatLng(data.airports[0].coordinates);
+    
   }
   //60000 is 1minutes time
   useFocusEffect(() => {
@@ -64,6 +77,7 @@ const AcceptBookingForFlight = ({ route, navigation }: any) => {
     //   getFlightPosition();
     // }, 60000);
     // return () => clearInterval(interval);
+    setIsLoading(true)
   }, []);
 
   const renderMap = () => {
@@ -73,11 +87,11 @@ const AcceptBookingForFlight = ({ route, navigation }: any) => {
         <MapView
           region={{
             latitude: departureAirportLatLng.lat,
-            longitude: destinationAirportLatLng.lng,
+            longitude: departureAirportLatLng.lon,
             latitudeDelta: 200,
             longitudeDelta: 220,
           }}
-          mapType={Platform.OS == "android" ? "none" : "standard"}
+          mapType={Platform.OS == "android" ? 'standard' : "standard"}
           // onMapReady={onMapReadyHandler}
           provider={PROVIDER_GOOGLE} // remove if not using Google Maps
           showsUserLocation={false}
@@ -92,8 +106,8 @@ const AcceptBookingForFlight = ({ route, navigation }: any) => {
                   longitude: departureAirportLatLng.lon,
                 },
                 {
-                  latitude: flightPosition.latitude,
-                  longitude: flightPosition.longitude,
+                  latitude: flightPosition?.latitude,
+                  longitude: flightPosition?.longitude,
                 },
                 {
                   latitude: destinationAirportLatLng.lat,
@@ -132,8 +146,8 @@ const AcceptBookingForFlight = ({ route, navigation }: any) => {
             <Marker
               key={'middle'}
               coordinate={{
-                latitude: flightPosition.latitude,
-                longitude: flightPosition.longitude,
+                latitude: flightPosition?.latitude,
+                longitude: flightPosition?.longitude,
               }}
               title={'middle'}
             />

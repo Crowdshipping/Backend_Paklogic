@@ -263,6 +263,7 @@ export const getAirportName = (data: any) => {
 };
 export const addFlight = (data: any) => {
   console.log('addFlightdata', data);
+  console.log("flight departure date", data.date)
   var myHeaders = new Headers();
   myHeaders.append(
     'Cookie',
@@ -718,7 +719,7 @@ export const getShipLatestPosition = (mmsi: any) => {
   };
 
   return fetch(
-    `https://backend-crowdshipping.herokuapp.com/customer/shiplatestposition/${mmsi}`,
+    `https://backend-crowdshipping.herokuapp.com/customer/shiplatestposition/${mmsi}/false`,
     requestOptions,
   );
 };

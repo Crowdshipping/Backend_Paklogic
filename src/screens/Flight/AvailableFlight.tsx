@@ -85,7 +85,7 @@ const AvailableFight = ({ route, navigation, status, myColor }: any) => {
               setIsLoading(true);
               var flight: AddFlight = {
                 airline: flightData.airline,
-                date: flightData.date,
+                date: item.scheduled_out,
                 departureAirport: flightData.departureAirport,
                 destinationAirport: flightData.destinationAirport,
                 departureTime: flightData.departureTime,
@@ -99,12 +99,14 @@ const AvailableFight = ({ route, navigation, status, myColor }: any) => {
                 providerId: providerId,
                 flightArrivalDate: item.scheduled_in,
               };
+              console.log("yooouhhhhhh",flight)
               addFlight(flight)
                 .then(response => response.json())
                 .then(result => {
                   setIsLoading(false);
                   console.log('Processing for add Flight', result);
                   if (result.success) {
+                    
                     Alert.alert('Alert', result.message, [
                       {
                         text: 'Ok',

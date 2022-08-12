@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { View, StyleSheet, Alert, Platform, Dimensions } from 'react-native';
+import { View, StyleSheet, Alert, Platform, Dimensions,ActivityIndicator } from 'react-native';
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import MyLoader from '../../../../../components/MyLoader';
 import { changeStatusByDriver } from '../../../../../services';
@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { io, Socket } from 'socket.io-client';
 import Geolocation from 'react-native-geolocation-service';
 import  { LatLng } from 'react-native-maps';
+import { Text } from 'react-native-svg';
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -23,9 +24,10 @@ const GOOGLE_MAPS_APIKEY = 'AIzaSyBnzRyirdu4C6br2saqLU0ExTV2U7qxVLg';
 
 const AcceptBookingForVehicle = ({ route, navigation }: any) => {
   const { vehicleData } = route.params;
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [userId, setUserId] = React.useState<any>('');
+ console.log('userId arahi ha',route.params.userId)
+  const [isLoading, setIsLoading] = React.useState(true);
   const [connected, setConnected] = React.useState(false);
+  const [repeat, setRepeat] = React.useState(false);
   const [socket, setSocket] = React.useState<Socket>();
     
   const ref = useRef<MapView>(null);
@@ -46,14 +48,18 @@ const AcceptBookingForVehicle = ({ route, navigation }: any) => {
         longitude: 73.0375761,
     }
 );
-const getUserId = async () => {
-  try {
-      const value = await AsyncStorage.getItem('@user_Id');
-      setUserId(value);
-  } catch (e) {
-      console.log(e)
-  }
-}
+// const getUserId = async () => {
+//   try {
+//       const value = await AsyncStorage.getItem('@user_Id');
+//       setUserId(value);
+//       console.log(value)
+//   } catch (e) {
+//       console.log(e)
+//   }
+// }
+// React.useEffect(()=>{
+//   getUserId();
+// },[])
 const getCurrentLocationDriver = () => {
 
   Geolocation.getCurrentPosition((position) => {
@@ -75,9 +81,10 @@ const getCurrentLocationDriver = () => {
   );
 }
 
+
   
   React.useEffect(() => {
-      getUserId();
+     
       getCurrentLocationDriver();
       ///////uncomment this interval when you done tracking part/////
       // getLiveLocation();
@@ -86,13 +93,16 @@ const getCurrentLocationDriver = () => {
       console.log('After 3 Seconds');
   
       // }, 3000);
+     
       const newSocket = io("ws://driver-live-socket.herokuapp.com/", {
           secure: true,
           transports: ['websocket'],
       });
-      newSocket.on('disconnect', () => setConnected(false));
+
+      //newSocket.on('disconnect', () => setConnected(false));
       newSocket.on('connect', () => setConnected(true));
       setSocket(newSocket);
+      
       // return () => clearInterval(interval)
   }, [])
   
@@ -101,16 +111,18 @@ React.useEffect(()=>{
   // console.log('you got here')
   // console.log("kcrossing", driverLiveLocation,userId)
   setInterval(() => {
-       console.log("kcrossing", driverLiveLocation,userId)
-       console.log('userId',userId)
+       console.log("kcrossing", driverLiveLocation)
       if (connected) {
       //     setCurrentLocationLatitude(prevValue => prevValue + 0.1111);
+      setIsLoading(false)
+       console.log( "UserID",route.params.userId)
+       console.log("socket ",socket)
           socket?.emit('sendLocation', {
               location: {
                   "lat": driverLiveLocation.latitude,
                   "lng": driverLiveLocation.longitude
               },
-              driverID: userId
+              driverID: route.params.userId
           })
           socket?.on('getLocation', (r) => {
               console.log("socketLiveLocation", r);
@@ -118,7 +130,7 @@ React.useEffect(()=>{
 
       }
   }, 10000)
-},[])
+},[connected])
 
   const renderMap = () => {
     return (
@@ -175,7 +187,7 @@ React.useEffect(()=>{
   return (
     <View style={styles.container}>
       {isLoading ? (
-        <MyLoader />
+        <MyLoader/>
       ) : (
         <View style={styles.container}>
           {renderMap()}

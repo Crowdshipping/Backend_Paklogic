@@ -5,10 +5,12 @@ import MyLoader from '../../../../../../../components/MyLoader';
 import Geolocation from '@react-native-community/geolocation';
 import { ScrollView, Text, View } from 'react-native';
 import { heightPercentageToDP } from 'react-native-responsive-screen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Pending = ({ navigation }: any) => {
   const [vehicleResponse, setVehicleResponse] = React.useState<any>([]);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [userId, setUserId] = React.useState<any>('');
 
   const getDataOfVehicle = () => {
     setIsLoading(true);
@@ -34,7 +36,18 @@ const Pending = ({ navigation }: any) => {
     });
     return willFocusSubscription;
   }, []);
-
+  const getUserId = async () => {
+    try {
+        const value = await AsyncStorage.getItem('@user_Id');
+        setUserId(value);
+        console.log("new Driver",value)
+    } catch (e) {
+        console.log(e)
+    }
+  }
+  React.useEffect(()=>{
+    getUserId();
+  },[])
   const noVehicleAvailable = () => {
     return (
       <View style={{ height: heightPercentageToDP(75), justifyContent: 'center' }}>
@@ -53,11 +66,13 @@ const Pending = ({ navigation }: any) => {
         onPress={() => {
           navigation.navigate('ACCEPTORREJECTFORVEHICLE', {
             vehicleData: item,
+            userId
           });
         }}
         acceptPress={() => {
           navigation.navigate('ACCEPTORREJECTFORVEHICLE', {
             vehicleData: item,
+            userId
           });
         }}
         isAccepted={false}
