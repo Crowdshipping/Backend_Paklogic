@@ -35,14 +35,14 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>CrowdShipping would like access to your Media Library</string>
 	<key>NSCameraUsageDescription</key>
 	<string>CrowdShipping would like to use your camera</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Permission Required to show live Map traffic</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>CrowdShipping would like access to your photo gallery</string>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>CrowdShipping would like access to your Media Library</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

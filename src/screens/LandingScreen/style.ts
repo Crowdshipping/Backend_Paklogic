@@ -1,8 +1,9 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import {colors} from '../../theme';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -32,7 +33,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#E0E0E0',
     borderRadius: 10,
     elevation: 5,
-    shadowColor: 'gray',
+    shadowColor: Platform.OS === 'android' ? colors.black : 'grey',
     shadowOffset: {
       width: 1,
       height: 1,

@@ -3,6 +3,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import {colors} from '../../../theme';
 
 export const styles = StyleSheet.create({
   container: {
@@ -20,7 +21,7 @@ export const styles = StyleSheet.create({
   },
   menu: {marginHorizontal: wp(10), marginVertical: hp(2.5)},
   location: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     width: wp(80),
     borderRadius: 10,
     alignSelf: 'center',
@@ -33,7 +34,7 @@ export const styles = StyleSheet.create({
     // justifyContent: 'right',
   },
   bckimg: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     // marginTop: hp(20),
     borderTopRightRadius: 15,
     borderTopLeftRadius: 15,

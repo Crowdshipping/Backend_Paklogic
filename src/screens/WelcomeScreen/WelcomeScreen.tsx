@@ -1,16 +1,16 @@
-import React, {useEffect} from 'react';
-import {SafeAreaView, Text, View, Alert} from 'react-native';
-import {styles} from './style';
+import React, { useEffect } from 'react';
+import { SafeAreaView, Text, View, Alert, BackHandler } from 'react-native';
+import { styles } from './style';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {SvgXml} from 'react-native-svg';
-import {Button, Header} from '../../components/index';
-import {welcome} from '../../theme/assets/svg/index';
+import { SvgXml } from 'react-native-svg';
+import { Button, Header } from '../../components';
+import { welcome } from '../../theme/assets/svg';
 // import {useFocusEffect} from '@react-navigation/native';
 
-const WelcomeScreen = ({navigation}: any) => {
+const WelcomeScreen = ({ navigation }: any) => {
   // useFocusEffect(
   //   React.useCallback(() => {
   //     const onBackPress = () => {
@@ -40,22 +40,6 @@ const WelcomeScreen = ({navigation}: any) => {
       navigation.addListener('beforeRemove', (e: any) => {
         // Prevent default behavior of leaving the screen
         e.preventDefault();
-
-        // Prompt the user before leaving the screen
-        // Alert.alert(
-        //   'Discard changes?',
-        //   'You have unsaved changes. Are you sure to discard them and leave the screen?',
-        //   [
-        //     { text: "Don't leave", style: 'cancel', onPress: () => {} },
-        //     {
-        //       text: 'Discard',
-        //       style: 'destructive',
-        //       // If the user confirmed, then we dispatch the action we blocked earlier
-        //       // This will continue the action that had triggered the removal of the screen
-        //       onPress: () => navigation.dispatch(e.data.action),
-        //     },
-        //   ]
-        // );
         Alert.alert('Hold on!', 'Are you sure you want to Exit?', [
           {
             text: 'Cancel',
@@ -65,12 +49,10 @@ const WelcomeScreen = ({navigation}: any) => {
           {
             text: 'YES',
             onPress: () => {
-              // navigation.dispatch(e.data.action);
+              BackHandler.exitApp();
             },
           },
         ]);
-
-        // navigation.navigate('Register');
         return true;
       }),
     [navigation],
@@ -82,7 +64,7 @@ const WelcomeScreen = ({navigation}: any) => {
         <Header title={'WELCOME'} />
       </View>
       <View>
-        <SvgXml xml={welcome} style={{alignSelf: 'center'}} />
+        <SvgXml xml={welcome} style={{ alignSelf: 'center' }} />
       </View>
       <View>
         <Button

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import moment from 'moment';
 import {
@@ -16,9 +16,9 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-import {getShips} from '../../../API';
-import {Header, Datepicker, BookingListCard} from '../../../components';
-import {SearchPort} from '../../../Modals';
+import { getShips } from '../../../API';
+import { Header, Datepicker, BookingListCard } from '../../../components';
+import { SearchPort } from '../../../Modals';
 
 interface portArray {
   Country: string;
@@ -27,10 +27,11 @@ interface portArray {
   Name: string;
 }
 
-import {styles} from './style';
-import {colors} from '../../../theme/colors';
+import { styles } from './style';
+import { colors } from '../../../theme/colors';
+import { mapp } from '../../../theme/assets/images';
 
-const BookingListShipping = ({navigation, route}: any) => {
+const BookingListShipping = ({ navigation, route }: any) => {
   const [isVisible, setisVisible] = useState(false);
   const [isVisible2, setisVisible2] = useState(false);
   const [marinetrafficships, setmarinetrafficships] = useState([]);
@@ -78,19 +79,19 @@ const BookingListShipping = ({navigation, route}: any) => {
           {
             rest.success &&
               (setmarinetrafficships(rest.marinetrafficships),
-              setmarineShipsProvider(rest.ships),
-              setLoading(false));
+                setmarineShipsProvider(rest.ships),
+                setLoading(false));
           }
         })
         .catch(error => {
-          Alert.alert(error.message);
+          Alert.alert(error.message ? error.message : 'Something went wrong');
           setLoading(false);
         });
     }
   }, [pickupLocation, dropoffLocation, dobTo, dobTo2]);
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
       <Header
         title="list of bookings"
         pressMethod={() => navigation.goBack()}
@@ -99,12 +100,12 @@ const BookingListShipping = ({navigation, route}: any) => {
       {/* {bookings} */}
       <View style={styles.row}>
         <TouchableOpacity
-          style={[styles.Touch, {flexDirection: 'row', alignItems: 'center'}]}
+          style={[styles.Touch, { flexDirection: 'row', alignItems: 'center' }]}
           // onPress={() => setModalVisible(!isModalVisible)}
           onPress={() => setisVisible(true)}
-          // onPress={() => {
-          //   <SelectCountryModal isModalVisible={isModalVisible} />;
-          // }}
+        // onPress={() => {
+        //   <SelectCountryModal isModalVisible={isModalVisible} />;
+        // }}
         >
           {/* <Text style={styles.txt1}>{SelectedCountry.name}</Text> */}
           <Text style={styles.txt1}>
@@ -114,7 +115,7 @@ const BookingListShipping = ({navigation, route}: any) => {
           </Text>
           <AntDesign
             name="caretdown"
-            color={'#000'}
+            color={colors.black}
             size={wp(3)}
             style={{
               alignSelf: 'center',
@@ -125,7 +126,7 @@ const BookingListShipping = ({navigation, route}: any) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.Touch, {flexDirection: 'row', alignItems: 'center'}]}
+          style={[styles.Touch, { flexDirection: 'row', alignItems: 'center' }]}
           // onPress={() => setModalVisible2(!isModalVisible2)}>
           onPress={() => setisVisible2(true)}>
           {/* <Text style={styles.txt1}>{SelectedCountry2.name}</Text> */}
@@ -137,7 +138,7 @@ const BookingListShipping = ({navigation, route}: any) => {
 
           <AntDesign
             name="caretdown"
-            color={'#000'}
+            color={colors.black}
             size={wp(3)}
             style={{
               alignSelf: 'center',
@@ -179,7 +180,7 @@ const BookingListShipping = ({navigation, route}: any) => {
         )}
       </View>
       {/* available booking view */}
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         {
           isLoading ? (
             <View
@@ -195,7 +196,7 @@ const BookingListShipping = ({navigation, route}: any) => {
               <ActivityIndicator size={'small'} color={colors.red} />
             </View>
           ) : (
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
               <ScrollView style={styles.detailsbox}>
                 {marineShipsProvider && marineShipsProvider.length >= 1 && (
                   <View>
@@ -206,16 +207,18 @@ const BookingListShipping = ({navigation, route}: any) => {
                           key={index}
                           firstname={item.provider.firstname}
                           lastname={item.provider.lastname}
+                          mmsi={'MMSI'}
                           mmsiNumber={item.mmsiNumber}
                           pickupCity={item.pickupCity}
                           dropoffCity={item.dropoffCity}
                           shipDate={item.shipDate}
                           requestText={'Request'}
+                          img={mapp}
                           handleNavigation={() => {
                             navigation.navigate('ShipProviderDetail', {
                               data: {
                                 MMSI: item.mmsiNumber,
-                                type: 'ship',
+                                type: 'Ship',
                                 departurePort: pickupLocation.Name,
                                 destinationPort: dropoffLocation.Name,
                                 pickcoords: {
@@ -261,11 +264,13 @@ const BookingListShipping = ({navigation, route}: any) => {
                         key={index}
                         // firstname={item.provider.firstname}
                         // lastname={item.provider.lastname}
+                        mmsi={'MMSI'}
                         mmsiNumber={item.$.MMSI}
                         pickupCity={pickupLocation.Name}
                         dropoffCity={dropoffLocation.Name}
                         shipDate={item.$.ETA}
                         requestText={'Post Request'}
+                        img={mapp}
                         handleNavigation={() => {
                           navigation.navigate('ShipProductDetail', {
                             data: {

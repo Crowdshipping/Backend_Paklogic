@@ -1,5 +1,5 @@
-import axios, {AxiosRequestConfig} from 'axios';
-import {prodUrl} from '../appConstants';
+import axios, { AxiosRequestConfig } from 'axios';
+import { prodUrl } from '../appConstants';
 
 export const signIn = async (email: string, password: string) => {
   return new Promise((resolve, reject) => {
@@ -16,7 +16,7 @@ export const signIn = async (email: string, password: string) => {
         resolve(response.data);
       })
       .catch(error => {
-        reject(error.response.data.message);
+        reject(error?.response?.data?.message ? error.response.data.message : error);
       });
   });
 };

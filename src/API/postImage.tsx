@@ -7,13 +7,6 @@ interface IimageShow {
 }
 interface IimageShow1 extends Array<IimageShow> {}
 
-// {
-//   uri: Platform.OS === 'ios' ? Images[0].uri.slice(7) : Images[0].uri,
-//   type: 'image/JPEG',
-//   name: Images[0].name,
-//   fileSize: Images[0].size,
-// },
-
 export const postImage = async (images: IimageShow1) => {
   let promise = await Promise.all(
     images.map(async item => {

@@ -1,20 +1,22 @@
-import React, {useState, useEffect} from 'react';
-import {Alert, SafeAreaView, Text, View} from 'react-native';
-import {styles} from './style';
+import React, { useState, useEffect } from 'react';
+import { Alert, SafeAreaView, Text, View } from 'react-native';
+import { styles } from './style';
 
-import {Button, PhoneNumberPicker, Header} from '../../components/index';
+import { Button, PhoneNumberPicker, Header } from '../../components';
 
-import {SvgXml} from 'react-native-svg';
-import {welcome} from '../../theme/assets/svg/index';
+import { SvgXml } from 'react-native-svg';
+import { welcome } from '../../theme/assets/svg';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 
-import {verifyNumber} from '../../API/verifyPhone';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { verifyNumber } from '../../API/verifyPhone';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { NUM_REGEX } from '../../appConstants';
+import { colors } from '../../theme';
 
-const RegisterNumberScreen = ({navigation}: any) => {
+const RegisterNumberScreen = ({ navigation }: any) => {
   useEffect(() => {
     setphone(''),
       setcountryCode({
@@ -38,12 +40,11 @@ const RegisterNumberScreen = ({navigation}: any) => {
 
   async function handleSubmit() {
     let validate = true;
-    let phNumRegex = /^[0-9]{6,15}$/;
     // if (!phone) {
     //   setphoneValue(false);
     //   validate = false;
     // }
-    if (!phNumRegex.test(phone)) {
+    if (!NUM_REGEX.test(phone)) {
       setphoneValue(false);
       validate = false;
     }
@@ -58,17 +59,17 @@ const RegisterNumberScreen = ({navigation}: any) => {
           {
             setloading(false);
             rest.success &&
-              navigation.navigate('VerifyOtp', {countryCode, phone});
+              navigation.navigate('VerifyOtp', { countryCode, phone });
           }
         })
         .catch(error => {
-          Alert.alert(error.message);
+          Alert.alert(error.message ? error.message : 'Something went wrong');
           setloading(false);
         });
     }
   }
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
       <KeyboardAwareScrollView>
         <View>
           <Header
@@ -81,9 +82,9 @@ const RegisterNumberScreen = ({navigation}: any) => {
         <View>
           <SvgXml
             xml={welcome}
-            style={{alignSelf: 'center'}}
-            // width={wp(90)}
-            // height={hp(50)}
+            style={{ alignSelf: 'center' }}
+          // width={wp(90)}
+          // height={hp(50)}
           />
         </View>
         <View style={styles.inputContainer}>

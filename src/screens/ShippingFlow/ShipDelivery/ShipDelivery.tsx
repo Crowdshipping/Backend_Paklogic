@@ -1,29 +1,22 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   SafeAreaView,
   Text,
   TouchableOpacity,
   Platform,
-  Alert,
-  Modal,
-  ScrollView,
 } from 'react-native';
-import {styles} from './style';
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import {Button, Header, Datepicker} from '../../../components';
+import { styles } from './style';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { Button, Header, Datepicker } from '../../../components';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {SvgXml} from 'react-native-svg';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {calendar} from '../../../theme/assets/svg';
-import DateTimePicker from '@react-native-community/datetimepicker';
 
-import {colors} from '../../../theme/colors';
-import {SearchPort} from '../../../Modals';
-import moment from 'moment';
+import { SearchPort } from '../../../Modals';
+import { colors } from '../../../theme';
 
 interface portArray {
   Country: string;
@@ -32,7 +25,7 @@ interface portArray {
   Name: string;
 }
 
-const ShipDelivery = ({navigation}: any) => {
+const ShipDelivery = ({ navigation }: any) => {
   const [initialDate, setinitialDate] = useState('');
 
   const [finalDate, setfinalDate] = useState('');
@@ -56,7 +49,7 @@ const ShipDelivery = ({navigation}: any) => {
   const [markers, setmarkers] = useState([
     {
       title: 'initial',
-      latlng: {latitude: 33.738045, longitude: 73.084488},
+      latlng: { latitude: 33.738045, longitude: 73.084488 },
     },
     {
       title: 'final',
@@ -106,7 +99,7 @@ const ShipDelivery = ({navigation}: any) => {
   initDate.setDate(initDate.getDate() + 1);
 
   return (
-    <SafeAreaView style={{display: 'flex', flex: 1, backgroundColor: '#fff'}}>
+    <SafeAreaView style={{ display: 'flex', flex: 1, backgroundColor: colors.white }}>
       <View style={styles.container}>
         <MapView
           provider={PROVIDER_GOOGLE} // remove if not using Google Maps
@@ -125,13 +118,13 @@ const ShipDelivery = ({navigation}: any) => {
               key={index}
               coordinate={marker.latlng}
               title={marker.title}
-              // description={marker.description}
+            // description={marker.description}
             />
           ))}
         </MapView>
       </View>
 
-      <TouchableOpacity onPress={() => {}} style={styles.menu}>
+      <TouchableOpacity onPress={() => { }} style={styles.menu}>
         <Entypo name="menu" size={25} />
       </TouchableOpacity>
       <View style={styles.location}>
@@ -158,7 +151,7 @@ const ShipDelivery = ({navigation}: any) => {
           </Text>
         </TouchableOpacity>
         {!pickValue && (
-          <Text style={[styles.errorMsg, {paddingHorizontal: wp(5)}]}>
+          <Text style={[styles.errorMsg, { paddingHorizontal: wp(5) }]}>
             Departure Seaport is required
           </Text>
         )}
@@ -185,7 +178,7 @@ const ShipDelivery = ({navigation}: any) => {
           </Text>
         </TouchableOpacity>
         {!dropValue && (
-          <Text style={[styles.errorMsg, {paddingHorizontal: wp(5)}]}>
+          <Text style={[styles.errorMsg, { paddingHorizontal: wp(5) }]}>
             Destination Seaport is required
           </Text>
         )}
@@ -206,7 +199,7 @@ const ShipDelivery = ({navigation}: any) => {
               paddingHorizontal: wp(15),
               width: wp(70),
             }}>
-            <View style={{marginBottom: hp(1)}}>
+            <View style={{ marginBottom: hp(1) }}>
               <Datepicker
                 text={'From'}
                 onChange={(selectedDate: string) => {
@@ -218,7 +211,7 @@ const ShipDelivery = ({navigation}: any) => {
               />
               {/* new Date().setDate(new Date().getDate() + 1) */}
             </View>
-            <View style={{marginBottom: hp(1)}}>
+            <View style={{ marginBottom: hp(1) }}>
               <Datepicker
                 text={'To'}
                 onChange={(selectedDate: string) => {

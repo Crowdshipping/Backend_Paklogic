@@ -1,4 +1,5 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
+import {colors} from '../../theme/colors';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -14,12 +15,12 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     marginBottom: hp(10),
     width: wp(90),
     borderRadius: 10,
     elevation: 5,
-    shadowColor: '#000',
+    shadowColor: Platform.OS === 'android' ? colors.black : 'grey',
     shadowOffset: {
       width: 2,
       height: 2,

@@ -21,6 +21,14 @@ import ShipProviderDetail from './ShippingFlow/ShipProviderDetail/ShipProviderDe
 import ShipProductDetail from './ShippingFlow/ShipProductDetail/ShipProductDetail';
 import ShipReceiverDetail from './ShippingFlow/ShipReceiverDetail/ShipReceiverDetail';
 import ShipModifyRequest from './ShippingFlow/ShipModifyRequest/ShipModifyRequest';
+import BookingHistory from './DrawerScreens/BookingHistory/BookingHistory';
+import TrackFlight from './DrawerScreens/TrackFlight/TrackFlight';
+import TrackShip from './DrawerScreens/TrackShip/TrackShip';
+import LandProductDetail from './LandFlow/LandProductDetail/LandProductDetail';
+import LandReceiverDetail from './LandFlow/LandReceiverDetail/LandReceiverDetail';
+import TrackLand from './DrawerScreens/TrackLand/TrackLand';
+import LandModifyRequest from './LandFlow/LandModifyRequest/LandModifyRequest';
+import HistoryDetail from './DrawerScreens/HistoryDetail/HistoryDetail';
 
 export {
   RegisterScreen,
@@ -46,4 +54,12 @@ export {
   ShipProductDetail,
   ShipReceiverDetail,
   ShipModifyRequest,
+  BookingHistory,
+  TrackFlight,
+  TrackShip,
+  TrackLand,
+  LandProductDetail,
+  LandReceiverDetail,
+  LandModifyRequest,
+  HistoryDetail,
 };

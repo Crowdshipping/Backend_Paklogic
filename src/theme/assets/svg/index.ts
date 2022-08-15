@@ -10,7 +10,7 @@ import {car} from './car';
 import {cycle} from './cycle';
 import {scooter} from './scooter';
 import {avatar} from './avatar';
-import {ship} from './ship';
+import {shipsvg} from './ship';
 import {receiver_derails} from './receiverdetails';
 import {location} from './location';
 import {calendar} from './calendar';
@@ -20,6 +20,20 @@ import {carlocation} from './carlocation';
 import {dropdown} from './dropdown';
 import {pencil} from './pencil';
 import {success} from './success';
+import {locationicon} from './locationicon';
+import {mailicon} from './mailicon';
+import {profileicon} from './profileicon';
+import {setting} from './setting';
+import {claimicon} from './claimicon';
+import {homeicon} from './homeicon';
+import {logouticon} from './logouticon';
+import {notificationicon} from './notificationicon';
+import {packageicon} from './packageicon';
+import {supporticon} from './supporticon';
+import {historyicon} from './historyicon';
+import {carbgRed} from './carbgRed';
+import {scooterbgRed} from './scooterbgRed';
+import {cyclebgRed} from './cyclebgRed';
 
 export {
   register,
@@ -34,7 +48,7 @@ export {
   cycle,
   scooter,
   avatar,
-  ship,
+  shipsvg,
   receiver_derails,
   location,
   calendar,
@@ -44,4 +58,18 @@ export {
   dropdown,
   pencil,
   success,
+  locationicon,
+  mailicon,
+  profileicon,
+  setting,
+  claimicon,
+  homeicon,
+  logouticon,
+  notificationicon,
+  packageicon,
+  supporticon,
+  historyicon,
+  carbgRed,
+  scooterbgRed,
+  cyclebgRed,
 };

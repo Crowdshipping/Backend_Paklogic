@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   Text,
@@ -6,32 +6,32 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {styles} from './style';
+import { styles } from './style';
 import Modal from 'react-native-modal';
-import {Countries} from '../appConstants';
+import { Countries } from '../appConstants';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/AntDesign';
-import {IPhonePicker, ICountryCode} from './interface';
+import { IPhonePicker, ICountryCode } from './interface';
 
 export const PhoneNumberPicker = (props: IPhonePicker) => {
-  const {onChange, errormsg, countryCode, phone, editable} = props;
+  const { onChange, errormsg, countryCode, phone, editable } = props;
   const [num, setNum] = useState('');
   const [isModal, setIsModal] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<ICountryCode>(
     countryCode
       ? countryCode
       : {
-          name: 'United States',
-          dial_code: '+1',
-          code: 'US',
-          flag: '🇺🇸',
-        },
+        name: 'United States',
+        dial_code: '+1',
+        code: 'US',
+        flag: '🇺🇸',
+      },
   );
   return (
-    <View style={[styles.sectionContainer, {width: '100%'}]}>
+    <View style={[styles.sectionContainer, { width: '100%' }]}>
       <Text style={styles.titleText}>Mobile</Text>
       <View style={styles.addressView}>
         <TouchableOpacity
@@ -41,13 +41,13 @@ export const PhoneNumberPicker = (props: IPhonePicker) => {
             setIsModal(true);
           }}>
           <Text style={styles.countryText}>
-            {selectedCountry.flag + ' ' + selectedCountry.dial_code + ' '}
+            {selectedCountry?.flag}{' '}{selectedCountry.dial_code}{' '}
           </Text>
           {/* <View style={{flex: 1}}> */}
           <Icon
             name="caretdown"
             size={wp(4)}
-            // style={{alignSelf: 'flex-end', justifyContent: 'center'}}
+          // style={{alignSelf: 'flex-end', justifyContent: 'center'}}
           />
           {/* </View> */}
         </TouchableOpacity>
@@ -80,7 +80,7 @@ export const PhoneNumberPicker = (props: IPhonePicker) => {
           <ScrollView>
             {Countries.map((d: any, i: any) => {
               return (
-                <View key={i} style={{backgroundColor: 'white'}}>
+                <View key={i} style={{ backgroundColor: 'white' }}>
                   <TouchableOpacity
                     style={styles.modalViewBtn}
                     onPress={() => {
@@ -102,7 +102,7 @@ export const PhoneNumberPicker = (props: IPhonePicker) => {
 };
 
 export const PhoneNumberPickerUI = (props: IPhonePicker) => {
-  const {onChange, errormsg} = props;
+  const { onChange, errormsg } = props;
   const [isModal, setIsModal] = useState(false);
   const [num, setNum] = useState('');
   const [selectedCountry, setSelectedCountry] = useState({
@@ -112,8 +112,8 @@ export const PhoneNumberPickerUI = (props: IPhonePicker) => {
     flag: '🇺🇸',
   });
   return (
-    <View style={[styles.sectionContainer, {paddingHorizontal: 0}]}>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+    <View style={[styles.sectionContainer, { paddingHorizontal: 0 }]}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <TouchableOpacity
           style={{
             borderBottomWidth: 1,
@@ -124,7 +124,7 @@ export const PhoneNumberPickerUI = (props: IPhonePicker) => {
             justifyContent: 'space-between',
           }}
           onPress={() => setIsModal(true)}>
-          <Text style={{fontSize: wp(4)}}>
+          <Text style={{ fontSize: wp(4) }}>
             {selectedCountry.flag + ' ' + selectedCountry.dial_code + '  '}
           </Text>
           <Icon name="caretdown" size={wp(4)} />
@@ -141,8 +141,6 @@ export const PhoneNumberPickerUI = (props: IPhonePicker) => {
             borderColor: 'grey',
           }}
           onChangeText={text => {
-            // let phNumRegex = /^[0-9\b]+$/;
-            // if (phNumRegex.test(text)) {
             setNum(text);
             onChange && onChange(selectedCountry, text);
             // }
@@ -171,9 +169,9 @@ export const PhoneNumberPickerUI = (props: IPhonePicker) => {
           <ScrollView>
             {Countries.map((d: any, i: number) => {
               return (
-                <View key={i} style={{backgroundColor: 'white'}}>
+                <View key={i} style={{ backgroundColor: 'white' }}>
                   <TouchableOpacity
-                    style={{marginVertical: hp(1), flexDirection: 'row'}}
+                    style={{ marginVertical: hp(1), flexDirection: 'row' }}
                     onPress={() => {
                       setSelectedCountry(d);
                       onChange && onChange(d, num);
@@ -182,7 +180,7 @@ export const PhoneNumberPickerUI = (props: IPhonePicker) => {
                     <Text>{d.flag + ' ' + d.name}</Text>
                   </TouchableOpacity>
                   <View
-                    style={{height: hp(0.1), backgroundColor: 'lightgrey'}}
+                    style={{ height: hp(0.1), backgroundColor: 'lightgrey' }}
                   />
                 </View>
               );

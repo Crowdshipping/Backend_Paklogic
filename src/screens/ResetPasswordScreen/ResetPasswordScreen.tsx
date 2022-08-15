@@ -1,16 +1,16 @@
-import React, {useState} from 'react';
-import {SafeAreaView, View, Alert} from 'react-native';
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import {Textbox, Button, Header} from '../../components/index';
+import React, { useState } from 'react';
+import { SafeAreaView, View, Alert } from 'react-native';
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { Textbox, Button, Header } from '../../components';
 
-import {SvgXml} from 'react-native-svg';
-import {forgot_password} from '../../theme/assets/svg/index';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {setnewPassword} from '../../API/setnewPassword';
-import {SuccessModal} from '../../Modals';
+import { SvgXml } from 'react-native-svg';
+import { forgot_password } from '../../theme/assets/svg';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { setnewPassword } from '../../API/setnewPassword';
+import { SuccessModal } from '../../Modals';
 
-const ResetPasswordScreen = ({route, navigation}: any) => {
-  const {id} = route.params;
+const ResetPasswordScreen = ({ route, navigation }: any) => {
+  const { id } = route.params;
   const [loading, setloading] = useState(false);
   const [success, setsuccess] = useState(false);
   const [passwordValue, setpasswordValue] = useState(true);
@@ -46,7 +46,7 @@ const ResetPasswordScreen = ({route, navigation}: any) => {
           rest.success && (settext(rest.message), setsuccess(true));
         })
         .catch(error => {
-          Alert.alert(error.message);
+          Alert.alert(error.message ? error.message : 'Something went wrong');
           setloading(false);
         });
     }

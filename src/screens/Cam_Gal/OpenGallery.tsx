@@ -32,7 +32,7 @@ const OpenGallery = (props: any) => {
   const launchLibrary = async () => {
     await launchImageLibrary({...DEFAULT_OPTIONS}, (response: any) => {
       if (response.didCancel) {
-        Alert.alert('User cancelled camera picker');
+        // Alert.alert('User cancelled camera picker');
         return;
       } else if (response.errorCode == 'camera_unavailable') {
         Alert.alert('Camera not available on device');
@@ -57,7 +57,7 @@ const OpenGallery = (props: any) => {
           .then((response: any) => {
             let ImageObject: IimageShow = {
               uri: response.uri,
-              type: response.type,
+              type: 'image/JPEG',
               name: response.name,
             };
 
@@ -65,12 +65,24 @@ const OpenGallery = (props: any) => {
           })
           .catch((err: any) => {
             console.log(err);
+            Alert.alert(err.message ? err.message : 'Something went wrong');
           });
       }
     });
   };
   return (
-    <TouchableOpacity onPress={launchLibrary} style={{alignSelf: 'center'}}>
+    <TouchableOpacity
+      onPress={() => {
+        launchLibrary();
+      }}
+      style={{
+        // borderWidth: 1,
+        // width: '100%',
+        // height: '100%',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
       <Text style={styles.txt1}>Gallery</Text>
     </TouchableOpacity>
   );

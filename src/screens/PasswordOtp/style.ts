@@ -1,8 +1,9 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import {colors} from '../../theme';
 
 export const styles = StyleSheet.create({
   sectionContainer: {
@@ -16,9 +17,9 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: wp(1.5),
     alignSelf: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     elevation: 2,
-    shadowColor: '#000',
+    shadowColor: Platform.OS === 'android' ? colors.black : 'grey',
     shadowOffset: {
       width: 0.5,
       height: 0.5,

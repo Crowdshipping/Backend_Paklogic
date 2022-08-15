@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   ScrollView,
@@ -6,16 +6,17 @@ import {
   Text,
   SafeAreaView,
   Modal,
+  Alert,
 } from 'react-native';
 // import Modal from 'react-native-modal';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {Countries} from '../appConstants';
-import {Textbox} from '../components';
-import {colors} from '../theme';
-import {searchPort} from '../API/index';
+import { Countries } from '../appConstants';
+import { Textbox } from '../components';
+import { colors } from '../theme';
+import { searchPort } from '../API';
 
 interface IModal {
   setModalVisible: Function;
@@ -28,7 +29,7 @@ interface portArray {
   // Coordinates: string;
   Name: string;
 }
-interface portArray1 extends Array<portArray> {}
+interface portArray1 extends Array<portArray> { }
 
 export const SearchPort = (props: IModal) => {
   const [ports, setports] = useState<portArray1>([
@@ -45,9 +46,10 @@ export const SearchPort = (props: IModal) => {
       })
       .catch(error => {
         console.log(error);
+        // Alert.alert(error.message ? error.message : 'Something went wrong');
       });
   }
-  const {isModalVisible, setModalVisible, setLocation} = props;
+  const { isModalVisible, setModalVisible, setLocation } = props;
   return (
     <Modal visible={isModalVisible}>
       <SafeAreaView>
@@ -57,7 +59,7 @@ export const SearchPort = (props: IModal) => {
             alignItems: 'center',
             justifyContent: 'space-around',
           }}>
-          <View style={{width: '85%'}}>
+          <View style={{ width: '85%' }}>
             <Textbox
               placeholder={'Search Port'}
               onChangeValue={(text: string) => {
@@ -75,11 +77,11 @@ export const SearchPort = (props: IModal) => {
               });
               setModalVisible(false);
             }}
-            style={{width: '15%'}}>
-            <Text style={{color: colors.red}}>Cancel</Text>
+            style={{ width: '15%' }}>
+            <Text style={{ color: colors.red }}>Cancel</Text>
           </TouchableOpacity>
         </View>
-        <ScrollView style={{paddingHorizontal: wp(5)}}>
+        <ScrollView style={{ paddingHorizontal: wp(5) }}>
           {ports?.map((item: portArray, index: number) => {
             return (
               <TouchableOpacity
@@ -89,7 +91,7 @@ export const SearchPort = (props: IModal) => {
                   setLocation(item);
                 }}>
                 <Text>
-                  {item.Name} ({item.Country})
+                  {item.Name} {item.Country && ((item.Country))}
                 </Text>
               </TouchableOpacity>
             );
@@ -99,3 +101,4 @@ export const SearchPort = (props: IModal) => {
     </Modal>
   );
 };
+// ({item.Country})

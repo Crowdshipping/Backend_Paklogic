@@ -3,6 +3,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import {colors} from '../../../theme';
 
 export const styles = StyleSheet.create({
   btnView: {alignSelf: 'center'},
@@ -41,10 +42,10 @@ export const styles = StyleSheet.create({
     paddingHorizontal: wp(5),
     marginHorizontal: wp(5),
     // padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     bottom: hp(5),
     elevation: 5,
-    shadowColor: '#000',
+    shadowColor: colors.black,
     borderRadius: 8,
   },
   title: {

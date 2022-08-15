@@ -393,22 +393,70 @@ PODS:
     - React-jsi (= 0.68.1)
     - React-logger (= 0.68.1)
     - React-perflogger (= 0.68.1)
-  - RNCAsyncStorage (1.17.6):
+  - RNCAsyncStorage (1.17.7):
     - React-Core
-  - RNDateTimePicker (6.1.3):
+  - RNDateTimePicker (6.1.4):
     - React-Core
-  - RNGestureHandler (2.4.2):
+  - RNGestureHandler (2.5.0):
     - React-Core
   - RNPermissions (3.3.1):
     - React-Core
+  - RNReanimated (2.8.0):
+    - DoubleConversion
+    - FBLazyVector
+    - FBReactNativeSpec
+    - glog
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-callinvoker
+    - React-Core
+    - React-Core/DevSupport
+    - React-Core/RCTWebSocket
+    - React-CoreModules
+    - React-cxxreact
+    - React-jsi
+    - React-jsiexecutor
+    - React-jsinspector
+    - React-RCTActionSheet
+    - React-RCTAnimation
+    - React-RCTBlob
+    - React-RCTImage
+    - React-RCTLinking
+    - React-RCTNetwork
+    - React-RCTSettings
+    - React-RCTText
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNScreens (3.13.1):
     - React-Core
     - React-RCTImage
   - RNSVG (12.3.0):
     - React-Core
-  - RNVectorIcons (9.1.0):
+  - RNVectorIcons (9.2.0):
     - React-Core
   - SocketRocket (0.6.0)
+  - Stripe (22.4.0):
+    - Stripe/Stripe3DS2 (= 22.4.0)
+    - StripeApplePay (= 22.4.0)
+    - StripeCore (= 22.4.0)
+    - StripeUICore (= 22.4.0)
+  - stripe-react-native (0.13.1):
+    - React-Core
+    - Stripe (~> 22.4.0)
+    - StripeFinancialConnections (~> 22.4.0)
+  - Stripe/Stripe3DS2 (22.4.0):
+    - StripeApplePay (= 22.4.0)
+    - StripeCore (= 22.4.0)
+    - StripeUICore (= 22.4.0)
+  - StripeApplePay (22.4.0):
+    - StripeCore (= 22.4.0)
+  - StripeCore (22.4.0)
+  - StripeFinancialConnections (22.4.0):
+    - StripeCore (= 22.4.0)
+    - StripeUICore (= 22.4.0)
+  - StripeUICore (22.4.0):
+    - StripeCore (= 22.4.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -480,9 +528,11 @@ DEPENDENCIES:
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
+  - "stripe-react-native (from `../node_modules/@stripe/stripe-react-native`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -503,6 +553,11 @@ SPEC REPOS:
     - libevent
     - OpenSSL-Universal
     - SocketRocket
+    - Stripe
+    - StripeApplePay
+    - StripeCore
+    - StripeFinancialConnections
+    - StripeUICore
     - YogaKit
 
 EXTERNAL SOURCES:
@@ -590,12 +645,16 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
+  stripe-react-native:
+    :path: "../node_modules/@stripe/stripe-react-native"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -653,17 +712,24 @@ SPEC CHECKSUMS:
   React-RCTVibration: 9e344c840176b0af9c84d5019eb4fed8b3c105a1
   React-runtimeexecutor: 7285b499d0339104b2813a1f58ad1ada4adbd6c0
   ReactCommon: bf2888a826ceedf54b99ad1b6182d1bc4a8a3984
-  RNCAsyncStorage: 466b9df1a14bccda91da86e0b7d9a345d78e1673
-  RNDateTimePicker: 04b805a3cb4d386e5e6aff54b47ace7bad706fda
-  RNGestureHandler: 61628a2c859172551aa2100d3e73d1e57878392f
+  RNCAsyncStorage: d81ee5c3db1060afd49ea7045ad460eff82d2b7d
+  RNDateTimePicker: f56338ebc86246f6b46f9e0953daa3a28acf909c
+  RNGestureHandler: bad495418bcbd3ab47017a38d93d290ebd406f50
   RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
+  RNReanimated: 64573e25e078ae6bec03b891586d50b9ec284393
   RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
   RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
-  RNVectorIcons: 7923e585eaeb139b9f4531d25a125a1500162a0b
+  RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
+  Stripe: a925dfa9a7e51aa8f782f428abc10cb828b45a85
+  stripe-react-native: e7f9976caf5de6d4e397bf084add5457e538ca20
+  StripeApplePay: 369857bafe8baf02e31b47478db1574febd2a2f3
+  StripeCore: a94d2823817c97c79fce60884ab9027a2da798c1
+  StripeFinancialConnections: 269658b79f639c2d6b7d513235d469418b04c2dd
+  StripeUICore: a8e24a6c91a5c99075c7a490d45695fb912876e8
   Yoga: 17cd9a50243093b547c1e539c749928dd68152da
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 5b984bc6c84f4bf2c5415ba96d0e3e0058491b2f
+PODFILE CHECKSUM: 9d9e3c573b71fd9580bb7a6a69f5676ada6f2801
 
 COCOAPODS: 1.11.3

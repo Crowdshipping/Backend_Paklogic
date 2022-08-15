@@ -3,6 +3,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import {colors} from '../theme/colors';
 
 export const styles = StyleSheet.create({
   view1: {
@@ -29,7 +30,7 @@ export const styles = StyleSheet.create({
   },
 
   modal: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     elevation: 5,
 
     width: wp(80),

@@ -3,7 +3,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {colors} from '../theme';
 
 export const styles = StyleSheet.create({
   addressView: {
@@ -68,7 +68,8 @@ export const styles = StyleSheet.create({
     borderColor: 'grey',
   },
   textInput: {
-    width: '50%',
+    // width: '50%',
+    flex: 1,
     fontSize: wp(4),
     borderBottomWidth: 1,
     borderColor: 'grey',
@@ -96,7 +97,7 @@ export const styles = StyleSheet.create({
   },
   btnView: {
     borderWidth: 1,
-    borderColor: '#D83025',
+    borderColor: colors.red,
     height: hp(7),
     borderRadius: wp(2),
     alignItems: 'center',

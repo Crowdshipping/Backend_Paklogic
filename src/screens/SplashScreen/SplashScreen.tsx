@@ -1,11 +1,11 @@
-import React, {useEffect} from 'react';
-import {SafeAreaView} from 'react-native';
-import {styles} from './style';
-import {splash} from '../../theme/assets/svg/index';
-import {SvgXml} from 'react-native-svg';
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import React, { useEffect } from 'react';
+import { SafeAreaView } from 'react-native';
+import { styles } from './style';
+import { splash } from '../../theme/assets/svg';
+import { SvgXml } from 'react-native-svg';
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
-const SplashScreen = ({navigation}: any) => {
+const SplashScreen = ({ navigation }: any) => {
   useEffect(() => {
     const performTimeConsumingTask = () => {
       setTimeout(() => {

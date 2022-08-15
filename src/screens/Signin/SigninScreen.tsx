@@ -1,18 +1,19 @@
-import React, {useState} from 'react';
-import {SafeAreaView, Text, View, TouchableOpacity, Alert} from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView, Text, View, TouchableOpacity, Alert } from 'react-native';
 import {
   heightPercentageToDP,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {styles} from './style';
-import {Textbox, Button, Header} from '../../components/index';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { styles } from './style';
+import { Textbox, Button, Header } from '../../components';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import {SvgXml} from 'react-native-svg';
-import {signin} from '../../theme/assets/svg/index';
-import {signIn} from '../../API/signin';
-const SigninScreen = ({navigation}: any) => {
+import { SvgXml } from 'react-native-svg';
+import { signin } from '../../theme/assets/svg';
+import { signIn } from '../../API/signin';
+
+const SigninScreen = ({ navigation }: any) => {
   const [emailValue, setemailValue] = useState(true);
   // const [email, setemail] = useState('');
   const [passwordValue, setpasswordValue] = useState(true);
@@ -44,16 +45,27 @@ const SigninScreen = ({navigation}: any) => {
       signIn(email, password)
         .then((rest: any) => {
           setloading(false);
-          try {
-            AsyncStorage.setItem('@userId', rest.user._id);
-          } catch (e) {
-            console.log('error', e);
+          if (!rest.user?.role) {
+            try {
+              AsyncStorage.setItem('@userId', rest.user._id);
+              AsyncStorage.setItem('@userEmail', rest.user.email);
+              AsyncStorage.setItem(
+                '@userName',
+                rest.user.firstname + rest.user.lastname,
+              );
+            } catch (e) {
+              console.log('error', e);
+            }
+            rest.success &&
+              navigation.navigate('MyDrawer', { screen: 'Landing' });
+          } else {
+            Alert.alert('User does not exist');
           }
-          rest.success && navigation.navigate('Landing');
         })
         .catch(error => {
           setloading(false);
-          Alert.alert(error);
+          console.log(error);
+          Alert.alert(error.message ? error.message : 'User does not exist');
         });
     }
   }
@@ -115,7 +127,7 @@ const SigninScreen = ({navigation}: any) => {
             <Text style={styles.btnText}> Register Now</Text>
           </TouchableOpacity>
         </View>
-        <View style={{marginBottom: heightPercentageToDP(10)}}>
+        <View style={{ marginBottom: heightPercentageToDP(10) }}>
           <Button
             title="Next"
             onPress={() => {

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   Text,
@@ -6,15 +6,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {styles} from './style';
+import { styles } from './style';
 import Modal from 'react-native-modal';
-import {Countries} from '../appConstants';
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import { Countries } from '../appConstants';
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/Entypo';
-import {IAddressPicker} from './interface';
+import { IAddressPicker } from './interface';
+import { colors } from '../theme';
 
 export const Address = (props: IAddressPicker) => {
-  const {onChange, errormsg} = props;
+  const { onChange, errormsg } = props;
   const [isModal, setIsModal] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState({
     name: 'United States',
@@ -33,7 +34,7 @@ export const Address = (props: IAddressPicker) => {
           <Text style={styles.countryText}>
             {selectedCountry.flag + ' ' + selectedCountry.code + ' '}
           </Text>
-          <Icon name="location-pin" size={wp(7)} color={'#D83025'} />
+          <Icon name="location-pin" size={wp(7)} color={colors.red} />
         </TouchableOpacity>
 
         <TextInput
@@ -59,7 +60,7 @@ export const Address = (props: IAddressPicker) => {
           <ScrollView>
             {Countries.map((d: any, i: any) => {
               return (
-                <View key={d.dial_code} style={{backgroundColor: 'white'}}>
+                <View key={d.dial_code} style={{ backgroundColor: 'white' }}>
                   <TouchableOpacity
                     style={styles.modalViewBtn}
                     onPress={() => {

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   View,
@@ -9,23 +9,23 @@ import {
   Image,
 } from 'react-native';
 
-import {Textbox, Button, MapHeader} from '../../components';
-import {packagedetails, cross} from '../../theme/assets/svg';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {mapp} from '../../theme/assets/images';
+import { Textbox, Button, MapHeader } from '../../components';
+import { packagedetails, cross } from '../../theme/assets/svg';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { mapp } from '../../theme/assets/images';
 
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {styles} from './style';
+import { styles } from './style';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {colors} from '../../theme/colors';
-import {ModalTypes} from '../../Modals';
+import { colors } from '../../theme/colors';
+import { ModalTypes } from '../../Modals';
 
-import {SvgXml} from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
 import Modal from 'react-native-modal/dist/modal';
 
 import OpenCamera from '../Cam_Gal/OpenCamera';
@@ -36,8 +36,9 @@ interface IimageShow {
   uri: string;
   type: string;
 }
-interface IimageShow1 extends Array<IimageShow> {}
-const ProductScreen = ({navigation, route}: any) => {
+interface IimageShow1 extends Array<IimageShow> { }
+const ProductScreen = ({ navigation, route }: any) => {
+  console.log('haris very bad', route.params.item)
   const pickcoords = route.params?.item?.pickcoords;
   const dropcoords = route.params?.item?.dropcoords;
   const providerId = route.params.item?.providerId;
@@ -71,24 +72,24 @@ const ProductScreen = ({navigation, route}: any) => {
   ]);
 
   const category = [
-    {id: 1, name: 'Wood'},
-    {id: 2, name: 'Iron'},
-    {id: 3, name: 'Plastic'},
-    {id: 4, name: 'Glass'},
+    { id: 1, name: 'Wood' },
+    { id: 2, name: 'Iron' },
+    { id: 3, name: 'Plastic' },
+    { id: 4, name: 'Glass' },
   ];
   const Type = [
-    {id: 1, name: 'Cargo'},
-    {id: 2, name: 'hand Carry'},
-    {id: 3, name: 'soft'},
+    { id: 1, name: 'Cargo' },
+    { id: 2, name: 'hand Carry' },
+    { id: 3, name: 'soft' },
   ];
   const Unit = [
-    {id: 1, name: 'Kilogram'},
-    {id: 2, name: 'Gram'},
-    {id: 3, name: 'Pound'},
+    { id: 1, name: 'Kilogram' },
+    { id: 2, name: 'Gram' },
+    { id: 3, name: 'Pound' },
   ];
   function handleSubmit() {
     let validate = true;
-    let phNumRegex = /^[0-9]{1,15}$/;
+
     if (!weight) {
       setweightValue(false);
       validate = false;
@@ -135,6 +136,7 @@ const ProductScreen = ({navigation, route}: any) => {
             initialDate: route.params.item.initialDate,
             finalDate: route.params.item.finalDate,
             Images,
+            type,
           },
         });
     } else if (fa_flight_id) {
@@ -170,32 +172,32 @@ const ProductScreen = ({navigation, route}: any) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
       <KeyboardAwareScrollView>
-        <ImageBackground resizeMode="stretch" style={{flex: 1}} source={mapp}>
+        <ImageBackground resizeMode="stretch" style={{ flex: 1 }} source={mapp}>
           <ScrollView
             style={{}}
             showsVerticalScrollIndicator={false}
             scrollToOverflowEnabled={false}>
-            <TouchableOpacity onPress={() => {}} style={styles.menu}>
+            <TouchableOpacity onPress={() => { }} style={styles.menu}>
               <Entypo name="menu" size={25} />
             </TouchableOpacity>
             <View style={styles.location}>
               <Textbox
                 title={'Pickup Location'}
                 placeholder={pickupCity}
-                onChangeValue={() => {}}
+                onChangeValue={() => { }}
                 editable={false}
               />
               <Textbox
                 title={'Drop Location'}
                 placeholder={dropoffCity}
-                onChangeValue={() => {}}
+                onChangeValue={() => { }}
                 editable={false}
               />
             </View>
             <View style={styles.bckimg}>
-              <View style={{bottom: hp(7)}}>
+              <View style={{ bottom: hp(7) }}>
                 <MapHeader
                   title="Package Details"
                   picture={packagedetails}
@@ -222,7 +224,7 @@ const ProductScreen = ({navigation, route}: any) => {
                     />
                   </View>
 
-                  <Text style={{borderColor: 'grey'}}>
+                  <Text style={{ borderColor: 'grey' }}>
                     {SelectedCategory ? SelectedCategory : 'Select Category'}
                   </Text>
                 </TouchableOpacity>
@@ -262,7 +264,7 @@ const ProductScreen = ({navigation, route}: any) => {
                 ) : (
                   <View></View>
                 )}
-                <View
+                {/* <View
                   style={{
                     flexDirection: 'row',
                     // borderWidth: 1,
@@ -287,11 +289,6 @@ const ProductScreen = ({navigation, route}: any) => {
                     }
                   />
 
-                  {/* !weightValue
-                        ? weight.length == 0
-                          ? 'Weight is Required'
-                          : 'Invalid weight'
-                        : '' */}
                   <TouchableOpacity
                     onPress={() => setModalVisible3(!isModalVisible3)}
                     style={{
@@ -311,6 +308,80 @@ const ProductScreen = ({navigation, route}: any) => {
                       }}
                     />
                   </TouchableOpacity>
+                </View> */}
+
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginLeft: wp(3),
+                    marginRight: wp(5),
+                    // borderWidth: 1,
+                    // alignItems: 'center',
+                    // justifyContent: 'space-between',
+                  }}>
+                  <View
+                    style={{
+                      width: '50%',
+                      // borderWidth: 1
+                    }}>
+                    <Textbox
+                      title="Product Weight"
+                      placeholder={
+                        route.params?.data?.weight
+                          ? route.params?.data?.weight
+                          : "Enter product's weight"
+                      }
+                      onChangeValue={(text: string) => {
+                        setweightValue(true), setweight(text);
+                      }}
+                      type={true}
+                      errormsg={
+                        !weightValue && !unitValue
+                          ? 'Weight and Unit are Required'
+                          : !unitValue
+                            ? 'Unit is Required'
+                            : !weightValue
+                              ? 'Weight is Required'
+                              : ''
+                      }
+                    />
+                  </View>
+                  <TouchableOpacity
+                    style={{
+                      // marginTop: 0,
+                      width: '47%',
+                      // borderWidth: 1,
+                      borderBottomWidth: 1,
+                      marginTop: hp(2),
+                      // marginHorizontal: wp(1),
+                      // paddingHorizontal: wp(5),
+                      marginBottom: hp(3),
+                      borderColor: 'grey',
+                      height: '55%',
+                      // alignSelf: 'center',
+
+                      // justifyContent: 'center',
+                    }}
+                    onPress={() => setModalVisible3(!isModalVisible3)}>
+                    <View style={styles.txtview}>
+                      <Text style={styles.txt1}>Product Unit</Text>
+
+                      <AntDesign
+                        name="caretdown"
+                        color={'grey'}
+                        size={wp(3)}
+                        style={{
+                          alignSelf: 'center',
+                          // borderWidth: 2,
+                          marginLeft: hp(1),
+                        }}
+                      />
+                    </View>
+
+                    <Text style={{ borderColor: 'grey', marginTop: 2 }}>
+                      {SelectedUnit ? SelectedUnit : 'Select Unit'}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
                 <View style={styles.attachment}>
                   <Text style={styles.txt}>Attached Photo</Text>
@@ -323,17 +394,17 @@ const ProductScreen = ({navigation, route}: any) => {
                     disabled={Images.length >= 2 ? true : false}>
                     <Entypo
                       name="attachment"
-                      color={'#000'}
+                      color={colors.black}
                       size={wp(5)}
-                      style={{alignSelf: 'flex-end'}}
+                      style={{ alignSelf: 'flex-end' }}
                     />
                   </TouchableOpacity>
                 </View>
-                <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                   {Images.length >= 1 ? (
                     Images.map((item, index1: number) => {
                       return (
-                        <View key={index1} style={{marginHorizontal: wp(5)}}>
+                        <View key={index1} style={{ marginLeft: wp(8) }}>
                           <TouchableOpacity
                             onPress={() => {
                               setImages([
@@ -354,10 +425,10 @@ const ProductScreen = ({navigation, route}: any) => {
                           </TouchableOpacity>
 
                           <Image
-                            source={{uri: item.uri}}
+                            source={{ uri: item.uri }}
                             style={{
-                              height: wp(35),
-                              width: wp(35),
+                              height: wp(37),
+                              width: wp(37),
                               // margin: wp(5),
                               borderRadius: 10,
                               // borderWidth: 1,
@@ -375,7 +446,7 @@ const ProductScreen = ({navigation, route}: any) => {
                         borderRadius: wp(5),
                         justifyContent: 'center',
                         alignItems: 'center',
-                        marginHorizontal: wp(5),
+                        marginHorizontal: wp(8),
                         backgroundColor: '#C4C4C4',
                       }}>
                       <View
@@ -400,7 +471,7 @@ const ProductScreen = ({navigation, route}: any) => {
                     </Text>
                   </View>
                 )}
-                <View style={{paddingHorizontal: wp(8)}}>
+                <View style={{ paddingHorizontal: wp(8) }}>
                   <Text style={styles.txt}>Instructions</Text>
                   <View
                     style={{
@@ -425,13 +496,13 @@ const ProductScreen = ({navigation, route}: any) => {
                         paddingVertical: hp(1),
                         flexWrap: 'wrap',
                       }}
-                      // onChangeText={(text: string) => {
-                      //   setinstructions(text);
-                      // }}
+                    // onChangeText={(text: string) => {
+                    //   setinstructions(text);
+                    // }}
                     />
                   </View>
                 </View>
-                <View style={{paddingHorizontal: wp(8)}}>
+                <View style={{ paddingHorizontal: wp(8) }}>
                   <Text style={styles.txt}>Product Description</Text>
                   <View
                     style={{
@@ -505,7 +576,7 @@ const ProductScreen = ({navigation, route}: any) => {
         onBackdropPress={() => settoCaptureImage(false)}>
         <View
           style={{
-            backgroundColor: '#fff',
+            backgroundColor: colors.white,
             elevation: 5,
 
             width: wp(80),
@@ -525,7 +596,7 @@ const ProductScreen = ({navigation, route}: any) => {
               right: -10,
               top: -10,
             }}>
-            <TouchableOpacity onPress={() => setModalVisible(false)}>
+            <TouchableOpacity onPress={() => settoCaptureImage(false)}>
               <SvgXml
                 // style={styles.cross_img}
                 width="16"
@@ -542,26 +613,30 @@ const ProductScreen = ({navigation, route}: any) => {
               // paddingVertical: 30,
               paddingBottom: 30,
             }}>
-            <Text style={[styles.txt1, {color: 'red', textAlign: 'center'}]}>
+            <Text style={[styles.txt1, { color: 'red', textAlign: 'center' }]}>
               Choose a picture
             </Text>
           </View>
           <View
             style={{
               justifyContent: 'space-around',
-              paddingVertical: 30,
+              paddingVertical: 5,
               flexDirection: 'row',
               alignItems: 'center',
               // paddin,
             }}>
-            <OpenCamera callbackImage={getSelectedImage.bind(this)} />
+            <View style={{ width: '45%', height: hp(5) }}>
+              <OpenCamera callbackImage={getSelectedImage.bind(this)} />
+            </View>
             <View
               style={{
                 borderLeftWidth: 1,
                 height: '100%',
               }}
             />
-            <OpenGallery callbackImage={getSelectedImage.bind(this)} />
+            <View style={{ width: '45%', height: hp(5) }}>
+              <OpenGallery callbackImage={getSelectedImage.bind(this)} />
+            </View>
           </View>
         </View>
       </Modal>

@@ -4,6 +4,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import {colors} from '../../theme';
 
 export const styles = StyleSheet.create({
   arrorwStyle: {
@@ -14,7 +15,7 @@ export const styles = StyleSheet.create({
   },
   bckimg: {
     // flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     marginTop: hp(10),
     borderTopRightRadius: 15,
     borderTopLeftRadius: 15,
@@ -83,7 +84,7 @@ export const styles = StyleSheet.create({
   },
   menu: {marginHorizontal: wp(10), marginVertical: hp(3)},
   location: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     width: wp(80),
     borderRadius: 10,
     alignSelf: 'center',

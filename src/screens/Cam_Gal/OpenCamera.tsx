@@ -12,7 +12,8 @@ import {
   ImageLibraryOptions,
 } from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
-import {styles} from './style';
+import { styles } from './style';
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 interface IimageShow {
   name: string;
@@ -52,7 +53,7 @@ const OpenCamera = (props: any) => {
       includeExtra: false,
       presentationStyle: 'pageSheet',
     };
-    launchCamera({...DEFAULT_OPTIONS}, (response: any) => {
+    launchCamera({ ...DEFAULT_OPTIONS }, (response: any) => {
       if (response.didCancel) {
         // Alert.alert('User cancelled camera picker');
         return;
@@ -79,19 +80,30 @@ const OpenCamera = (props: any) => {
           .then((response: any) => {
             let ImageObject: IimageShow = {
               uri: response.uri,
-              type: response.type,
+              type: 'image/JPEG',
               name: response.name,
             };
             callbackImage(ImageObject);
           })
           .catch((err: any) => {
             console.log(err);
+            Alert.alert(err.message ? err.message : 'Something went wrong');
           });
       }
     });
   };
   return (
-    <TouchableOpacity onPress={pickImage}>
+    <TouchableOpacity
+      onPress={pickImage}
+      // onPress={() => {}}
+      style={{
+        // borderWidth: 1,
+        // width: '100%',
+        // height: '100%',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
       <Text style={styles.txt1}>Camera</Text>
     </TouchableOpacity>
   );

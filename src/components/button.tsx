@@ -1,10 +1,11 @@
 import React from 'react';
-import {Text, View, TouchableOpacity, ActivityIndicator} from 'react-native';
-import {IButton} from './interface';
-import {styles} from './style';
+import { Text, View, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { IButton } from './interface';
+import { styles } from './style';
+import { colors } from '../theme/colors';
 
 export const Button = (props: IButton) => {
-  const {containerStyle, title, onPress, bg, loading} = props;
+  const { containerStyle, title, onPress, bg, loading } = props;
   const isLoading = loading == undefined ? false : loading;
   return (
     <View style={[styles.sectionContainer, containerStyle]}>
@@ -13,12 +14,12 @@ export const Button = (props: IButton) => {
         onPress={() => onPress()}
         style={[
           styles.btnView,
-          {backgroundColor: bg ? 'transparent' : '#D83025'},
+          { backgroundColor: bg ? 'transparent' : colors.red },
         ]}>
         {isLoading ? (
-          <ActivityIndicator size={'small'} color={'white'} />
+          <ActivityIndicator size={'small'} color={colors.white} />
         ) : (
-          <Text style={[styles.btnText, {color: bg ? '#D83025' : 'white'}]}>
+          <Text style={[styles.btnText, { color: bg ? colors.red : colors.white }]}>
             {title}
           </Text>
         )}

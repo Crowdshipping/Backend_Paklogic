@@ -14,6 +14,14 @@ import {postRequest} from './postRequest';
 import {getShips} from './getShips';
 import {searchPort} from './searchPort';
 import {postImage} from './postImage';
+import {orderHistory} from './orderHistory';
+import {flightTracking} from './flightTracking';
+import {shipTracking} from './shipTracking';
+import {searchAirport} from './searchAirport';
+import {createPaymentsHistory} from './createPaymentsHistory';
+import {createDriverRequest} from './createDriverRequest';
+import {cancelDriverRequest} from './cancelDriverRequest';
+import {editBooking} from './editBooking';
 
 export {
   forgotPassword,
@@ -32,4 +40,12 @@ export {
   getShips,
   searchPort,
   postImage,
+  orderHistory,
+  flightTracking,
+  shipTracking,
+  searchAirport,
+  createPaymentsHistory,
+  createDriverRequest,
+  cancelDriverRequest,
+  editBooking,
 };

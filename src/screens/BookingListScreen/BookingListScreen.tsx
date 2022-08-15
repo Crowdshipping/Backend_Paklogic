@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   StyleSheet,
@@ -11,16 +11,16 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import {SvgXml} from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {location, calendar} from '../../theme/assets/svg/index';
-import {Countries} from '../../appConstants';
-import {mapp} from '../../theme/assets/images/index';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { location, calendar } from '../../theme/assets/svg';
+import { Countries } from '../../appConstants';
+import { mapp } from '../../theme/assets/images';
 
-import {getFlights} from '../../API/index';
+import { getFlights } from '../../API';
 
 import moment from 'moment';
 import {
@@ -29,12 +29,14 @@ import {
 } from 'react-native-responsive-screen';
 import Modal from 'react-native-modal';
 
-import {Textbox, Button, Header, Datepicker} from '../../components/index';
-import {SearchCity} from '../../Modals';
+import { Textbox, Button, Header, Datepicker } from '../../components';
+import { SearchCity } from '../../Modals';
+import { styles } from './style';
+import { colors } from '../../theme/colors';
 interface cityArray {
   name: string;
   code: string;
-  coordinates: {lat: string; lon: string};
+  coordinates: { lat: string; lon: string };
   // country_code: string;
   // time_zone: string;
 }
@@ -45,9 +47,8 @@ interface country {
   // flag: string;
 }
 
-import {styles} from './style';
-import {colors} from '../../theme/colors';
-const BookingListScreen = ({navigation, route}: any) => {
+// import { Button } from '../../components/button';
+const BookingListScreen = ({ navigation, route }: any) => {
   const [isVisible, setisVisible] = useState(false);
   const [isVisible2, setisVisible2] = useState(false);
   const [detailsArray, setdetailsArray] = useState([]);
@@ -136,32 +137,32 @@ const BookingListScreen = ({navigation, route}: any) => {
         {
           rest.success &&
             (setdetailsArray(rest?.flightawareflights?.scheduled),
-            setdetailsArrayProvider(rest?.flights),
-            setLoading(false));
+              setdetailsArrayProvider(rest?.flights),
+              setLoading(false));
         }
       })
       .catch(error => {
-        Alert.alert(error.message);
+        Alert.alert(error.message ? error.message : 'Something went wrong');
         setLoading(false);
       });
   }
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
       <Header
         title="list of bookings"
         pressMethod={() => navigation.goBack()}
-        menu={true}
+      // menu={true}
       />
       {/* {bookings} */}
       <View style={styles.row}>
         <TouchableOpacity
-          style={[styles.Touch, {flexDirection: 'row', alignItems: 'center'}]}
+          style={[styles.Touch, { flexDirection: 'row', alignItems: 'center' }]}
           // onPress={() => setModalVisible(!isModalVisible)}
           onPress={() => setisVisible(true)}
-          // onPress={() => {
-          //   <SelectCountryModal isModalVisible={isModalVisible} />;
-          // }}
+        // onPress={() => {
+        //   <SelectCountryModal isModalVisible={isModalVisible} />;
+        // }}
         >
           {/* <Text style={styles.txt1}>{SelectedCountry.name}</Text> */}
           <Text style={styles.txt1}>
@@ -171,7 +172,7 @@ const BookingListScreen = ({navigation, route}: any) => {
           </Text>
           <AntDesign
             name="caretdown"
-            color={'#000'}
+            color={colors.black}
             size={wp(3)}
             style={{
               alignSelf: 'center',
@@ -182,7 +183,7 @@ const BookingListScreen = ({navigation, route}: any) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.Touch, {flexDirection: 'row', alignItems: 'center'}]}
+          style={[styles.Touch, { flexDirection: 'row', alignItems: 'center' }]}
           // onPress={() => setModalVisible2(!isModalVisible2)}>
           onPress={() => setisVisible2(true)}>
           {/* <Text style={styles.txt1}>{SelectedCountry2.name}</Text> */}
@@ -194,7 +195,7 @@ const BookingListScreen = ({navigation, route}: any) => {
 
           <AntDesign
             name="caretdown"
-            color={'#000'}
+            color={colors.black}
             size={wp(3)}
             style={{
               alignSelf: 'center',
@@ -227,10 +228,10 @@ const BookingListScreen = ({navigation, route}: any) => {
             />
           </View>
         </View>
-        <Text style={[styles.errorMsg, {marginLeft: wp(10)}]}>{dateShow}</Text>
+        <Text style={[styles.errorMsg, { marginLeft: wp(10) }]}>{dateShow}</Text>
       </View>
       {/* available booking view */}
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         {
           isLoading ? (
             <View
@@ -246,7 +247,7 @@ const BookingListScreen = ({navigation, route}: any) => {
               <ActivityIndicator size={'small'} color={colors.red} />
             </View>
           ) : (
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
               <ScrollView style={styles.detailsbox}>
                 {detailsArrayProvider.length >= 1 && (
                   <View>
@@ -261,7 +262,7 @@ const BookingListScreen = ({navigation, route}: any) => {
                                 {item.provider.firstname}{' '}
                                 {item.provider.lastname}
                               </Text>
-                              <Text style={{fontSize: 15}}>
+                              <Text style={{ fontSize: 15 }}>
                                 Flight No: {item.flightNumber}
                               </Text>
 
@@ -307,17 +308,18 @@ const BookingListScreen = ({navigation, route}: any) => {
                                         dropoffCity: dropoffLocation.name,
                                         initialDate: dobTo,
                                         finalDate: dobTo2,
+                                        type: 'Flight',
                                       },
                                     });
                                   }}>
-                                  <Text style={{color: 'green'}}>Request</Text>
+                                  <Text style={{ color: 'green' }}>Request</Text>
                                 </TouchableOpacity>
                               </View>
                               <View style={styles.viewdetail}>
                                 <Text style={styles.txtdetail}>
                                   {item.dropoffCity}
                                 </Text>
-                                <Text style={{fontSize: 14}}>
+                                <Text style={{ fontSize: 14 }}>
                                   {moment(item.flightDate).format('YYYY-MM-DD')}
                                 </Text>
                               </View>
@@ -335,7 +337,7 @@ const BookingListScreen = ({navigation, route}: any) => {
                         <View style={styles.flexrow}>
                           <Image source={mapp} style={styles.img} />
                           <View style={styles.test}>
-                            <Text style={{fontSize: 15}}>
+                            <Text style={{ fontSize: 15 }}>
                               Flight No: {item.ident_iata}
                             </Text>
                           </View>
@@ -354,7 +356,7 @@ const BookingListScreen = ({navigation, route}: any) => {
                               width: '90%',
                               paddingHorizontal: wp(1),
                             }}>
-                            <View style={styles.viewdetail}>
+                            <View style={[styles.viewdetail]}>
                               <Text style={styles.txtdetail}>
                                 {item.origin_iata}
                               </Text>
@@ -363,7 +365,7 @@ const BookingListScreen = ({navigation, route}: any) => {
                                   navigation.navigate('ProductScreen', {
                                     item: {
                                       fa_flight_id: item.fa_flight_id,
-                                      type: 'flight',
+                                      type: 'Flight',
                                       pickupIATACityCode: item.origin_iata,
                                       dropoffIATACityCode:
                                         item.destination_iata,
@@ -376,7 +378,7 @@ const BookingListScreen = ({navigation, route}: any) => {
                                     },
                                   });
                                 }}>
-                                <Text style={{color: 'green'}}>
+                                <Text style={{ color: 'green' }}>
                                   Post Request
                                 </Text>
                               </TouchableOpacity>
@@ -385,7 +387,7 @@ const BookingListScreen = ({navigation, route}: any) => {
                               <Text style={styles.txtdetail}>
                                 {item.destination_iata}
                               </Text>
-                              <Text style={{fontSize: 14}}>
+                              <Text style={{ fontSize: 14 }}>
                                 {moment(item.scheduled_in).format('YYYY-MM-DD')}
                               </Text>
                             </View>

@@ -40,7 +40,7 @@ export interface ICountryCode {
   name: string;
   dial_code: string;
   code: string;
-  flag: string;
+  flag?: string;
 }
 export interface IAddressPicker {
   containerStyle?: ViewStyle;

@@ -42,11 +42,14 @@ export const postRequest = async (
         ETA: ETA ? ETA : null,
       },
     };
+    console.log('post request success', {config});
     axios(config)
       .then(response => {
+        console.log('data', [response.data]);
         resolve(response.data);
       })
       .catch(error => {
+        console.log('post request', error.response.data);
         reject(error.response.data);
       });
   });

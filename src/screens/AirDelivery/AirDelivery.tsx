@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   SafeAreaView,
@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
-import {styles} from './style';
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import {Button, Header, Datepicker} from '../../components/index';
+import { styles } from './style';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { Button, Header, Datepicker } from '../../components';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -16,16 +16,17 @@ import {
 
 import Entypo from 'react-native-vector-icons/Entypo';
 
-import {SearchCity} from '../../Modals';
+import { SearchCity } from '../../Modals';
 import moment from 'moment';
+import { colors } from '../../theme';
 interface cityArray {
   name: string;
   code: string;
-  coordinates: {lat: string; lon: string};
+  coordinates: { lat: string; lon: string };
   country_code: string;
   // time_zone: string;
 }
-const AirDelivery = ({navigation}: any) => {
+const AirDelivery = ({ navigation }: any) => {
   const [initialDate, setinitialDate] = useState<Date>();
 
   const [finalDate, setfinalDate] = useState<Date>();
@@ -33,14 +34,14 @@ const AirDelivery = ({navigation}: any) => {
   const [pickupLocation, setpickupLocation] = useState<cityArray>({
     name: '',
     code: '',
-    coordinates: {lat: '', lon: ''},
+    coordinates: { lat: '', lon: '' },
     country_code: '',
     // time_zone: '',
   });
   const [dropoffLocation, setdropoffLocation] = useState<cityArray>({
     name: '',
     code: '',
-    coordinates: {lat: '', lon: ''},
+    coordinates: { lat: '', lon: '' },
     country_code: '',
     // time_zone: '',
   });
@@ -53,7 +54,7 @@ const AirDelivery = ({navigation}: any) => {
   const [markers, setmarkers] = useState([
     {
       title: 'initial',
-      latlng: {latitude: 33.738045, longitude: 73.084488},
+      latlng: { latitude: 33.738045, longitude: 73.084488 },
     },
     {
       title: 'final',
@@ -104,7 +105,7 @@ const AirDelivery = ({navigation}: any) => {
   }
 
   return (
-    <SafeAreaView style={{display: 'flex', flex: 1, backgroundColor: '#fff'}}>
+    <SafeAreaView style={{ display: 'flex', flex: 1, backgroundColor: colors.white }}>
       <View style={styles.container}>
         <MapView
           provider={PROVIDER_GOOGLE} // remove if not using Google Maps
@@ -123,13 +124,13 @@ const AirDelivery = ({navigation}: any) => {
               key={index}
               coordinate={marker.latlng}
               title={marker.title}
-              // description={marker.description}
+            // description={marker.description}
             />
           ))}
         </MapView>
       </View>
 
-      <TouchableOpacity onPress={() => {}} style={styles.menu}>
+      <TouchableOpacity onPress={() => { }} style={styles.menu}>
         <Entypo name="menu" size={25} />
       </TouchableOpacity>
       <View style={styles.location}>
@@ -156,7 +157,7 @@ const AirDelivery = ({navigation}: any) => {
           </Text>
         </TouchableOpacity>
         {!pickValue ? (
-          <Text style={[styles.errorMsg, {paddingHorizontal: wp(5)}]}>
+          <Text style={[styles.errorMsg, { paddingHorizontal: wp(5) }]}>
             Pickup Location is required
           </Text>
         ) : (
@@ -185,7 +186,7 @@ const AirDelivery = ({navigation}: any) => {
           </Text>
         </TouchableOpacity>
         {!dropValue ? (
-          <Text style={[styles.errorMsg, {paddingHorizontal: wp(5)}]}>
+          <Text style={[styles.errorMsg, { paddingHorizontal: wp(5) }]}>
             Dropoff Location is required
           </Text>
         ) : (
@@ -208,7 +209,7 @@ const AirDelivery = ({navigation}: any) => {
               paddingHorizontal: wp(15),
               width: wp(70),
             }}>
-            <View style={{marginBottom: hp(1)}}>
+            <View style={{ marginBottom: hp(1) }}>
               <Datepicker
                 text={'From'}
                 onChange={(selectedDate: Date) => {
@@ -218,7 +219,7 @@ const AirDelivery = ({navigation}: any) => {
                 datePrev={''}
               />
             </View>
-            <View style={{marginBottom: hp(1)}}>
+            <View style={{ marginBottom: hp(1) }}>
               <Datepicker
                 text={'To'}
                 onChange={(selectedDate: Date) => {
@@ -226,11 +227,11 @@ const AirDelivery = ({navigation}: any) => {
                   setdateShow('');
                 }}
                 datePrev={''}
-                // disable={initialDate ? false : true}
+              // disable={initialDate ? false : true}
               />
             </View>
           </View>
-          <Text style={[styles.errorMsg, {marginLeft: wp(10)}]}>
+          <Text style={[styles.errorMsg, { marginLeft: wp(10) }]}>
             {dateShow}
           </Text>
           <Button title="next" onPress={() => handleSubmit()} />

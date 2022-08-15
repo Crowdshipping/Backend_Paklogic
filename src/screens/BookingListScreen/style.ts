@@ -66,7 +66,7 @@ export const styles = StyleSheet.create({
     // marginHorizontal: wp(5),
     // paddingHorizontal: wp(2),
     // paddingVertical: hp(1),
-    shadowColor: Platform.OS === 'android' ? '#000' : 'grey',
+    shadowColor: Platform.OS === 'android' ? colors.black : 'grey',
     borderRadius: hp(2),
     backgroundColor: 'white',
     marginVertical: hp(1),

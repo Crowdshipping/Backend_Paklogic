@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   View,
@@ -16,18 +16,18 @@ import {
   Datepicker,
   PhoneNumberPicker,
 } from '../../components';
-import {packagedetails, carlocation} from '../../theme/assets/svg';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {SvgXml} from 'react-native-svg';
+import { packagedetails, carlocation } from '../../theme/assets/svg';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { SvgXml } from 'react-native-svg';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {styles} from './style';
+import { styles } from './style';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {colors} from '../../theme/colors';
-import {ModalTypes, SuccessModal} from '../../Modals';
+import { colors } from '../../theme/colors';
+import { ModalTypes, SuccessModal } from '../../Modals';
 import Modal from 'react-native-modal/dist/modal';
 
 import OpenCamera from '../Cam_Gal/OpenCamera';
@@ -37,11 +37,13 @@ import {
   requestProvider,
   postRequest,
   postImage,
+  editBooking,
 } from '../../API';
 
-import {cross} from '../../theme/assets/svg';
+import { cross } from '../../theme/assets/svg';
 import Entypo from 'react-native-vector-icons/Entypo';
 import moment from 'moment';
+import { NAME_REGEX, NUM_REGEX } from '../../appConstants';
 
 export interface ICountryCode {
   name: string;
@@ -54,8 +56,8 @@ interface IimageShow {
   uri: string;
   type: string;
 }
-interface IimageShow1 extends Array<IimageShow> {}
-const ModifyRequest = ({navigation, route}: any) => {
+interface IimageShow1 extends Array<IimageShow> { }
+const ModifyRequest = ({ navigation, route }: any) => {
   const {
     pickcoords,
     dropcoords,
@@ -120,34 +122,32 @@ const ModifyRequest = ({navigation, route}: any) => {
   const [weightValue, setweightValue] = useState(true);
   let productImage: string;
   let productImage2: string;
-  let bookingId: string;
+  let bookingId: string = route.params.data?.bookingId ? route.params.data?.bookingId : ''
   const category = [
-    {id: 1, name: 'Wood'},
-    {id: 2, name: 'Iron'},
-    {id: 3, name: 'Plastic'},
-    {id: 4, name: 'Glass'},
+    { id: 1, name: 'Wood' },
+    { id: 2, name: 'Iron' },
+    { id: 3, name: 'Plastic' },
+    { id: 4, name: 'Glass' },
   ];
   const Type = [
-    {id: 1, name: 'Cargo'},
-    {id: 2, name: 'hand Carry'},
-    {id: 3, name: 'soft'},
+    { id: 1, name: 'Cargo' },
+    { id: 2, name: 'hand Carry' },
+    { id: 3, name: 'soft' },
   ];
   const Unit = [
-    {id: 1, name: 'Kilogram'},
-    {id: 2, name: 'Gram'},
-    {id: 3, name: 'Pound'},
+    { id: 1, name: 'Kilogram' },
+    { id: 2, name: 'Gram' },
+    { id: 3, name: 'Pound' },
   ];
 
-  function handleSubmit() {
+  async function handleSubmit() {
     let validate = true;
-    let phNumRegex = /^[0-9]{6,15}$/;
-    let nameRegex = /^[a-zA-Z]{2,}$/;
 
-    if (!nameRegex.test(receiverName)) {
+    if (!NAME_REGEX.test(receiverName)) {
       validate = false;
       setvalueName(false);
     }
-    if (!phNumRegex.test(phone)) {
+    if (!NUM_REGEX.test(phone)) {
       validate = false;
       setvalueNum(false);
     }
@@ -156,51 +156,56 @@ const ModifyRequest = ({navigation, route}: any) => {
       setweightValue(false);
     }
     if (validate) {
-      const receiverNum = phone;
       setloading(true);
-      postImage(Images)
-        .then((rest: any) => {
-          let validate = true;
-          // setloading(false);
-          if (rest.length === 2) {
-            if (rest[0].success && rest[1].success) {
-              productImage = rest[0].imageUrl;
-              productImage2 = rest[1].imageUrl;
-            } else validate = false;
-          } else if (rest.length === 1) {
-            if (rest[0].success) {
-              productImage = rest[0].imageUrl;
-            } else validate = false;
-          }
-          if (validate) {
-            createBooking(
-              SelectedCategory,
-              SelectedType,
-              description,
-              weight,
-              SelectedUnit,
-              pickcoords,
-              dropcoords,
-              null,
-              null,
-              receiverName,
-              receiverNum,
-              productImage,
-              productImage2,
-            )
-              .then((rest: any) => {
-                bookingId = rest.booking._id;
-                setloading(false);
-                rest.success && providerId
-                  ? requestProvider(flightId, providerId, bookingId)
+      if (bookingId === '') {
+        postImage(Images)
+          .then((rest: any) => {
+            let validate = true;
+            // setloading(false);
+            if (rest.length === 2) {
+              if (rest[0].success && rest[1].success) {
+                productImage = rest[0].imageUrl;
+                productImage2 = rest[1].imageUrl;
+              } else validate = false;
+            } else if (rest.length === 1) {
+              if (rest[0].success) {
+                productImage = rest[0].imageUrl;
+              } else validate = false;
+            }
+            if (validate) {
+              createBooking(
+                SelectedCategory,
+                SelectedType,
+                description,
+                weight,
+                SelectedUnit,
+                pickcoords,
+                dropcoords,
+                null,
+                null,
+                receiverName,
+                countrySelect.dial_code,
+                phone,
+                productImage,
+                productImage2,
+              )
+                .then((rest: any) => {
+                  bookingId = rest.booking._id;
+                  setloading(false);
+                  rest.success && providerId
+                    ? requestProvider(providerId, bookingId, type, null, flightId)
                       .then((rest: any) => {
                         rest.success && setsuccess(true);
                       })
                       .catch(error => {
                         setloading(false);
-                        Alert.alert(error);
+                        Alert.alert(
+                          error.message
+                            ? error.message
+                            : 'Something went wrong',
+                        );
                       })
-                  : postRequest(
+                    : postRequest(
                       bookingId,
                       type,
                       pickupCity,
@@ -220,19 +225,82 @@ const ModifyRequest = ({navigation, route}: any) => {
                       })
                       .catch(error => {
                         setloading(false);
-                        Alert.alert(error);
+                        Alert.alert(
+                          error.message
+                            ? error.message
+                            : 'Something went wrong',
+                        );
                       });
-              })
-              .catch(error => {
-                setloading(false);
-                Alert.alert(error);
-              });
-          }
-        })
-        .catch(error => {
-          setloading(false);
-          Alert.alert(error);
-        });
+                })
+                .catch(error => {
+                  setloading(false);
+                  Alert.alert(
+                    error.message ? error.message : 'Something went wrong',
+                  );
+                });
+            }
+          })
+          .catch(error => {
+            setloading(false);
+            Alert.alert(error.message ? error.message : 'Something went wrong');
+          });
+      } else {
+        if (!(Images[0]?.uri?.includes("https://"))) {
+          console.log('image 1', !(Images[0].uri.includes("https://")))
+          await postImage([Images[0]]).then((rest: any) => {
+            console.log(rest)
+
+            if (rest[0].success) {
+              productImage = rest[0].imageUrl;
+            } else { validate = false; setloading(false); Alert.alert('Something went wrong') }
+
+          })
+        } else productImage = Images[0].uri
+        if (Images.length > 1 && Images[1]?.uri !== null && !(Images[1]?.uri?.includes("https://"))) {
+          console.log('image 2', !(Images[1]?.uri?.includes("https://")))
+          await postImage([Images[1]]).then((rest: any) => {
+            console.log(rest)
+
+            if (rest[0].success) {
+              productImage2 = rest[0].imageUrl;
+            } else { validate = false; setloading(false); Alert.alert('Something went wrong') }
+
+          })
+        } else productImage2 = Images[1]?.uri
+        if (validate) {
+          editBooking(
+            bookingId,
+            SelectedCategory,
+            SelectedType,
+            description,
+            weight,
+            SelectedUnit,
+            pickcoords,
+            dropcoords,
+            null,
+            null,
+            receiverName,
+            countrySelect.dial_code,
+            phone,
+            productImage,
+            productImage2,
+          )
+            .then((rest: any) => {
+              console.log('create booking', { rest });
+              Alert.alert(rest.message)
+              navigation.navigate('BookingHistory')
+              setloading(false);
+            })
+            .catch(error => {
+              console.log('create booking', { error });
+              setloading(false);
+              Alert.alert(
+                error.message ? error.message : 'Something went wrong',
+              );
+            });
+        }
+      }
+
     }
   }
 
@@ -243,60 +311,134 @@ const ModifyRequest = ({navigation, route}: any) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
       <KeyboardAwareScrollView>
         <ScrollView
-          style={{}}
           showsVerticalScrollIndicator={false}
           scrollToOverflowEnabled={false}>
-          <View style={styles.bckimg}>
-            <Header
-              title="Package Details"
-              picture={packagedetails}
-              pressMethod={() => navigation.goBack()}
-            />
+          <Header
+            title="Modify Request"
+            picture={packagedetails}
+            pressMethod={() => navigation.goBack()}
+          />
 
-            <View style={styles.main}>
-              <TouchableOpacity
-                style={styles.Touch}
-                onPress={() => setModalVisible(!isModalVisible)}>
-                <View style={styles.txtview}>
-                  <Text style={styles.txt1}>Product Category</Text>
+          <View style={styles.main}>
+            <TouchableOpacity
+              style={styles.Touch}
+              onPress={() => setModalVisible(!isModalVisible)}>
+              <View style={styles.txtview}>
+                <Text style={styles.txt1}>Product Category</Text>
 
-                  <AntDesign
-                    name="caretdown"
-                    color={'grey'}
-                    size={wp(3)}
-                    style={{
-                      alignSelf: 'center',
-                      // borderWidth: 2,
-                      marginLeft: hp(1),
-                    }}
-                  />
-                </View>
+                <AntDesign
+                  name="caretdown"
+                  color={'grey'}
+                  size={wp(3)}
+                  style={{
+                    alignSelf: 'center',
+                    // borderWidth: 2,
+                    marginLeft: hp(1),
+                  }}
+                />
+              </View>
 
-                <Text style={{borderColor: 'grey'}}>
-                  {SelectedCategory ? SelectedCategory : 'Select Category'}
-                </Text>
-              </TouchableOpacity>
-              {/* {errormsg ? ( */}
+              <Text style={{ borderColor: 'grey' }}>
+                {SelectedCategory ? SelectedCategory : 'Select Category'}
+              </Text>
+            </TouchableOpacity>
+            {/* {errormsg ? ( */}
 
-              {!categoryValue ? (
-                <Text style={styles.errorMsg}>
-                  Product Category is Required
-                </Text>
-              ) : (
-                <View></View>
-              )}
+            {!categoryValue ? (
+              <Text style={styles.errorMsg}>
+                Product Category is Required
+              </Text>
+            ) : (
+              <View></View>
+            )}
 
-              {/* ) : (
+            {/* ) : (
                   <Text></Text>
                 )} */}
+            <TouchableOpacity
+              style={styles.Touch}
+              onPress={() => setModalVisible2(!isModalVisible2)}>
+              <View style={styles.txtview}>
+                <Text style={styles.txt1}>Product Type</Text>
+
+                <AntDesign
+                  name="caretdown"
+                  color={'grey'}
+                  size={wp(3)}
+                  style={{
+                    alignSelf: 'center',
+                    // borderWidth: 2,
+                    marginLeft: hp(1),
+                  }}
+                />
+              </View>
+              <Text>{SelectedType ? SelectedType : 'Select Type '}</Text>
+              {/* <Text style={{borderColor: 'grey'}}>Select Type</Text> */}
+            </TouchableOpacity>
+            {!typeValue ? (
+              <Text style={styles.errorMsg}>Product Type is Required</Text>
+            ) : (
+              <View></View>
+            )}
+
+            <View
+              style={{
+                flexDirection: 'row',
+                marginLeft: wp(3),
+                marginRight: wp(5),
+                // borderWidth: 1,
+                // alignItems: 'center',
+                // justifyContent: 'space-between',
+              }}>
+              <View
+                style={{
+                  width: '50%',
+                  // borderWidth: 1
+                }}>
+                <Textbox
+                  title="Product Weight"
+                  placeholder={
+                    route.params?.data?.weight
+                      ? route.params?.data?.weight
+                      : "Enter product's weight"
+                  }
+                  onChangeValue={(text: string) => {
+                    setweightValue(true), setweight(text);
+                  }}
+                  type={true}
+                  errormsg={
+                    !weightValue && !unitValue
+                      ? 'Weight and Unit are Required'
+                      : !unitValue
+                        ? 'Unit is Required'
+                        : !weightValue
+                          ? 'Weight is Required'
+                          : ''
+                  }
+                />
+              </View>
               <TouchableOpacity
-                style={styles.Touch}
-                onPress={() => setModalVisible2(!isModalVisible2)}>
+                style={{
+                  // marginTop: 0,
+                  width: '47%',
+                  // borderWidth: 1,
+                  borderBottomWidth: 1,
+                  marginTop: hp(2),
+                  // marginHorizontal: wp(1),
+                  // paddingHorizontal: wp(5),
+                  marginBottom: hp(3),
+                  borderColor: 'grey',
+                  height: '55%',
+                  // alignSelf: 'center',
+
+                  // justifyContent: 'center',
+                }}
+                onPress={() => setModalVisible3(!isModalVisible3)}>
                 <View style={styles.txtview}>
-                  <Text style={styles.txt1}>Product Type</Text>
+                  <Text style={styles.txt1}>Product Unit</Text>
 
                   <AntDesign
                     name="caretdown"
@@ -309,347 +451,291 @@ const ModifyRequest = ({navigation, route}: any) => {
                     }}
                   />
                 </View>
-                <Text>{SelectedType ? SelectedType : 'Select Type '}</Text>
-                {/* <Text style={{borderColor: 'grey'}}>Select Type</Text> */}
+
+                <Text style={{ borderColor: 'grey', marginTop: 2 }}>
+                  {SelectedUnit ? SelectedUnit : 'Select Unit'}
+                </Text>
               </TouchableOpacity>
-              {!typeValue ? (
-                <Text style={styles.errorMsg}>Product Type is Required</Text>
-              ) : (
-                <View></View>
-              )}
-
-              <View
-                style={{
-                  flexDirection: 'row',
-                  // borderWidth: 1,
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}>
-                <View style={{width: wp(50)}}>
-                  <Textbox
-                    title="Product Weight"
-                    placeholder={
-                      route.params?.data?.weight
-                        ? route.params?.data?.weight
-                        : "Enter product's weight"
-                    }
-                    onChangeValue={(text: string) => {
-                      setweightValue(true), setweight(text);
-                    }}
-                    type={true}
-                    errormsg={
-                      !weightValue && !unitValue
-                        ? 'Weight and Unit are Required'
-                        : !unitValue
-                        ? 'Unit is Required'
-                        : !weightValue
-                        ? 'Weight is Required'
-                        : ''
-                    }
-                  />
-                </View>
-                <TouchableOpacity
-                  style={[styles.Touch, {marginTop: 0, width: wp(40)}]}
-                  onPress={() => setModalVisible3(!isModalVisible3)}>
-                  <View style={styles.txtview}>
-                    <Text style={styles.txt1}>Product Unit</Text>
-
-                    <AntDesign
-                      name="caretdown"
-                      color={'grey'}
-                      size={wp(3)}
-                      style={{
-                        alignSelf: 'center',
-                        // borderWidth: 2,
-                        marginLeft: hp(1),
-                      }}
-                    />
-                  </View>
-
-                  <Text style={{borderColor: 'grey'}}>
-                    {SelectedUnit ? SelectedUnit : 'Select Unit'}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              <View
-                style={{
-                  width: wp(100),
-                  flexWrap: 'wrap',
-                  marginBottom: hp(1),
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  paddingHorizontal: wp(5),
-                }}>
-                <View style={{width: wp(40)}}>
-                  <Text style={styles.txt1}>From Date</Text>
-                  <Datepicker
-                    onChange={(selectedDate: Date) => {
-                      setinitialDate(selectedDate);
-                      setdateShow(false);
-                    }}
-                    datePrev={moment(initialDate).format('YYYY-MM-DD')}
-                    disable={true}
-                  />
-                </View>
-
-                <View style={{width: wp(40)}}>
-                  <Text style={styles.txt1}>From Date</Text>
-                  <Datepicker
-                    onChange={(selectedDate: Date) => {
-                      setfinalDate(selectedDate);
-                      setdateShow(false);
-                    }}
-                    datePrev={moment(finalDate).format('YYYY-MM-DD')}
-                    disable={true}
-                  />
-                </View>
-              </View>
-              {dateShow &&
-                (!initialDate && !finalDate ? (
-                  <Text style={styles.errorMsg}>
-                    initial and final dates are required
-                  </Text>
-                ) : !initialDate ? (
-                  <Text style={styles.errorMsg}>initial date is required</Text>
-                ) : !finalDate ? (
-                  <Text style={styles.errorMsg}>final date is required</Text>
-                ) : (
-                  <Text style={styles.errorMsg}>
-                    initial date must be smaller than final date
-                  </Text>
-                ))}
-
-              <View style={styles.attachment}>
-                <Text style={styles.txt}>Attached Photo</Text>
-
-                <TouchableOpacity
-                  style={styles.arrorwStyle}
-                  onPress={() => {
-                    settoCaptureImage(true);
+            </View>
+            <View
+              style={{
+                width: wp(100),
+                flexWrap: 'wrap',
+                marginBottom: hp(1),
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                paddingHorizontal: wp(8),
+              }}>
+              <View style={{ width: '50%', paddingRight: wp(5) }}>
+                <Text style={styles.txt1}>From Date</Text>
+                <Datepicker
+                  onChange={(selectedDate: Date) => {
+                    setinitialDate(selectedDate);
+                    setdateShow(false);
                   }}
-                  disabled={Images.length >= 2 ? true : false}>
-                  <Entypo
-                    name="attachment"
-                    color={'#000'}
-                    size={wp(5)}
-                    style={{alignSelf: 'flex-end'}}
-                  />
-                </TouchableOpacity>
+                  datePrev={moment(initialDate).format('YYYY-MM-DD')}
+                  disable={true}
+                />
               </View>
-              <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-                {Images.length >= 2 ? (
-                  Images.map((item, index) => {
-                    return (
-                      <View key={index} style={{marginHorizontal: wp(5)}}>
-                        <TouchableOpacity
-                          onPress={() => {
-                            setImages([
-                              ...Images.slice(0, index),
-                              ...Images.slice(index + 1, Images.length),
-                            ]);
-                          }}
-                          style={{
-                            alignSelf: 'flex-end',
-                            borderRadius: 78,
-                            backgroundColor: 'red',
-                            padding: wp(1),
-                            left: wp(3),
-                            top: wp(3.5),
-                            zIndex: 100,
-                          }}>
-                          <SvgXml width={wp(4)} height={wp(4)} xml={cross} />
-                        </TouchableOpacity>
 
-                        <Image
-                          source={{uri: item.uri}}
-                          style={{
-                            height: wp(35),
-                            width: wp(35),
-                            // margin: wp(5),
-                            borderRadius: 10,
-                            // borderWidth: 1,
-                            // backgroundColor: '#fedcba',
-                          }}
-                        />
-                      </View>
-                    );
-                  })
-                ) : (
+              <View style={{ width: '50%' }}>
+                <Text style={styles.txt1}>To Date</Text>
+                <Datepicker
+                  onChange={(selectedDate: Date) => {
+                    setfinalDate(selectedDate);
+                    setdateShow(false);
+                  }}
+                  datePrev={moment(finalDate).format('YYYY-MM-DD')}
+                  disable={true}
+                />
+              </View>
+            </View>
+            {dateShow &&
+              (!initialDate && !finalDate ? (
+                <Text style={styles.errorMsg}>
+                  initial and final dates are required
+                </Text>
+              ) : !initialDate ? (
+                <Text style={styles.errorMsg}>initial date is required</Text>
+              ) : !finalDate ? (
+                <Text style={styles.errorMsg}>final date is required</Text>
+              ) : (
+                <Text style={styles.errorMsg}>
+                  initial date must be smaller than final date
+                </Text>
+              ))}
+
+            <View style={styles.attachment}>
+              <Text style={styles.txt}>Attached Photo</Text>
+
+              <TouchableOpacity
+                style={styles.arrorwStyle}
+                onPress={() => {
+                  settoCaptureImage(true);
+                }}
+                disabled={Images.length >= 2 ? true : false}>
+                <Entypo
+                  name="attachment"
+                  color={colors.black}
+                  size={wp(5)}
+                  style={{ alignSelf: 'flex-end' }}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+              {Images.length >= 1 ? (
+                Images.map((item, index) => {
+                  return (
+                    <View key={index} style={{ marginLeft: wp(8) }}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setImages([
+                            ...Images.slice(0, index),
+                            ...Images.slice(index + 1, Images.length),
+                          ]);
+                        }}
+                        style={{
+                          alignSelf: 'flex-end',
+                          borderRadius: 78,
+                          backgroundColor: 'red',
+                          padding: wp(1),
+                          left: wp(3),
+                          top: wp(3.5),
+                          zIndex: 100,
+                        }}>
+                        <SvgXml width={wp(4)} height={wp(4)} xml={cross} />
+                      </TouchableOpacity>
+
+                      <Image
+                        source={{ uri: item.uri }}
+                        style={{
+                          height: wp(37),
+                          width: wp(37),
+                          // margin: wp(5),
+                          borderRadius: 10,
+                          // borderWidth: 1,
+                          // backgroundColor: '#fedcba',
+                        }}
+                      />
+                    </View>
+                  );
+                })
+              ) : (
+                <View
+                  style={{
+                    height: wp(35),
+                    width: wp(35),
+                    borderRadius: wp(5),
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginHorizontal: wp(8),
+                    backgroundColor: '#C4C4C4',
+                  }}>
                   <View
                     style={{
-                      height: wp(35),
-                      width: wp(35),
-                      borderRadius: wp(5),
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginHorizontal: wp(5),
-                      backgroundColor: '#C4C4C4',
-                    }}>
-                    <View
-                      style={{
-                        width: '40%',
-                        height: '55%',
-                        borderWidth: wp(3),
-                        borderColor: '#C0904E',
-                      }}></View>
-                  </View>
-                )}
-              </View>
-              {!ImagesValue && (
-                <View>
-                  <Text
-                    style={{
-                      paddingHorizontal: wp(5),
-                      textAlign: 'left',
-                      color: 'red',
-                    }}>
-                    Images are Required
-                  </Text>
+                      width: '40%',
+                      height: '55%',
+                      borderWidth: wp(3),
+                      borderColor: '#C0904E',
+                    }}></View>
                 </View>
               )}
-              <View style={{paddingHorizontal: wp(8)}}>
-                <Text style={styles.txt}>Instructions</Text>
-                <View
-                  style={{
-                    // marginHorizontal: wp(5),
-                    marginVertical: hp(2),
-                    // height: hp(20),
-                    backgroundColor: colors.boxBackground,
-                    borderRadius: 10,
-                    // width: wp(80),
-                  }}>
-                  <TextInput
-                    placeholder="Only jpg and png are acceptable, file size should not be more than 5mb."
-                    editable={false}
-                    placeholderTextColor={'#969696'}
-                    multiline={true}
-                    // autoCorrect={false}
-                    // autoCapitalize={'none'}
-                    style={{
-                      width: wp(80),
-                      paddingHorizontal: wp(3),
-                      // marginTop: hp(1),
-                      paddingVertical: hp(1),
-                      flexWrap: 'wrap',
-                    }}
-                    // onChangeText={(text: string) => {
-                    //   setinstructions(text);
-                    // }}
-                  />
-                </View>
-              </View>
-              <View style={{paddingHorizontal: wp(8)}}>
-                <Text style={styles.txt}>Product Description</Text>
-                <View
-                  style={{
-                    // marginHorizontal: wp(5),
-                    marginVertical: hp(2),
-                    height: hp(20),
-                    backgroundColor: colors.boxBackground,
-                    borderRadius: 10,
-                    // width: wp(80),
-                  }}>
-                  <TextInput
-                    placeholder={route.params?.data?.description}
-                    placeholderTextColor={'#969696'}
-                    multiline={true}
-                    autoCorrect={false}
-                    autoCapitalize={'none'}
-                    style={{
-                      width: wp(80),
-                      paddingHorizontal: wp(3),
-                      marginTop: hp(1),
-                      paddingVertical: hp(1),
-                    }}
-                    onChangeText={(text: string) => {
-                      setdescription(text);
-                    }}
-                  />
-                </View>
-              </View>
-              <View style={styles.viewlocation}>
-                <View
-                  style={{
-                    // paddingTop: 5,
-                    width: '20%',
-                    height: hp(20),
-                    // width: wp(8),
-                    // height: hp(20),
-                    // borderWidth: 1,
-                    justifyContent: 'center',
-
-                    alignItems: 'center',
-                  }}>
-                  <SvgXml
-                    // style={{borderWidth: 1}}
-                    xml={carlocation}
-                    width={wp(8)}
-                    // height={hp(30)}
-                    // width="100%"
-                    height="100%"
-                  />
-                </View>
-                <View
-                  style={{
-                    justifyContent: 'space-between',
-                    width: '80%',
-                    height: hp(20),
-                    paddingHorizontal: wp(5),
-                  }}>
-                  <Textbox
-                    title={'Pickup Location'}
-                    placeholder={pickupCity}
-                    editable={false}
-                    // picture={pencil}
-                    // line={true}
-                  />
-                  <View style={styles.line}></View>
-                  <Textbox
-                    title={'Pickup Location'}
-                    placeholder={dropoffCity}
-                    editable={false}
-                    // picture={pencil}
-                    // line={true}
-                  />
-                </View>
-              </View>
-              <View style={{paddingHorizontal: wp(8)}}>
-                <Text style={styles.txt}>Receiver Details</Text>
-                <View>
-                  <Textbox
-                    title="Name"
-                    placeholder={route.params?.receiverName}
-                    onChangeValue={(text: string) => {
-                      setreceiverName(text);
-                      setvalueName(true);
-                    }}
-                    errormsg={
-                      !valueName
-                        ? receiverName.length === 0
-                          ? 'Receiver name is required'
-                          : 'Name should have atleast 3 alphabets'
-                        : ''
-                    }
-                  />
-                  <PhoneNumberPicker
-                    onChange={(selectedCountry: ICountryCode, text: string) => {
-                      setphone(selectedCountry.dial_code.substring(1) + text);
-                      setvalueNum(true);
-                    }}
-                    errormsg={
-                      !valueNum
-                        ? phone.length
-                          ? 'Receiver Number is required'
-                          : 'Must Enter valid phone number'
-                        : ''
-                    }
-                    phone={route.params?.phone}
-                    countryCode={countrySelect}
-                  />
-                </View>
-              </View>
-              <Button title="next" onPress={handleSubmit} loading={loading} />
             </View>
+            {!ImagesValue && (
+              <View>
+                <Text
+                  style={{
+                    paddingHorizontal: wp(5),
+                    textAlign: 'left',
+                    color: 'red',
+                  }}>
+                  Images are Required
+                </Text>
+              </View>
+            )}
+            <View style={{ paddingHorizontal: wp(8) }}>
+              <Text style={styles.txt}>Instructions</Text>
+              <View
+                style={{
+                  // marginHorizontal: wp(5),
+                  marginVertical: hp(2),
+                  // height: hp(20),
+                  backgroundColor: colors.boxBackground,
+                  borderRadius: 10,
+                  // width: wp(80),
+                }}>
+                <TextInput
+                  placeholder="Only jpg and png are acceptable, file size should not be more than 5mb."
+                  editable={false}
+                  placeholderTextColor={'#969696'}
+                  multiline={true}
+                  // autoCorrect={false}
+                  // autoCapitalize={'none'}
+                  style={{
+                    width: wp(80),
+                    paddingHorizontal: wp(3),
+                    // marginTop: hp(1),
+                    paddingVertical: hp(1),
+                    flexWrap: 'wrap',
+                  }}
+                // onChangeText={(text: string) => {
+                //   setinstructions(text);
+                // }}
+                />
+              </View>
+            </View>
+            <View style={{ paddingHorizontal: wp(8) }}>
+              <Text style={styles.txt}>Product Description</Text>
+              <View
+                style={{
+                  // marginHorizontal: wp(5),
+                  marginVertical: hp(2),
+                  height: hp(20),
+                  backgroundColor: colors.boxBackground,
+                  borderRadius: 10,
+                  // width: wp(80),
+                }}>
+                <TextInput
+                  placeholder={route.params.data.description ? route.params.data.description : 'Enter product description'}
+                  placeholderTextColor={'#969696'}
+                  multiline={true}
+                  autoCorrect={false}
+                  autoCapitalize={'none'}
+                  style={{
+                    width: wp(80),
+                    paddingHorizontal: wp(3),
+                    marginTop: hp(1),
+                    paddingVertical: hp(1),
+                  }}
+                  onChangeText={(text: string) => {
+                    setdescription(text);
+                  }}
+                />
+              </View>
+            </View>
+            <View style={[styles.viewlocation, { paddingHorizontal: wp(3), justifyContent: 'center', alignItems: 'center' }]}>
+              <View
+                style={{
+                  // paddingTop: 5,
+                  width: '20%',
+                  height: hp(20),
+                  // width: wp(8),
+                  // height: hp(20),
+                  // borderWidth: 1,
+                  justifyContent: 'center',
+
+                  alignItems: 'center',
+                }}>
+                <SvgXml
+                  // style={{borderWidth: 1}}
+                  xml={carlocation}
+                  width={wp(8)}
+                  // height={hp(30)}
+                  // width="100%"
+                  height="100%"
+                />
+              </View>
+              <View
+                style={{
+                  justifyContent: 'space-between',
+                  width: '80%',
+                  // height: hp(20),
+                  paddingRight: wp(5),
+                }}>
+                <Textbox
+                  title={'Pickup Location'}
+                  placeholder={pickupCity}
+                  editable={false}
+                // picture={pencil}
+                // line={true}
+                />
+                <View style={styles.line}></View>
+                <Textbox
+                  title={'Pickup Location'}
+                  placeholder={dropoffCity}
+                  editable={false}
+                // picture={pencil}
+                // line={true}
+                />
+              </View>
+            </View>
+            <View style={{ paddingHorizontal: wp(3) }}>
+              <Text style={[styles.txt, { paddingHorizontal: wp(5) }]}>
+                Receiver Details
+              </Text>
+              <Textbox
+                title="Name"
+                placeholder={route.params?.receiverName}
+                onChangeValue={(text: string) => {
+                  setreceiverName(text);
+                  setvalueName(true);
+                }}
+                errormsg={
+                  !valueName
+                    ? receiverName.length === 0
+                      ? 'Receiver name is required'
+                      : 'Name should have atleast 3 alphabets'
+                    : ''
+                }
+              />
+              <PhoneNumberPicker
+                onChange={(selectedCountry: ICountryCode, text: string) => {
+                  setphone(text);
+                  setcountrySelect(selectedCountry)
+                  setvalueNum(true);
+                }}
+                errormsg={
+                  !valueNum
+                    ? phone.length
+                      ? 'Receiver Number is required'
+                      : 'Must Enter valid phone number'
+                    : ''
+                }
+                phone={route.params?.phone}
+                countryCode={countrySelect}
+              />
+            </View>
+            <Button title="next" onPress={handleSubmit} loading={loading} />
           </View>
         </ScrollView>
       </KeyboardAwareScrollView>
@@ -687,7 +773,7 @@ const ModifyRequest = ({navigation, route}: any) => {
         isSuccess={isSuccess}
         setsuccess={() => {
           setsuccess(false);
-          navigation.navigate('Landing');
+          navigation.navigate('MyDrawer', { screen: 'Landing' });
         }}
         text={'Submitted Successfuly'}
       />
@@ -696,7 +782,7 @@ const ModifyRequest = ({navigation, route}: any) => {
         onBackdropPress={() => settoCaptureImage(false)}>
         <View
           style={{
-            backgroundColor: '#fff',
+            backgroundColor: colors.white,
             elevation: 5,
 
             width: wp(80),
@@ -716,7 +802,7 @@ const ModifyRequest = ({navigation, route}: any) => {
               right: -10,
               top: -10,
             }}>
-            <TouchableOpacity onPress={() => setModalVisible(false)}>
+            <TouchableOpacity onPress={() => settoCaptureImage(false)}>
               <SvgXml
                 // style={styles.cross_img}
                 width="16"
@@ -733,26 +819,30 @@ const ModifyRequest = ({navigation, route}: any) => {
               // paddingVertical: 30,
               paddingBottom: 30,
             }}>
-            <Text style={[styles.txt1, {color: 'red', textAlign: 'center'}]}>
+            <Text style={[styles.txt1, { color: 'red', textAlign: 'center' }]}>
               Choose a picture
             </Text>
           </View>
           <View
             style={{
               justifyContent: 'space-around',
-              paddingVertical: 30,
+              paddingVertical: 5,
               flexDirection: 'row',
               alignItems: 'center',
               // paddin,
             }}>
-            <OpenCamera callbackImage={getSelectedImage.bind(this)} />
+            <View style={{ width: '45%', height: hp(5) }}>
+              <OpenCamera callbackImage={getSelectedImage.bind(this)} />
+            </View>
             <View
               style={{
                 borderLeftWidth: 1,
                 height: '100%',
               }}
             />
-            <OpenGallery callbackImage={getSelectedImage.bind(this)} />
+            <View style={{ width: '45%', height: hp(5) }}>
+              <OpenGallery callbackImage={getSelectedImage.bind(this)} />
+            </View>
           </View>
         </View>
       </Modal>

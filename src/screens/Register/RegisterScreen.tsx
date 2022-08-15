@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
-import {Alert, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {styles} from './style';
+import React, { useState } from 'react';
+import { Alert, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { styles } from './style';
 import {
   Textbox,
   Button,
@@ -10,17 +10,17 @@ import {
   PhoneNumberPicker,
   Header,
 } from '../../components';
-import {SvgXml} from 'react-native-svg';
-import {register} from '../../theme/assets/svg';
-import {registerUser} from '../../API/registerUser';
-import {SuccessModal} from '../../Modals';
+import { SvgXml } from 'react-native-svg';
+import { register } from '../../theme/assets/svg';
+import { registerUser } from '../../API/registerUser';
+import { SuccessModal } from '../../Modals';
 
-const RegisterScreen = ({route, navigation}: any) => {
+const RegisterScreen = ({ route, navigation }: any) => {
   const [loading, setloading] = useState(false);
   const [success, setsuccess] = useState(false);
   const [text, settext] = useState('');
 
-  const {countryCode, phone} = route.params;
+  const { countryCode, phone } = route.params;
   const [fnameValue, setfnameValue] = useState(true);
   const [fname, setfname] = useState('');
   const [lnameValue, setlnameValue] = useState(true);
@@ -41,7 +41,6 @@ const RegisterScreen = ({route, navigation}: any) => {
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     let nameRegex = /^[a-zA-Z]{2,}$/;
 
-    // let phNumRegex = /^[0-9]{1,10}$/;
     let addressRegex = /^([a-zA-z0-9/\\''(),.#-_\s]{5,255})$/;
 
     if (!nameRegex.test(fname)) {
@@ -75,7 +74,7 @@ const RegisterScreen = ({route, navigation}: any) => {
           rest.success && (settext(rest.message), setsuccess(true));
         })
         .catch(error => {
-          Alert.alert(error.message);
+          Alert.alert(error.message ? error.message : 'Something went wrong');
           setloading(false);
         });
     }

@@ -1,23 +1,28 @@
 import React from 'react';
-import {SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
-import {styles} from './style';
+import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import { styles } from './style';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {Header} from '../../components/index';
-import {SvgXml} from 'react-native-svg';
-import {truck, plane, ship} from '../../theme/assets/svg/index';
+import { Header } from '../../components';
+import { SvgXml } from 'react-native-svg';
+import { truck, plane, shipsvg } from '../../theme/assets/svg';
+import { DrawerActions } from '@react-navigation/native';
 
-const LandingScreen = ({navigation}: any) => {
+const LandingScreen = ({ navigation }: any) => {
   return (
     <SafeAreaView style={styles.container}>
-      <Header title={'CrowdShipping'} />
+      <Header
+        title={'CrowdShipping'}
+        menu={true}
+        pressMethod={() => navigation.toggleDrawer()}
+      />
       <View style={styles.deliveryComponent}>
         <Text style={styles.text}>LOCAL DELIVERY</Text>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('StartBooking');
+            navigation.navigate('LandFlowNavigation');
           }}
           style={styles.svgView}>
           <SvgXml
@@ -40,7 +45,7 @@ const LandingScreen = ({navigation}: any) => {
             style={styles.svg}
             xml={plane}
             height={hp(20)}
-            // width={wp(100)}
+          // width={wp(100)}
           />
         </TouchableOpacity>
       </View>
@@ -54,9 +59,9 @@ const LandingScreen = ({navigation}: any) => {
           style={styles.svgView}>
           <SvgXml
             style={styles.svg}
-            xml={ship}
+            xml={shipsvg}
             height={hp(20)}
-            // width={wp(100)}
+          // width={wp(100)}
           />
         </TouchableOpacity>
       </View>

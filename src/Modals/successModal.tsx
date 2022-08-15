@@ -1,20 +1,20 @@
 import React from 'react';
-import {View, ScrollView, TouchableOpacity, Text} from 'react-native';
+import { View, ScrollView, TouchableOpacity, Text } from 'react-native';
 import Modal from 'react-native-modal';
 7;
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {styles} from './style';
-import {SvgXml} from 'react-native-svg';
-import {cross, success} from '../theme/assets/svg';
-import {colors} from '../theme/colors';
+import { styles } from './style';
+import { SvgXml } from 'react-native-svg';
+import { cross, success } from '../theme/assets/svg';
+import { colors } from '../theme/colors';
 
 export const SuccessModal = (props: any) => {
-  const {isSuccess, setsuccess, text, pressMethod} = props;
+  const { isSuccess, setsuccess, text, pressMethod } = props;
   return (
-    <Modal isVisible={isSuccess}>
+    <Modal isVisible={isSuccess} onBackdropPress={() => setsuccess(false)}>
       <View style={styles.modal}>
         <View
           style={{
@@ -67,7 +67,7 @@ export const SuccessModal = (props: any) => {
                 fontSize: 16,
                 marginVertical: hp(1.5),
                 textAlign: 'center',
-                color: '#fff',
+                color: colors.white,
               }}>
               ok
             </Text>

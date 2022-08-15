@@ -1,0 +1,228 @@
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import {
+  Alert,
+  ActivityIndicator,
+  View,
+  Platform,
+  Text,
+  SafeAreaView,
+} from 'react-native';
+
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+
+import { Button, Header } from '../../../components';
+
+import { shipTracking } from '../../../API';
+import { colors } from '../../../theme';
+import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from 'react-native-maps';
+import { styles } from './style';
+
+import MapViewDirections from 'react-native-maps-directions';
+
+import { useFocusEffect } from '@react-navigation/native';
+import moment from 'moment';
+
+const TrackShip = ({ route, navigation }: any) => {
+  const { mmsiNumber, pickupAddress, dropAddress, eta } = route.params;
+  console.log([route.params]);
+  // const [isLoading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(true);
+  const [data, setData] = useState<any>();
+  const markerIDs = ['Marker1', 'Marker2'];
+
+  function handleTracking() {
+    shipTracking(mmsiNumber)
+      .then((rest: any) => {
+        {
+          console.log(
+            'ship Tracking response',
+            JSON.stringify(rest.shipposition[0].$),
+          );
+          rest.success && (setData(rest.shipposition[0].$), console.log('ship ki loc', rest.shipposition[0].$), setLoading(false));
+        }
+      })
+      .catch(error => {
+        Alert.alert(error.message ? error.message : 'Something went wrong');
+        setLoading(false);
+      });
+  }
+
+  useFocusEffect(() => {
+    let timer = setInterval(handleTracking, 120000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  });
+
+  useEffect(() => {
+    handleTracking();
+  }, [mmsiNumber]);
+  const ref = useRef<MapView>(null);
+
+  // effects
+  const onMapReadyHandler = useCallback(() => {
+    if (Platform.OS === 'ios') {
+      ref?.current?.fitToElements({
+        animated: true,
+        edgePadding: {
+          top: 50,
+          right: 50,
+          bottom: 50,
+          left: 50,
+        },
+      });
+    } else {
+      ref?.current?.fitToCoordinates([pickupAddress, dropAddress], {
+        animated: true,
+        edgePadding: {
+          top: 50,
+          right: 50,
+          bottom: 50,
+          left: 50,
+        },
+      });
+    }
+  }, [ref]);
+  return (
+    <SafeAreaView style={{ backgroundColor: colors.white }}>
+      <View style={{ paddingBottom: hp(2) }}>
+        <Header
+          title="Booking History"
+          pressMethod={() => navigation.navigate('BookingHistory')}
+        // menu={true}
+        />
+      </View>
+      {isLoading ? (
+        <View
+          style={{
+            // backgroundColor: colors.boxBackground,
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+            // paddingVertical: hp(10),
+            // paddingHorizontal: wp(10),
+            // borderRadius: hp(2),
+          }}>
+          <ActivityIndicator size={'small'} color={colors.red} />
+        </View>
+      ) : (
+        <View style={styles.container}>
+          {data && data.LAT && data.LON ? (
+            <MapView
+              provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+              showsUserLocation={true}
+              ref={ref}
+              zoomControlEnabled={false}
+              zoomEnabled={true}
+              style={styles.map}
+              onMapReady={onMapReadyHandler}
+            >
+              <Polyline
+                coordinates={[
+                  { latitude: pickupAddress.lat, longitude: pickupAddress.lng },
+                  { latitude: data.LAT, longitude: data.LON },
+                  { latitude: dropAddress.lat, longitude: dropAddress.lng },
+                ]}
+                geodesic={true}
+                strokeWidth={2}
+                lineDashPhase={3}
+              />
+              <Marker
+                key={'initial'}
+                coordinate={{
+                  latitude: pickupAddress.lat,
+                  longitude: pickupAddress.lng,
+                }}
+                title={'initial'}
+                identifier={'Marker1'}
+              />
+              <Marker
+                key={'middle'}
+                coordinate={{
+                  latitude: data.LAT,
+                  longitude: data.LON,
+                }}
+                title={'middle'}
+                identifier={'Marker3'}
+              />
+              <Marker
+                key={'final'}
+                coordinate={{
+                  latitude: dropAddress.lat,
+                  longitude: dropAddress.lng,
+                }}
+                title={'final'}
+                identifier={'Marker1'}
+              />
+            </MapView>
+          ) : <MapView
+            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+            showsUserLocation={true}
+            ref={ref}
+            zoomControlEnabled={false}
+            zoomEnabled={true}
+            style={styles.map}
+            onMapReady={onMapReadyHandler}
+          >
+            <Polyline
+              coordinates={[
+                { latitude: pickupAddress.lat, longitude: pickupAddress.lng },
+                { latitude: dropAddress.lat, longitude: dropAddress.lng },
+              ]}
+              geodesic={true}
+              strokeWidth={2}
+              lineDashPhase={3}
+            />
+            <Marker
+              key={'initial'}
+              coordinate={{
+                latitude: pickupAddress.lat,
+                longitude: pickupAddress.lng,
+              }}
+              title={'initial'}
+              identifier={'Marker1'}
+            />
+            <Marker
+              key={'final'}
+              coordinate={{
+                latitude: dropAddress.lat,
+                longitude: dropAddress.lng,
+              }}
+              title={'final'}
+              identifier={'Marker1'}
+            />
+          </MapView>}
+          <View style={{ width: wp(90) }}>
+            <View
+              style={{
+                backgroundColor: 'white',
+
+                justifyContent: 'center',
+                alignItems: 'center',
+                alignSelf: 'center',
+                padding: wp(2),
+                paddingHorizontal: wp(5),
+                borderRadius: wp(2),
+              }}>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  fontWeight: '600',
+                }}>
+                Ship Arrival Date {moment(eta).format('YYYY-MM-DD hh:mm:ss')}
+              </Text>
+            </View>
+
+            <Button title={'Chat'} onPress={() => { }} />
+          </View>
+        </View>
+      )}
+    </SafeAreaView>
+  );
+};
+
+export default TrackShip;

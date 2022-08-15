@@ -3,6 +3,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import {colors} from '../../theme';
 
 export const styles = StyleSheet.create({
   sectionContainer: {
@@ -30,7 +31,9 @@ export const styles = StyleSheet.create({
   },
   main: {
     // paddingTop: hp(4),
-    paddingHorizontal: wp(5),
+    // paddingHorizontal: wp(5),
+    width: wp(90),
+    alignSelf: 'center',
     bottom: hp(3),
   },
   bgImage: {
@@ -39,20 +42,20 @@ export const styles = StyleSheet.create({
   },
   menu: {marginHorizontal: wp(10), marginVertical: hp(3)},
   location: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     width: wp(80),
     borderRadius: 10,
     alignSelf: 'center',
   },
   body: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     marginTop: hp(10),
     borderTopRightRadius: 15,
     borderTopLeftRadius: 15,
-    paddingTop: hp(1),
+    // paddingTop: hp(1),
   },
-  viewHeader: {bottom: hp(7)},
+  viewHeader: {bottom: hp(5)},
 
   view1: {
     borderBottomWidth: 1,
@@ -82,11 +85,21 @@ export const styles = StyleSheet.create({
     lineHeight: 25,
   },
   modal: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     elevation: 5,
 
     width: wp(80),
     alignSelf: 'center',
     borderRadius: 10,
+  },
+  paymentView: {
+    backgroundColor: '#F3F2F2',
+    paddingVertical: hp(1),
+    paddingHorizontal: wp(10),
+    borderRadius: wp(1),
+    marginVertical: hp(2),
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

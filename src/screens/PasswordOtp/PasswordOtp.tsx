@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, { useState, useRef } from 'react';
 import {
   SafeAreaView,
   Text,
@@ -11,21 +11,21 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {SvgXml} from 'react-native-svg';
-import {Button, Header} from '../../components';
+import { SvgXml } from 'react-native-svg';
+import { Button, Header } from '../../components';
 // import {register5} from '../../theme/assets/svg';
-import {styles} from './style';
-import {otp} from '../../theme/assets/svg/index';
-import {passwordOtp} from '../../API/passwordOtp';
-import {forgotPassword} from '../../API/forgotPassword';
-import {colors} from '../../theme/colors';
-import {SuccessModal} from '../../Modals';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { styles } from './style';
+import { otp } from '../../theme/assets/svg';
+import { passwordOtp } from '../../API/passwordOtp';
+import { forgotPassword } from '../../API/forgotPassword';
+import { colors } from '../../theme/colors';
+import { SuccessModal } from '../../Modals';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-const PasswordOtp = ({route, navigation}: any) => {
+const PasswordOtp = ({ route, navigation }: any) => {
   const [loading, setloading] = useState(false);
   const [success, setsuccess] = useState(false);
-  const {email} = route.params;
+  const { email } = route.params;
   const refNum1: any = useRef();
   const refNum2: any = useRef();
   const refNum3: any = useRef();
@@ -65,10 +65,10 @@ const PasswordOtp = ({route, navigation}: any) => {
           setloading(false);
 
           let id = rest.user._id;
-          rest.success && navigation.navigate('ResetPassword', {id});
+          rest.success && navigation.navigate('ResetPassword', { id });
         })
         .catch(error => {
-          Alert.alert('falling', error.message);
+          Alert.alert(error.message ? error.message : 'Something went wrong');
           refNum6.current.clear(),
             setNum6('-'),
             refNum5.current.clear(),
@@ -110,31 +110,31 @@ const PasswordOtp = ({route, navigation}: any) => {
 
         rest.success &&
           (setText(rest.message),
-          refNum6.current.clear(),
-          setNum6('-'),
-          refNum5.current.clear(),
-          setNum5('-'),
-          refNum4.current.clear(),
-          setNum4('-'),
-          refNum3.current.clear(),
-          setNum3('-'),
-          refNum2.current.clear(),
-          setNum2('-'),
-          refNum1.current.clear(),
-          setNum1('-'),
-          refNum1.current.focus(),
-          setsuccess(true));
+            refNum6.current.clear(),
+            setNum6('-'),
+            refNum5.current.clear(),
+            setNum5('-'),
+            refNum4.current.clear(),
+            setNum4('-'),
+            refNum3.current.clear(),
+            setNum3('-'),
+            refNum2.current.clear(),
+            setNum2('-'),
+            refNum1.current.clear(),
+            setNum1('-'),
+            refNum1.current.focus(),
+            setsuccess(true));
       })
       .catch(error => {
         setloading(false);
-        Alert.alert(error.message);
+        Alert.alert(error.message ? error.message : 'Something went wrong');
       });
   };
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: colors.white,
       }}>
       <KeyboardAwareScrollView>
         <View>
@@ -187,7 +187,7 @@ const PasswordOtp = ({route, navigation}: any) => {
                 textAlign: 'center',
                 textTransform: 'lowercase',
               }}
-              onKeyPress={({nativeEvent: {key: keyValue}}) => {
+              onKeyPress={({ nativeEvent: { key: keyValue } }) => {
                 if (keyValue === 'Backspace') {
                   setNum1('-');
                 } else if (keyValue === ' ') {
@@ -208,7 +208,7 @@ const PasswordOtp = ({route, navigation}: any) => {
               maxLength={1}
               placeholder="-"
               autoCapitalize="none"
-              placeholderTextColor={'#000'}
+              placeholderTextColor={colors.black}
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -218,7 +218,7 @@ const PasswordOtp = ({route, navigation}: any) => {
                 textTransform: 'lowercase',
                 // borderWidth: 1,
               }}
-              onKeyPress={({nativeEvent: {key: keyValue}}) => {
+              onKeyPress={({ nativeEvent: { key: keyValue } }) => {
                 if (keyValue === 'Backspace' && num2 === '-') {
                   refNum1.current.focus();
                 } else if (keyValue === 'Backspace' && num2.length === 1) {
@@ -252,7 +252,7 @@ const PasswordOtp = ({route, navigation}: any) => {
                 textAlign: 'center',
                 textTransform: 'lowercase',
               }}
-              onKeyPress={({nativeEvent: {key: keyValue}}) => {
+              onKeyPress={({ nativeEvent: { key: keyValue } }) => {
                 if (keyValue === 'Backspace' && num3 === '-') {
                   refNum2.current.focus();
                 } else if (keyValue === 'Backspace' && num3.length === 1) {
@@ -284,7 +284,7 @@ const PasswordOtp = ({route, navigation}: any) => {
                 textAlign: 'center',
                 textTransform: 'lowercase',
               }}
-              onKeyPress={({nativeEvent: {key: keyValue}}) => {
+              onKeyPress={({ nativeEvent: { key: keyValue } }) => {
                 if (keyValue === 'Backspace' && num4 === '-') {
                   refNum3.current.focus();
                 } else if (keyValue === 'Backspace' && num4.length === 1) {
@@ -317,7 +317,7 @@ const PasswordOtp = ({route, navigation}: any) => {
                 textAlign: 'center',
                 textTransform: 'lowercase',
               }}
-              onKeyPress={({nativeEvent: {key: keyValue}}) => {
+              onKeyPress={({ nativeEvent: { key: keyValue } }) => {
                 if (keyValue === 'Backspace' && num5 === '-') {
                   refNum4.current.focus();
                 } else if (keyValue === 'Backspace' && num5.length === 1) {
@@ -350,7 +350,7 @@ const PasswordOtp = ({route, navigation}: any) => {
                 textAlign: 'center',
                 textTransform: 'lowercase',
               }}
-              onKeyPress={({nativeEvent: {key: keyValue}}) => {
+              onKeyPress={({ nativeEvent: { key: keyValue } }) => {
                 if (keyValue === 'Backspace' && num6 === '-') {
                   refNum5.current.focus();
                 } else if (keyValue === 'Backspace' && num6.length === 1) {
@@ -384,7 +384,7 @@ const PasswordOtp = ({route, navigation}: any) => {
             title="NEXT"
             onPress={() => Validate()}
             loading={loading}
-            // containerStyle={{width: wp(100)}}
+          // containerStyle={{width: wp(100)}}
           />
         </View>
       </KeyboardAwareScrollView>

@@ -1,15 +1,15 @@
-import React, {useState} from 'react';
-import {SafeAreaView, Text, View, Alert} from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView, Text, View, Alert } from 'react-native';
 
-import {styles} from './style';
-import {Textbox, Button, Header} from '../../components/index';
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import {SvgXml} from 'react-native-svg';
-import {forgot_password} from '../../theme/assets/svg/index';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {forgotPassword} from '../../API/forgotPassword';
+import { styles } from './style';
+import { Textbox, Button, Header } from '../../components';
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { SvgXml } from 'react-native-svg';
+import { forgot_password } from '../../theme/assets/svg';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { forgotPassword } from '../../API/forgotPassword';
 
-const ForgotPassword = ({navigation}: any) => {
+const ForgotPassword = ({ navigation }: any) => {
   const [emailValue, setemailValue] = useState(true);
   const [email, setemail] = useState('');
   const [loading, setloading] = useState(false);
@@ -31,11 +31,11 @@ const ForgotPassword = ({navigation}: any) => {
         .then((rest: any) => {
           setloading(false);
 
-          rest.success && navigation.navigate('PasswordOtp', {email});
+          rest.success && navigation.navigate('PasswordOtp', { email });
         })
         .catch(error => {
           setloading(false);
-          Alert.alert(error.message);
+          Alert.alert(error.message ? error.message : 'Something went wrong');
         });
     }
   }

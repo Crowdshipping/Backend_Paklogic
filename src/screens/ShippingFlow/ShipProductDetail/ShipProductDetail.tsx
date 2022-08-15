@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   View,
@@ -9,23 +9,23 @@ import {
   Image,
 } from 'react-native';
 
-import {Textbox, Button, MapHeader} from '../../../components';
-import {packagedetails, cross} from '../../../theme/assets/svg';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {mapp} from '../../../theme/assets/images';
+import { Textbox, Button, MapHeader } from '../../../components';
+import { packagedetails, cross } from '../../../theme/assets/svg';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { mapp } from '../../../theme/assets/images';
 
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {styles} from './style';
+import { styles } from './style';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {colors} from '../../../theme/colors';
-import {ModalTypes} from '../../../Modals';
+import { colors } from '../../../theme/colors';
+import { ModalTypes } from '../../../Modals';
 
-import {SvgXml} from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
 
 import Modal from 'react-native-modal/dist/modal';
 
@@ -37,8 +37,8 @@ interface IimageShow {
   uri: string;
   type: string;
 }
-interface IimageShow1 extends Array<IimageShow> {}
-const ShipProductDetail = ({navigation, route}: any) => {
+interface IimageShow1 extends Array<IimageShow> { }
+const ShipProductDetail = ({ navigation, route }: any) => {
   const {
     MMSI,
     type,
@@ -87,20 +87,20 @@ const ShipProductDetail = ({navigation, route}: any) => {
   ]);
 
   const category = [
-    {id: 1, name: 'Wood'},
-    {id: 2, name: 'Iron'},
-    {id: 3, name: 'Plastic'},
-    {id: 4, name: 'Glass'},
+    { id: 1, name: 'Wood' },
+    { id: 2, name: 'Iron' },
+    { id: 3, name: 'Plastic' },
+    { id: 4, name: 'Glass' },
   ];
   const Type = [
-    {id: 1, name: 'Cargo'},
-    {id: 2, name: 'hand Carry'},
-    {id: 3, name: 'soft'},
+    { id: 1, name: 'Cargo' },
+    { id: 2, name: 'hand Carry' },
+    { id: 3, name: 'soft' },
   ];
   const Unit = [
-    {id: 1, name: 'Kilogram'},
-    {id: 2, name: 'Gram'},
-    {id: 3, name: 'Pound'},
+    { id: 1, name: 'Kilogram' },
+    { id: 2, name: 'Gram' },
+    { id: 3, name: 'Pound' },
   ];
   function handleSubmit() {
     let validate = true;
@@ -173,32 +173,32 @@ const ShipProductDetail = ({navigation, route}: any) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
       <KeyboardAwareScrollView>
-        <ImageBackground resizeMode="stretch" style={{flex: 1}} source={mapp}>
+        <ImageBackground resizeMode="stretch" style={{ flex: 1 }} source={mapp}>
           <ScrollView
             style={{}}
             showsVerticalScrollIndicator={false}
             scrollToOverflowEnabled={false}>
-            <TouchableOpacity onPress={() => {}} style={styles.menu}>
+            <TouchableOpacity onPress={() => { }} style={styles.menu}>
               <Entypo name="menu" size={25} />
             </TouchableOpacity>
             <View style={styles.location}>
               <Textbox
                 title={'Pickup Location'}
                 placeholder={departurePort}
-                onChangeValue={() => {}}
+                onChangeValue={() => { }}
                 editable={false}
               />
               <Textbox
                 title={'Drop Location'}
                 placeholder={destinationPort}
-                onChangeValue={() => {}}
+                onChangeValue={() => { }}
                 editable={false}
               />
             </View>
             <View style={styles.bckimg}>
-              <View style={{bottom: hp(7)}}>
+              <View style={{ bottom: hp(7) }}>
                 <MapHeader
                   title="Package Details"
                   picture={packagedetails}
@@ -225,7 +225,7 @@ const ShipProductDetail = ({navigation, route}: any) => {
                     />
                   </View>
 
-                  <Text style={{borderColor: 'grey'}}>
+                  <Text style={{ borderColor: 'grey' }}>
                     {SelectedCategory ? SelectedCategory : 'Select Category'}
                   </Text>
                 </TouchableOpacity>
@@ -283,10 +283,10 @@ const ShipProductDetail = ({navigation, route}: any) => {
                       !weightValue && !unitValue
                         ? 'Weight and Unit are Required'
                         : !unitValue
-                        ? 'Unit is Required'
-                        : !weightValue
-                        ? 'Weight is Required'
-                        : ''
+                          ? 'Unit is Required'
+                          : !weightValue
+                            ? 'Weight is Required'
+                            : ''
                     }
                   />
 
@@ -327,18 +327,18 @@ const ShipProductDetail = ({navigation, route}: any) => {
                     disabled={Images.length >= 2 ? true : false}>
                     <Entypo
                       name="attachment"
-                      color={'#000'}
+                      color={colors.black}
                       size={wp(5)}
-                      style={{alignSelf: 'flex-end'}}
+                      style={{ alignSelf: 'flex-end' }}
                     />
                   </TouchableOpacity>
                 </View>
 
-                <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                   {Images.length >= 1 ? (
                     Images.map((item, index1: number) => {
                       return (
-                        <View key={index1} style={{marginHorizontal: wp(5)}}>
+                        <View key={index1} style={{ marginLeft: wp(8) }}>
                           <TouchableOpacity
                             onPress={() => {
                               setImages([
@@ -359,10 +359,10 @@ const ShipProductDetail = ({navigation, route}: any) => {
                           </TouchableOpacity>
 
                           <Image
-                            source={{uri: item.uri}}
+                            source={{ uri: item.uri }}
                             style={{
-                              height: wp(35),
-                              width: wp(35),
+                              height: wp(37),
+                              width: wp(37),
                               // margin: wp(5),
                               borderRadius: 10,
                               // borderWidth: 1,
@@ -405,7 +405,7 @@ const ShipProductDetail = ({navigation, route}: any) => {
                     </Text>
                   </View>
                 )}
-                <View style={{paddingHorizontal: wp(8)}}>
+                <View style={{ paddingHorizontal: wp(8) }}>
                   <Text style={styles.txt}>Instructions</Text>
                   <View
                     style={{
@@ -430,13 +430,13 @@ const ShipProductDetail = ({navigation, route}: any) => {
                         paddingVertical: hp(1),
                         flexWrap: 'wrap',
                       }}
-                      // onChangeText={(text: string) => {
-                      //   setinstructions(text);
-                      // }}
+                    // onChangeText={(text: string) => {
+                    //   setinstructions(text);
+                    // }}
                     />
                   </View>
                 </View>
-                <View style={{paddingHorizontal: wp(8)}}>
+                <View style={{ paddingHorizontal: wp(8) }}>
                   <Text style={styles.txt}>Product Description</Text>
                   <View
                     style={{
@@ -511,7 +511,7 @@ const ShipProductDetail = ({navigation, route}: any) => {
         onBackdropPress={() => settoCaptureImage(false)}>
         <View
           style={{
-            backgroundColor: '#fff',
+            backgroundColor: colors.white,
             elevation: 5,
 
             width: wp(80),
@@ -531,7 +531,7 @@ const ShipProductDetail = ({navigation, route}: any) => {
               right: -10,
               top: -10,
             }}>
-            <TouchableOpacity onPress={() => setModalVisible(false)}>
+            <TouchableOpacity onPress={() => settoCaptureImage(false)}>
               <SvgXml
                 // style={styles.cross_img}
                 width="16"
@@ -548,26 +548,30 @@ const ShipProductDetail = ({navigation, route}: any) => {
               // paddingVertical: 30,
               paddingBottom: 30,
             }}>
-            <Text style={[styles.txt1, {color: 'red', textAlign: 'center'}]}>
+            <Text style={[styles.txt1, { color: 'red', textAlign: 'center' }]}>
               Choose a picture
             </Text>
           </View>
           <View
             style={{
               justifyContent: 'space-around',
-              paddingVertical: 30,
+              paddingVertical: 5,
               flexDirection: 'row',
               alignItems: 'center',
               // paddin,
             }}>
-            <OpenCamera callbackImage={getSelectedImage.bind(this)} />
+            <View style={{ width: '45%', height: hp(5) }}>
+              <OpenCamera callbackImage={getSelectedImage.bind(this)} />
+            </View>
             <View
               style={{
                 borderLeftWidth: 1,
                 height: '100%',
               }}
             />
-            <OpenGallery callbackImage={getSelectedImage.bind(this)} />
+            <View style={{ width: '45%', height: hp(5) }}>
+              <OpenGallery callbackImage={getSelectedImage.bind(this)} />
+            </View>
           </View>
         </View>
       </Modal>
