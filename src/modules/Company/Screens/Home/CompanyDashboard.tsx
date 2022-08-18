@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
      ButtonContainer:{
         backgroundColor:'#efebeb',
         width:wp('60%'),
-        height:hp('30%'),
+        height:hp('28%'),
         borderRadius:25,
         marginLeft:10,
         alignSelf:'center',
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
      SecondButtonContainer:{
         backgroundColor:'#efebeb',
         width:wp('60%'),
-        height:hp('30%'),
+        height:hp('28%'),
         marginLeft:10,
         borderRadius:25,
         alignSelf:'center',

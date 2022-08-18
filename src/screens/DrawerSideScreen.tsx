@@ -31,15 +31,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyLoader from '../components/MyLoader';
 
 const DrawerSideScreen = ({ navigation }: any) => {
-
-
     const [userId, setUserId] = React.useState<any>('');
     const [isLoading, setIsLoading] = React.useState(false);
+    const[userData,setUserData]=useState<any>()
 
     const getUserId = async () => {
         try {
             const value = await AsyncStorage.getItem('@user_Id');
             setUserId(value);
+            const data = await AsyncStorage.getItem('@user_Data');
+            if (data !== null) {
+                console.log(data);
+                let temp=JSON.parse(data)
+                setUserData(temp)
+                console.log("userData:::",temp.email)
+            }
         } catch (e) {
             console.log(e)
         }
@@ -89,10 +95,10 @@ const DrawerSideScreen = ({ navigation }: any) => {
                 />
                 <View style={{ paddingTop: 10, alignItems: 'center' }}>
                     <Text style={{ fontSize: 18, color: 'white', fontWeight: 'bold' }}>
-                        tony stark
+                         {userData?.firstname+" "+userData?.lastname}
                     </Text>
                     <Text style={{ fontSize: 18, color: 'white' }}>
-                        tonystark@gmail.com
+                         {userData?.email}
                     </Text>
                     <TouchableOpacity onPress={() => {
                         navigation.navigate('MYPROFILE');

@@ -3,10 +3,7 @@ import { View, StyleSheet, Image, Text, Pressable } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { backendUrl } from '../../../../../appConstants';
-import HorizontalDivider from '../../../../../components/HorizontalDivider';
-import { LocationSvg } from '../../../../../theme/assets/svg/LocationSvg';
-import { areoplane } from '../../../../../assets';
-import MineCard from '../../../../../screens/Common/MineCard';
+import { profile } from '../../../../../assets';
 export const AllDriverCompanyCard= ({
     onPress,
     firstName,
@@ -54,7 +51,7 @@ export const AllDriverCompanyCard= ({
                             ) : (
                                 <Image
                                     style={{ width:70, height: 70, borderRadius: 50, marginRight: 10 }}
-                                    source={areoplane}
+                                    source={profile}
                                 />
                             )}
                         </View>
@@ -82,11 +79,11 @@ export const AllDriverCompanyCard= ({
                             </Text>
                         </View>
                         <View>
-                        {show?
+                        
                         <TouchableOpacity onPress={viewDriverDetailsPress}>
                                 <Text style={{color:'green'}}>Driver Details</Text>
                             </TouchableOpacity>
-                        :null}
+                        
                         </View>
                         
                     </View>
@@ -97,15 +94,12 @@ export const AllDriverCompanyCard= ({
  
      </View>
      <View>
-        {show ?
-            <TouchableOpacity onPress={bookingDetailsPress}
+        <TouchableOpacity onPress={bookingDetailsPress}
             style={styles.buttonContainer}>
                 <Text style={styles.detailsText}>
                     VIEW DETAILS
                 </Text>
-            </TouchableOpacity>:null
-        
-        }
+            </TouchableOpacity>
         
     </View>
     </View>

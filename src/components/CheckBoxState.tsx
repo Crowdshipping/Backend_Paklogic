@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight:10
+    marginRight:6
   },
   textCheckBox: {
     fontSize: 12,

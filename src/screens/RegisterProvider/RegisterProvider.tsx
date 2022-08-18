@@ -91,12 +91,12 @@ export default function RegisterProvider(props: any) {
           setLoading(false);
           console.log('result:::', result);
           if (result.success) {
-            if (props.route.params.option == 'Driver') {
-              props.navigation.navigate('RegisterDriver', {
-                uid: result.data._id,
-              });
-            }
-             else if (props.route.params.option == 'Company') {
+            // if (props.route.params.option == 'Driver') {
+            //   props.navigation.navigate('RegisterDriver', {
+            //     uid: result.data._id,
+            //   });
+            // } 
+            if (props.route.params.option == 'Company') {
               props.navigation.navigate('RegisterCompany', {
                 uid: result.data._id,
               });

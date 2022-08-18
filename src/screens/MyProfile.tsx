@@ -21,106 +21,258 @@ import { settingSvg } from '../theme/assets/svg/settingSvg';
 import { location2Svg } from '../theme/assets/svg/location2Svg';
 import { mailSvg } from '../theme/assets/svg/mailSvg';
 import { profileSvg } from '../theme/assets/svg/profileSvg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getCompanyData, getUserData } from '../services';
+import MyLoader from '../components/MyLoader';
 const MyProfile = ({ navigation }: any) => {
-    const [pdetail, setpdetail] = useState({
-        name: 'Roma',
-        email: 'roma1996@gmail.com',
-        location: 'Pakistan',
-    });
+    const[companyData,setCompanyData]=useState<any>()
+    const[userData,setUserData]=useState<any>()
+    const[isloading,setIsloading]=useState(true)
+    const getProfileData = async() => {
+        const value = await AsyncStorage.getItem('@user_Id');
+        if(value!==null){
+            if (value !== null) {
+                // setIsloading(true);
+                 getUserData(value)
+                  .then(response => response.json())
+                  .then(result => {
+                    console.log("user data",result)
+                     setUserData(result.user);     
+                     getData(result.user); 
+                  })
+                  .catch(error => {
+                    // setIsloading(false);
+                    console.log('error', error);
+                });   
+            }         
+        }
+      };
+   
+      React.useEffect(() => {
+            getProfileData();         
+        }, [])
+
+        const getData = async (data:any) => {
+            const value = await AsyncStorage.getItem('@user_Id');
+            console.log("Datatata")
+            if(!data.companyId){
+                console.log("Kuch nai")
+                if (value !== null) {
+                    // setIsloading(true);
+                     getCompanyData(value)
+                      .then(response => response.json())
+                      .then(result => {
+                        console.log("company data",result)
+                        setIsloading(false)
+                        setCompanyData(result.companyDetails);
+                      })
+                      .catch(error => {
+                        setIsloading(false);
+                        console.log('error', error);
+                      });
+                   }
+            }else{
+                    getCompanyData(data.companyId)
+                     .then(response => response.json())
+                     .then(result => {
+                       console.log("company data",result)
+                       setIsloading(false)
+                       setCompanyData(result.companyDetails);
+                     
+                   })
+                     .catch(error => {
+                       setIsloading(false);
+                       console.log('error', error);
+                     });
+                   }
+        
+          };
+
     return (
+        
         <SafeAreaView>
-            <View style={styles.ViewTop}>
-                <ImageBackground
-                    style={{
-                        width: '100%',
-                        height: '100%',
-                        resizeMode: 'stretch',
-                        top: hp(-1),
-                    }}
-                    // resizeMode={'stretch'}
-                    source={require('../assets/PROFILEpic.png')}>
-                    <View style={styles.header}>
-                        <Header
-                            title="My Profile"
-                            onPress={() => {
-                                navigation.navigate("Drawer")
-                                console.log('Error in Go Back');
-                            }}
-                        />
-                    </View>
-                    <View style={styles.imgview}>
-                        <Image
-                            source={require('../assets/tony.jpg')}
-                            style={styles.img}
-                        />
-                    </View>
-                </ImageBackground>
-            </View>
-            <View style={styles.ViewDetails}>
-                <View style={styles.viewunderline}>
-                    <View>
-                        <SvgXml
-                            // style={styles.svg}
-                            xml={profileSvg}
-                            width={25}
-                        // width={75}
-                        // height={75}
-                        />
-                    </View>
-                    <View style={{ paddingLeft: wp(5) }}>
-                        <Text style={styles.txtdetail}>{pdetail.name}</Text>
-                    </View>
+    
+            { isloading ? 
+                 <MyLoader/>
+            :
+
+            <View>
+                <View style={styles.ViewTop}>
+                    <ImageBackground
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            resizeMode: 'stretch',
+                            top: hp(-1),
+                        }}
+                        // resizeMode={'stretch'}
+                        source={require('../assets/PROFILEpic.png')}>
+                         {userData.role==="Company" ?
+                            <View style={styles.header}>
+                                <Header
+                                    title="My Profile"
+                                    onPress={() => {
+                                        navigation.navigate("CompanyDrawer")
+                                        console.log('Error in Go Back');
+                                    }}
+                                />
+                            </View>:null
+                    }
+                    {userData.role==="Provider" ?
+                        <View style={styles.header}>
+                            <Header
+                                title="My Profile"
+                                onPress={() => {
+                                    navigation.navigate("ProviderDrawer")
+                                    console.log('Error in Go Back');
+                                }}
+                            />
+                        </View>:null
+                    }
+                    {userData.role==="Driver" ?
+                        <View style={styles.header}>
+                            <Header
+                                title="My Profile"
+                                onPress={() => {
+                                    navigation.navigate("DriverDrawer")
+                                    console.log('Error in Go Back');
+                                }}
+                            />
+                        </View>:null
+                    }
+                        <View style={styles.imgview}>
+                            <Image
+                                source={require('../assets/tony.jpg')}
+                                style={styles.img}
+                            />
+                        </View>
+                    </ImageBackground>
                 </View>
-                <View style={styles.viewunderline}>
+                <View style={styles.ViewDetails}>
+                    <View style={styles.editContainer}>
+                        <TouchableOpacity onPress={()=>navigation.navigate('EditMyProfile')}> 
+                            <Text style={styles.editText}>
+                                Edit
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.viewunderline}>
+                        <View>
+                            <SvgXml
+                                // style={styles.svg}
+                                xml={profileSvg}
+                                width={25}
+                            // width={75}
+                            // height={75}
+                            />
+                        </View>
+                        <View style={{ paddingLeft: wp(3.5) }}>
+                            <Text style={styles.txtdetail}>{userData?.firstname+' '+userData?.lastname}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.viewunderline}>
+                        <View>
+                            <SvgXml style={styles.svg} xml={mailSvg} width={25} />
+                        </View>
+                        <View style={{ paddingLeft: wp(3.5) }}>
+                            <Text style={styles.txtdetail}>{userData?.email}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.viewunderline}>
+                        <View>
+                            <SvgXml style={styles.svg} xml={location2Svg} width={25} />
+                        </View>
+                        <View style={{ paddingLeft: wp(3.5) }}>
+                            <Text style={styles.txtdetail}>{userData?.address}</Text>
+                        </View>
+                    </View>
+                    {userData.role==='Company' ?
                     <View>
-                        <SvgXml style={styles.svg} xml={mailSvg} width={25} />
+                        <View style={styles.viewunderline}>
+                        <View>
+                            <SvgXml style={styles.svg} xml={mailSvg} width={25} />
+                        </View>
+                        <View style={{ paddingLeft: wp(3.5) }}>
+                            <Text style={styles.txtdetail}>{companyData?.companyName}</Text>
+                        </View>
                     </View>
-                    <View style={{ paddingLeft: wp(5) }}>
-                        <Text style={styles.txtdetail}>{pdetail.email}</Text>
+                    <View style={styles.viewunderline}>
+                        <View>
+                            <SvgXml style={styles.svg} xml={mailSvg} width={25} />
+                        </View>
+                        <View style={{ paddingLeft: wp(3.5) }}>
+                            <Text style={styles.txtdetail}>{companyData?.companyRegNo}</Text>
+                        </View>
                     </View>
-                </View>
-                <View style={styles.viewunderline}>
+                    <View style={styles.viewunderline}>
+                        <View>
+                            <SvgXml style={styles.svg} xml={mailSvg} width={25} />
+                        </View>
+                        <View style={{ paddingLeft: wp(3.5) }}>
+                            <Text style={styles.txtdetail}>{companyData?.totalvehicles}</Text>
+                        </View>
+                    </View>
+                    </View>:null
+                    }
+                    {userData.role==="Driver"  && userData.companyId ?
                     <View>
-                        <SvgXml style={styles.svg} xml={location2Svg} width={25} />
+                        <View style={styles.viewunderline}>
+                            <View>
+                                <SvgXml style={styles.svg} xml={mailSvg} width={25} />
+                            </View>
+                            <View style={{ paddingLeft: wp(3.5) }}>
+                                <Text style={styles.txtdetail}>{companyData?.companyName}</Text>
+                            </View>
                     </View>
-                    <View style={{ paddingLeft: wp(5) }}>
-                        <Text style={styles.txtdetail}>{pdetail.location}</Text>
-                    </View>
-                </View>
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        paddingVertical: hp(1),
-                        justifyContent: 'space-between',
-                    }}>
+                        <View style={styles.viewunderline}>
+                            <View>
+                                <SvgXml style={styles.svg} xml={mailSvg} width={25} />
+                            </View>
+                            <View style={{ paddingLeft: wp(3.5) }}>
+                                <Text style={styles.txtdetail}>{companyData?.companyRegNo}</Text>
+                            </View>
+                        </View>
+                    </View>:null
+
+                    }
+                    {userData.role==="Driver" || userData.role==="Provider"
+                    ?
                     <View
                         style={{
                             flexDirection: 'row',
+                            paddingVertical: hp(1),
+                            justifyContent: 'space-between',
                         }}>
-                        <View>
-                            <SvgXml style={styles.svg} xml={settingSvg} width={25} />
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                            }}>
+                            <View>
+                                <SvgXml style={styles.svg} xml={settingSvg} width={25} />
+                            </View>
+                            <View style={{ paddingLeft: wp(5) }}>
+                                <Text style={styles.txtdetail}>Setting</Text>
+                            </View>
                         </View>
-                        <View style={{ paddingLeft: wp(5) }}>
-                            <Text style={styles.txtdetail}>Setting</Text>
-                        </View>
-                    </View>
 
-                    <View>
-                        <TouchableOpacity>
-                            <AntDesign
-                                name="right"
-                                color={'#000'}
-                                size={wp(5)}
-                                onPress={() =>
-                                    navigation.dispatch(DrawerActions.openDrawer())
-                                }
-                            // onPress={() => console.log('adasdsefsssd')}
-                            />
-                        </TouchableOpacity>
-                    </View>
+                        <View>
+                            <TouchableOpacity>
+                                <AntDesign
+                                    name="right"
+                                    color={'#000'}
+                                    size={wp(5)}
+                                    onPress={() =>
+                                        navigation.dispatch(DrawerActions.openDrawer())
+                                    }
+                                // onPress={() => console.log('adasdsefsssd')}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    </View>:null 
+                    }
                 </View>
-                {/* <View style={{borderBottomWidth: 1}}></View> */}
-            </View>
+            </View> 
+            }
         </SafeAreaView>
     );
 };
@@ -162,11 +314,20 @@ const styles = StyleSheet.create({
         paddingVertical: hp(1),
         // justifyContent: 'center',
         alignItems: 'center',
+        marginTop:10,
         // width: wp(25),
         // justifyContent: 'space-between',
     },
     txtdetail: {
         fontSize: 18,
     },
+    editContainer:{
+        alignItems:'flex-end'
+    },
+    editText:{
+        fontSize:15,
+        color:'green'
+    }
+
 });
 export default MyProfile;

@@ -18,6 +18,7 @@ import TrackingVehicle from '../modules/Driver/Screens/Vehicle/TrackingVehicle';
 import MyProfile from '../screens/MyProfile';
 import VehiclePackageDetail from '../modules/Driver/Screens/Vehicle/VehiclePackageDetail';
 import VehicleVerifyOtp from '../screens/Common/VehicleVerifyOtp';
+import EditMyProfile from '../screens/EditMyProfile';
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   return (
@@ -49,7 +50,7 @@ export const DriverNavigation = () => {
           headerShown: false,
           title: 'Back',
         }}
-        name="Drawer"
+        name="DriverDrawer"
         component={DrawerNavigator}
       />
       <Stack.Screen
@@ -191,7 +192,7 @@ export const DriverNavigation = () => {
           headerTitleAlign: 'center',
           title: 'ADD TICKET DETAILS',
         }}
-        name="MYPROFILE"
+        name="MYPROFILEDRIVER"
         component={MyProfile}
       />
       <Stack.Screen
@@ -224,6 +225,14 @@ export const DriverNavigation = () => {
         name="VEHICLEVERIFYOTP"
         component={VehicleVerifyOtp}
       />
+       <Stack.Screen
+            name="EditMyProfile"
+            component={EditMyProfile}
+            options={{
+            headerShown:false
+
+            }}
+          />
     </Stack.Navigator>
   );
 };

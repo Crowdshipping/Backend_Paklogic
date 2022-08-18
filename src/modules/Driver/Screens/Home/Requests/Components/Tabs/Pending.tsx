@@ -21,7 +21,8 @@ const Pending = ({ navigation }: any) => {
         .then(result => {
           setIsLoading(false);
           setVehicleResponse(result.DriverRequests);
-          // console.log("gggggggggggggg", result.DriverRequests)
+          console.log("Vehicle",vehicleResponse)
+
         })
         .catch(error => {
           setIsLoading(false);
@@ -89,22 +90,27 @@ const Pending = ({ navigation }: any) => {
     if (isLoading) {
       return <MyLoader />
     } else if (vehicleResponse && vehicleResponse.length !== 0) {
-      let isPendingLocal = false;
+      let notPending = 0;
       return vehicleResponse.map((item: any) => {
         if (item.status === 'Pending') {
-          isPendingLocal = true;
           return (
             <ScrollView>
               {renderVechicle(item)}
             </ScrollView>
           )
-        } else if(!isPendingLocal){
+        }else{
+          console.log(vehicleResponse.length)
+          console.log("Not pending Available",notPending)
+          notPending=notPending+1;
+        } 
+        if(notPending===vehicleResponse.length){
+          console.log("Not pending final",notPending)
           return noVehicleAvailable();
         }
       })
-    } else {
+    }else{
       return noVehicleAvailable();
-    }
+    } 
   }
   return (
     renderContents()

@@ -43,12 +43,12 @@ const DriverDetailsCompany= ({ navigation,route }: any) => {
         <HorizontalDivider/>
         <View style={styles.container}>
             <Text style={styles.HeaderText}>Car</Text>
-            <Text style={styles.text}>{route.params.item.vehicles[0].vehicleName}</Text>
+            <Text style={styles.text}>{route?.params?.item?.vehicles[0]?.vehicleName}</Text>
         </View>
         <HorizontalDivider/>
         <View style={styles.container}>
             <Text style={styles.HeaderText}>Car Number</Text>
-            <Text style={styles.text}>{route.params.item.vehicles[0].licenseNumber}</Text>
+            <Text style={styles.text}>{route?.params?.item?.vehicles[0]?.licenseNumber}</Text>
         </View>
         <HorizontalDivider/>
         <View style={{alignItems:'center'}}>        

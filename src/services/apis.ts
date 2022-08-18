@@ -828,6 +828,41 @@ export const getImageUrlFromServer = async (image: any) => {
   );
   return await response.json();
 };
+export const getImageUrlFromServerNew = async (image: any, name:any, isEdited?:boolean) => {
+  console.log('dataaaaa 123123',isEdited)
+  isEdited=isEdited!==undefined?isEdited:true
+  console.log('dataaaaa 123123',isEdited)
+  return new Promise(async (resolve, reject) => {
+    if(!isEdited){
+      resolve({imageName:name,res:{"success":true,"imageUrl":image.Image}})
+      console.log('dataaaaa 123123')
+      return
+    }
+    console.log('promiseeee 123123')
+    var formdata = new FormData();
+  formdata.append('image', image);
+
+  var requestOptions = {
+    method: 'POST',
+    body: formdata,
+    redirect: 'follow',
+  };
+
+  fetch(
+    'https://backend-crowdshipping.herokuapp.com/company/singlepicture',
+    requestOptions,
+  ).then(data=>data.json())
+  .then((response)=>{
+    console.log("new",response)
+
+    resolve({imageName:name,res:response})
+  }).catch((err)=>{
+    console.log("error",err)
+  });
+  // return await response.json();
+  })
+  
+};
 export const getVehicleRequest = (lat: any, lng: any) => {
   var myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');
@@ -1134,3 +1169,98 @@ export const addVehicleCompany = (vehicle: AddVehicleCompany) => {
         requestOptions,
       );
     };
+    export const driverDeleteCompany = ( driverId: any,companyId: any ) => {
+      var myHeaders = new Headers();
+      myHeaders.append("Cookie", "connect.sid=s%3AFZsOLF5nt9g8ecQHsFGdy_LWpj644Jyr.OVXtEEAj%2F27d2u1N9v9R9RVlUZW%2BboWWE8%2BrQwGuQsM");
+    
+      var requestOptions = {
+        method: 'DELETE',
+        headers: myHeaders,
+        redirect: 'follow'
+      };
+    
+      return fetch(`https://backend-crowdshipping.herokuapp.com/company/deletedriver/${driverId}/${companyId}`, requestOptions);
+    
+    }
+    export const getCompanyData = (companyId: any) => {
+      var myHeaders = new Headers();
+      myHeaders.append(
+        'Cookie',
+        'connect.sid=s%3AyulJxLavmCWWcJPfR99ffsX-tEGgaRKa.k6L4OXZAX1lq%2F2ROv%2BFgg9%2Bj6zBXf3OWrH1HooexOaU',
+      );
+    
+      var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow',
+      };
+    
+      return fetch(
+        `https://backend-crowdshipping.herokuapp.com/company/getcompanyinfo/${companyId}`,
+        requestOptions,
+      );
+    };
+
+    export const updateProfile = (data: any,userId:any) => {
+      var formdata = new FormData();
+      formdata.append('firstname', data.firstname);
+      formdata.append('email', data.email);
+      formdata.append('address', data.address);
+      formdata.append('lastname', data.lastname);
+      console.log(formdata);
+    
+      var requestOptions = {
+        method: 'PATCH',
+        body: formdata,
+        redirect: 'follow',
+      };
+    
+      return fetch(
+        `https://backend-crowdshipping.herokuapp.com/user/updateuser/${userId}`,
+        requestOptions,
+      );
+    };
+
+    export const updateCompanyDetails = (data:any,companyId:string) => {
+      var myHeaders = new Headers();
+      myHeaders.append('Content-Type', 'application/json');
+      myHeaders.append(
+        'Cookie',
+        'connect.sid=s%3AmzAxQxmim5IE9KvghS8yLZQlZ0nQ_One.%2Bk2uZG0FbSZSRJV%2FExAjvD03998A4K6%2FVfKQO6ctj3U',
+      );
+    
+      var raw = JSON.stringify({
+      companyName: data.companyName,
+      companyRegNo: data.companyRegNo,
+      totalvehicles: data.totalvehicles
+      });
+    
+      var requestOptions = {
+        method: 'PATCH',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow',
+      };
+      return fetch(
+        `https://backend-crowdshipping.herokuapp.com/company/updatecompany/${companyId}`,
+        requestOptions,
+      );
+      }
+      export const getUserData = (userId: any) => {
+        var myHeaders = new Headers();
+        myHeaders.append(
+          'Cookie',
+          'connect.sid=s%3AyulJxLavmCWWcJPfR99ffsX-tEGgaRKa.k6L4OXZAX1lq%2F2ROv%2BFgg9%2Bj6zBXf3OWrH1HooexOaU',
+        );
+      
+        var requestOptions = {
+          method: 'GET',
+          headers: myHeaders,
+          redirect: 'follow',
+        };
+      
+        return fetch(
+          `https://backend-crowdshipping.herokuapp.com/user/getuser/${userId}`,
+          requestOptions,
+        );
+      };

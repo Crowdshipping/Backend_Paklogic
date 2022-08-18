@@ -8,6 +8,7 @@ import { heightPercentageToDP } from 'react-native-responsive-screen'
 const PendingsTab = ({ item, navigation }: any) => {
     console.log("Check the item", item);
     const [isLoading, setIsLoading] = React.useState(false);
+    const [isCheck, setCheck] = React.useState(true);
 
 
     const noVehicleAvailable = () => {
@@ -23,11 +24,13 @@ const PendingsTab = ({ item, navigation }: any) => {
 
     const renderContents = () => {
         if (isLoading) {
-            return <MyLoader />;
             console.log("araha")
+            return <MyLoader />;
+            
         } else if (item && item.length !== 0 && item.status==='Pending') {
             return renderPendingTab();
-        } else {
+        }
+        else{
             return noVehicleAvailable();
         }
     }
@@ -116,15 +119,12 @@ const PendingsTab = ({ item, navigation }: any) => {
             );
         }
     }
+
     return (
         <View>
             {renderContents()}
-            {/* {isLoading ? <MyLoader /> : renderPendingTab()} */}
         </View>
     )
-
-
-
 
 }
 

@@ -37,7 +37,7 @@ const FlightComponent = ({
             </View>
             <View style={styles.right}>
               <View style={styles.singleTextRowView}>
-                <Text style={{ marginRight: 18 }}>Destination Airport</Text>
+                <Text style={{ marginRight: 29 }}>Departure Airport</Text>
                 <Text style={{ flex: 1, flexWrap: 'wrap' }}>{departureAirport}</Text>
               </View>
               <View style={styles.singleTextRowView}>

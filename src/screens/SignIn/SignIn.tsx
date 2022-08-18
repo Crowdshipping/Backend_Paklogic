@@ -38,10 +38,11 @@ export default function SignIn({ navigation }: any) {
 
   const [loading, setLoading] = useState(false);
 
-  const storeUserId = async (value: any, role: string) => {
+  const storeUserId = async (value: any, role: string,userData:{}) => {
     try {
       await AsyncStorage.setItem('@user_Id', value);
       await AsyncStorage.setItem('@user_role', role);
+      await AsyncStorage.setItem('@user_Data', JSON.stringify(userData));
     } catch (e) {
       console.log('error', e);
     }
@@ -99,11 +100,12 @@ export default function SignIn({ navigation }: any) {
         .then(response => response.json())
         .then(result => {
           console.log('response worked', result);
+          console.log('User', result.user);
           setLoading(false);
           if (result.success) {
-            storeUserId(result.user._id, result.user.role);
+            storeUserId(result.user._id, result.user.role,result.user);
             if (result.user.role === 'Provider') {
-              navigation.navigate('Drawer');
+              navigation.navigate('ProviderDrawer');
             } else if (result.user.role === 'Driver') {
               navigation.navigate('DriverNavigation');
             }else if (result.user.role === 'Company'){

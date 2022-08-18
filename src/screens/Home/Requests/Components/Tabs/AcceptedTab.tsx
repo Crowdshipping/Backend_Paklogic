@@ -28,6 +28,7 @@ const AcceptedTab = ({ item, navigation }: any) => {
             });
     }
     const renderAcceptTabs = () => {
+        let check=true;
         if (item && item.length !== 0 && item.status==='Accepted') {
             if (isLoading) {
                 console.log("place of loader")
@@ -38,6 +39,7 @@ const AcceptedTab = ({ item, navigation }: any) => {
                     return;
                 }
                 else if (item.status === 'Accepted' && item.type === "Flight") {
+                    check=true;
                     if (item.requestedBy !== null && item.flight !== null) {
                         if (item.requestedBy.profilepic !== null || item.requestedBy.firstname !== null
                             || item.requestedBy.lastname !== null || item.flight.flightAirline !== null
@@ -65,6 +67,7 @@ const AcceptedTab = ({ item, navigation }: any) => {
                     }
                 }
                 else if (item.status === 'Accepted' && item.type === "Ship" && item.ship !== null) {
+                    check=true;
                     return (
                         <RequestCard
                             onPress={() => {
@@ -91,10 +94,15 @@ const AcceptedTab = ({ item, navigation }: any) => {
                         />
                     );
                 }
+                else{
+                    check=false
+                }
             }
         } else {
             return noVehicleAvailable()
         }
+        
+        
     }
     const noVehicleAvailable = () => {
         return (

@@ -45,6 +45,7 @@ import { DriverNavigation } from './DriverNavigation';
 import { CompanyNavigation } from './CompanyNavigation';
 import ShipVerifyOtp from '../screens/Common/ShipVerifyOtp';
 import FlightVerifyOtp from '../screens/Common/FlightVerifyOtp';
+import EditMyProfile from '../screens/EditMyProfile';
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   return (
@@ -76,7 +77,7 @@ export const StackNavigation = () => {
           headerShown: false,
           title: 'Back',
         }}
-        name="Drawer"
+        name="ProviderDrawer"
         component={DrawerNavigator}
       />
       <Stack.Screen
@@ -668,6 +669,14 @@ export const StackNavigation = () => {
         name="FLIGHTVERIFYOTP"
         component={FlightVerifyOtp}
       />
+       <Stack.Screen
+            name="EditMyProfile"
+            component={EditMyProfile}
+            options={{
+            headerShown:false
+
+            }}
+          />
     </Stack.Navigator>
   );
 };

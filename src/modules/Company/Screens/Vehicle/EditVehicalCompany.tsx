@@ -6,13 +6,14 @@ import { widthPercentageToDP } from 'react-native-responsive-screen';
 import { ImagePickerSvg } from '../../../../theme/assets/svg/ImagePickerSvg';
 import VehicleImageRow from './Components/AddVehicle/VehicleImageRow';
 import { launchImageLibrary } from 'react-native-image-picker';
-import{getImageUrlFromServer,updateVehicleCompany} from '../../../../services'
+import{getImageUrlFromServer,getImageUrlFromServerNew,updateVehicleCompany} from '../../../../services'
 import MyLoader from '../../../../components/MyLoader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyDropdown from '../../../../components/MyDropdown';
 import VehicleDropDown from './Components/VehicleDropDown';
 import DropDownPicker from 'react-native-dropdown-picker';
 import PopupModalOfSuccess from '../../../../components/PopupModalOfSuccess';
+import { backendUrl } from '../../../../appConstants';
 
 const EditVehicleCompany = ({ navigation,route }: any) => {
   console.log(route.params.item)
@@ -30,15 +31,22 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
   const [isLicenceNumber, setIsLicenceNumber] = React.useState(true);
 
   /* Images of app */
-  const [vehicleImage, setVehicleImage] = React.useState<any>({vehicleImage: route.params.item.vehicleImage});
-  const [isVehicleImage, setIsVehicleImage] = React.useState(true);
+  let splitVehicleImage=route.params.item.vehicleImage.split("/src/");
+  const [vehicleImage, setVehicleImage] = React.useState<any>({Image: splitVehicleImage[1]});
+  const [isVehicleImage, setIsVehicleImage] = React.useState(false);
 
-  const [vehicleInsurance, setVehicleInsurance] = React.useState<any>({vehicleInsurance: route.params.item.vehicleInsurance});
-  const [isVehicleInsurance, setIsVehicleInsurance] = React.useState(true);
-  const [vehicleLicence, setVehicleLicence] = React.useState<any>({vehicleLicence: route.params.item.vehicleLicence});
-  const [isVehicleLicence, setIsVehicleLicence] = React.useState(true);
-  const [vehicleResidence, setVehicleResidence] = React.useState<any>({vehicleResidenceProof: route.params.item.vehicleResidenceProof});
-  const [isVehicleResidence, setIsVehicleResidence] = React.useState(true);
+  let splitVehicleInsurance=route.params.item.vehicleInsurance.split("/src/");
+  const [vehicleInsurance, setVehicleInsurance] = React.useState<any>({Image: splitVehicleInsurance[1]});
+  const [isVehicleInsurance, setIsVehicleInsurance] = React.useState(false);
+
+  let splitVehicleLicence=route.params.item.vehicleLicence.split("/src/");
+  const [vehicleLicence, setVehicleLicence] = React.useState<any>({Image: splitVehicleLicence[1]});
+  const [isVehicleLicence, setIsVehicleLicence] = React.useState(false);
+
+  let splitVehicleResidence=route.params.item.vehicleResidenceProof.split("/src/");
+  const [vehicleResidence, setVehicleResidence] = React.useState<any>({Image: splitVehicleResidence[1]});
+  const [isVehicleResidence, setIsVehicleResidence] = React.useState(false);
+  
   const [isLoading, setIsLoading] = React.useState(false);
   const [isModalVisible, setModalVisible] = React.useState(false);
 
@@ -121,12 +129,16 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
       };
       if (whichImage === 'VEHICLEIMAGE') {
         setVehicleImage(imageFile);
+        setIsVehicleImage(true)
       } else if (whichImage === 'VEHICLEINSURANCE') {
         setVehicleInsurance(imageFile);
+        setIsVehicleInsurance(true)
       } else if (whichImage === 'VEHICLELICENCE') {
         setVehicleLicence(imageFile);
+        setIsVehicleLicence(true)
       } else if (whichImage === 'VEHICLERESIDENCE') {
         setVehicleResidence(imageFile);
+        setIsVehicleResidence(true)
       }
       // setImage(imageFile);
     } catch (err: any) {
@@ -134,36 +146,36 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
     }
   };
   const checkVehicleImage = () => {
-    if (Object.keys(vehicleImage).length === 0) {
+    if (Object.keys(vehicleImage).length === 1) {
       setIsVehicleImage(false);
-      return false;
+      return true;
     } else {
       setIsVehicleImage(true);
       return true;
     }
   };
   const checkVehicleInsurance = () => {
-    if (Object.keys(vehicleInsurance).length === 0) {
+    if (Object.keys(vehicleInsurance).length === 1) {
       setIsVehicleInsurance(false);
-      return false;
+      return true;
     } else {
       setIsVehicleInsurance(true);
       return true;
     }
   };
   const checkVehicleResidence = () => {
-    if (Object.keys(vehicleResidence).length === 0) {
+    if (Object.keys(vehicleResidence).length === 1) {
       setIsVehicleResidence(false);
-      return false;
+      return true;
     } else {
       setIsVehicleResidence(true);
       return true;
     }
   };
   const checkVehicleLicence = () => {
-    if (Object.keys(vehicleLicence).length === 0) {
+    if (Object.keys(vehicleLicence).length === 1) {
       setIsVehicleLicence(false);
-      return false;
+      return true;
     } else {
       setIsVehicleLicence(true);
       return true;
@@ -172,19 +184,20 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
 
   const getAllImagesUrlByPromise = () => {
     setIsLoading(true)
-    console.log(vehicleImage,vehicleInsurance,vehicleLicence,vehicleResidence)
+    console.log(isVehicleImage,isVehicleInsurance,isVehicleLicence,isVehicleResidence)
     
     Promise.all([
-      getImageUrlFromServer(vehicleImage),
-      getImageUrlFromServer(vehicleLicence),
-      getImageUrlFromServer(vehicleResidence),
-      isVehicleInsurance && getImageUrlFromServer(vehicleInsurance),
+      getImageUrlFromServerNew(vehicleImage,'vehicleImage',isVehicleImage),
+      getImageUrlFromServerNew(vehicleLicence,'vehicleLicence',isVehicleLicence),
+       getImageUrlFromServerNew(vehicleResidence,'vehicleResidence',isVehicleResidence),
+      getImageUrlFromServerNew(vehicleInsurance,'vehicleInsurance',isVehicleInsurance),
     ]).then(response => {
       setIsLoading(false);
-        uploadDataToServer(response);
+      console.log("Message",JSON.stringify(response))
+      uploadDataToServer(response);
     }).catch(error=>{
       setIsLoading(false);
-      console.log(error)
+      console.log("Image Error",error)
       console.log(error?.response?.data)
     });
     
@@ -197,6 +210,7 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
 
 
   const validForm = () => {
+    console.log("valid Form")
     const type = validateVehicleType();
     const name = validateVehicleName();
     const color = validateVehicleColor();
@@ -205,6 +219,7 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
     const vImage = checkVehicleImage();
     const vLicence = checkVehicleLicence();
     const vResidence = checkVehicleResidence();
+    const vInsurance=checkVehicleInsurance()
     if (
       type &&
       name &&
@@ -213,16 +228,20 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
       licence &&
       vImage &&
       vLicence &&
-      vResidence
+      vResidence &&
+      vInsurance
     ) {
+      console.log("Promise")
       getAllImagesUrlByPromise();
-    }
+      }else{
+        Alert.alert("something went wrong")
+      }
   };
   const uploadDataToServer = async (response: any) => {
     const value = await AsyncStorage.getItem('@user_Id');
     let insuranceValue = '';
     if (response.length === 4) {
-      insuranceValue = response[3].imageUrl;
+      insuranceValue =response[3].res.imageUrl;
     }
     if (value) {
      
@@ -230,12 +249,12 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
         companyId: value,
         licenseNumber: licenseNumber,
         vehicleColor: vehicleColor,
-        vehicleImage: response[0].imageUrl,
+        vehicleImage: response[0].res.imageUrl,
         vehicleInsurance: insuranceValue,
-        vehicleLicence: response[1].imageUrl,
+        vehicleLicence:response[1].res.imageUrl,
         vehicleModel: vehicleModel,
         vehicleName: vehicleName,
-        vehicleResidence: response[2].imageUrl,
+        vehicleResidence:response[2].res.imageUrl,
         vehicleType: vehicleType,
       };
       console.log("check vehicle", vehicle);
@@ -331,11 +350,11 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
             }}
           />
           <VehicleImageRow
-            isValid={isVehicleImage}
+           isValid={true}
             validMessage={'Vehicle Image is Required'}
             title={
               Object.keys(vehicleImage).length === 1
-                ? route.params.item.vehicleImage
+                ? splitVehicleImage
                 : vehicleImage.name
             }
             onPress={() => {
@@ -344,9 +363,10 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
             svgImage={ImagePickerSvg}
           />
           <VehicleImageRow
+          isValid={true}
             title={
               Object.keys(vehicleInsurance).length === 1
-                ? route.params.item.vehicleInsurance
+                ? splitVehicleInsurance
                 : vehicleInsurance.name
             }
             onPress={() => {
@@ -355,11 +375,11 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
             svgImage={ImagePickerSvg}
           />
           <VehicleImageRow
-            isValid={isVehicleLicence}
+          isValid={true}
             validMessage={'Vehicle Licence is Required'}
             title={
               Object.keys(vehicleLicence).length === 1
-                ? route.params.item.vehicleLicence
+                ? splitVehicleLicence
                 : vehicleLicence.name
             }
             onPress={() => {
@@ -368,11 +388,12 @@ const EditVehicleCompany = ({ navigation,route }: any) => {
             svgImage={ImagePickerSvg}
           />
           <VehicleImageRow 
-            isValid={isVehicleResidence}
+            
+            isValid={true}
             validMessage={'Vehicle Residence is Required'}
             title={
               Object.keys(vehicleResidence).length === 1
-                ?  route.params.item.vehicleResidenceProof
+                ?  splitVehicleResidence
                 : vehicleResidence.name
             }
             onPress={() => {

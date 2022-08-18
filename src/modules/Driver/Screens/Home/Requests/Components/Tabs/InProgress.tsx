@@ -7,8 +7,8 @@ import { Alert, ScrollView, Text, View } from 'react-native';
 
 const InProgress = ({ navigation }: any) => {
   const [isLoading, setIsLoading] = React.useState(false);
-  const [requestResponse, setRequestResponse] = React.useState([]);
-
+  const [requestResponse, setRequestResponse] = React.useState<any>([]);
+  let check = false;
   const getData = async () => {
     const value = await AsyncStorage.getItem('@user_Id');
     // if (value !== null) {
@@ -46,7 +46,6 @@ const InProgress = ({ navigation }: any) => {
 
         if (!isCompleted && (stateInProgress || stateInProgressToo)) {
           console.log(" kkkitem", item?.bookingId?.pickupAddress?.lat)
-
           return (
             <VehicleRequestCard
               onPress={() => {
@@ -116,11 +115,34 @@ const InProgress = ({ navigation }: any) => {
   const renderContents = () => {
     if (isLoading) {
       return <MyLoader />
-    } else if (requestResponse && requestResponse.length !== 0) {
-      return <ScrollView>
-        {renderContent()}
-      </ScrollView>
-    } else {
+    } else if (requestResponse) {
+      return requestResponse.map((item: any) => {
+        let cancelStatus = 0;
+        if (item.length !== 0) {
+          if (item.status === "Accepted") {
+            check = true
+            return <ScrollView>
+              {renderContent()}
+            </ScrollView>
+          }
+          else{
+            console.log("Cancel ", cancelStatus)
+            cancelStatus = cancelStatus +1;
+          }
+          if(cancelStatus === requestResponse.length){
+            console.log("No Cancel")
+            return noVehicleAvailable();
+          }
+        }
+        else{
+          console.log("Null Length")
+        }
+      })
+    }
+    else {
+      return noVehicleAvailable();
+    }
+    if (check === false) {
       return noVehicleAvailable();
     }
   }

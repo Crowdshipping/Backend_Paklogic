@@ -32,6 +32,19 @@ const DriverBookingHistory= ({ navigation,route }: any) => {
         setIsloading(false);
         setRequestResponse(result.requests);
         console.log('result',result)
+        if(!result.success){
+             Alert.alert("", result.message,
+                            [
+                              {
+                                text: 'ok', onPress: () => {
+                                  navigation.goBack();
+                                },
+                                style: 'default',
+                              },
+                            ],
+                            { cancelable: false }
+                          )
+                      }
       })
       .catch(error => {
         setIsloading(false);
@@ -54,6 +67,15 @@ const DriverBookingHistory= ({ navigation,route }: any) => {
       />
     );
   };
+  const nobookingAvailable = () => {
+    return (
+      <View style={{ height: '100%', justifyContent: 'center' }}>
+        <View style={{ backgroundColor: "#f0f0f0", height: 250, borderRadius: 10, margin: 20, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ color: 'red' }}>No booking available for now</Text>
+        </View>
+      </View>
+    )
+  }
   const renderContent = () => {
     if (requestResponse) {
       return requestResponse.map((item: any) => {
@@ -67,11 +89,14 @@ const DriverBookingHistory= ({ navigation,route }: any) => {
           if (item.state === 'Completed' && item.status=== 'Accepted') {
             return renderVehicle(item, "Completed");
           }
-        if (item.status === 'Cancelled' && item.state !== 'Completed') {
+          if (item.status === 'Cancelled' && item.state !== 'Completed') {
             return renderVehicle(item, "Cancelled");
           }
         }else if(inProgress && item.status === 'Accepted'){
           return renderVehicle(item,'In progress')
+        }else if(isCompleted===true || isRejected===true || inProgress===true){
+          return nobookingAvailable();
+
         }
       });
     }
