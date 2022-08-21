@@ -1207,6 +1207,8 @@ export const addVehicleCompany = (vehicle: AddVehicleCompany) => {
       formdata.append('email', data.email);
       formdata.append('address', data.address);
       formdata.append('lastname', data.lastname);
+      formdata.append('profilepic', data.profilepic);
+      
       console.log(formdata);
     
       var requestOptions = {

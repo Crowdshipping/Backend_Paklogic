@@ -17,7 +17,7 @@ const VehicleImageRow = ({ onPress, title, svgImage, isValid, validMessage }: an
             <View style={styles.container}>
                 <TouchableOpacity onPress={onPress}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Text>{title}</Text>
+                        <Text style={styles.text}>{title}</Text>
                         <SvgXml xml={svgImage} width={20} height={20} />
                     </View>
                 </TouchableOpacity>
@@ -32,6 +32,10 @@ export default VehicleImageRow;
 const styles = StyleSheet.create({
     container: {
         marginTop: 20,
-        paddingRight:22
+    },
+    text:{
+        width:"90%"
+
     }
+
 })

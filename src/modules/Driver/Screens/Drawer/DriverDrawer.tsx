@@ -22,28 +22,33 @@ import { supportSvg } from '../../../../theme/assets/svg/supportSvg';
 import { clockSvg } from '../../../../theme/assets/svg/clockSvg';
 import { flightSvg } from '../../../../theme/assets/svg/flightSvg';
 import { ship2Svg } from '../../../../theme/assets/svg/ship2Svg';
-import { logoutUser } from '../../../../services';
+import { getUserData, logoutUser } from '../../../../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { profile } from '../../../../assets';
+import { backendUrl } from '../../../../appConstants';
+import { Avatar } from 'react-native-elements';
 const DriverDrawer = ({ navigation }: any) => {
     const [userId, setUserId] = React.useState<any>('');
     const [isLoading, setIsLoading] = React.useState(false);
-    const[userData,setUserData]=useState<any>()
-
-    const getUserId = async () => {
-        try {
-            const value = await AsyncStorage.getItem('@user_Id');
-            setUserId(value);
-            const data = await AsyncStorage.getItem('@user_Data');
-            if (data !== null) {
-                console.log(data);
-                let temp=JSON.parse(data)
-                setUserData(temp)
-                console.log("userData:::",temp.email)
-              }
-        } catch (e) {
-            console.log(e)
+    const[userData,setUserData]=useState<any>({})
+    
+    const getProfileData = async() => {
+        const value = await AsyncStorage.getItem('@user_Id');
+        setUserId(value)
+        if(value!==null){
+            if (value !== null) {     
+                 getUserData(value)
+                  .then(response => response.json())
+                  .then(result => {
+                    console.log("user data:::::",result)
+                     setUserData(result.user);
+                  })
+                  .catch(error => {
+                    console.log('error', error);
+                });   
+            }         
         }
-    }
+      };
 
     const removeId = async () => {
         await AsyncStorage.removeItem('@user_Id');
@@ -78,20 +83,35 @@ const DriverDrawer = ({ navigation }: any) => {
 
     }
     React.useEffect(() => {
-        getUserId();
+        getProfileData();
     }, []);
     return (
         <>
             <View style={styles.ViewTop}>
-                <Image
-                    source={require('../../../../assets/tony.jpg')}
-                    style={styles.img}
-                />
+            {!userData.profilepic ?
+                <Avatar
+                   size={113}
+                   rounded
+                   icon={{ name: "person",color:'grey'}}
+                   containerStyle={styles.img}
+                 />
+                    :
+                    <Image
+                        source={
+                            {
+                                uri: backendUrl + userData.profilepic
+                            }
+                        }
+                        style={styles.img}
+                    />
+
+
+                }
                 <View style={{ paddingTop: 10, alignItems: 'center' }}>
                     <Text style={{ fontSize: 18, color: 'white', fontWeight: 'bold' }}>
                          {userData?.firstname+" "+userData?.lastname}
                     </Text>
-                    <Text style={{ fontSize: 18, color: 'white' }}>
+                    <Text style={{ fontSize: 13, color: 'white' }}>
                          {userData?.email}
                     </Text>
                     <TouchableOpacity onPress={() => {
@@ -114,6 +134,13 @@ const DriverDrawer = ({ navigation }: any) => {
                     <SvgXml style={styles.svg} xml={flightSvg} width={25} />
                     <Text style={styles.txtdetail}>Manage Vehicles</Text>
                 </TouchableOpacity>
+                <TouchableOpacity onPress={logout}
+                    style={styles.viewunderline}>
+                    <SvgXml
+                        xml={logoutSvg} width={25}
+                    />
+                    <Text style={styles.txtdetail}>Logout</Text>
+                </TouchableOpacity>
 
             </View>
         </>
@@ -126,7 +153,8 @@ const styles = StyleSheet.create({
         borderRadius: 100 / 2,
         overflow: "hidden",
         borderWidth: 3,
-        borderColor: "#DB3F34"
+        borderColor: "#DB3F34",
+        backgroundColor:'white'
     },
     ViewTop: {
         paddingTop: 60,

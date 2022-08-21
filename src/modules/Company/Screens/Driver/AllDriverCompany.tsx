@@ -9,6 +9,7 @@ import {AllDriverCompanyCard} from './Components/AllDriverCompanyCard';
 import { driverDeleteCompany, getAllDriversCompany } from '../../../../services';
 import MineCard from '../../../../screens/Common/MineCard';
 import { profile } from '../../../../assets';
+import { Avatar } from 'react-native-elements';
 const AllDriverCompany = ({ navigation }: any) => {
   const [requestResponse, setRequestResponse] = React.useState([]);
   const [requestInviteDriverResponse, setInviteDriverResponse] = React.useState([]);
@@ -121,10 +122,12 @@ const AllDriverCompany = ({ navigation }: any) => {
                 </View>
                 <View style={styles.top}>
                         <View style={styles.topLeft}>
-                                <Image
-                                    style={{ width:70, height: 70, borderRadius: 50, marginRight: 10 }}
-                                    source={profile}
-                                />
+                        <Avatar
+                            size={110}
+                            rounded
+                            icon={{ name: "person", color: 'grey', size: 60 }}
+                            containerStyle={{ width: 70, height: 70, borderRadius: 50, marginRight: 10 }}
+                                    />
     
                         </View>
                         <View style={styles.topRight}>

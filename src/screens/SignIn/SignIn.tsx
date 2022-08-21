@@ -42,7 +42,7 @@ export default function SignIn({ navigation }: any) {
     try {
       await AsyncStorage.setItem('@user_Id', value);
       await AsyncStorage.setItem('@user_role', role);
-      await AsyncStorage.setItem('@user_Data', JSON.stringify(userData));
+    
     } catch (e) {
       console.log('error', e);
     }

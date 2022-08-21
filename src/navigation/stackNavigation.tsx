@@ -180,6 +180,7 @@ export const StackNavigation = () => {
           headerTitleStyle: {
             fontWeight: 'bold',
           },
+          headerLeft: () => null 
         }}
         name="WELCOME"
         component={Welcome}

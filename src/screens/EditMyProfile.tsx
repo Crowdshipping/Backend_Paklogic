@@ -10,6 +10,7 @@ import {
     TextInput,
     ScrollView,
     Alert,
+    Platform,
 } from 'react-native';
 import {
     widthPercentageToDP as wp,
@@ -25,274 +26,404 @@ import { location2Svg } from '../theme/assets/svg/location2Svg';
 import { mailSvg } from '../theme/assets/svg/mailSvg';
 import { profileSvg } from '../theme/assets/svg/profileSvg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getCompanyData, updateCompanyDetails, updateProfile } from '../services';
+import { getCompanyData, getImageUrlFromServer, getUserData, updateCompanyDetails, updateProfile } from '../services';
+import { cameraSvg } from '../theme/assets/svg/cameraSvg';
+import { DrawerCompanyNameSvg } from '../theme/assets/svg/DrawerCompanyNameSvg';
+import { DrawerCompanyRegSvg } from '../theme/assets/svg/DrawerCompanyRegSvg';
+import { DrawerVehicleCompanySvg } from '../theme/assets/svg/DrawerVehicleCompanySvg';
+import { penSvg } from '../theme/assets/svg/penSvg';
+import { backendUrl } from '../appConstants';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { Avatar } from 'react-native-elements';
+
 const EditMyProfile = ({ navigation }: any) => {
-    const[companyData,setCompanyData]=useState<any>()
-    const[userData,setUserData]=useState<any>('')
-    const[getfirstName,setFirstname]=useState<any>(userData?.firstname)
-    const[getLastName,setlastname]=useState<any>(userData?.lastName)
-    const[getemail,setEmail]=useState<any>(userData?.email)
-    const[getaddress,setAddress]=useState<any>(userData?.address)
-    const[getcompanyName,setCompanyName]=useState<any>()
-    const[getcompanyRegNo,setCompanyRegNo]=useState<any>()
-    const[gettotalVehicles,setTotalVehicles]=useState<any>()
+    const [companyData, setCompanyData] = useState<any>()
+    const [userData, setUserData] = useState<any>({})
+    const [getfirstName, setFirstname] = useState<any>()
+    const [getLastName, setlastname] = useState<any>()
+    const [getemail, setEmail] = useState<any>()
+    const [getaddress, setAddress] = useState<any>()
+    const [getcompanyName, setCompanyName] = useState<any>()
+    const [getcompanyRegNo, setCompanyRegNo] = useState<any>()
+    const [gettotalVehicles, setTotalVehicles] = useState<any>()
+    const [profileImage, setProfileImage] = React.useState<any>({});
 
+    const getProfileData = async () => {
+        const value = await AsyncStorage.getItem('@user_Id');
+        if (value !== null) {
+            if (value !== null) {
+                getUserData(value)
+                    .then(response => response.json())
+                    .then(result => {
+                        console.log("user data:::::", result)
+                        setUserData(result.user);
+                        setFirstname(result.user.firstname)
+                        setlastname(result.user.lastName)
+                        setEmail(result.user.email)
+                        setAddress(result.user.address)
+                    })
+                    .catch(error => {
+                        console.log('error', error);
+                    });
+            }
+        }
+    };
 
-    const getProfileData = async() => {
-        const data = await AsyncStorage.getItem('@user_Data');
-          if (data !== null) {
-            console.log(data);
-            let temp=JSON.parse(data)
-            setUserData(temp)
-            console.log("userData:::",temp.email)
-          }
-      };
-   
-      React.useEffect(() => {
-            getProfileData(); 
-            getData();
-        }, [])
+    React.useEffect(() => {
+        getProfileData();
+        getData();
+    }, [])
 
-        const getData = async () => {
-            const value = await AsyncStorage.getItem('@user_Id');
-            if(!userData.companyId){
-                if (value !== null) {
-                    // setIsloading(true);
-                     getCompanyData(value)
-                      .then(response => response.json())
-                      .then(result => {
-                        console.log("company data",result)
+    const getData = async () => {
+        const value = await AsyncStorage.getItem('@user_Id');
+        if (!userData.companyId) {
+            if (value !== null) {
+                // setIsloading(true);
+                getCompanyData(value)
+                    .then(response => response.json())
+                    .then(result => {
+                        console.log("company data", result)
                         setCompanyData(result.companyDetails);
                         setCompanyName(result.companyDetails.companyName)
                         setCompanyRegNo(result.companyDetails.companyRegNo)
                         setTotalVehicles(result.companyDetails.totalvehicles)
-                      })
-                      .catch(error => {
+                    })
+                    .catch(error => {
                         // setIsloading(false);
                         console.log('error', error);
-                      });
-                }
-                }       
-          };
+                    });
+            }
+        }
+    };
+    const getImagesUrlByPromise = () => {
+        // setIsLoading(true);
+        Promise.all([
+            getImageUrlFromServer(profileImage),
+        ]).then(response => {
+            console.log("Image", response)
+            uploadData(response);
+        });
+    };
 
-     const uploadData= async ()=>{
+    const uploadData = async (response: any) => {
         const value = await AsyncStorage.getItem('@user_Id');
         let data = {
-            firstname:getfirstName,
-            email:getemail,
-            address:getaddress,
-            lastname:getLastName,
+            firstname: getfirstName,
+            email: getemail,
+            address: getaddress,
+            lastname: getLastName,
+            profilepic: response[0].imageUrl,
         }
-        let companyData={
-            companyName:getcompanyName,
-            companyRegNo:getcompanyRegNo,
-            totalvehicles:gettotalVehicles,
+        let companyData = {
+            companyName: getcompanyName,
+            companyRegNo: getcompanyRegNo,
+            totalvehicles: gettotalVehicles,
 
         }
-        if(value!==null){
-           updateProfile(data,value)
-           .then(response => response.json())
-           .then(result => {
-             console.log('jhnkjh', result);
-             if (result.success) {
-            //    Alert.alert("CrowdShipping",result.message)
-            //    props.navigation.navigate('SIGNIN');
-            //    // Alert.alert('skc', result.message)
-             }
-           })
-           .catch(error => {
-            //  setLoading(false);
-             console.log('akdsnvcosd', error);
-             Alert.alert('Alert', 'something went wrong');
-           });
+        if (value !== null) {
+            updateProfile(data, value)
+                .then(response => response.json())
+                .then(result => {
+                    console.log('jhnkjh', result);
+                    if (result.success) {
+                        //    Alert.alert("CrowdShipping",result.message)
+                        //    props.navigation.navigate('SIGNIN');
+                        //    // Alert.alert('skc', result.message)
+                        getProfileData();
+                    }
+                })
+                .catch(error => {
+                    //  setLoading(false);
+                    console.log('akdsnvcosd', error);
+                    Alert.alert('Alert', 'something went wrong');
+                });
         }
-        if(userData.role==='Company'){
-          if(value!==null){
-            
-            updateCompanyDetails(companyData,value)
-            .then(response => response.json())
-            .then(result => {
-             console.log('jhnkjh', result);
-             if (result.success) {
-               Alert.alert("CrowdShipping",result.message)
-            //    props.navigation.navigate('SIGNIN');
-            //    // Alert.alert('skc', result.message)
-             }
-           })
-           .catch(error => {
-            //  setLoading(false);
-             console.log('akdsnvcosd', error);
-             Alert.alert('Alert', 'something went wrong');
-           });
-        
-        
-        
-        }
+        if (userData.role === 'Company') {
+            if (value !== null) {
+
+                updateCompanyDetails(companyData, value)
+                    .then(response => response.json())
+                    .then(result => {
+                        console.log('jhnkjh', result);
+                        if (result.success) {
+                            Alert.alert("CrowdShipping", result.message)
+                            getProfileData();
+                            //    props.navigation.navigate('SIGNIN');
+                            //    // Alert.alert('skc', result.message)
+                        }
+                    })
+                    .catch(error => {
+                        //  setLoading(false);
+                        console.log('akdsnvcosd', error);
+                        Alert.alert('Alert', 'something went wrong');
+                    });
+
+
+
+            }
 
         }
 
-     }
+    }
+    const imagePicker = async () => {
+        try {
+            const result = await launchImageLibrary({
+                mediaType: 'photo',
+                quality: 0.5,
+            });
+            if (result.didCancel) {
+                return;
+            }
+            let data: any = result.assets?.[0];
+            if (Platform.OS === 'ios') {
+                data.uri = data?.uri?.slice(7);
+            }
+            let imageFile = {
+                uri: data.uri,
+                type: data.type,
+                name: data.fileName,
+            };
+
+            setProfileImage(imageFile);
+
+            // setImage(imageFile);
+        } catch (err: any) {
+            Alert.alert(err);
+        }
+    };
 
 
     return (
         <SafeAreaView>
             <ScrollView>
-            <View style={styles.ViewTop}>
-                <ImageBackground
-                    style={{
-                        width: '100%',
-                        height: '100%',
-                        resizeMode: 'stretch',
-                        top: hp(-1),
-                    }}
-                    // resizeMode={'stretch'}
-                    source={require('../assets/PROFILEpic.png')}>
-                    {userData.role==="Company" ?
-                        <View style={styles.header}>
-                            <Header
-                                title="Edit Profile"
-                                onPress={() => {
-                                    navigation.navigate("CompanyProfile")
-                                    console.log('Error in Go Back');
-                                }}
-                            />
-                        </View>:null
-                    }
-                    {userData.role==="Provider" ?
-                        <View style={styles.header}>
-                            <Header
-                                title="Edit Profile"
-                                onPress={() => {
-                                    navigation.navigate("MYPROFILE")
-                                    console.log('Error in Go Back');
-                                }}
-                            />
-                        </View>:null
-                    }
-                    {userData.role==="Driver" ?
-                        <View style={styles.header}>
-                            <Header
-                                title="Edit Profile"
-                                onPress={() => {
-                                    navigation.navigate("MYPROFILEDRIVER")
-                                    console.log('Error in Go Back');
-                                }}
-                            />
-                        </View>:null
-                    }
-                    <View style={styles.imgview}>
-                        <Image
-                            source={require('../assets/tony.jpg')}
-                            style={styles.img}
-                        />
-                    </View>
-                </ImageBackground>
-            </View>
-            <View style={styles.ViewDetails}>
-                <View style={styles.viewunderline}>
-                    <View>
-                        <SvgXml
-                            // style={styles.svg}
-                            xml={profileSvg}
-                            width={25}
-                        // width={75}
-                        // height={75}
-                        />
-                    </View>
-                    <View style={{ paddingLeft: wp(3.5) }}>
-                    <TextInput 
-                        placeholder={userData?.firstname}
-                        onChangeText={(value:any)=>setFirstname(value)}       
-                    />
-                    </View>
+                <View style={styles.ViewTop}>
+                    <ImageBackground
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            resizeMode: 'stretch',
+                            top: hp(-1),
+                        }}
+                        // resizeMode={'stretch'}
+                        source={require('../assets/PROFILEpic.png')}>
+                        {userData.role === "Company" ?
+                            <View style={styles.header}>
+                                <Header
+                                    title="Edit Profile"
+                                    onPress={() => {
+                                        navigation.navigate("CompanyProfile")
+                                        console.log('Error in Go Back');
+                                    }}
+                                />
+                            </View> : null
+                        }
+                        {userData.role === "Provider" ?
+                            <View style={styles.header}>
+                                <Header
+                                    title="Edit Profile"
+                                    onPress={() => {
+                                        navigation.navigate("MYPROFILE")
+                                        console.log('Error in Go Back');
+                                    }}
+                                />
+                            </View> : null
+                        }
+                        {userData.role === "Driver" ?
+                            <View style={styles.header}>
+                                <Header
+                                    title="Edit Profile"
+                                    onPress={() => {
+                                        navigation.navigate("MYPROFILEDRIVER")
+                                        console.log('Error in Go Back');
+                                    }}
+                                />
+                            </View> : null
+                        }
+                        <View style={styles.imgview}>
+                            {!userData.profilepic ?
+                                <Avatar
+                                    size={110}
+                                    rounded
+                                    icon={{ name: "person", color: 'grey' ,size:80}}
+                                    containerStyle={styles.img}
+                                />
+                                :
+                                <Image
+                                    source={
+                                        {
+                                            uri: backendUrl + userData.profilepic
+                                        }
+                                    }
+                                    style={styles.img}
+                                />
+
+
+                            }
+                            <TouchableOpacity onPress={imagePicker}
+
+                                style={{
+                                    position: 'absolute',
+                                    top: hp(14),
+                                    right: 15,
+                                }}>
+                                <SvgXml style={styles.svg} xml={cameraSvg} width={25} />
+                            </TouchableOpacity>
+                        </View>
+                    </ImageBackground>
                 </View>
-                <View style={styles.viewunderline}>
-                    <View>
-                        <SvgXml
-                            // style={styles.svg}
-                            xml={profileSvg}
-                            width={25}
-                        // width={75}
-                        // height={75}
-                        />
-                    </View>
-                    <View style={{ paddingLeft: wp(3.5) }}>
-                    <TextInput 
-                        placeholder={userData?.lastname}
-                        onChangeText={(value:any)=>setlastname(value)}       
-                    />
-                    </View>
-                </View>
-                <View style={styles.viewunderline}>
-                    <View>
-                        <SvgXml style={styles.svg} xml={mailSvg} width={25} />
-                    </View>
-                    <View style={{ paddingLeft: wp(3.5) }}>
-                    <TextInput 
-                        placeholder={userData?.email}
-                        onChangeText={(value:any)=>setEmail(value)}  
-                    />
-                    </View>
-                </View>
-                <View style={styles.viewunderline}>
-                    <View>
-                        <SvgXml style={styles.svg} xml={location2Svg} width={25} />
-                    </View>
-                    <View style={{ paddingLeft: wp(3.5) }}>
-                    <TextInput 
-                        placeholder={userData?.address}
-                        onChangeText={(value:any)=>setAddress(value)}  
-                        />
-                    </View>
-                </View>
-                {userData.role==='Company' ?
-                  <View>
+                <View style={styles.ViewDetails}>
                     <View style={styles.viewunderline}>
-                    <View>
-                        <SvgXml style={styles.svg} xml={mailSvg} width={25} />
-                    </View>
-                    <View style={{ paddingLeft: wp(3.5) }}>
-                    <TextInput 
-                        placeholder={companyData?.companyName}
-                        onChangeText={(value:any)=>setCompanyName(value)}  
-                        />
-                    </View>
-                </View>
-                <View style={styles.viewunderline}>
-                    <View>
-                        <SvgXml style={styles.svg} xml={mailSvg} width={25} />
-                    </View>
-                    <View style={{ paddingLeft: wp(3.5) }}>
-                         <TextInput 
-                            placeholder={companyData?.companyRegNo}
-                            onChangeText={(value:any)=>setCompanyRegNo(value)}  
+                        <View>
+                            <SvgXml
+                                // style={styles.svg}
+                                xml={profileSvg}
+                                width={25}
+                            // width={75}
+                            // height={75}
                             />
-                    </View>
-                </View>
-                <View style={styles.viewunderline}>
-                    <View>
-                        <SvgXml style={styles.svg} xml={mailSvg} width={25} />
-                    </View>
-                    <View style={{ paddingLeft: wp(3.5) }}>
-                        <TextInput 
-                            placeholder={companyData?.totalvehicles}
-                            onChangeText={(value:any)=>setTotalVehicles(value)}  
+                        </View>
+                        <View style={{ paddingLeft: wp(3.5), width: '85%' }}>
+                            <TextInput
+                                placeholder={userData?.firstname}
+                                onChangeText={(value: any) => setFirstname(value)}
                             />
+                        </View>
+                        <View>
+                            <SvgXml
+                                xml={penSvg}
+                                width={25}
+                                style={{ alignSelf: 'flex-end' }}
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.viewunderline}>
+                        <View>
+                            <SvgXml
+                                // style={styles.svg}
+                                xml={profileSvg}
+                                width={25}
+                            // width={75}
+                            // height={75}
+                            />
+                        </View>
+                        <View style={{ paddingLeft: wp(3.5), width: '85%' }}>
+                            <TextInput
+                                placeholder={userData?.lastname}
+                                onChangeText={(value: any) => setlastname(value)}
+                            />
+                        </View>
+                        <View>
+                            <SvgXml
+                                xml={penSvg}
+                                width={25}
+                                style={{ alignSelf: 'flex-end' }}
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.viewunderline}>
+                        <View>
+                            <SvgXml style={styles.svg} xml={mailSvg} width={25} />
+                        </View>
+                        <View style={{ paddingLeft: wp(3.5), width: '85%' }}>
+                            <TextInput
+                                placeholder={userData?.email}
+                                onChangeText={(value: any) => setEmail(value)}
+                            />
+                        </View>
+                        <View>
+                            <SvgXml
+                                xml={penSvg}
+                                width={25}
+                                style={{ alignSelf: 'flex-end' }}
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.viewunderline}>
+                        <View>
+                            <SvgXml style={styles.svg} xml={location2Svg} width={25} />
+                        </View>
+                        <View style={{ paddingLeft: wp(3.5), width: '85%' }}>
+                            <TextInput
+                                placeholder={userData?.address}
+                                onChangeText={(value: any) => setAddress(value)}
+                            />
+                        </View>
+                        <View>
+                            <SvgXml
+                                xml={penSvg}
+                                width={25}
+                                style={{ alignSelf: 'flex-end' }}
+                            />
+                        </View>
+                    </View>
+                    {userData.role === 'Company' ?
+                        <View>
+                            <View style={styles.viewunderline}>
+                                <View>
+                                    <SvgXml style={styles.svg} xml={DrawerCompanyNameSvg} width={25} />
+                                </View>
+                                <View style={{ paddingLeft: wp(3.5), width: '85%' }}>
+                                    <TextInput
+                                        placeholder={companyData?.companyName}
+                                        onChangeText={(value: any) => setCompanyName(value)}
+                                    />
+                                </View>
+                                <View>
+                                    <SvgXml
+                                        xml={penSvg}
+                                        width={25}
+                                        style={{ alignSelf: 'flex-end' }}
+                                    />
+                                </View>
+                            </View>
+                            <View style={styles.viewunderline}>
+                                <View>
+                                    <SvgXml style={styles.svg} xml={DrawerCompanyRegSvg} width={25} />
+                                </View>
+                                <View style={{ paddingLeft: wp(3.5), width: '85%' }}>
+                                    <TextInput
+                                        placeholder={companyData?.companyRegNo}
+                                        onChangeText={(value: any) => setCompanyRegNo(value)}
+                                    />
+                                </View>
+                                <View>
+                                    <SvgXml
+                                        xml={penSvg}
+                                        width={25}
+                                    />
+                                </View>
+                            </View>
+                            <View style={styles.viewunderline}>
+                                <View>
+                                    <SvgXml style={styles.svg} xml={DrawerVehicleCompanySvg} width={25} />
+                                </View>
+                                <View style={{ paddingLeft: wp(3.5), width: '85%' }}>
+                                    <TextInput
+                                        placeholder={companyData?.totalvehicles}
+                                        onChangeText={(value: any) => setTotalVehicles(value)}
+                                    />
+                                </View>
+                                <View>
+                                    <SvgXml
+                                        xml={penSvg}
+                                        width={25}
+                                        style={{ alignSelf: 'flex-end' }}
+                                    />
+                                </View>
+                            </View>
+                        </View> : null
+                    }
+                    <View style={{ marginTop: '7%' }}>
+                        <TouchableOpacity onPress={getImagesUrlByPromise}
+                            style={{ backgroundColor: 'red', borderRadius: 25, padding: '5%', alignItems: 'center' }}>
+                            <Text style={{ color: 'white' }}>
+                                SAVE
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
-                  </View>:null
-                }
-                <View style={{marginTop:'7%'}}>
-                    <TouchableOpacity onPress={uploadData}
-                    style={{backgroundColor:'red',borderRadius:25,padding:'5%',alignItems:'center'}}>
-                        <Text style={{color:'white'}}>
-                            SAVE
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </ScrollView>
-    </SafeAreaView>
+            </ScrollView>
+        </SafeAreaView>
     );
 };
 const styles = StyleSheet.create({
@@ -302,14 +433,16 @@ const styles = StyleSheet.create({
     imgview: {
         justifyContent: 'center',
         alignItems: 'center',
-
+        alignSelf: 'center',
+        top: hp(1)
     },
     img: {
         width: 150,
         height: 150,
         borderRadius: 150 / 2,
         overflow: "hidden",
-        borderWidth: 3,
+        borderWidth: 1,
+        backgroundColor:'white',
     },
     ViewTop: {
         // borderWidth: 2,
@@ -320,6 +453,10 @@ const styles = StyleSheet.create({
         // borderWidth: 1,
         justifyContent: 'center',
         alignContent: 'center',
+        backgroundColor: 'white',
+        height: hp(10),
+        width: wp(20),
+        borderRadius: 25
     },
     ViewDetails: {
         // borderWidth: 2,
@@ -333,20 +470,21 @@ const styles = StyleSheet.create({
         paddingVertical: hp(1),
         // justifyContent: 'center',
         alignItems: 'center',
-        marginTop:10,
+        marginTop: 10,
         // width: wp(25),
         // justifyContent: 'space-between',
     },
     txtdetail: {
         fontSize: 18,
     },
-    editContainer:{
-        alignItems:'flex-end'
+    editContainer: {
+        alignItems: 'flex-end'
     },
-    editText:{
-        fontSize:15,
-        color:'green'
+    editText: {
+        fontSize: 15,
+        color: 'green'
     }
+
 
 });
 export default EditMyProfile;

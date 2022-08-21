@@ -146,7 +146,7 @@ const VehicleTrackingContent = ({ changeState, item, navigation, isOtpVerify }: 
     return (
         <View style={styles.container}>
             <PopupModalOfSuccess
-                firstText={"Parsal Successfully"}
+                firstText={"Parcel Successfully"}
                 secondText={"delivered"}
                 isModalVisible={isModalVisible}
                 closeButtonOnPressed={() => {
