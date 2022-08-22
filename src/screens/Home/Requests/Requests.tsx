@@ -358,41 +358,68 @@ const Requests = ({ navigation, status, myColor, route }: any) => {
   }
   const noVehicleAvailable = () => {
     return (
-        <View style={{ justifyContent: 'center', height: heightPercentageToDP("70%") }}>
-            <View style={{ backgroundColor: "#f0f0f0", height: 250, borderRadius: 10, margin: 20, justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ color: 'red' }}>No request available for now</Text>
-            </View>
+      <View style={{ justifyContent: 'center', height: heightPercentageToDP("70%") }}>
+        <View style={{ backgroundColor: "#f0f0f0", height: 250, borderRadius: 10, margin: 20, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ color: 'red' }}>No request available for now</Text>
         </View>
+      </View>
     )
-}
+  }
 
   const renderTabs = () => {
+    let pendingCount = 0;
+    let acceptedCount= 0;
     //when post request tab selected this will run
     if (tabSelected === 3) {
       // return postRequestTab()
       return <PostRequestsTab navigation={navigation} />
     }
     //response used for both accepted and pending thats why written here
-    else if (response.length>=0) {
-      console.log('eeeeeeeeeeeeeeee',response)
+    else if (response.length >= 0) {
+      console.log('eeeeeeeeeeeeeeee', response)
       return response.map((item: any) => {
         console.log('ggggggggggggggg')
         //when accepted tab selected this will run
-        if (tabSelected === 1 ) {
+        if (tabSelected === 1) {
           console.log('ttttttttt')
           // return acceptedTab(item)
-          return <AcceptedTab item={item} navigation={navigation} />
+          if(item.status==='Accepted'){
+            return <AcceptedTab item={item} navigation={navigation} />
+          }
+          else{
+            acceptedCount=acceptedCount+1;
+          }
+          if (response.length === acceptedCount) {
+            //NO pending task
+            console.log("ASFjg",response.length)
+            console.log("aghfgj",acceptedCount)
+            return noVehicleAvailable();
+          }
+        
         }
         //when pending tab selected this will run
-        else if (tabSelected === 2  ) {
+        else if (tabSelected === 2) {
           // return pendingTab(item)
           console.log('1111213131')
-          return <PendingsTab item={item} navigation={navigation} />
+          if (item.status === 'Pending') {
+            return <PendingsTab item={item} navigation={navigation} />
+          }
+          else {
+            pendingCount = pendingCount + 1;
+          }
+          if (response.length === pendingCount) {
+            //NO pending task
+            console.log("ASFjg",response.length)
+            console.log("aghfgj",pendingCount)
+            return noVehicleAvailable();
+          }
+
+          // return <PendingsTab item={item} navigation={navigation} />
         }
 
       });
     }
-    
+
   }
 
   return (

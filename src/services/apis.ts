@@ -832,6 +832,7 @@ export const getImageUrlFromServerNew = async (image: any, name:any, isEdited?:b
   console.log('dataaaaa 123123',isEdited)
   isEdited=isEdited!==undefined?isEdited:true
   console.log('dataaaaa 123123',isEdited)
+  console.log("data",image)
   return new Promise(async (resolve, reject) => {
     if(!isEdited){
       resolve({imageName:name,res:{"success":true,"imageUrl":image.Image}})
@@ -840,7 +841,7 @@ export const getImageUrlFromServerNew = async (image: any, name:any, isEdited?:b
     }
     console.log('promiseeee 123123')
     var formdata = new FormData();
-  formdata.append('image', image);
+    formdata.append('image', image);
 
   var requestOptions = {
     method: 'POST',
@@ -1202,6 +1203,7 @@ export const addVehicleCompany = (vehicle: AddVehicleCompany) => {
     };
 
     export const updateProfile = (data: any,userId:any) => {
+      console.log("Datatatat",data)
       var formdata = new FormData();
       formdata.append('firstname', data.firstname);
       formdata.append('email', data.email);

@@ -28,8 +28,7 @@ const AcceptedTab = ({ item, navigation }: any) => {
             });
     }
     const renderAcceptTabs = () => {
-        let check=true;
-        if (item && item.length !== 0 && item.status==='Accepted') {
+        if (item && item.length !== 0) {
             if (isLoading) {
                 console.log("place of loader")
                 return <MyLoader />
@@ -39,7 +38,6 @@ const AcceptedTab = ({ item, navigation }: any) => {
                     return;
                 }
                 else if (item.status === 'Accepted' && item.type === "Flight") {
-                    check=true;
                     if (item.requestedBy !== null && item.flight !== null) {
                         if (item.requestedBy.profilepic !== null || item.requestedBy.firstname !== null
                             || item.requestedBy.lastname !== null || item.flight.flightAirline !== null
@@ -67,7 +65,6 @@ const AcceptedTab = ({ item, navigation }: any) => {
                     }
                 }
                 else if (item.status === 'Accepted' && item.type === "Ship" && item.ship !== null) {
-                    check=true;
                     return (
                         <RequestCard
                             onPress={() => {
@@ -94,26 +91,13 @@ const AcceptedTab = ({ item, navigation }: any) => {
                         />
                     );
                 }
-                else{
-                    check=false
-                }
+                
             }
-        } else {
-            return noVehicleAvailable()
         }
         
         
     }
-    const noVehicleAvailable = () => {
-        return (
-            <View style={{ justifyContent: 'center', height: heightPercentageToDP("70%") }}>
-                <View style={{ backgroundColor: "#f0f0f0", height: 250, borderRadius: 10, margin: 20, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ color: 'red' }}>No request available for now</Text>
-                </View>
-            </View>
-        )
-    }
-
+    
     return (
         <View>
             {renderAcceptTabs()}

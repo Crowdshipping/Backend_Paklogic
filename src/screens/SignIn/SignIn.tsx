@@ -96,6 +96,7 @@ export default function SignIn({ navigation }: any) {
       login({
         email: email.toLowerCase(),
         password: password,
+        role:"Driver"
       })
         .then(response => response.json())
         .then(result => {

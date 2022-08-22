@@ -110,11 +110,14 @@ const VehicleTrackingContent = ({ changeState, item, navigation, isOtpVerify }: 
                     } else if (requestStates === 4) {
                         setRequestStates(1)
                     }
+                }else{
+                    Alert.alert("CrowdShipping",result.message)
                 }
             })
             .catch((error: any) => {
                 setIsLoading(false);
                 console.log('error', error)
+
             });
     }
     const imagePicker = async () => {

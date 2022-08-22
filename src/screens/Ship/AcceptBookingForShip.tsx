@@ -2,9 +2,11 @@ import React, { useRef } from 'react';
 import { View, StyleSheet, Text, Alert, Platform, Dimensions } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
+import { SvgXml } from 'react-native-svg';
 import MyLoader from '../../components/MyLoader';
 // import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import { changeStateByProvider, getFlightsDate, getShipFromDate, getShipLatestPosition } from '../../services';
+import { shipTrackingSvg } from '../../theme/assets/svg/shipTrackingSvg';
 import BottomSheetModalForShip from './components/BottomSheetModalForShip';
 const AcceptBookingForShip = ({ route, navigation }: any) => {
   //////google maps things////
@@ -207,7 +209,8 @@ const AcceptBookingForShip = ({ route, navigation }: any) => {
           longitude: shipPosition[0]?.$.LON,
         }}
         title={'middle'}
-      />}
+      ><SvgXml xml={shipTrackingSvg} width={50}/></Marker>
+      }
       <Marker
         key={'final'}
         coordinate={{

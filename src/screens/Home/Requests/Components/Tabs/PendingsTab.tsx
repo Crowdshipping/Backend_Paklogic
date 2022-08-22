@@ -8,7 +8,7 @@ import { heightPercentageToDP } from 'react-native-responsive-screen'
 const PendingsTab = ({ item, navigation }: any) => {
     console.log("Check the item", item);
     const [isLoading, setIsLoading] = React.useState(false);
-    const [isCheck, setCheck] = React.useState(true);
+    const [isCheck, setCheck] = React.useState(false);
 
 
     const noVehicleAvailable = () => {
@@ -30,16 +30,19 @@ const PendingsTab = ({ item, navigation }: any) => {
         } else if (item && item.length !== 0 && item.status==='Pending') {
             return renderPendingTab();
         }
-        else{
-            return noVehicleAvailable();
-        }
+        // else{
+        //     return noVehicleAvailable();
+        // }
+        
     }
+
 
 
 
     const renderPendingTab = () => {
         if (item.status === 'Pending') {
             if (item.type === "Ship") {
+                setCheck(true)
                 return <RequestCard
                     onPress={() => {
                         navigation.navigate('ACCEPTREJECTFORSHIP', {
@@ -65,8 +68,8 @@ const PendingsTab = ({ item, navigation }: any) => {
                     date={item.ship.shipDate.slice(0, -14)}
                 />
             }
-            if (item.flight === undefined || item.flight === null) {
-                return;
+            if (item.flight === undefined || item.flight === null) {  
+                return ;
             }
             return (
                 <RequestCard
@@ -123,6 +126,9 @@ const PendingsTab = ({ item, navigation }: any) => {
     return (
         <View>
             {renderContents()}
+            { isCheck
+
+            }
         </View>
     )
 

@@ -12,6 +12,8 @@ import { io, Socket } from 'socket.io-client';
 
 import Geolocation from 'react-native-geolocation-service';
 import { changeStateByProvider } from '../../../../services';
+import { carTracking } from '../../../../theme/assets/svg/carTrackingSvg';
+import { SvgXml } from 'react-native-svg';
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE = 37.771707;
@@ -355,7 +357,7 @@ const TrackingVehicle = ({ route, navigation }: any) => {
                             latitude: coordinates2[1].latitude,
                             longitude: coordinates2[1].longitude
                         }}>
-                        <Image source={require('../../../../assets/car.png')} style={{ width: 30, height: 30 }} />
+                        <SvgXml xml={carTracking} width={50}/>
                     </Marker>
                 }
                 {coordinates2[2] &&
