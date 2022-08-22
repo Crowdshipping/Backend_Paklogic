@@ -221,63 +221,41 @@ const HistoryDetail = ({ navigation, route }: any) => {
               <Text style={styles.txtdetailbox}>+{bookingId?.recieverPhoneno.countrycode}{bookingId?.recieverPhoneno?.phoneno}</Text>
             </View>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: hp(2) }}>
-              {/* {status === 'Pending'
-                ?  */}
-              <View style={{ width: '50%', paddingHorizontal: '5%', }}>
-                <TouchableOpacity
-                  style={{
-                    borderRadius: wp(2),
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: colors.red,
-                  }}
-                  onPress={() => {
-                    let weightUnit = bookingId?.productWeight.split(/(\d+)/)
-                    console.log('separator', weightUnit[2])
-                    type === 'Flight'
-                      ? navigation.navigate('ModifyRequest', {
-                        data: {
-                          SelectedCategory: bookingId?.category,
-                          SelectedType: bookingId?.productType,
-                          description: bookingId?.productDistribution,
-                          weight: weightUnit[1],
-                          SelectedUnit: weightUnit[2],
-                          pickcoords: {
-                            lat: bookingId?.pickupAddress.lat,
-                            lon: bookingId?.pickupAddress.lng,
-                            name: flight?.pickupCity
-                          },
-                          dropcoords: {
-                            lat: bookingId?.dropAddress.lat,
-                            lon: bookingId?.dropAddress.lng,
-                            name: flight?.dropoffCity
-                          },
-                          dropoffCity: flight?.dropoffCity,
-                          pickupCity: flight?.pickupCity,
-                          initialDate: flight?.flightDate,
-                          finalDate: flight?.flightarrivalDate,
-                          SelectedBookingType: type,
-                          bookingId: bookingId?._id,
-                          Images,
-                        },
-                        countrySelect: { dial_code: '+' + bookingId?.recieverPhoneno.countrycode },
-                        phone: bookingId?.recieverPhoneno?.phoneno,
-                        receiverName: bookingId?.recieverName,
-                      })
-                      : type === 'Ship'
-                        ? navigation.navigate('ShipModifyRequest', {
+              {status === 'Pending'
+                ?
+                <View style={{ width: '50%', paddingHorizontal: '5%', }}>
+                  <TouchableOpacity
+                    style={{
+                      borderRadius: wp(2),
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: colors.red,
+                    }}
+                    onPress={() => {
+                      let weightUnit = bookingId?.productWeight.split(/(\d+)/)
+                      console.log('separator', weightUnit[2])
+                      type === 'Flight'
+                        ? navigation.navigate('ModifyRequest', {
                           data: {
                             SelectedCategory: bookingId?.category,
                             SelectedType: bookingId?.productType,
                             description: bookingId?.productDistribution,
                             weight: weightUnit[1],
                             SelectedUnit: weightUnit[2],
-                            dropoffCity: ship?.dropoffCity,
-                            pickupCity: ship?.pickupCity,
-                            destinationCountry: ship?.destinationPort,
-                            departCountry: ship?.departurePort,
-                            initialDate: ship?.shipDate,
-                            finalDate: ship?.eta,
+                            pickcoords: {
+                              lat: bookingId?.pickupAddress.lat,
+                              lon: bookingId?.pickupAddress.lng,
+                              name: flight?.pickupCity
+                            },
+                            dropcoords: {
+                              lat: bookingId?.dropAddress.lat,
+                              lon: bookingId?.dropAddress.lng,
+                              name: flight?.dropoffCity
+                            },
+                            dropoffCity: flight?.dropoffCity,
+                            pickupCity: flight?.pickupCity,
+                            initialDate: flight?.flightDate,
+                            finalDate: flight?.flightarrivalDate,
                             SelectedBookingType: type,
                             bookingId: bookingId?._id,
                             Images,
@@ -285,50 +263,72 @@ const HistoryDetail = ({ navigation, route }: any) => {
                           countrySelect: { dial_code: '+' + bookingId?.recieverPhoneno.countrycode },
                           phone: bookingId?.recieverPhoneno?.phoneno,
                           receiverName: bookingId?.recieverName,
-                        }) : type === 'Land'
-                          ? navigation.navigate('LandModifyRequest', {
+                        })
+                        : type === 'Ship'
+                          ? navigation.navigate('ShipModifyRequest', {
                             data: {
-                              pickupLocation: {
-                                lat: bookingId?.pickupAddress.lat,
-                                lon: bookingId?.pickupAddress.lng,
-                                name: bookingId?.pickupAddressText
-                              },
-                              dropoffLocation: {
-                                lat: bookingId?.dropAddress.lat,
-                                lon: bookingId?.dropAddress.lng,
-                                name: bookingId?.dropAddressText
-                              },
-                              vehicleType: bookingId?.vehicleType,
-                              initialDate: bookingId?.fromdate,
-                              finalDate: bookingId?.todate,
-                              Images,
-                              SelectedBookingType: bookingId?.pickupType,
                               SelectedCategory: bookingId?.category,
                               SelectedType: bookingId?.productType,
-                              SelectedUnit: weightUnit[2],
                               description: bookingId?.productDistribution,
                               weight: weightUnit[1],
-                              bookingId: bookingId?._id
+                              SelectedUnit: weightUnit[2],
+                              dropoffCity: ship?.dropoffCity,
+                              pickupCity: ship?.pickupCity,
+                              destinationCountry: ship?.destinationPort,
+                              departCountry: ship?.departurePort,
+                              initialDate: ship?.shipDate,
+                              finalDate: ship?.eta,
+                              SelectedBookingType: type,
+                              bookingId: bookingId?._id,
+                              Images,
                             },
                             countrySelect: { dial_code: '+' + bookingId?.recieverPhoneno.countrycode },
                             phone: bookingId?.recieverPhoneno?.phoneno,
                             receiverName: bookingId?.recieverName,
-                          })
-                          : null;
+                          }) : type === 'Land'
+                            ? navigation.navigate('LandModifyRequest', {
+                              data: {
+                                pickupLocation: {
+                                  lat: bookingId?.pickupAddress.lat,
+                                  lon: bookingId?.pickupAddress.lng,
+                                  name: bookingId?.pickupAddressText
+                                },
+                                dropoffLocation: {
+                                  lat: bookingId?.dropAddress.lat,
+                                  lon: bookingId?.dropAddress.lng,
+                                  name: bookingId?.dropAddressText
+                                },
+                                vehicleType: bookingId?.vehicleType,
+                                initialDate: bookingId?.fromdate,
+                                finalDate: bookingId?.todate,
+                                Images,
+                                SelectedBookingType: bookingId?.pickupType,
+                                SelectedCategory: bookingId?.category,
+                                SelectedType: bookingId?.productType,
+                                SelectedUnit: weightUnit[2],
+                                description: bookingId?.productDistribution,
+                                weight: weightUnit[1],
+                                bookingId: bookingId?._id
+                              },
+                              countrySelect: { dial_code: '+' + bookingId?.recieverPhoneno.countrycode },
+                              phone: bookingId?.recieverPhoneno?.phoneno,
+                              receiverName: bookingId?.recieverName,
+                            })
+                            : null;
 
-                  }}
-                >
-                  <Text
-                    style={{
-                      marginVertical: wp(1.5),
-                      marginHorizontal: wp(2),
-                      color: colors.white,
-                    }}>
-                    Edit Booking
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              {/* : null} */}
+                    }}
+                  >
+                    <Text
+                      style={{
+                        marginVertical: wp(1.5),
+                        marginHorizontal: wp(2),
+                        color: colors.white,
+                      }}>
+                      Edit Booking
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                : null}
               {state === 'Reached' || state === undefined || state === 'Completed'
                 ? null
                 : <View style={{ width: '50%', paddingHorizontal: '5%' }}>
@@ -340,6 +340,7 @@ const HistoryDetail = ({ navigation, route }: any) => {
                       backgroundColor: colors.red,
                     }}
                     onPress={() => {
+                      console.log('history detal', JSON.stringify(route.params.item))
                       type === 'Flight'
                         ? navigation.navigate('TrackFlight', {
                           fa_flight_id: route.params.item?.flight?.fa_flight_id,
@@ -356,9 +357,9 @@ const HistoryDetail = ({ navigation, route }: any) => {
                             dropAddress: route.params.item?.bookingId?.dropAddress,
                           }) : type === 'Land'
                             ? navigation.navigate('TrackLand', {
-                              driverID: route.params.item?.provider?._id,
-                              pickupAddress: route.params.item?.bookingId?.pickupAddress,
-                              dropAddress: route.params.item?.bookingId?.dropAddress,
+                              driverID: route?.params?.item?.request?.provider?._id,
+                              pickupAddress: route?.params?.item?.request?.bookingId?.pickupAddress,
+                              dropAddress: route?.params?.item?.request?.bookingId?.dropAddress,
                             })
                             : null;
                     }}>

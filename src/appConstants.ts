@@ -247,3 +247,5 @@ export const prodUrl = 'https://backend-crowdshipping.herokuapp.com';
 export const NAME_REGEX = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/
 export const NUM_REGEX = /^[0-9]{6,15}$/;
 export const GOOGLE_MAPS_APIKEY = 'AIzaSyBnzRyirdu4C6br2saqLU0ExTV2U7qxVLg';
+
+export const ONESIGNAL_APP_ID = 'e98b3642-ab77-4f66-bbcb-cae1f102b2e8'

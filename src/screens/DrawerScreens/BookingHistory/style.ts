@@ -96,4 +96,29 @@ export const styles = StyleSheet.create({
     // justifyContent: 'center',
     // flex: 1,
   },
+
+  view1: {
+    // borderBottomWidth: 1,
+
+    justifyContent: 'center',
+    alignItems: 'center',
+    // paddingVertical: 30,
+    paddingBottom: hp(4),
+  },
+  // txt1: {
+  //   textAlign: 'center',
+  //   fontSize: 18,
+  //   // paddingHorizontal: 15,
+  //   paddingTop: 15,
+  //   // paddingBottom: 10,
+  // },
+
+  modal: {
+    backgroundColor: colors.white,
+    elevation: 5,
+
+    width: wp(80),
+    alignSelf: 'center',
+    borderRadius: 10,
+  },
 });

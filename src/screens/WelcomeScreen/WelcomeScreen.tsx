@@ -86,7 +86,7 @@ const WelcomeScreen = ({ navigation }: any) => {
       </View>
       <View style={styles.textView}>
         <Text style={styles.text}>
-          Crowd shipping corporation App is ground breaking crowd delivery
+          Crowd shipping corporation app is ground breaking crowd delivery
           platform where multiple businesses and everone shares delivery
           providers to send and receive packages or goods for both local and
           international delieveries

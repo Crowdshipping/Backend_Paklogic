@@ -24,6 +24,8 @@ import MapViewDirections from 'react-native-maps-directions';
 
 import { useFocusEffect } from '@react-navigation/native';
 import moment from 'moment';
+import { shipsvgMap } from '../../../theme/assets/svg';
+import { SvgXml } from 'react-native-svg';
 
 const TrackShip = ({ route, navigation }: any) => {
   const { mmsiNumber, pickupAddress, dropAddress, eta } = route.params;
@@ -31,7 +33,7 @@ const TrackShip = ({ route, navigation }: any) => {
   // const [isLoading, setLoading] = useState(true);
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState<any>();
-  const markerIDs = ['Marker1', 'Marker2'];
+
 
   function handleTracking() {
     shipTracking(mmsiNumber)
@@ -148,7 +150,7 @@ const TrackShip = ({ route, navigation }: any) => {
                 }}
                 title={'middle'}
                 identifier={'Marker3'}
-              />
+              ><SvgXml xml={shipsvgMap} width={50} height={50} style={{ padding: 0, margin: 0 }} /></Marker>
               <Marker
                 key={'final'}
                 coordinate={{

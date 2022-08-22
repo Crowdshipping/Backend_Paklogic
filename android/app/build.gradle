@@ -1,5 +1,16 @@
 apply plugin: "com.android.application"
 
+buildscript {
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.12.10, 0.99.99]'
+    }
+}
+
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+
 import com.android.build.OutputFile
 import org.apache.tools.ant.taskdefs.condition.Os
 
@@ -274,8 +285,9 @@ dependencies {
        exclude group: 'com.google.android.gms', module: 'play-services-maps'
    }
 
-   implementation 'com.google.android.gms:play-services-base:17.2.1'
-   implementation 'com.google.android.gms:play-services-maps:17.0.0'
+   implementation 'com.google.android.gms:play-services-base:18.0.1'
+   implementation 'com.google.android.gms:play-services-location:19.0.1'
+   implementation 'com.google.android.gms:play-services-maps:18.0.2'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'

@@ -22,6 +22,7 @@ import {createPaymentsHistory} from './createPaymentsHistory';
 import {createDriverRequest} from './createDriverRequest';
 import {cancelDriverRequest} from './cancelDriverRequest';
 import {editBooking} from './editBooking';
+import {AddPlayer} from './AddPlayer';
 
 export {
   forgotPassword,
@@ -48,4 +49,5 @@ export {
   createDriverRequest,
   cancelDriverRequest,
   editBooking,
+  AddPlayer,
 };

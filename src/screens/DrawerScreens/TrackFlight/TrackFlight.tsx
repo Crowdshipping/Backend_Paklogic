@@ -23,6 +23,8 @@ import { styles } from './style';
 import MapViewDirections from 'react-native-maps-directions';
 import { useFocusEffect } from '@react-navigation/native';
 import moment from 'moment';
+import { SvgXml } from 'react-native-svg';
+import { plane, planesvgMap } from '../../../theme/assets/svg';
 
 const TrackFlight = ({ route, navigation }: any) => {
   const {
@@ -174,7 +176,9 @@ const TrackFlight = ({ route, navigation }: any) => {
                   longitude: data.longitude,
                 }}
                 title={'middle'}
-              />
+              >
+                <SvgXml xml={planesvgMap} width={50} height={50} style={{ padding: 0, margin: 0 }} />
+              </Marker>
               <Marker
                 key={'final'}
                 coordinate={{

@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, ActivityIndicator, View, ScrollView, Text, TouchableOpacity } from 'react-native';
+import { Alert, ActivityIndicator, View, ScrollView, Text, TouchableOpacity, } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import Modal from 'react-native-modal';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 import { BookingListCard, Header } from '../../../components';
 import { useIsFocused } from '@react-navigation/native';
 
-import { plane, shipsvg, truck } from '../../../theme/assets/svg';
+import { cross, plane, shipsvg, success, truck } from '../../../theme/assets/svg';
 import { cancelDriverRequest, orderHistory } from '../../../API';
 import { colors } from '../../../theme';
 import StripePayment from '../../../stripe/stripePayment';
+import { SvgXml } from 'react-native-svg';
+
+import { styles } from './style'
 
 const BookingHistory = ({ navigation }: any) => {
   const [isLoading, setLoading] = useState(true);
+  const [cancelModal, setcancelModal] = useState(true);
   const [data, setData] = useState([]);
   const isfocus = useIsFocused();
 
@@ -38,6 +42,31 @@ const BookingHistory = ({ navigation }: any) => {
       fetchData();
     }
   }, [isfocus]);
+
+  function handleCancelEvent(item: string) {
+    setLoading(true)
+    cancelDriverRequest(item)
+      .then((rest: any) => {
+        {
+          console.log(
+            'flight Tracking response',
+            JSON.stringify(rest),
+          );
+          rest.success &&
+
+            fetchData()
+          // setLoading(false));
+        }
+      })
+      .catch(error => {
+        console.log(
+          'flight Tracking error',
+          error,
+        );
+        Alert.alert(error.message ? error.message : 'Something went wrong');
+        setLoading(false);
+      });
+  }
 
   return (
     <SafeAreaView>
@@ -140,28 +169,18 @@ const BookingHistory = ({ navigation }: any) => {
                       // handleNavigation={() => { }}
                       handleCancellation={() => {
                         console.log('item?.request?.bookingId?._id', item?.request?._id)
-                        setLoading(true)
-                        cancelDriverRequest(item?.request?._id)
-                          .then((rest: any) => {
-                            {
-                              console.log(
-                                'flight Tracking response',
-                                JSON.stringify(rest),
-                              );
-                              rest.success &&
+                        // setLoading(true)
 
-                                fetchData()
-                              // setLoading(false));
-                            }
-                          })
-                          .catch(error => {
-                            console.log(
-                              'flight Tracking error',
-                              error,
-                            );
-                            Alert.alert(error.message ? error.message : 'Something went wrong');
-                            setLoading(false);
-                          });
+                        Alert.alert('Alert!', 'Are you sure you want to cancel request?', [
+                          {
+                            text: 'Yes',
+                            onPress: () => handleCancelEvent(item?.request?._id),
+                          },
+                          {
+                            text: 'No',
+                            onPress: () => null,
+                            style: 'cancel',
+                          }])
                       }}
                       handleTracking={() => {
                         item.request.isMakePayment === false
@@ -217,10 +236,74 @@ const BookingHistory = ({ navigation }: any) => {
                 </Text>
               </View>}
           </View>
+
+          {/* <Modal isVisible={cancelModal} onBackdropPress={() => setcancelModal(false)}>
+            <View style={styles.modal}>
+              <View
+                style={{
+                  alignSelf: 'flex-end',
+                  //   backgroundColor: '#A9A9A9',
+                  borderRadius: 78,
+                  //   marginTop: 8,
+                  //   marginRight: 15,
+                  //   borderWidth: 1,
+                  backgroundColor: 'red',
+                  padding: 5,
+                  left: 10,
+                  bottom: 10,
+                }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setcancelModal(false);
+                  }}>
+                  <SvgXml
+                    // style={styles.cross_img}
+                    width="20"
+                    height="20"
+                    xml={cross}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.view1}>
+                <SvgXml
+                  // style={styles.cross_img}
+                  width="45"
+                  height="45"
+                  xml={success}
+                />
+                <Text style={[styles.txt1]}>Are you sure you want to cancel the request?</Text>
+              </View>
+
+
+              <TouchableOpacity
+                onPress={() => handleCancelEvent()}
+                style={{
+                  alignSelf: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: colors.red,
+                  width: wp(20),
+                  borderRadius: 10,
+                  marginBottom: hp(2),
+                }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    marginVertical: hp(1.5),
+                    textAlign: 'center',
+                    color: colors.white,
+                  }}>
+                  Yes
+                </Text>
+              </TouchableOpacity>
+
+            </View>
+          </Modal> */}
         </ScrollView>
       )}
     </SafeAreaView>
   );
 };
+
+
 
 export default BookingHistory;

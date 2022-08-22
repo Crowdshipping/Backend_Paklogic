@@ -8,10 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* CrowdShippingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* CrowdShippingTests.m */; };
+		0474F24A28ACDB9D00B1AB2D /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0415F1CA28ACC9A000B33C74 /* UserNotifications.framework */; };
+		0474F24B28ACDB9D00B1AB2D /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0415F1CC28ACC9A000B33C74 /* UserNotificationsUI.framework */; };
+		0474F24E28ACDB9D00B1AB2D /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0474F24D28ACDB9D00B1AB2D /* NotificationViewController.swift */; };
+		0474F25128ACDB9E00B1AB2D /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0474F24F28ACDB9E00B1AB2D /* MainInterface.storyboard */; };
+		0474F25528ACDB9E00B1AB2D /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 0474F24928ACDB9D00B1AB2D /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1A2C953E239BDF27D3B6A85B /* libPods-CrowdShipping.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0114933DFCA74239F486E67E /* libPods-CrowdShipping.a */; };
+		7B17D5C0FBBE2AD3E340FB92 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B62D7E170523012DA8D2364D /* libPods-OneSignalNotificationServiceExtension.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		E077F25585ECDE499D5894F5 /* libPods-CrowdShipping-CrowdShippingTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F38C25DE07DF6540AE097E89 /* libPods-CrowdShipping-CrowdShippingTests.a */; };
 /* End PBXBuildFile section */
@@ -24,13 +30,42 @@
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
 			remoteInfo = CrowdShipping;
 		};
+		0474F25328ACDB9E00B1AB2D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0474F24828ACDB9D00B1AB2D;
+			remoteInfo = OneSignalNotificationServiceExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		0415F1DB28ACC9A000B33C74 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				0474F25528ACDB9E00B1AB2D /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		00E356EE1AD99517003FC87E /* CrowdShippingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CrowdShippingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* CrowdShippingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CrowdShippingTests.m; sourceTree = "<group>"; };
 		0114933DFCA74239F486E67E /* libPods-CrowdShipping.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CrowdShipping.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0415F1C428ACC82100B33C74 /* CrowdShipping.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = CrowdShipping.entitlements; path = CrowdShipping/CrowdShipping.entitlements; sourceTree = "<group>"; };
+		0415F1CA28ACC9A000B33C74 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		0415F1CC28ACC9A000B33C74 /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
+		0474F24928ACDB9D00B1AB2D /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		0474F24D28ACDB9D00B1AB2D /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
+		0474F25028ACDB9E00B1AB2D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		0474F25228ACDB9E00B1AB2D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0474F25928ACDBDD00B1AB2D /* OneSignalNotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OneSignalNotificationServiceExtension.entitlements; sourceTree = "<group>"; };
 		06C863FA9F7F4398BE70D768 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		123FE694FECC4F11B0E46FA0 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* CrowdShipping.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CrowdShipping.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -41,16 +76,19 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = CrowdShipping/main.m; sourceTree = "<group>"; };
 		157A307F851CF5D577EF8DE8 /* Pods-CrowdShipping.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CrowdShipping.debug.xcconfig"; path = "Target Support Files/Pods-CrowdShipping/Pods-CrowdShipping.debug.xcconfig"; sourceTree = "<group>"; };
 		247FC13228804988BCC92326 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		2F8E9FD0247B186BDF89566B /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		2FA73171AFBB4B0DBDEB10F3 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		4E5A9077653DDC3E233DD419 /* Pods-CrowdShipping-CrowdShippingTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CrowdShipping-CrowdShippingTests.debug.xcconfig"; path = "Target Support Files/Pods-CrowdShipping-CrowdShippingTests/Pods-CrowdShipping-CrowdShippingTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5E537BE7977B4322865399D9 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		5FEACC68E4924FA9B76D8BEE /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		622DB286812B489E9B414CD8 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		64CA545955B541D488539E56 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
+		6CDE75067F422CE3173187A1 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 		79639939964F49CE9EA33B9D /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = CrowdShipping/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9874FD03B7FCDA1253349253 /* Pods-CrowdShipping-CrowdShippingTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CrowdShipping-CrowdShippingTests.release.xcconfig"; path = "Target Support Files/Pods-CrowdShipping-CrowdShippingTests/Pods-CrowdShipping-CrowdShippingTests.release.xcconfig"; sourceTree = "<group>"; };
 		B3CD9EAD8A9241AC85F93065 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
+		B62D7E170523012DA8D2364D /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B94827E3163D43AC9B45B483 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		D3CC84B0FD1A4C6892EA990F /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		DC5FD800DDB94562901C97DD /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
@@ -68,6 +106,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				E077F25585ECDE499D5894F5 /* libPods-CrowdShipping-CrowdShippingTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0474F24628ACDB9D00B1AB2D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0474F24B28ACDB9D00B1AB2D /* UserNotificationsUI.framework in Frameworks */,
+				0474F24A28ACDB9D00B1AB2D /* UserNotifications.framework in Frameworks */,
+				7B17D5C0FBBE2AD3E340FB92 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,9 +147,21 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		0474F24C28ACDB9D00B1AB2D /* OneSignalNotificationServiceExtension */ = {
+			isa = PBXGroup;
+			children = (
+				0474F25928ACDBDD00B1AB2D /* OneSignalNotificationServiceExtension.entitlements */,
+				0474F24D28ACDB9D00B1AB2D /* NotificationViewController.swift */,
+				0474F24F28ACDB9E00B1AB2D /* MainInterface.storyboard */,
+				0474F25228ACDB9E00B1AB2D /* Info.plist */,
+			);
+			path = OneSignalNotificationServiceExtension;
+			sourceTree = "<group>";
+		};
 		13B07FAE1A68108700A75B9A /* CrowdShipping */ = {
 			isa = PBXGroup;
 			children = (
+				0415F1C428ACC82100B33C74 /* CrowdShipping.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -118,6 +178,9 @@
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				0114933DFCA74239F486E67E /* libPods-CrowdShipping.a */,
 				F38C25DE07DF6540AE097E89 /* libPods-CrowdShipping-CrowdShippingTests.a */,
+				0415F1CA28ACC9A000B33C74 /* UserNotifications.framework */,
+				0415F1CC28ACC9A000B33C74 /* UserNotificationsUI.framework */,
+				B62D7E170523012DA8D2364D /* libPods-OneSignalNotificationServiceExtension.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -135,6 +198,7 @@
 				13B07FAE1A68108700A75B9A /* CrowdShipping */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* CrowdShippingTests */,
+				0474F24C28ACDB9D00B1AB2D /* OneSignalNotificationServiceExtension */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
@@ -150,6 +214,7 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* CrowdShipping.app */,
 				00E356EE1AD99517003FC87E /* CrowdShippingTests.xctest */,
+				0474F24928ACDB9D00B1AB2D /* OneSignalNotificationServiceExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -184,6 +249,8 @@
 				FCA2360489FA32C9B7763898 /* Pods-CrowdShipping.release.xcconfig */,
 				4E5A9077653DDC3E233DD419 /* Pods-CrowdShipping-CrowdShippingTests.debug.xcconfig */,
 				9874FD03B7FCDA1253349253 /* Pods-CrowdShipping-CrowdShippingTests.release.xcconfig */,
+				2F8E9FD0247B186BDF89566B /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */,
+				6CDE75067F422CE3173187A1 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -212,6 +279,24 @@
 			productReference = 00E356EE1AD99517003FC87E /* CrowdShippingTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		0474F24828ACDB9D00B1AB2D /* OneSignalNotificationServiceExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0474F25628ACDB9E00B1AB2D /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */;
+			buildPhases = (
+				0F94988B91B5517AD2FDF1A6 /* [CP] Check Pods Manifest.lock */,
+				0474F24528ACDB9D00B1AB2D /* Sources */,
+				0474F24628ACDB9D00B1AB2D /* Frameworks */,
+				0474F24728ACDB9D00B1AB2D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OneSignalNotificationServiceExtension;
+			productName = OneSignalNotificationServiceExtension;
+			productReference = 0474F24928ACDB9D00B1AB2D /* OneSignalNotificationServiceExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		13B07F861A680F5B00A75B9A /* CrowdShipping */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "CrowdShipping" */;
@@ -224,10 +309,12 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				1C403429EA7E16EE78234D62 /* [CP] Embed Pods Frameworks */,
 				9504284F2556C27A34FDEDBB /* [CP] Copy Pods Resources */,
+				0415F1DB28ACC9A000B33C74 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				0474F25428ACDB9E00B1AB2D /* PBXTargetDependency */,
 			);
 			name = CrowdShipping;
 			productName = CrowdShipping;
@@ -240,11 +327,15 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1340;
 				LastUpgradeCheck = 1210;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
+					};
+					0474F24828ACDB9D00B1AB2D = {
+						CreatedOnToolsVersion = 13.4.1;
 					};
 					13B07F861A680F5B00A75B9A = {
 						LastSwiftMigration = 1340;
@@ -266,6 +357,7 @@
 			targets = (
 				13B07F861A680F5B00A75B9A /* CrowdShipping */,
 				00E356ED1AD99517003FC87E /* CrowdShippingTests */,
+				0474F24828ACDB9D00B1AB2D /* OneSignalNotificationServiceExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -275,6 +367,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0474F24728ACDB9D00B1AB2D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0474F25128ACDB9E00B1AB2D /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -303,6 +403,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+		};
+		0F94988B91B5517AD2FDF1A6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OneSignalNotificationServiceExtension-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
 		};
 		1C403429EA7E16EE78234D62 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -446,6 +568,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0474F24528ACDB9D00B1AB2D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0474F24E28ACDB9D00B1AB2D /* NotificationViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		13B07F871A680F5B00A75B9A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -463,7 +593,23 @@
 			target = 13B07F861A680F5B00A75B9A /* CrowdShipping */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
+		0474F25428ACDB9E00B1AB2D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0474F24828ACDB9D00B1AB2D /* OneSignalNotificationServiceExtension */;
+			targetProxy = 0474F25328ACDB9E00B1AB2D /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		0474F24F28ACDB9E00B1AB2D /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0474F25028ACDB9E00B1AB2D /* Base */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
@@ -517,12 +663,94 @@
 			};
 			name = Release;
 		};
+		0474F25728ACDB9E00B1AB2D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2F8E9FD0247B186BDF89566B /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 2TV8YBFR4G;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = OneSignalNotificationServiceExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.crowdshipping.user.OneSignalNotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		0474F25828ACDB9E00B1AB2D /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6CDE75067F422CE3173187A1 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = OneSignalNotificationServiceExtension/OneSignalNotificationServiceExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 2TV8YBFR4G;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OneSignalNotificationServiceExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = OneSignalNotificationServiceExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.crowdshipping.user.OneSignalNotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 157A307F851CF5D577EF8DE8 /* Pods-CrowdShipping.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = CrowdShipping/CrowdShipping.entitlements;
 				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = 2TV8YBFR4G;
 				ENABLE_BITCODE = NO;
@@ -552,8 +780,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FCA2360489FA32C9B7763898 /* Pods-CrowdShipping.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = CrowdShipping/CrowdShipping.entitlements;
 				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = 2TV8YBFR4G;
 				INFOPLIST_FILE = CrowdShipping/Info.plist;
@@ -720,6 +950,15 @@
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
 				00E356F71AD99517003FC87E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0474F25628ACDB9E00B1AB2D /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0474F25728ACDB9E00B1AB2D /* Debug */,
+				0474F25828ACDB9E00B1AB2D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

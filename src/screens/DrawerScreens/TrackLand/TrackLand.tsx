@@ -25,8 +25,12 @@ import { useFocusEffect } from '@react-navigation/native';
 import moment from 'moment';
 import { io, Socket } from "socket.io-client";
 import { GOOGLE_MAPS_APIKEY } from '../../../appConstants';
+import { SvgXml } from 'react-native-svg';
+import { plane } from '../../../theme/assets/svg';
+import { carsvgMap } from '../../../theme/assets/svg/carsvgMap';
 
 const TrackLand = ({ route, navigation }: any) => {
+  console.log('tracking land', route.params)
   const {
     driverID, pickupAddress,
     dropAddress
@@ -73,6 +77,7 @@ const TrackLand = ({ route, navigation }: any) => {
 
 
   const onMapReadyHandler = useCallback(() => {
+    console.log('object on ready')
     if (Platform.OS === 'ios') {
       ref?.current?.fitToElements({
         animated: true,
@@ -121,30 +126,12 @@ const TrackLand = ({ route, navigation }: any) => {
             <MapView
               provider={PROVIDER_GOOGLE} // remove if not using Google Maps
               showsUserLocation={false}
-
               ref={ref}
               onMapReady={onMapReadyHandler}
+
               zoomControlEnabled={false}
               style={styles.map}>
-              {/* <Polyline
-                coordinates={[
-                  {
-                    latitude: pickupAddress.lat,
-                    longitude: pickupAddress.lng,
-                  },
-                  {
-                    latitude: data?.lat,
-                    longitude: data?.lng,
-                  },
-                  {
-                    latitude: dropAddress.lat,
-                    longitude: dropAddress.lng
-                  },
-                ]}
-                geodesic={true}
-                strokeWidth={2}
-                lineDashPhase={3}
-              /> */}
+
               <MapViewDirections
                 apikey={GOOGLE_MAPS_APIKEY}
                 origin={{
@@ -154,13 +141,14 @@ const TrackLand = ({ route, navigation }: any) => {
                 waypoints={[{
                   latitude: data?.lat,
                   longitude: data?.lng,
-                },]
+                },
+                ]
                 }
                 destination={{
                   latitude: dropAddress.lat,
                   longitude: dropAddress.lng
                 }}
-                strokeWidth={wp(1)}
+                strokeWidth={wp(0.5)}
                 strokeColor={colors.red}
               />
               <Marker
@@ -178,7 +166,8 @@ const TrackLand = ({ route, navigation }: any) => {
                   longitude: data?.lng,
                 }}
                 title={'middle'}
-              />
+              // style={{ borderWidth: 1 }}
+              ><SvgXml xml={carsvgMap} width={50} height={50} style={{ padding: 0, margin: 0 }} /></Marker>
               <Marker
                 key={'final'}
                 coordinate={{
@@ -191,9 +180,9 @@ const TrackLand = ({ route, navigation }: any) => {
           ) : <MapView
             provider={PROVIDER_GOOGLE} // remove if not using Google Maps
             showsUserLocation={false}
-
             ref={ref}
             onMapReady={onMapReadyHandler}
+
             zoomControlEnabled={false}
             style={styles.map}>
             <MapViewDirections

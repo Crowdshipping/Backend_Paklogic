@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Text, View, TouchableOpacity, Alert } from 'react-native';
 import {
   heightPercentageToDP,
@@ -11,14 +11,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { SvgXml } from 'react-native-svg';
 import { signin } from '../../theme/assets/svg';
-import { signIn } from '../../API/signin';
+import { signIn, AddPlayer } from '../../API';
+import OneSignal from 'react-native-onesignal';
+
 
 const SigninScreen = ({ navigation }: any) => {
   const [emailValue, setemailValue] = useState(true);
   // const [email, setemail] = useState('');
   const [passwordValue, setpasswordValue] = useState(true);
-  const [email, setemail] = useState(__DEV__ ? 'Salman090898@gmail.com' : '');
-  const [password, setpassword] = useState(__DEV__ ? 'Qwerty1@' : '');
+  // const [email, setemail] = useState(__DEV__ ? 'Salman090898@gmail.com' : '');
+  const [email, setemail] = useState(__DEV__ ? 'harisbakhabarpk1222272@gmail.com' : '');
+  // const [password, setpassword] = useState(__DEV__ ? 'Qwerty1@' : '');
+  const [password, setpassword] = useState(__DEV__ ? 'Hahaha88*' : '');
+  const [devState, setdevState] = useState<any>();
+
   // const [password, setpassword] = useState('');
 
   const [loading, setloading] = useState(false);
@@ -44,6 +50,7 @@ const SigninScreen = ({ navigation }: any) => {
       setloading(true);
       signIn(email, password)
         .then((rest: any) => {
+          console.log(rest)
           setloading(false);
           if (!rest.user?.role) {
             try {
@@ -56,8 +63,11 @@ const SigninScreen = ({ navigation }: any) => {
             } catch (e) {
               console.log('error', e);
             }
+            console.log('signedx', rest)
             rest.success &&
-              navigation.navigate('MyDrawer', { screen: 'Landing' });
+              (rest.user.playerID ?
+                navigation.navigate('MyDrawer', { screen: 'Landing' }) : handleDeviceState(rest.user._id))
+            // if(rest.user.playerID)
           } else {
             Alert.alert('User does not exist');
           }
@@ -69,6 +79,26 @@ const SigninScreen = ({ navigation }: any) => {
         });
     }
   }
+
+  async function handleDeviceState(user: string) {
+    const data = await OneSignal.getDeviceState();
+    console.log("vfgbhn ", data?.userId);
+    if (data?.userId) {
+      let item = {
+        playerId: data.userId,
+        UserId: user
+      }
+      AddPlayer(item).then((rest: any) => {
+        console.log(rest)
+      }).catch(error => { console.log(error) })
+    }
+
+
+  }
+
+  // useEffect(() => {
+  //   handleDeviceState();
+  // }, [])
   return (
     <SafeAreaView>
       <KeyboardAwareScrollView>

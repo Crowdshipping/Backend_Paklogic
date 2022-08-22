@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, ScrollView, TouchableOpacity, Text } from 'react-native';
 import Modal from 'react-native-modal';
-7;
+
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,

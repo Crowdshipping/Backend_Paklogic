@@ -34,6 +34,9 @@ import {historyicon} from './historyicon';
 import {carbgRed} from './carbgRed';
 import {scooterbgRed} from './scooterbgRed';
 import {cyclebgRed} from './cyclebgRed';
+import {carsvgMap} from './carsvgMap';
+import {shipsvgMap} from './shipsvgMap';
+import {planesvgMap} from './planesvgMap';
 
 export {
   register,
@@ -72,4 +75,7 @@ export {
   carbgRed,
   scooterbgRed,
   cyclebgRed,
+  carsvgMap,
+  planesvgMap,
+  shipsvgMap,
 };

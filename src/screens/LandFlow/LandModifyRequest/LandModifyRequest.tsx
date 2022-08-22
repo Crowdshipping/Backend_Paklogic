@@ -7,6 +7,7 @@ import {
   ScrollView,
   Alert,
   Image,
+  Platform,
 } from 'react-native';
 
 import {
@@ -27,7 +28,7 @@ import {
 import { styles } from './style';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { colors } from '../../../theme/colors';
-import { ModalTypes, SuccessModal } from '../../../Modals';
+import { ModalTypes, SearchCity, SearchPlaces, SuccessModal } from '../../../Modals';
 import Modal from 'react-native-modal/dist/modal';
 
 import OpenCamera from '../../Cam_Gal/OpenCamera';
@@ -51,6 +52,7 @@ export interface ICountryCode {
   code: string;
   flag: string;
 }
+
 interface IimageShow {
   name: string;
   uri: string;
@@ -61,10 +63,12 @@ const LandModifyRequest = ({ navigation, route }: any) => {
   console.log('acddddfahfjfie', route.params.data)
   const {
     // SelectedBookingType,
-    pickupLocation,
-    dropoffLocation,
     vehicleType,
   } = route.params?.data;
+
+  const [pickupLocation, setpickupLocation] = useState<any>(route.params?.data.pickupLocation);
+  const [dropoffLocation, setdropoffLocation] = useState<any>(route.params?.data.dropoffLocation);
+
   const [toCaptureImage, settoCaptureImage] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isModalVisible1, setModalVisible1] = useState(false);
@@ -117,6 +121,13 @@ const LandModifyRequest = ({ navigation, route }: any) => {
   const [valueName, setvalueName] = useState(true);
   const [weight, setweight] = useState(route.params?.data?.weight);
   const [weightValue, setweightValue] = useState(true);
+
+  const [pickValue, setpickValue] = useState(true);
+  const [dropValue, setdropValue] = useState(true);
+  const [isVisible, setisVisible] = useState(false);
+  const [isVisible2, setisVisible2] = useState(false);
+
+
   let productImage: string;
   let productImage2: string;
   let bookingId: string = route.params.data?.bookingId ? route.params.data?.bookingId : ''
@@ -155,6 +166,16 @@ const LandModifyRequest = ({ navigation, route }: any) => {
       validate = false;
       setweightValue(false);
     }
+    if (!pickupLocation) {
+      console.log('pick loc', pickupLocation);
+      setpickValue(false)
+      validate = false;
+    }
+    if (!dropoffLocation) {
+      console.log('drop loc', dropoffLocation);
+      setdropValue(false)
+      validate = false;
+    }
     if (SelectedBookingType === 'Schedule') {
       if (!initialDate && !finalDate) {
         setdateShow('Initial and final dates are Required');
@@ -175,6 +196,7 @@ const LandModifyRequest = ({ navigation, route }: any) => {
         validate = false;
       }
     }
+    // console.log(first)
     if (validate) {
       setloading(true);
       if (bookingId === '') {
@@ -693,7 +715,7 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                   height="100%"
                 />
               </View>
-              <View
+              {/* <View
                 style={{
                   justifyContent: 'space-between',
                   width: '80%',
@@ -712,6 +734,66 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                   placeholder={dropoffLocation.name}
                   editable={false}
                 />
+              </View> */}
+              <View style={styles.location}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setisVisible(true);
+                  }}
+                  style={{
+                    borderBottomWidth: 1,
+                    // marginTop: hp(2),
+                    // marginBottom: hp(1),
+                    // paddingHorizontal: wp(5),
+                    marginHorizontal: wp(5),
+                  }}>
+                  <Text
+                    style={{
+                      paddingVertical: Platform.OS === 'ios' ? wp(2) : 0,
+                      borderBottomWidth: 1,
+                      borderColor: 'grey',
+                    }}>
+                    {pickupLocation?.name !== ''
+                      ? pickupLocation.name
+                      : 'Pickup Location'}
+                  </Text>
+                </TouchableOpacity>
+                {!pickValue ? (
+                  <Text style={[styles.errorMsg, { paddingHorizontal: wp(5) }]}>
+                    Pickup Location is required
+                  </Text>
+                ) : (
+                  <View></View>
+                )}
+                <TouchableOpacity
+                  onPress={() => {
+                    setisVisible2(true);
+                  }}
+                  style={{
+                    borderBottomWidth: 1,
+                    marginTop: hp(2),
+                    // marginBottom: hp(1),
+                    // paddingHorizontal: wp(5),
+                    marginHorizontal: wp(5),
+                  }}>
+                  <Text
+                    style={{
+                      paddingVertical: Platform.OS === 'ios' ? wp(2) : 0,
+                      borderBottomWidth: 1,
+                      borderColor: 'grey',
+                    }}>
+                    {dropoffLocation?.name !== ''
+                      ? dropoffLocation.name
+                      : 'Dropoff Location'}
+                  </Text>
+                </TouchableOpacity>
+                {!dropValue ? (
+                  <Text style={[styles.errorMsg, { paddingHorizontal: wp(5) }]}>
+                    Dropoff Location is required
+                  </Text>
+                ) : (
+                  <View></View>
+                )}
               </View>
             </View>
             <View style={{ paddingHorizontal: wp(3) }}>
@@ -755,7 +837,26 @@ const LandModifyRequest = ({ navigation, route }: any) => {
           {/* </View> */}
         </ScrollView>
       </KeyboardAwareScrollView>
-
+      <SearchPlaces
+        isModalVisible={isVisible}
+        setModalVisible={() => {
+          setisVisible(!isVisible);
+        }}
+        setLocation={(d: any) => {
+          setpickupLocation(d);
+          setpickValue(true);
+        }}
+      />
+      <SearchPlaces
+        isModalVisible={isVisible2}
+        setModalVisible={() => {
+          setisVisible2(!isVisible2);
+        }}
+        setLocation={(d: any) => {
+          setdropoffLocation(d);
+          setdropValue(true);
+        }}
+      />
       <ModalTypes
         isModalVisible={isModalVisible}
         setModalVisible={setModalVisible}

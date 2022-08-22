@@ -52,8 +52,9 @@ const StripePayment = ({ navigation, route }: any) => {
                   setLoading(false);
                 });
           } else if (result.error) {
+            console.log('payment time error', result.error)
             setLoading(false);
-            Alert.alert('Something went wrong', result.error.localizedMessage);
+            Alert.alert(result.error.localizedMessage ? result.error.localizedMessage : 'Something went wrong');
           }
         })
         .catch(error => {
@@ -109,7 +110,7 @@ const StripePayment = ({ navigation, route }: any) => {
         {/* <Text style={{}}>Stripe Payment</Text> */}
 
         <Header
-          title={'Stipe Payment'}
+          title={'Stripe Payment'}
           pressMethod={() => {
             navigation.goBack();
           }}
@@ -128,12 +129,12 @@ const StripePayment = ({ navigation, route }: any) => {
             height: 50,
             marginVertical: 30,
           }}
-          onCardChange={cardDetails => {
-            console.log('cardDetails', cardDetails);
-          }}
-          onFocus={focusedField => {
-            console.log('focusField', focusedField);
-          }}
+        // onCardChange={cardDetails => {
+        //   console.log('cardDetails', cardDetails);
+        // }}
+        // onFocus={focusedField => {
+        //   console.log('focusField', focusedField);
+        // }}
         />
         <Button title={'Pay'} onPress={handlePayment} loading={loading} />
 

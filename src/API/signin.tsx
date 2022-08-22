@@ -9,6 +9,7 @@ export const signIn = async (email: string, password: string) => {
       data: {
         email: email.toLowerCase(),
         password: password,
+        role: 'Customer'
       },
     };
     axios(config)
