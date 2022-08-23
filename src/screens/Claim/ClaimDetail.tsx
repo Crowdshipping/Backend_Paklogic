@@ -12,13 +12,20 @@ import {
     heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-const ClaimDetail = ({ navigation, title, description }: any) => {
-
+const ClaimDetail = ({ navigation,route }: any) => {
     return (
         <SafeAreaView>
             <ScrollView>
                 <View style={styles.maincontainer}>
                     <View style={styles.card}>
+                        <Text
+                            style={{
+                                color: 'black',
+                                fontWeight: 'bold',
+                                paddingVertical: hp(1),
+                            }}>
+                            Details
+                        </Text>
 
                         <Text
                             style={{
@@ -26,10 +33,10 @@ const ClaimDetail = ({ navigation, title, description }: any) => {
                                 fontWeight: 'bold',
                                 paddingVertical: hp(1),
                             }}>
-                            {/* {title} */}
-                            Customer Misbehave with me
+                            {route.params.item.claimTitle}
+                           
                         </Text>
-                        <Text>Customer treatment was very unfare with me and he shout on me. when i ask for OTP he speak louder and </Text>
+                        <Text>{route.params.item.claimDescription}</Text>
                     </View>
                 </View>
             </ScrollView>

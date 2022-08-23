@@ -14,7 +14,7 @@ import {
 import { SvgXml } from 'react-native-svg';
 
 import { Button } from '../../components';
-import { login, } from '../../services';
+import { AddPlayer, login, } from '../../services';
 import { signIn } from '../../theme/assets/svg';
 import { colors } from '../../theme/colors';
 import { validateEmail, validatePassword } from '../../validation';
@@ -22,6 +22,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import HorizontalDivider from '../../components/HorizontalDivider';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import OneSignal from 'react-native-onesignal';
 
 export default function SignIn({ navigation }: any) {
   const [email, setEmail] = useState('');
@@ -38,15 +39,39 @@ export default function SignIn({ navigation }: any) {
 
   const [loading, setLoading] = useState(false);
 
-  const storeUserId = async (value: any, role: string,userData:{}) => {
+  const storeUserId = async (value: any, role: string) => {
     try {
       await AsyncStorage.setItem('@user_Id', value);
       await AsyncStorage.setItem('@user_role', role);
-    
+
     } catch (e) {
       console.log('error', e);
     }
   };
+
+  async function handleDeviceState(user: string,userData:any) {
+    const data = await OneSignal.getDeviceState();
+    console.log("vfgbhn ", data?.userId);
+    if (data?.userId) {
+      let item = {
+        playerId: data.userId,
+        UserId: user
+      }
+      AddPlayer(item).then((rest: any) => {
+        if (userData.role === 'Provider') {
+          navigation.navigate('ProviderDrawer');
+        } else if (userData.role === 'Driver') {
+          navigation.navigate('DriverNavigation');
+        } else if (userData.role === 'Company') {
+          navigation.navigate('CompanyNavigation');
+        }
+        else Alert.alert('Only driver and provider can access');
+        console.log(rest)
+      }).catch(error => { console.log(error) })
+    }
+  }
+
+
 
   useEffect(() => {
     const willFocusSubscription = navigation.addListener('focus', () => {
@@ -96,7 +121,7 @@ export default function SignIn({ navigation }: any) {
       login({
         email: email.toLowerCase(),
         password: password,
-        role:"Driver"
+        role: "Driver"
       })
         .then(response => response.json())
         .then(result => {
@@ -104,15 +129,20 @@ export default function SignIn({ navigation }: any) {
           console.log('User', result.user);
           setLoading(false);
           if (result.success) {
-            storeUserId(result.user._id, result.user.role,result.user);
-            if (result.user.role === 'Provider') {
-              navigation.navigate('ProviderDrawer');
-            } else if (result.user.role === 'Driver') {
-              navigation.navigate('DriverNavigation');
-            }else if (result.user.role === 'Company'){
-              navigation.navigate('CompanyNavigation');
-             }
-             else Alert.alert('Only driver and provider can access');
+            storeUserId(result.user._id, result.user.role);
+            if (result.user.playerID) {
+              if (result.user.role === 'Provider') {
+                navigation.navigate('ProviderDrawer');
+              } else if (result.user.role === 'Driver') {
+                navigation.navigate('DriverNavigation');
+              } else if (result.user.role === 'Company') {
+                navigation.navigate('CompanyNavigation');
+              }
+              else Alert.alert('Only driver and provider can access');
+            } else {
+              handleDeviceState(result.user._id,result.user)
+             
+            }
 
             // navigation.dispatch((state: any) => {
             //   const routes = [{name: 'Drawer'}, ...state.routes];

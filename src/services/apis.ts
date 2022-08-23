@@ -1268,3 +1268,75 @@ export const addVehicleCompany = (vehicle: AddVehicleCompany) => {
           requestOptions,
         );
       };
+
+      interface IFlightData {
+        playerId: string,
+        UserId: string
+    }
+    
+    export const AddPlayer = async (props: IFlightData) => {
+        const {
+            playerId,
+            UserId
+        } = props;
+        return new Promise((resolve, reject) => {
+            const config: AxiosRequestConfig = {
+                method: 'post',
+                url: `${backendUrl}/user/createnewplayer/${UserId}`,
+                data: {
+                    playerId: playerId
+                },
+            };
+    
+            axios(config)
+                .then(response => {
+                    resolve(response.data);
+                })
+                .catch(error => {
+                    reject(error);
+                });
+        });
+    };
+    export const addClaim = (claimTitle:any,claimDetail:any,userId:any ) => {
+      var myHeaders = new Headers();
+      myHeaders.append('Content-Type', 'application/json');
+      myHeaders.append(
+        'Cookie',
+        'connect.sid=s%3AmzAxQxmim5IE9KvghS8yLZQlZ0nQ_One.%2Bk2uZG0FbSZSRJV%2FExAjvD03998A4K6%2FVfKQO6ctj3U',
+      );
+    
+      var raw = JSON.stringify({
+        claimTitle: claimTitle,
+        claimDescription: claimDetail,
+        claimBy: userId
+      });
+    
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow',
+      };
+      return fetch(
+        "https://backend-crowdshipping.herokuapp.com/complainclaim/createclaim",
+        requestOptions,
+      );
+      }
+      export const getClaim = (userId: any) => {
+        var myHeaders = new Headers();
+        myHeaders.append(
+          'Cookie',
+          'connect.sid=s%3AyulJxLavmCWWcJPfR99ffsX-tEGgaRKa.k6L4OXZAX1lq%2F2ROv%2BFgg9%2Bj6zBXf3OWrH1HooexOaU',
+        );
+      
+        var requestOptions = {
+          method: 'GET',
+          headers: myHeaders,
+          redirect: 'follow',
+        };
+      
+        return fetch(
+          `https://backend-crowdshipping.herokuapp.com/complainclaim/getclaimsbyuser/${userId}`,
+          requestOptions,
+        );
+      };

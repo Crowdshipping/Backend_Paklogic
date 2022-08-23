@@ -134,6 +134,12 @@ const DriverDrawer = ({ navigation }: any) => {
                     <SvgXml style={styles.svg} xml={flightSvg} width={25} />
                     <Text style={styles.txtdetail}>Manage Vehicles</Text>
                 </TouchableOpacity>
+                <TouchableOpacity onPress={() => {
+                    navigation.navigate("CLAIMDRIVER")
+                  }} style={styles.viewunderline}>
+                    <SvgXml style={styles.svg} xml={claimSvg} width={25} />
+                    <Text style={styles.txtdetail}>Claim</Text>
+                </TouchableOpacity>
                 <TouchableOpacity onPress={logout}
                     style={styles.viewunderline}>
                     <SvgXml
