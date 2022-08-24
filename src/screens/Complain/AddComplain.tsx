@@ -20,9 +20,108 @@ import { SvgXml } from 'react-native-svg';
 import { imagePlaceholderSvg } from '../../theme/assets/svg/imagePlaceholderSvg';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { launchImageLibrary } from 'react-native-image-picker';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { addComplain } from '../../services';
+import PopupModalOfSuccess from '../../components/PopupModalOfSuccess';
+import { Button } from '../../components';
 const AddComplain = ({ navigation }: any) => {
     const [image, setImage] = React.useState<any>({});
+    const [isImage, setIsImage] = React.useState<any>(true);
+    const [complainTitle, setComplainTitle] = React.useState<any>();
+    const [complainDescription, setcomplainDescription] = React.useState<any>();
+    const [isComplainTitle, setIsComplainTitle] = useState(true)
+    const [isComplainTitleLength, setIsComplainTitleLength] = useState(true)
+    const [isComplainDescriptionLength, setIsComplainDescriptionLength] = useState(true)
+    const [isComplainDescription, setIsComplainDescription] = useState(true)
+    const [isModalVisible, setIsModalVisible] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+
+
+    const toggleModal = () => {
+        setIsModalVisible(!isModalVisible);
+    };
+
+    const validateComplainTitle = () => {
+        if (complainTitle) {
+            if(complainTitle.length>=10){
+                    setIsComplainTitle(true);
+                    setIsComplainTitleLength(true)
+                    return true;
+                }
+                else{
+                    setIsComplainTitle(true);
+                    setIsComplainTitleLength(false)
+                    return false;
+                }          
+        } else {
+            setIsComplainTitle(false);
+            return false;
+        }
+    }
+    const validateComplainDetail = () => {
+        if (complainDescription) {
+            if(complainDescription.length>=10){
+                setIsComplainDescription(true);
+                setIsComplainDescriptionLength(true)
+                return true;
+            }
+            else{
+                setIsComplainTitle(true);
+                setIsComplainDescriptionLength(false)
+                return false;
+            }
+          
+        } else {
+            setIsComplainDescription(false);
+            return false;
+        }
+    }
+    const validateComplainImage = () => {
+        console.log("Image:::",image)
+        if (image.uri===undefined) {
+            setIsImage(false);
+            return false;          
+        } else {
+            setIsImage(true);
+            console.log("true.............")
+            return true;
+        }
+    }
+
+    
+
+    const uploadDataToServer = async () => {
+        const value = await AsyncStorage.getItem('@user_Id');
+        console.log("userId", value)
+        const complainT = validateComplainTitle();
+        const ComplainD = validateComplainDetail();
+        const complainImage = validateComplainImage();
+       
+        if( complainT && ComplainD && complainImage ){
+            let data = {
+                complainTitle: complainTitle,
+                complainDescription: complainDescription,
+                complainBy: value,
+                complainImage: image,
+            }
+            console.log("userCompLainBy", data.complainBy)
+            if (value) {
+                setIsLoading(true);
+                addComplain(data)
+                    .then((response) => response.json())
+                    .then((result: any) => {
+                        if (result.success) {
+                            toggleModal();
+                            setIsLoading(false)
+                        } else {
+                            setIsLoading(false)
+                            Alert.alert("CrowdShipping", result.message)
+                        }
+                    });
+            }
+        }
+    };
+
 
 
     const imagePicker = async () => {
@@ -60,14 +159,24 @@ const AddComplain = ({ navigation }: any) => {
                 <View style={styles.maincontainer}>
                     <Text style={styles.heading}>Complain Title</Text>
                     <View style={styles.title}>
-                        <TextInput placeholder={'Write Complain Here '} />
+                        <TextInput
+                            placeholder={'Write Complain Here '}
+                            onChangeText={(value: any) => { setComplainTitle(value) }}
+
+                        />
                     </View>
+                    {!isComplainTitle && <Text style={{ color: 'red',marginLeft:'2%' }}>Complain Title is required</Text>}
+                    {!isComplainTitleLength && <Text style={{ color: 'red',marginLeft:'2%' }}>Complain Title have at least 10 words</Text>}
                     <Text style={styles.heading}>Description</Text>
                     <View style={styles.description}>
-                        <TextInput placeholder={'Write Description Here '} />
+                        <TextInput
+                            placeholder={'Write Description Here '}
+                            onChangeText={(value: any) => { setcomplainDescription(value) }}
+                        />
                     </View>
+                    {!isComplainDescription && <Text style={{ color: 'red',marginLeft:'2%' }}>Complain descripton is required</Text>}                    
+                    {!isComplainDescriptionLength && <Text style={{ color: 'red',marginLeft:'2%' }}>Complain descripton have at least 10 words</Text>}                    
                     <Text style={styles.heading}>Upload Photo</Text>
-
                     {Object.keys(image).length === 0 ? (
                         <TouchableOpacity onPress={imagePicker}>
                             <View style={styles.imageBox}>
@@ -82,30 +191,24 @@ const AddComplain = ({ navigation }: any) => {
                             />
                         </View>
                     )}
-
-                    <View style={{ paddingTop: hp(1), alignItems: 'center' }}>
-                        <MapButton
-                            onPress={() => {
-                                // setIsLoading(true);
-                                // changeStateByProvider("Pickedup", shipData._id)
-                                //     .then(response => response.json())
-                                //     .then(result => {
-                                //         console.log("result of ship", result);
-                                //         if (result.success) {
-                                //             setIsLoading(false);
-                                //             navigation.navigate('TRANSITFORSHIP', {
-                                //                 shipData: shipData,
-                                //             });
-                                //         }
-                                //     })
-                                //     .catch(error => {
-                                //         setIsLoading(false);
-                                //         console.log('error', error)
-                                //     });
-                            }}
-                            text={'     Submit     '}
-                        />
+                    <View>
+                    {!isImage && <Text style={{ color: 'red',marginLeft:'2%' }}>Complain Image is required</Text>}
                     </View>
+                    
+                    <View style={{margin:40}}>
+                    <Button
+                        title='Submit'
+                        onPress={uploadDataToServer}
+                        loading={isLoading}
+                    />
+                    </View>
+
+                    <PopupModalOfSuccess
+                        firstText={"Complain Added"}
+                        isModalVisible={isModalVisible}
+                        closeButtonOnPressed={() => {
+                            navigation.goBack();
+                        }} />
                 </View>
             </ScrollView>
         </SafeAreaView>

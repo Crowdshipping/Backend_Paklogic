@@ -16,12 +16,9 @@ import {
 import { SvgXml } from 'react-native-svg';
 import { imagePlaceholderSvg } from '../../theme/assets/svg/imagePlaceholderSvg';
 import CheckBoxState from '../../components/CheckBoxState';
+import { backendUrl } from '../../appConstants';
 
-const ComplainDetail = ({ navigation }: any) => {
-    const [bdetail, setbdetail] = useState({
-        txt: 'Customer treatment was very unfare with me and he shout on me, when i ask otp he speak louder and',
-        title: 'Lorem ipsum',
-    });
+const ComplainDetail = ({ navigation, route }: any) => {
 
     return (
         <SafeAreaView>
@@ -29,19 +26,34 @@ const ComplainDetail = ({ navigation }: any) => {
                 <View style={styles.maincontainer}>
                     <Text style={styles.heading}>Description</Text>
                     <View style={styles.description}>
-                        <Text style={styles.txt}>{bdetail.txt}</Text>
+                        <Text style={styles.txt}>{route.params.item.complainDescription}</Text>
                     </View>
-                    <Text style={styles.heading}>Upload Photo</Text>
+                    <Text style={styles.heading}>Complain Photo</Text>
                     <View style={styles.imageBox}>
                         <Image
                             style={{ width: '100%', height: '100%', borderRadius: 20 }}
-                            source={require('../../assets/tony.jpg')}
+                            source={
+                                {
+                                    uri: backendUrl + route.params.item.complainImage
+                                }
+                            }
                         />
                     </View>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
-                        <CheckBoxState text={'Resolved'} whenPressed={() => { }} />
-                        <CheckBoxState text={'Pending'} whenPressed={() => { }} />
-                    </View>
+                    {route.params.item.complainStatus === "Pending" ?
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
+
+                            <CheckBoxState text={'Pending'} isDisabled={true} checked={true} />
+                            <CheckBoxState text={'Resolved'} isDisabled={true} />
+
+                        </View>
+                        :
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
+
+                            <CheckBoxState text={'Pending'} isDisabled={true} />
+                            <CheckBoxState text={'Resolved'} isDisabled={true} checked={true}/>
+
+                        </View>
+                        }
                 </View>
             </ScrollView>
         </SafeAreaView>

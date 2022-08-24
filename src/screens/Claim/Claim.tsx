@@ -19,8 +19,6 @@ import { getClaim } from '../../services';
 const Claim = ({ navigation }: any) => {
     const [claimResponse, setClaimResponse] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(false);
-    const [assignShow, setAssignShow] = React.useState(false);
-    const [isDisabled, setDisabled] = React.useState(false);
     const [pending, setPending] = React.useState(false);
     const [resolved, setResolved] = React.useState(true);
     const getData = async () => {
@@ -30,7 +28,6 @@ const Claim = ({ navigation }: any) => {
 
             if (value !== null) {
                 console.log("userID", value);
-                // getAllVehiclesCompany("625510f2d8e3e400045de1bf")
                 getClaim(value)
                     .then(response => response.json())
                     .then(result => {
@@ -38,7 +35,6 @@ const Claim = ({ navigation }: any) => {
                         if (result.success) {
                             setClaimResponse(result.claims);
                         }
-                        // setFlightResponse(result.flights);
                         console.log(claimResponse)
                         console.log('Fvehicle', result);
                     })
@@ -58,48 +54,53 @@ const Claim = ({ navigation }: any) => {
         return willFocusSubscription;
     }, []);
 
-    const renderClaim = (item:any) => {
+    const renderClaim = (item: any) => {
         return (
-            <ClaimSingleCard 
-            onPress={() => {
-                navigation.navigate("CLAIMDETAIL",{item})
-            }} 
-            state={item.claimStatus}
-            title={item.claimTitle}
-            subtitle={item.claimDescription} />
+            <ClaimSingleCard
+                onPress={() => {
+                    navigation.navigate("CLAIMDETAIL", { item })
+                }}
+                state={item.claimStatus}
+                title={item.claimTitle}
+                subtitle={item.claimDescription} />
         )
     }
 
     const noClaimAvailable = () => {
         return (
-          <View style={{ height: '75%', justifyContent: 'center',flex:1,marginTop:hp('15%') }}>
-            <View style={{ backgroundColor: "#f0f0f0", height: 250, borderRadius: 10, margin: 20, justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ color: 'red' }}>No claims available</Text>
+            <View style={{ height: '75%', justifyContent: 'center', flex: 1, marginTop: hp('15%')}}>
+                <View style={{ backgroundColor: "#f0f0f0", height: 250, borderRadius: 10, margin: 20, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ color: 'red' }}>No claims available</Text>
+                </View>
             </View>
-          </View>
         )
-      }
+    }
 
     const renderClaimCheck = () => {
-        let noClaimResolved=0;
+        let noClaimResolved = 0;
         return <View >
-            {claimResponse &&
+            {claimResponse.length !==0 ?
                 claimResponse.map((item: any) => {
                     console.log("itemitemitem12233", item);
-                    if (pending === true && item.claimStatus==='Pending') {
+                    if (pending === true && item.claimStatus === 'Pending') {
                         console.log(item.claimStatus)
                         return renderClaim(item)
                     }
-                    else if (resolved === true && item.claimStatus==='Resolved') {
+                    else if (resolved === true && item.claimStatus === 'Resolved') {
                         return renderClaim(item)
-                    }else{
-                        noClaimResolved=noClaimResolved+1;
+                    } else {
+                        noClaimResolved = noClaimResolved + 1;
                     }
-                    if(noClaimResolved===claimResponse.length){
-                        return noClaimAvailable()
 
+                    if (noClaimResolved === claimResponse.length) {
+                        return noClaimAvailable()
                     }
-                })}
+
+
+                })
+                :
+                    noClaimAvailable()
+            }
         </View>
     }
 
@@ -107,7 +108,7 @@ const Claim = ({ navigation }: any) => {
 
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{backgroundColor:'white',height:"100%"}}>
             <ScrollView>
                 <View style={styles.maincontainer}>
                     <TouchableOpacity onPress={() => {
@@ -116,14 +117,14 @@ const Claim = ({ navigation }: any) => {
                         <Text style={styles.txt}>ADD NEW</Text>
                     </TouchableOpacity>
                     <View style={styles.radio}>
-                        <CheckBoxState 
-                            text={'Resolved'} 
-                            onPress={() => {setResolved(!resolved)}}
-                            checked={true} 
+                        <CheckBoxState
+                            text={'Resolved'}
+                            onPress={() => { setResolved(!resolved) }}
+                            checked={true}
                         />
-                        <CheckBoxState text={'Pending'} onPress={() => { setPending(!pending)}} />
+                        <CheckBoxState text={'Pending'} onPress={() => { setPending(!pending) }} />
                     </View>
-                    {renderClaimCheck()}  
+                    {renderClaimCheck()}
                 </View>
             </ScrollView>
         </SafeAreaView>

@@ -23,8 +23,10 @@ import PopupModalOfSuccess from '../../components/PopupModalOfSuccess';
 const AddClaim = ({ navigation }: any) => {
     const [claimTitle, setClaimTitle] = useState<any>()
     const [isClaimTitle, setIsClaimTitle] = useState(true)
+    const [isClaimTitleLength, setIsClaimTitleLength] = useState(true)
     const [isClaimDetail, setIsClaimDetail] = useState(true)
     const [claimDetail, setClaimDetail] = useState<any>()
+    const [isClaimDetailLength, setIsClaimDetailLength] = useState(true)
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const toggleModal = () => {
@@ -33,37 +35,61 @@ const AddClaim = ({ navigation }: any) => {
 
     const validateClaimTitle = () => {
         if (claimTitle) {
-            setIsClaimTitle(true);          
+            if(claimTitle.length>=10)
+                {
+                    setIsClaimTitle(true);
+                    setIsClaimTitleLength(true);
+                    return true;
+                }else{
+                    setIsClaimTitle(true);
+                    setIsClaimTitleLength(false);
+                    return false;
+
+                }
+                      
         } else {
             setIsClaimTitle(false);
+            return false
         }
     }
     const validateClaimDetail = () => {
         if (claimDetail) {
-            setIsClaimDetail(true);          
+                if(claimDetail.length>=10){
+                    setIsClaimDetail(true);
+                    setIsClaimDetailLength(true); 
+                    return true;
+                }else{
+                    setIsClaimDetail(true);
+                    setIsClaimDetailLength(false); 
+                    return false;
+                }
+                     
         } else {
             setIsClaimDetail(false);
+            return false;
         }
     }
 
     const uploadDataToServer = async () => {
         const value = await AsyncStorage.getItem('@user_Id');
         console.log("userId", value)    
-        validateClaimTitle()
-        validateClaimDetail()
+        const claimT=  validateClaimTitle()
+        const claimD=validateClaimDetail()
          console.log(isClaimTitle)
-        if (value) {
-            setIsLoading(true);
-            addClaim(claimTitle, claimDetail, value)
-                .then((response) => response.json())
-                .then((result: any) => {
-                    if (result.success) {
-                        toggleModal();
-                        setIsLoading(false)
-                    }else{
-                        setIsLoading(false)
-                    }
-                });
+        if(claimT && claimD){
+            if (value) {
+                setIsLoading(true);
+                addClaim(claimTitle, claimDetail, value)
+                    .then((response) => response.json())
+                    .then((result: any) => {
+                        if (result.success) {
+                            toggleModal();
+                            setIsLoading(false)
+                        }else{
+                            setIsLoading(false)
+                        }
+                    });
+            }
         }
     };
 
@@ -78,7 +104,8 @@ const AddClaim = ({ navigation }: any) => {
                                 onChangeText={(value: any) => { setClaimTitle(value) }}  
                             />
                         </View>
-                        {!isClaimTitle && <Text style={{ color: 'red',marginLeft:'2%' }}>Claim Title is required</Text>}                    
+                        {!isClaimTitle && <Text style={{ color: 'red',marginLeft:'2%' }}>Claim Title is required</Text>}
+                        {!isClaimTitleLength && <Text style={{ color: 'red',marginLeft:'2%' }}>Claim Title have at least 10 words</Text>}                    
                     <Text style={styles.heading}>Description</Text>
                     <View style={styles.description}>
                         <TextInput
@@ -87,6 +114,7 @@ const AddClaim = ({ navigation }: any) => {
                         />
                     </View>
                     {!isClaimDetail && <Text style={{ color: 'red',marginLeft:'2%' }}>Claim Details is required</Text>} 
+                    {!isClaimDetailLength && <Text style={{ color: 'red',marginLeft:'2%' }}>Claim Details have at least 10 words </Text>}
                     <PopupModalOfSuccess
                         firstText={"Claim Added"}
                         isModalVisible={isModalVisible}

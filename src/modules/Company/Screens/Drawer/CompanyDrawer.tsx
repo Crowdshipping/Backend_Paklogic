@@ -180,6 +180,20 @@ const CompanyDrawer = ({ navigation, route }: any) => {
                     />
                     <Text style={styles.txtdetail}>Drivers Details</Text>
                 </TouchableOpacity>
+                <TouchableOpacity onPress={() => { navigation.navigate('CompanyClaim') }}
+                    style={styles.viewunderline}>
+                    <SvgXml
+                        xml={claimSvg} width={25}
+                    />
+                    <Text style={styles.txtdetail}>Claims</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => { navigation.navigate('CompanyComplain') }}
+                    style={styles.viewunderline}>
+                    <SvgXml
+                        xml={claimSvg} width={25}
+                    />
+                    <Text style={styles.txtdetail}>Complains</Text>
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.viewunderline}>
                     <SvgXml
                         xml={notificationSvg} width={25}

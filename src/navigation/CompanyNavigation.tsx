@@ -15,6 +15,8 @@ import DriverDetailsCompany from '../modules/Company/Screens/Driver/DriverDetail
 import DriverBookingHistoryDetail from '../modules/Company/Screens/History/DriverBookingHistoryDetails';
 import MyProfile from '../screens/MyProfile';
 import EditMyProfile from '../screens/EditMyProfile';
+import Claim from '../screens/Claim/Claim';
+import Complain from '../screens/Complain/Complain';
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   return (
@@ -186,6 +188,36 @@ const DrawerNavigator = () => {
 
             }}
           />
+          <Stack.Screen
+            name="CompanyClaim"
+            component={Claim}
+            options={{
+            headerTitleAlign: 'center',
+            headerTintColor: 'black',
+            headerStyle: {
+              elevation: 0,
+              shadowOpacity: 0,
+            },
+            headerTitle:'Claims'
+
+            }}
+          />
+          <Stack.Screen
+            name="CompanyComplain"
+            component={Complain}
+            options={{
+            headerTitleAlign: 'center',
+            headerTintColor: 'black',
+            headerStyle: {
+              elevation: 0,
+              shadowOpacity: 0,
+            },
+            headerTitle:'Complains'
+
+            }}
+          />
+
+          
         </Stack.Navigator>
         )
         }

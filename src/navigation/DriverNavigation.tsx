@@ -21,6 +21,7 @@ import VehicleVerifyOtp from '../screens/Common/VehicleVerifyOtp';
 import EditMyProfile from '../screens/EditMyProfile';
 import Claim from '../screens/Claim/Claim';
 import ClaimDetail from '../screens/Claim/ClaimDetail';
+import Complain from '../screens/Complain/Complain';
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
   return (
@@ -249,6 +250,21 @@ export const DriverNavigation = () => {
         }}
         name="CLAIMDRIVER"
         component={Claim}
+      />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          cardStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleAlign: 'center',
+          title: 'Complain',
+        }}
+        name="ComplainDriver"
+        component={Complain}
       />
     </Stack.Navigator>
   );

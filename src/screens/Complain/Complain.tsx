@@ -12,36 +12,106 @@ import {
     heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import ComplainSingleCard from './ComplainSingleCard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getComplain } from '../../services';
+import MyLoader from '../../components/MyLoader';
 const Complain = ({ navigation }: any) => {
-    // const [bdetail, setbdetail] = useState({
-    //     name: 'Mr.Joy',
-    //     phone: '090078601',
-    //     date: '12/04/20',
-    //     ticket: 'A56t70',
-    //     pickup: 'Tellin, Estonia',
-    //     dropoff: 'Helsinki, Estonia',
-    //     date1: 'March 13,2022',
-    //     request: 'In-Progress',
-    // });
-    // const [checked, setChecked] = useState('first');
+    const [complainResponse, setComplainesponse] = React.useState([]);
+    const [isLoading, setIsLoading] = React.useState(false);
+    // const [pending, setPending] = React.useState(false);
+    // const [resolved, setResolved] = React.useState(true);
+   
+    const getData = async () => {
+        setIsLoading(true);
+        try {
+            const value = await AsyncStorage.getItem('@user_Id');
+
+            if (value !== null) {
+                console.log("userID", value);
+                 getComplain(value)
+                    .then(response => response.json())
+                    .then(result => {
+                        setIsLoading(false);
+                        if (result.success) {
+                            setComplainesponse(result.complains);
+                            setIsLoading(false)
+                        }
+                        // setFlightResponse(result.flights);
+                        console.log(complainResponse)
+                        console.log('Fvehicle', result);
+                    })
+                    .catch(error => {
+                        setIsLoading(false);
+                        console.log('error', error);
+                    });
+            }
+        } catch (e) { }
+    };
+
+    React.useEffect(() => {
+        getData();
+        const willFocusSubscription = navigation.addListener('focus', () => {
+            getData();
+        });
+        return willFocusSubscription;
+    }, []);
+
+    const renderComplain = (item:any) => {
+        return (
+            <ComplainSingleCard onPress={() => {
+                navigation.navigate("COMPLAINDETAIL",{item})
+            }} title={item.complainTitle} date={item.date} status={item.complainStatus} />
+        
+        )
+    }
+
+    const noComplainAvailable = () => {
+        return (
+          <View style={{ height: '75%', justifyContent: 'center',flex:1,marginTop:hp('15%') }}>
+            <View style={{ backgroundColor: "#f0f0f0", height: 250, borderRadius: 10, margin: 20, justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ color: 'red' }}>No complain available</Text>
+            </View>
+          </View>
+        )
+      }
+
+    const renderComplainCheck = () => {
+
+        return <View >
+            {complainResponse.length!==0 ?
+                complainResponse.map((item: any) => {
+                    console.log("itemitemitem12233", item);  
+                    return renderComplain(item);
+                }):
+                    noComplainAvailable()            
+                }
+        </View>
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     return (
         <SafeAreaView>
-            <ScrollView>
+            {isLoading ?
+                <MyLoader/>
+
+            :
+            <ScrollView style={{backgroundColor:'white',height:'100%'}}>
                 <View style={styles.maincontainer}>
                     <TouchableOpacity onPress={() => {
                         navigation.navigate("ADDCOMPLAIN");
                     }} style={styles.addbtn}>
                         <Text style={styles.txt}>ADD NEW</Text>
                     </TouchableOpacity>
-
-                    <ComplainSingleCard onPress={() => {
-                        navigation.navigate("COMPLAINDETAIL")
-                    }} title={'Complain title'} date={"29-12-2022"} status={'Pending'} />
-                    <ComplainSingleCard onPress={() => {
-
-                    }} title={'Complain title'} date={"29-12-2022"} status={'Resolved'} />
+                    {renderComplainCheck()}
                 </View>
             </ScrollView>
+            }
         </SafeAreaView>
     );
 };

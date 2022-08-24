@@ -1340,3 +1340,43 @@ export const addVehicleCompany = (vehicle: AddVehicleCompany) => {
           requestOptions,
         );
       };
+
+      export const addComplain = (data: any) => {
+        console.log("Datatatat",data)
+        var formdata = new FormData();
+        formdata.append('complainTitle', data.complainTitle);
+        formdata.append('complainDescription', data.complainDescription);
+        formdata.append('complainBy', data.complainBy);
+        formdata.append('complainImage', data.complainImage);
+        
+        console.log(formdata);
+      
+        var requestOptions = {
+          method: 'POST',
+          body: formdata,
+          redirect: 'follow',
+        };
+      
+        return fetch(
+          `https://backend-crowdshipping.herokuapp.com/complainclaim/`,
+          requestOptions,
+        );
+      };
+      export const getComplain = (userId: any) => {
+        var myHeaders = new Headers();
+        myHeaders.append(
+          'Cookie',
+          'connect.sid=s%3AyulJxLavmCWWcJPfR99ffsX-tEGgaRKa.k6L4OXZAX1lq%2F2ROv%2BFgg9%2Bj6zBXf3OWrH1HooexOaU',
+        );
+      
+        var requestOptions = {
+          method: 'GET',
+          headers: myHeaders,
+          redirect: 'follow',
+        };
+      
+        return fetch(
+          `https://backend-crowdshipping.herokuapp.com/complainclaim/getcomplainsbyuser/${userId}`,
+          requestOptions,
+        );
+      };
