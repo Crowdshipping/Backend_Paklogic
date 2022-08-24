@@ -98,8 +98,10 @@ const TrackLand = ({ route, navigation }: any) => {
           left: 50,
         },
       });
-
+    setLoading(false)
   }, [ref]);
+
+  useEffect(() => { onMapReadyHandler }, [])
 
 
   return (
@@ -127,13 +129,21 @@ const TrackLand = ({ route, navigation }: any) => {
               provider={PROVIDER_GOOGLE} // remove if not using Google Maps
               showsUserLocation={false}
               ref={ref}
-              onMapReady={onMapReadyHandler}
-
-              zoomControlEnabled={false}
+              // onMapReady={onMapReadyHandler}
+              region={{
+                latitude: pickupAddress.lat,
+                longitude: pickupAddress.lng,
+                latitudeDelta: 0.09,
+                longitudeDelta: 0.0009
+              }}
+              // zoomControlEnabled={true}
+              zoomTapEnabled={true}
+              zoomEnabled={true}
               style={styles.map}>
 
               <MapViewDirections
                 apikey={GOOGLE_MAPS_APIKEY}
+                onReady={onMapReadyHandler}
                 origin={{
                   latitude: pickupAddress.lat,
                   longitude: pickupAddress.lng,

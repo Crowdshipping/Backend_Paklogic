@@ -23,6 +23,7 @@ import {createDriverRequest} from './createDriverRequest';
 import {cancelDriverRequest} from './cancelDriverRequest';
 import {editBooking} from './editBooking';
 import {AddPlayer} from './AddPlayer';
+import {getUser} from './getUser';
 
 export {
   forgotPassword,
@@ -50,4 +51,5 @@ export {
   cancelDriverRequest,
   editBooking,
   AddPlayer,
+  getUser,
 };

@@ -83,7 +83,7 @@ const CustomDrawerContent = (props: any) => {
             </Text>
             <TouchableOpacity
               onPress={() => {
-                // props.navigation.navigate('MYPROFILE');
+                // props.navigation.navigate('ViewProfile');
               }}>
               <Text style={{ fontSize: 18, color: 'yellow' }}>
                 View Profile

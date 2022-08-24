@@ -29,6 +29,7 @@ import LandReceiverDetail from './LandFlow/LandReceiverDetail/LandReceiverDetail
 import TrackLand from './DrawerScreens/TrackLand/TrackLand';
 import LandModifyRequest from './LandFlow/LandModifyRequest/LandModifyRequest';
 import HistoryDetail from './DrawerScreens/HistoryDetail/HistoryDetail';
+import ViewProfile from './Profile/ViewProfile';
 
 export {
   RegisterScreen,
@@ -62,4 +63,5 @@ export {
   LandReceiverDetail,
   LandModifyRequest,
   HistoryDetail,
+  ViewProfile,
 };

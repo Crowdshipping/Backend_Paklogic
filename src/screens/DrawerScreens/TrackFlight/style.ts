@@ -6,7 +6,7 @@ import {
 export const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    top: hp(13),
+    top: hp(7),
     height: hp(85),
 
     width: wp(100),

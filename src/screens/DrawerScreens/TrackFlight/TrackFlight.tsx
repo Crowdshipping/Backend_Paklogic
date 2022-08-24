@@ -191,6 +191,12 @@ const TrackFlight = ({ route, navigation }: any) => {
           ) : response && response.length > 0 && <MapView
             provider={PROVIDER_GOOGLE} // remove if not using Google Maps
             showsUserLocation={false}
+            region={{
+              latitude: response[0].lat,
+              longitude: response[0].lon,
+              latitudeDelta: 20,
+              longitudeDelta: 20
+            }}
             ref={ref}
             onMapReady={onMapReadyHandler}
             zoomControlEnabled={false}

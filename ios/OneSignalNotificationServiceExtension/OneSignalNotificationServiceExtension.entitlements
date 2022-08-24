@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.com.crowdshipping.user.OneSignalNotificationServiceExtension</string>
+		<string>group.com.crowdshipping.user.onesignal</string>
 	</array>
 </dict>
 </plist>

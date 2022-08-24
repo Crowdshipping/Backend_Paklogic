@@ -19,10 +19,10 @@ const SigninScreen = ({ navigation }: any) => {
   const [emailValue, setemailValue] = useState(true);
   // const [email, setemail] = useState('');
   const [passwordValue, setpasswordValue] = useState(true);
-  // const [email, setemail] = useState(__DEV__ ? 'Salman090898@gmail.com' : '');
-  const [email, setemail] = useState(__DEV__ ? 'harisbakhabarpk1222272@gmail.com' : '');
-  // const [password, setpassword] = useState(__DEV__ ? 'Qwerty1@' : '');
-  const [password, setpassword] = useState(__DEV__ ? 'Hahaha88*' : '');
+  const [email, setemail] = useState(__DEV__ ? 'Salman090898@gmail.com' : '');
+  // const [email, setemail] = useState(__DEV__ ? 'harisbakhabarpk1222272@gmail.com' : '');
+  const [password, setpassword] = useState(__DEV__ ? 'Qwerty1@' : '');
+  // const [password, setpassword] = useState(__DEV__ ? 'Hahaha88*' : '');
   const [devState, setdevState] = useState<any>();
 
   // const [password, setpassword] = useState('');

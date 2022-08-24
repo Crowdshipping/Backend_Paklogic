@@ -33,6 +33,7 @@ import {
   TrackLand,
   LandModifyRequest,
   HistoryDetail,
+  ViewProfile,
 } from '../screens';
 import CustomDrawerContent from './DrawerNavigation';
 import { StripePayment } from '../stripe';
@@ -75,6 +76,7 @@ type rootStack = {
   LandReceiverDetail: undefined;
   LandModifyRequest: undefined;
   HistoryDetail: undefined;
+  ViewProfile: undefined;
 };
 const Stack = createStackNavigator<rootStack>();
 const Drawer = createDrawerNavigator();
@@ -95,6 +97,7 @@ const MyDrawer = () => {
       <Stack.Screen name="TrackLand" component={TrackLand} />
       <Stack.Screen name="LandModifyRequest" component={LandModifyRequest} />
       <Stack.Screen name="ShipModifyRequest" component={ShipModifyRequest} />
+      <Stack.Screen name="ViewProfile" component={ViewProfile} />
       {/* <Stack.Screen name="Settings" component={Settings} /> */}
     </Drawer.Navigator>
   );

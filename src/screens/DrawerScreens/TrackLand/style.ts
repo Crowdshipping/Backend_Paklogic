@@ -6,7 +6,7 @@ import {
 export const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    top: hp(13),
+    top: hp(7),
     height: hp(85),
 
     width: wp(100),
@@ -18,6 +18,7 @@ export const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     height: hp(90),
     width: wp(100),
+    position: 'absolute',
     // paddingBottom: 5,
   },
 });
