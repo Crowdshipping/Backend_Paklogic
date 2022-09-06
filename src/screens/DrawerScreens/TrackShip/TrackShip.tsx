@@ -201,7 +201,7 @@ const TrackShip = ({ route, navigation }: any) => {
           <View style={{ width: wp(90) }}>
             <View
               style={{
-                backgroundColor: 'white',
+                backgroundColor: colors.white,
 
                 justifyContent: 'center',
                 alignItems: 'center',

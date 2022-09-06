@@ -15,6 +15,7 @@ import {
 } from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { IPhonePicker, ICountryCode } from './interface';
+import { colors } from '../theme';
 
 export const PhoneNumberPicker = (props: IPhonePicker) => {
   const { onChange, errormsg, countryCode, phone, editable } = props;
@@ -35,7 +36,7 @@ export const PhoneNumberPicker = (props: IPhonePicker) => {
       <Text style={styles.titleText}>Mobile</Text>
       <View style={styles.addressView}>
         <TouchableOpacity
-          disabled={editable ? !editable : false}
+          disabled={!editable}
           style={styles.modalBtn}
           onPress={() => {
             setIsModal(true);
@@ -80,7 +81,7 @@ export const PhoneNumberPicker = (props: IPhonePicker) => {
           <ScrollView>
             {Countries.map((d: any, i: any) => {
               return (
-                <View key={i} style={{ backgroundColor: 'white' }}>
+                <View key={i} style={{ backgroundColor: colors.white }}>
                   <TouchableOpacity
                     style={styles.modalViewBtn}
                     onPress={() => {
@@ -162,14 +163,14 @@ export const PhoneNumberPickerUI = (props: IPhonePicker) => {
           style={{
             width: wp(90),
             height: hp(70),
-            backgroundColor: 'white',
+            backgroundColor: colors.white,
             borderRadius: wp(2),
             padding: wp(5),
           }}>
           <ScrollView>
             {Countries.map((d: any, i: number) => {
               return (
-                <View key={i} style={{ backgroundColor: 'white' }}>
+                <View key={i} style={{ backgroundColor: colors.white }}>
                   <TouchableOpacity
                     style={{ marginVertical: hp(1), flexDirection: 'row' }}
                     onPress={() => {

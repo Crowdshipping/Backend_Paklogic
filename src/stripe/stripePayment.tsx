@@ -90,15 +90,18 @@ const StripePayment = ({ navigation, route }: any) => {
     axios(config)
       .then(response => {
         setPaymentIntent(response.data.paymentIntent);
+        setLoading(false)
         console.log('data from api', JSON.stringify(response.data));
       })
       .catch(error => {
+        setLoading(false)
         Alert.alert(error.message ? error.message : 'Something went wrong');
       });
     // });
   };
 
   useEffect(() => {
+    setLoading(true)
     fetchClientSecret();
   }, []);
   return (

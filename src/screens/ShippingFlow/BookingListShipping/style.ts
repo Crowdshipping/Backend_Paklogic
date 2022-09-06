@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     paddingTop: hp(3),
   },
   txt1: {
-    color: 'black',
+    color: colors.black,
     fontSize: hp(2),
   },
   box: {
@@ -52,7 +52,6 @@ export const styles = StyleSheet.create({
     // paddingBottom: hp(5),
     // shadowColor: 'grey',
     // borderRadius: hp(2),
-    // backgroundColor: 'white',
     // borderWidth: 2,
     // borderColor: colors.red,
     // marginBottom: hp(15),
@@ -68,7 +67,7 @@ export const styles = StyleSheet.create({
     // paddingVertical: hp(1),
     shadowColor: Platform.OS === 'android' ? colors.black : 'grey',
     borderRadius: hp(2),
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     marginVertical: hp(1),
     // borderWidth: 1,
     shadowOffset: {
@@ -119,7 +118,7 @@ export const styles = StyleSheet.create({
   },
   txtdetail: {
     fontSize: 18,
-    color: 'black',
+    color: colors.black,
   },
   test: {
     // resizeMode: 'contain',

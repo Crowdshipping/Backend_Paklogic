@@ -6,6 +6,7 @@ import {
   Alert,
   SafeAreaView,
   Text,
+  ActivityIndicator,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -124,7 +125,6 @@ const LandReceiverDetail = ({ navigation, route }: any) => {
               moment(finalDate).format('YYYY-MM-DD'),
             )
               .then((rest: any) => {
-                console.log('create booking', { rest });
                 bookingId = rest.booking._id;
                 {
                   rest.success && createDriverRequest(bookingId)
@@ -145,7 +145,6 @@ const LandReceiverDetail = ({ navigation, route }: any) => {
                 setloading(false);
               })
               .catch(error => {
-                console.log('create booking', { error });
                 setloading(false);
                 Alert.alert(
                   error.message ? error.message : 'Something went wrong',
@@ -211,6 +210,7 @@ const LandReceiverDetail = ({ navigation, route }: any) => {
                       : 'Invalid name format'
                     : ''
                 }
+                editable={!loading}
               />
               <PhoneNumberPicker
                 onChange={(selectedCountry: ICountryCode, text: string) => {
@@ -225,6 +225,7 @@ const LandReceiverDetail = ({ navigation, route }: any) => {
                       : 'Must enter valid phone number'
                     : ''
                 }
+                editable={!loading}
               />
 
               <View style={styles.paymentView}>
@@ -236,6 +237,7 @@ const LandReceiverDetail = ({ navigation, route }: any) => {
 
               <TouchableOpacity
                 style={{ alignSelf: 'center' }}
+                disabled={loading}
                 onPress={() => {
                   navigation.navigate('LandModifyRequest', {
                     data: route.params.data,

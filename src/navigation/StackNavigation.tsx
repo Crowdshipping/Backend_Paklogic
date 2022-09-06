@@ -34,6 +34,8 @@ import {
   LandModifyRequest,
   HistoryDetail,
   ViewProfile,
+  EditProfile,
+  Claims
 } from '../screens';
 import CustomDrawerContent from './DrawerNavigation';
 import { StripePayment } from '../stripe';
@@ -77,6 +79,8 @@ type rootStack = {
   LandModifyRequest: undefined;
   HistoryDetail: undefined;
   ViewProfile: undefined;
+  EditProfile: undefined;
+  Claims: undefined;
 };
 const Stack = createStackNavigator<rootStack>();
 const Drawer = createDrawerNavigator();
@@ -98,6 +102,8 @@ const MyDrawer = () => {
       <Stack.Screen name="LandModifyRequest" component={LandModifyRequest} />
       <Stack.Screen name="ShipModifyRequest" component={ShipModifyRequest} />
       <Stack.Screen name="ViewProfile" component={ViewProfile} />
+      <Stack.Screen name="EditProfile" component={EditProfile} />
+      <Stack.Screen name="Claims" component={Claims} />
       {/* <Stack.Screen name="Settings" component={Settings} /> */}
     </Drawer.Navigator>
   );

@@ -42,7 +42,7 @@ export const Address = (props: IAddressPicker) => {
           placeholderTextColor={'gray'}
           autoCapitalize={'none'}
           style={styles.textInput}
-          onChangeText={text => onChange(selectedCountry, text)}
+          onChangeText={text => onChange && onChange(selectedCountry, text)}
         />
       </View>
       <View>
@@ -60,7 +60,7 @@ export const Address = (props: IAddressPicker) => {
           <ScrollView>
             {Countries.map((d: any, i: any) => {
               return (
-                <View key={d.dial_code} style={{ backgroundColor: 'white' }}>
+                <View key={d.dial_code} style={{ backgroundColor: colors.white }}>
                   <TouchableOpacity
                     style={styles.modalViewBtn}
                     onPress={() => {

@@ -7,7 +7,7 @@ import {colors} from '../../../theme';
 
 export const styles = StyleSheet.create({
   txtheading: {
-    color: 'black',
+    color: colors.black,
     fontSize: 22,
     paddingVertical: hp(2),
   },
@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
   },
   txt: {
     paddingTop: hp(2),
-    color: 'black',
+    color: colors.black,
     fontSize: wp(4),
   },
   attachment: {
@@ -66,7 +66,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: wp(5),
     paddingVertical: hp(1),
     borderRadius: hp(2),
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     elevation: 8,
 
     shadowColor: Platform.OS === 'android' ? colors.black : 'grey',
@@ -125,11 +125,11 @@ export const styles = StyleSheet.create({
   },
   txtdetail: {
     fontSize: 18,
-    color: 'black',
+    color: colors.black,
   },
   txtdetailbox: {
     fontSize: 15,
-    color: 'black',
+    color: colors.black,
     // paddingVertical: hp(1),
   },
 

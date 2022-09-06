@@ -23,13 +23,13 @@ export const styles = StyleSheet.create({
   },
   svg: {
     borderWidth: 2,
-    color: 'black',
+    color: colors.black,
     fontSize: wp(4),
   },
 
   txt: {
     paddingTop: hp(2),
-    color: 'black',
+    color: colors.black,
     fontSize: wp(4),
   },
   main: {
@@ -57,7 +57,7 @@ export const styles = StyleSheet.create({
   txt1: {
     fontSize: wp(4),
     textTransform: 'uppercase',
-    color: 'black',
+    color: colors.black,
   },
   Touch: {
     borderBottomWidth: 1,

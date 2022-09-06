@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Alert, ActivityIndicator, View, ScrollView, Text, TouchableOpacity, } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Modal from 'react-native-modal';
@@ -8,18 +8,29 @@ import { BookingListCard, Header } from '../../../components';
 import { useIsFocused } from '@react-navigation/native';
 
 import { cross, plane, shipsvg, success, truck } from '../../../theme/assets/svg';
-import { cancelDriverRequest, orderHistory } from '../../../API';
+import { cancelDriverRequest, getPostRequests, orderHistory } from '../../../API';
 import { colors } from '../../../theme';
 import StripePayment from '../../../stripe/stripePayment';
 import { SvgXml } from 'react-native-svg';
 
 import { styles } from './style'
+import { History } from '../../../components/history';
+
 
 const BookingHistory = ({ navigation }: any) => {
   const [isLoading, setLoading] = useState(true);
-  const [cancelModal, setcancelModal] = useState(true);
+
   const [data, setData] = useState([]);
+  const [postData, setPostData] = useState([]);
+  const [prev, setprev] = useState(0)
+  const [next, setnext] = useState(10)
+  const [postprev, setpostprev] = useState(0)
+  const [postnext, setpostnext] = useState(10)
   const isfocus = useIsFocused();
+  const scrollRef = useRef<ScrollView>(null);
+
+  const [tabRequest, settabRequest] = useState(true)
+  const [tabpostRequest, settabpostRequest] = useState(false)
 
   function fetchData() {
     orderHistory()
@@ -32,14 +43,33 @@ const BookingHistory = ({ navigation }: any) => {
         }
       })
       .catch(error => {
-        Alert.alert(error.message ? error.message : 'Something went wrong');
+        // Alert.alert(error.message ? error.message : 'Something went wrong');
+        setLoading(false);
+      });
+  }
+  function fetchPostData() {
+    setLoading(true)
+    getPostRequests()
+      .then((rest: any) => {
+        {
+          rest.success &&
+            (console.log('response of post history', JSON.stringify(rest)),
+              setPostData(rest.postrequests),
+              setLoading(false));
+        }
+      })
+      .catch(error => {
+        console.log('error of post history')
+        // Alert.alert(error.message ? error.message : 'Something went wrong');
         setLoading(false);
       });
   }
 
+
   useEffect(() => {
     if (isfocus) {
       fetchData();
+      fetchPostData()
     }
   }, [isfocus]);
 
@@ -73,8 +103,22 @@ const BookingHistory = ({ navigation }: any) => {
       <Header
         title="Booking History"
         pressMethod={() => navigation.goBack()}
-      // menu={true}
       />
+
+      <View style={{ flexDirection: 'row', alignSelf: 'center', marginTop: hp(2), borderWidth: 1, backgroundColor: 'rgba(255,255,255,0.5)', borderRadius: wp(2), }}>
+        <TouchableOpacity disabled={tabRequest} onPress={() => { settabRequest(true), settabpostRequest(false) }} style={{ borderRightWidth: 0.5, }}>
+          <Text style={{ paddingHorizontal: wp(5), paddingVertical: hp(1), }}>
+            Requests
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity disabled={tabpostRequest} onPress={() => { settabpostRequest(true), settabRequest(false) }} style={{ borderLeftWidth: 0.5 }}>
+          <Text style={{
+            paddingHorizontal: wp(5), paddingVertical: hp(1),
+          }}>
+            Post Requests
+          </Text>
+        </TouchableOpacity>
+      </View>
 
       {isLoading ? (
         <View
@@ -89,217 +133,406 @@ const BookingHistory = ({ navigation }: any) => {
           }}>
           <ActivityIndicator size={'small'} color={colors.red} />
         </View>
-      ) : (
-        <ScrollView>
-          <View style={{ paddingBottom: hp(7) }}>
-            {data.length > 0 ?
-              (data.map((item: any, index: number) => {
-                return (
-                  item.request.bookingId &&
-                  <TouchableOpacity key={index} onPress={() => navigation.navigate('HistoryDetail', { item })}>
+      ) : (tabRequest ? data.length > 0 ?
+        <ScrollView ref={scrollRef} style={{ height: '90%' }}>
+          {data.slice(prev, next).map((item: any, index: number) => {
+            return (
+              item.request.bookingId &&
+              <TouchableOpacity key={index} onPress={() => navigation.navigate('HistoryDetail', { item })}>
 
-                    <BookingListCard
-                      key={index}
-                      svg={
-                        item.request.type === 'Flight'
-                          ? plane
-                          : item.request.type === 'Ship'
-                            ? shipsvg
-                            : item.request.type === 'Land'
-                              ? truck
-                              : ''
-                      }
-                      firstname={item?.request?.provider?.firstname}
-                      lastname={item?.request?.provider?.lastname}
-                      mmsi={
-                        item.request.type === 'Flight'
-                          ? 'Flight No'
-                          : item.request.type === 'Ship'
-                            ? 'MMSI'
-                            : item.request.type === 'Land'
-                              ? 'Vehicle Type'
-                              : ''
-                      }
-                      mmsiNumber={
-                        item.request.type === 'Flight'
-                          ? item?.request?.flight?.flightNumber
-                          : item.request.type === 'Ship'
-                            ? item.request.ship.mmsiNumber
-                            : item.request.type === 'Land' && item.request.bookingId?.vehicleType
-                      }
-                      pickupCity={
-                        item.request.type === 'Flight'
-                          ? item?.request?.flight?.pickupCity
-                          : item.request.type === 'Ship'
-                            ? item.request.ship.pickupCity
-                            : item.request.type === 'Land' &&
-                            item.request.bookingId?.pickupAddressText
-                      }
-                      dropoffCity={
-                        item.request.type === 'Flight'
-                          ? item?.request?.flight?.dropoffCity
-                          : item.request.type === 'Ship'
-                            ? item.request.ship.dropoffCity
-                            : item.request.type === 'Land' && item.request.bookingId?.dropAddressText
-                      }
-                      price={'30$'}
-                      requestText={
-                        item?.request?.status === 'Accepted'
-                          ? item?.request?.state
-                            ? item?.request?.state
-                            : 'Not Picked'
-                          : item?.request?.status
-                      }
-                      buttonText={
-                        item.request.isMakePayment === false
-                          ? 'Payment Pending'
-                          : 'Live Tracking'
-                      }
-                      btn={
-                        item.request.isMakePayment === false
-                          ? true
-                          : item.request.state === 'Reached' || item.request.state === undefined || item.request.state === 'Completed'
-                            ? false
-                            : true
-                      }
-                      btn1={
-                        item.request.status === 'Pending' ? true : false
-                        // true
-                      }
-                      // handleNavigation={() => { }}
-                      handleCancellation={() => {
-                        console.log('item?.request?.bookingId?._id', item?.request?._id)
-                        // setLoading(true)
+                <BookingListCard
+                  key={index}
+                  svg={
+                    item.request.type === 'Flight'
+                      ? plane
+                      : item.request.type === 'Ship'
+                        ? shipsvg
+                        : item.request.type === 'Land'
+                          ? truck
+                          : ''
+                  }
+                  firstname={item?.request?.provider?.firstname}
+                  lastname={item?.request?.provider?.lastname}
+                  mmsi={
+                    item.request.type === 'Flight'
+                      ? 'Flight No'
+                      : item.request.type === 'Ship'
+                        ? 'MMSI'
+                        : item.request.type === 'Land'
+                          ? 'Vehicle Type'
+                          : ''
+                  }
+                  mmsiNumber={
+                    item.request.type === 'Flight'
+                      ? item?.request?.flight?.flightNumber
+                      : item.request.type === 'Ship'
+                        ? item.request.ship.mmsiNumber
+                        : item.request.type === 'Land' && item.request.bookingId?.vehicleType
+                  }
+                  pickupCity={
+                    item.request.type === 'Flight'
+                      ? item?.request?.flight?.pickupCity
+                      : item.request.type === 'Ship'
+                        ? item.request.ship.pickupCity
+                        : item.request.type === 'Land' &&
+                        item.request.bookingId?.pickupAddressText
+                  }
+                  dropoffCity={
+                    item.request.type === 'Flight'
+                      ? item?.request?.flight?.dropoffCity
+                      : item.request.type === 'Ship'
+                        ? item.request.ship.dropoffCity
+                        : item.request.type === 'Land' && item.request.bookingId?.dropAddressText
+                  }
+                  price={'30$'}
+                  requestText={
+                    item?.request?.status === 'Accepted'
+                      ? item?.request?.state
+                        ? item?.request?.state
+                        : 'Not Picked'
+                      : item?.request?.status
+                  }
+                  buttonText={
+                    item.request.isMakePayment === false
+                      ? 'Payment Pending'
+                      : 'Live Tracking'
+                  }
+                  btn={
+                    item.request.isMakePayment === false
+                      ? true
+                      : item.request.state === 'Reached' || item.request.state === undefined || item.request.state === 'Completed'
+                        ? false
+                        : true
+                  }
+                  btn1={
+                    item.request.status === 'Pending' ? true : false
+                    // true
+                  }
+                  // handleNavigation={() => { }}
+                  handleCancellation={() => {
+                    console.log('item?.request?.bookingId?._id', item?.request?._id)
+                    // setLoading(true)
 
-                        Alert.alert('Alert!', 'Are you sure you want to cancel request?', [
-                          {
-                            text: 'Yes',
-                            onPress: () => handleCancelEvent(item?.request?._id),
-                          },
-                          {
-                            text: 'No',
-                            onPress: () => null,
-                            style: 'cancel',
-                          }])
-                      }}
-                      handleTracking={() => {
-                        item.request.isMakePayment === false
-                          ? navigation.navigate('StripePayment', {
-                            item: {
-                              requestId: item.request._id,
-                              amount: 30,
-                            },
+                    Alert.alert('Alert!', 'Are you sure you want to cancel request?', [
+                      {
+                        text: 'Yes',
+                        onPress: () => handleCancelEvent(item?.request?._id),
+                      },
+                      {
+                        text: 'No',
+                        onPress: () => null,
+                        style: 'cancel',
+                      }])
+                  }}
+                  handleTracking={() => {
+                    item.request.isMakePayment === false
+                      ? navigation.navigate('StripePayment', {
+                        item: {
+                          requestId: item.request._id,
+                          amount: 30,
+                        },
+                      })
+                      : item.request.state === 'Reached' || item.request.state === undefined
+                        ? false
+                        : item?.request?.type === 'Flight'
+                          ? navigation.navigate('TrackFlight', {
+                            fa_flight_id: item?.request?.flight?.fa_flight_id,
+                            flightarrivalDate: item?.request?.flight?.flightarrivalDate,
+                            departureAirport: item?.request?.flight?.departureAirport,
+                            destinationAirport:
+                              item?.request?.flight?.destinationAirport,
                           })
-                          : item.request.state === 'Reached' || item.request.state === undefined
-                            ? false
-                            : item?.request?.type === 'Flight'
-                              ? navigation.navigate('TrackFlight', {
-                                fa_flight_id: item?.request?.flight?.fa_flight_id,
-                                flightarrivalDate: item?.request?.flight?.flightarrivalDate,
-                                departureAirport: item?.request?.flight?.departureAirport,
-                                destinationAirport:
-                                  item?.request?.flight?.destinationAirport,
+                          : item?.request?.type === 'Ship'
+                            ? navigation.navigate('TrackShip', {
+                              mmsiNumber: item?.request?.ship?.mmsiNumber,
+                              eta: item?.request?.ship?.eta,
+                              pickupAddress: item?.request?.bookingId?.pickupAddress,
+                              dropAddress: item?.request?.bookingId?.dropAddress,
+                            }) : item?.request?.type === 'Land'
+                              ? navigation.navigate('TrackLand', {
+                                driverID: item?.request?.provider?._id,
+                                pickupAddress: item?.request?.bookingId?.pickupAddress,
+                                dropAddress: item?.request?.bookingId?.dropAddress,
                               })
-                              : item?.request?.type === 'Ship'
-                                ? navigation.navigate('TrackShip', {
-                                  mmsiNumber: item?.request?.ship?.mmsiNumber,
-                                  eta: item?.request?.ship?.eta,
-                                  pickupAddress: item?.request?.bookingId?.pickupAddress,
-                                  dropAddress: item?.request?.bookingId?.dropAddress,
-                                }) : item?.request?.type === 'Land'
-                                  ? navigation.navigate('TrackLand', {
-                                    driverID: item?.request?.provider?._id,
-                                    pickupAddress: item?.request?.bookingId?.pickupAddress,
-                                    dropAddress: item?.request?.bookingId?.dropAddress,
-                                  })
-                                  : null;
-                      }}
-                    />
-                  </TouchableOpacity>
-                );
-              })) : <View
-                style={{
-                  backgroundColor: colors.boxBackground,
-                  alignSelf: 'center',
-                  paddingVertical: hp(10),
-                  marginVertical: '50%',
-                  paddingHorizontal: wp(10),
-                  borderRadius: hp(2),
-                }}>
-                <Text
-                  style={{
-                    textAlign: 'center',
-                    color: colors.red,
-                    fontSize: hp(2),
-                  }}>
-                  Sorry no bookings available
-                </Text>
-              </View>}
-          </View>
-
-          {/* <Modal isVisible={cancelModal} onBackdropPress={() => setcancelModal(false)}>
-            <View style={styles.modal}>
-              <View
-                style={{
-                  alignSelf: 'flex-end',
-                  //   backgroundColor: '#A9A9A9',
-                  borderRadius: 78,
-                  //   marginTop: 8,
-                  //   marginRight: 15,
-                  //   borderWidth: 1,
-                  backgroundColor: 'red',
-                  padding: 5,
-                  left: 10,
-                  bottom: 10,
-                }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setcancelModal(false);
-                  }}>
-                  <SvgXml
-                    // style={styles.cross_img}
-                    width="20"
-                    height="20"
-                    xml={cross}
-                  />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.view1}>
-                <SvgXml
-                  // style={styles.cross_img}
-                  width="45"
-                  height="45"
-                  xml={success}
+                              : null;
+                  }}
                 />
-                <Text style={[styles.txt1]}>Are you sure you want to cancel the request?</Text>
-              </View>
-
+              </TouchableOpacity>
+            );
+          })}
+          {data.length > 10 &&
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: wp(5) }}>
 
               <TouchableOpacity
-                onPress={() => handleCancelEvent()}
+                disabled={prev === 0 ? true : false}
                 style={{
-                  alignSelf: 'center',
+                  borderRadius: wp(2),
+                  alignItems: 'center',
                   justifyContent: 'center',
                   backgroundColor: colors.red,
-                  width: wp(20),
-                  borderRadius: 10,
-                  marginBottom: hp(2),
+                }}
+                onPress={() => {
+                  setprev(prev - 10)
+                  setnext(next - 10)
+                  scrollRef.current?.scrollTo({
+                    y: 0,
+                    animated: true
+                  });
                 }}>
                 <Text
                   style={{
-                    fontSize: 16,
-                    marginVertical: hp(1.5),
-                    textAlign: 'center',
+                    marginVertical: wp(1.5),
+                    marginHorizontal: wp(2),
                     color: colors.white,
                   }}>
-                  Yes
+                  Prev
                 </Text>
               </TouchableOpacity>
-
-            </View>
-          </Modal> */}
+              <TouchableOpacity
+                disabled={next >= data.length ? true : false}
+                style={{
+                  borderRadius: wp(2),
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: colors.red,
+                }}
+                onPress={() => {
+                  setnext(next + 10)
+                  setprev(prev + 10)
+                  scrollRef.current?.scrollTo({
+                    y: 0,
+                    animated: true
+                  });
+                }}>
+                <Text
+                  style={{
+                    marginVertical: wp(1.5),
+                    marginHorizontal: wp(2),
+                    color: colors.white,
+                  }}>
+                  Next
+                </Text>
+              </TouchableOpacity>
+            </View>}
         </ScrollView>
-      )}
+        : <View
+          style={{
+            backgroundColor: colors.boxBackground,
+            alignSelf: 'center',
+            paddingVertical: hp(10),
+            marginVertical: '50%',
+            paddingHorizontal: wp(10),
+            borderRadius: hp(2),
+          }}>
+          <Text
+            style={{
+              textAlign: 'center',
+              color: colors.red,
+              fontSize: hp(2),
+            }}>
+            Sorry no bookings available
+          </Text>
+        </View>
+        : postData.length > 0 ?
+          <ScrollView ref={scrollRef} style={{ height: '90%' }}>
+            {postData.slice(postprev, postnext).map((item: any, index: number) => {
+              return (
+                item.bookingId &&
+                <TouchableOpacity key={index} onPress={() => navigation.navigate('HistoryDetail', { item: { request: item } })}>
+
+                  <BookingListCard
+                    key={index}
+                    svg={
+                      item.type === 'Flight'
+                        ? plane
+                        : item.type === 'Ship'
+                          ? shipsvg
+                          : item.type === 'Land'
+                            ? truck
+                            : ''
+                    }
+                    firstname={item?.request?.provider?.firstname}
+                    lastname={item?.request?.provider?.lastname}
+                    mmsi={
+                      item.type === 'Flight'
+                        ? 'Flight No'
+                        : item.type === 'Ship'
+                          ? 'MMSI'
+                          : item.type === 'Land'
+                            ? 'Vehicle Type'
+                            : ''
+                    }
+                    mmsiNumber={
+                      item.type === 'Flight'
+                        ? item?.flightNumber
+                        : item.type === 'Ship'
+                          ? item.mmsiNumber
+                          : item.type === 'Land' && item.bookingId?.vehicleType
+                    }
+                    pickupCity={
+                      item.type === 'Flight'
+                        ? item?.pickupCity
+                        : item.type === 'Ship'
+                          ? item.departurePort
+                          : item.type === 'Land' &&
+                          item.bookingId?.pickupAddressText
+                    }
+                    dropoffCity={
+                      item.type === 'Flight'
+                        ? item?.dropoffCity
+                        : item.type === 'Ship'
+                          ? item.destinationPort
+                          : item.type === 'Land' && item.bookingId?.dropAddressText
+                    }
+                    price={'30$'}
+                    requestText={
+                      item?.status === 'Accepted'
+                        ? item?.state
+                          ? item?.state
+                          : 'Not Picked'
+                        : item?.status
+                    }
+                    buttonText={
+                      item?.isMakePayment === false
+                        ? 'Payment Pending'
+                        : 'Live Tracking'
+                    }
+                    btn={
+                      item?.isMakePayment === false
+                        ? true
+                        : item?.state === 'Reached' || item?.state === undefined || item?.state === 'Completed'
+                          ? false
+                          : true
+                    }
+                    btn1={
+                      item?.status === 'Pending' ? true : false
+                      // true
+                    }
+                    // handleNavigation={() => { }}
+                    handleCancellation={() => {
+                      console.log('item?.request?.bookingId?._id', item?._id)
+                      // setLoading(true)
+
+                      Alert.alert('Alert!', 'Are you sure you want to cancel request?', [
+                        {
+                          text: 'Yes',
+                          onPress: () => handleCancelEvent(item?._id),
+                        },
+                        {
+                          text: 'No',
+                          onPress: () => null,
+                          style: 'cancel',
+                        }])
+                    }}
+                    handleTracking={() => {
+                      item.isMakePayment === false
+                        ? navigation.navigate('StripePayment', {
+                          item: {
+                            requestId: item._id,
+                            amount: 30,
+                          },
+                        })
+                        : item.state === 'Reached' || item.state === undefined
+                          ? false
+                          : item?.type === 'Flight'
+                            ? navigation.navigate('TrackFlight', {
+                              fa_flight_id: item?.fa_flight_id,
+                              flightarrivalDate: item?.flightarrivalDate,
+                              departureAirport: item?.departureAirport,
+                              destinationAirport:
+                                item?.destinationAirport,
+                            })
+                            : item?.type === 'Ship'
+                              ? navigation.navigate('TrackShip', {
+                                mmsiNumber: item?.mmsiNumber,
+                                // eta: item?.eta,
+                                pickupAddress: item?.bookingId?.pickupAddress,
+                                dropAddress: item?.bookingId?.dropAddress,
+                              }) : item?.type === 'Land'
+                                ? navigation.navigate('TrackLand', {
+                                  driverID: item?.provider?._id,
+                                  pickupAddress: item?.bookingId?.pickupAddress,
+                                  dropAddress: item?.bookingId?.dropAddress,
+                                })
+                                : null;
+                    }}
+                  />
+                </TouchableOpacity>
+              );
+            })}
+            {postData.length > 10 &&
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: wp(5) }}>
+
+                <TouchableOpacity
+                  disabled={prev === 0 ? true : false}
+                  style={{
+                    borderRadius: wp(2),
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: colors.red,
+                  }}
+                  onPress={() => {
+                    setpostprev(postprev - 10)
+                    setpostnext(postnext - 10)
+                    scrollRef.current?.scrollTo({
+                      y: 0,
+                      animated: true
+                    });
+                  }}>
+                  <Text
+                    style={{
+                      marginVertical: wp(1.5),
+                      marginHorizontal: wp(2),
+                      color: colors.white,
+                    }}>
+                    Prev
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  disabled={next >= data.length ? true : false}
+                  style={{
+                    borderRadius: wp(2),
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: colors.red,
+                  }}
+                  onPress={() => {
+                    setpostprev(postprev + 10)
+                    setpostnext(postnext + 10)
+                    scrollRef.current?.scrollTo({
+                      y: 0,
+                      animated: true
+                    });
+                  }}>
+                  <Text
+                    style={{
+                      marginVertical: wp(1.5),
+                      marginHorizontal: wp(2),
+                      color: colors.white,
+                    }}>
+                    Next
+                  </Text>
+                </TouchableOpacity>
+              </View>}
+          </ScrollView>
+          : <View
+            style={{
+              backgroundColor: colors.boxBackground,
+              alignSelf: 'center',
+              paddingVertical: hp(10),
+              marginVertical: '50%',
+              paddingHorizontal: wp(10),
+              borderRadius: hp(2),
+            }}>
+            <Text
+              style={{
+                textAlign: 'center',
+                color: colors.red,
+                fontSize: hp(2),
+              }}>
+              Sorry no bookings available
+            </Text>
+          </View>)}
     </SafeAreaView>
   );
 };

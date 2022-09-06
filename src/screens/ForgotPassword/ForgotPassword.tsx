@@ -8,6 +8,7 @@ import { SvgXml } from 'react-native-svg';
 import { forgot_password } from '../../theme/assets/svg';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { forgotPassword } from '../../API/forgotPassword';
+import { EMAIL_REGEX } from '../../appConstants';
 
 const ForgotPassword = ({ navigation }: any) => {
   const [emailValue, setemailValue] = useState(true);
@@ -16,13 +17,11 @@ const ForgotPassword = ({ navigation }: any) => {
 
   function handleSubmit() {
     let validate = true;
-    let emailRegx =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     // if (!email) {
     //   setemailValue(false);
     //   validate = false;
     // }
-    if (!emailRegx.test(email)) {
+    if (!EMAIL_REGEX.test(email)) {
       setemailValue(false);
       // validate = false;
     } else {

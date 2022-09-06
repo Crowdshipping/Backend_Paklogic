@@ -15,24 +15,27 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {
-
-  homeicon,
-  historyicon,
-
-  logouticon,
-
-} from '../theme/assets/svg';
+import { homeicon, historyicon, logouticon, claimicon } from '../theme/assets/svg';
 import { colors } from '../theme';
 import { profile } from '../theme/assets/images';
+import { prodUrl } from '../appConstants';
+import { LogoutApi } from '../API';
+import { useIsFocused } from '@react-navigation/native';
+
 
 const CustomDrawerContent = (props: any) => {
-  const [userId, setUserId] = React.useState<any>('');
+  const [email, setemail] = React.useState<any>('');
+  const [name, setname] = React.useState<any>('');
+  const [pic, setpic] = React.useState<any>('');
+  const isfocus = useIsFocused();
+
   // const [isLoading, setIsLoading] = React.useState(false);
-  const getUserId = async () => {
+  const getUserData = async () => {
     try {
-      const value = await AsyncStorage.getItem('@user_Id');
-      setUserId(value);
+      setemail(await AsyncStorage.getItem('@userEmail'));
+      setname(await AsyncStorage.getItem('@userName'));
+
+      setpic(prodUrl + (await AsyncStorage.getItem('@useerPic')));
     } catch (e) {
       console.log(e);
     }
@@ -41,6 +44,7 @@ const CustomDrawerContent = (props: any) => {
     await AsyncStorage.removeItem('@user_Id');
     await AsyncStorage.removeItem('@userEmail');
     await AsyncStorage.removeItem('@userName');
+    await AsyncStorage.removeItem('@userPlayerId');
   };
   const logout = () => {
     Alert.alert(
@@ -50,11 +54,16 @@ const CustomDrawerContent = (props: any) => {
         {
           text: 'Yes',
           onPress: () => {
-            // setIsLoading(true);
 
-            removeId();
-            props.navigation.navigate('Signin');
-
+            LogoutApi()
+              .then((rest: any) => {
+                rest.success && (removeId(), props.navigation.navigate('Signin'))
+              })
+              .catch(error =>
+                Alert.alert(
+                  error.message ? error.message : 'Something went wrong',
+                ),
+              );
           },
           style: 'default',
         },
@@ -64,8 +73,21 @@ const CustomDrawerContent = (props: any) => {
     );
   };
   React.useEffect(() => {
-    getUserId();
-  }, []);
+    // if (isfocus) {
+    //   console.log('drawer drawer', isfocus)
+    //   getUserData();
+    // }
+
+    console.log('first')
+    const unsubscribe = props.navigation.addListener("focus", async () => {
+      // await AsyncStorage.getItem("username").then((res: any) => {
+      //   var data = JSON.parse(res);
+      //   setusername(data);
+      // setimage(data.data.data[0].image);
+      getUserData();
+    });
+    return unsubscribe
+  }, [props.navigation]);
   return (
     <SafeAreaView>
       {/* {isLoading ? (
@@ -73,21 +95,23 @@ const CustomDrawerContent = (props: any) => {
       ) : ( */}
       <View>
         <View style={styles.ViewTop}>
-          <Image source={profile} style={styles.img} />
+          {pic ? (
+            <Image source={{ uri: pic }} style={styles.img} />
+          ) : (
+            <Image source={profile} style={styles.img} />
+          )}
+
           <View style={{ paddingTop: 10, alignItems: 'center' }}>
-            <Text style={{ fontSize: 18, color: 'white', fontWeight: 'bold' }}>
-              tony stark
+            <Text
+              style={{ fontSize: 18, color: colors.white, fontWeight: 'bold' }}>
+              {name}
             </Text>
-            <Text style={{ fontSize: 18, color: 'white' }}>
-              tonystark@gmail.com
-            </Text>
+            <Text style={{ fontSize: 18, color: colors.white }}>{email}</Text>
             <TouchableOpacity
               onPress={() => {
-                // props.navigation.navigate('ViewProfile');
+                props.navigation.navigate('ViewProfile');
               }}>
-              <Text style={{ fontSize: 18, color: 'yellow' }}>
-                View Profile
-              </Text>
+              <Text style={{ fontSize: 18, color: 'yellow' }}>View Profile</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -124,14 +148,14 @@ const CustomDrawerContent = (props: any) => {
               <SvgXml style={styles.svg} xml={clockSvg} width={25} />
               <Text style={styles.txtdetail}>Booking History</Text>
             </TouchableOpacity> */}
-          {/* <TouchableOpacity
-              onPress={() => {
-                props.navigation.navigate('CLAIM');
-              }}
-              style={styles.viewunderline}>
-              <SvgXml style={styles.svg} xml={claimicon} width={25} />
-              <Text style={styles.txtdetail}>Claim</Text>
-            </TouchableOpacity> */}
+          <TouchableOpacity
+            onPress={() => {
+              props.navigation.navigate('Claims');
+            }}
+            style={styles.viewunderline}>
+            <SvgXml style={styles.svg} xml={claimicon} width={25} />
+            <Text style={styles.txtdetail}>Claim</Text>
+          </TouchableOpacity>
           {/* <TouchableOpacity
               onPress={() => {
                 props.navigation.navigate('COMPLAIN');
@@ -198,7 +222,7 @@ const styles = StyleSheet.create({
   txtdetail: {
     fontSize: 18,
     paddingLeft: wp(5),
-    color: 'black',
+    color: colors.black,
     textAlign: 'center',
   },
 });

@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
   txt1: {
     fontSize: wp(4),
     // textTransform: 'uppercase',
-    color: 'black',
+    color: colors.black,
     // paddingRight: wp(),
     width: wp(15),
   },
@@ -83,7 +83,7 @@ export const styles = StyleSheet.create({
   modalView: {
     width: wp(90),
     height: hp(70),
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     borderRadius: wp(2),
     padding: wp(5),
   },

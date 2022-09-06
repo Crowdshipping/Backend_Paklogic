@@ -43,12 +43,13 @@ const TrackFlight = ({ route, navigation }: any) => {
     flightTracking(fa_flight_id)
       .then((rest: any) => {
         {
+          setLoading(false)
           console.log(
             'flight Tracking response',
             JSON.stringify(rest.flightlatestPosition),
           );
-          rest.success &&
-            (setData(rest.flightlatestPosition), setLoading(false));
+          // rest.success &&
+          //   setData(rest.flightlatestPosition)
         }
       })
       .catch(error => {
@@ -115,17 +116,14 @@ const TrackFlight = ({ route, navigation }: any) => {
   }, []);
 
   return (
-    <SafeAreaView style={{ backgroundColor: colors.white }}>
-      <View style={{ paddingBottom: hp(2) }}>
+    <SafeAreaView style={{ backgroundColor: colors.white, flex: 1 }}>
+      <View style={{ height: hp(8), }}>
         <Header
           title="Booking History"
           pressMethod={() => navigation.navigate('BookingHistory')}
         />
       </View>
 
-      {response &&
-        response?.length > 0 &&
-        console.log('track flight', response)}
       {isLoading ? (
         <ActivityIndicator
           size={'small'}
@@ -140,6 +138,12 @@ const TrackFlight = ({ route, navigation }: any) => {
               showsUserLocation={false}
               ref={ref}
               onMapReady={onMapReadyHandler}
+              region={{
+                latitude: response[0].lat,
+                longitude: response[0].lon,
+                latitudeDelta: 20,
+                longitudeDelta: 20
+              }}
               zoomControlEnabled={false}
               style={styles.map}>
               <Polyline
@@ -234,10 +238,10 @@ const TrackFlight = ({ route, navigation }: any) => {
             />
           </MapView>}
 
-          <View style={{ width: wp(90) }}>
+          <View style={{ width: wp(90), marginBottom: hp(3) }}>
             <View
               style={{
-                backgroundColor: 'white',
+                backgroundColor: colors.white,
 
                 justifyContent: 'center',
                 alignItems: 'center',

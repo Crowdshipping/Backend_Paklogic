@@ -243,9 +243,12 @@ export const Countries = [
 ];
 
 export const prodUrl = 'https://backend-crowdshipping.herokuapp.com';
+export const GOOGLE_MAPS_APIKEY = 'AIzaSyBnzRyirdu4C6br2saqLU0ExTV2U7qxVLg';
+export const ONESIGNAL_APP_ID = 'e98b3642-ab77-4f66-bbcb-cae1f102b2e8'
 
 export const NAME_REGEX = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/
 export const NUM_REGEX = /^[0-9]{6,15}$/;
-export const GOOGLE_MAPS_APIKEY = 'AIzaSyBnzRyirdu4C6br2saqLU0ExTV2U7qxVLg';
+export const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+export const ADDRESS_REGEX = /^([a-zA-z0-9/\\''(),.#-_\s]{5,255})$/;
 
-export const ONESIGNAL_APP_ID = 'e98b3642-ab77-4f66-bbcb-cae1f102b2e8'
+

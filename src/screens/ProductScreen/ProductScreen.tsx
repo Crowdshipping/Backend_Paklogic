@@ -38,7 +38,7 @@ interface IimageShow {
 }
 interface IimageShow1 extends Array<IimageShow> { }
 const ProductScreen = ({ navigation, route }: any) => {
-  console.log('haris very bad', route.params.item)
+  // console.log('haris very bad', route.params.item)
   const pickcoords = route.params?.item?.pickcoords;
   const dropcoords = route.params?.item?.dropcoords;
   const providerId = route.params.item?.providerId;

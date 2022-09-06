@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
   },
   txt: {
     paddingTop: hp(2),
-    color: 'black',
+    color: colors.black,
     fontSize: wp(4),
   },
   data: {

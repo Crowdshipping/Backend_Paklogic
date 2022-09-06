@@ -6,7 +6,7 @@ import {
 import {colors} from '../../../theme';
 export const styles = StyleSheet.create({
   txt1: {
-    color: 'black',
+    color: colors.black,
     fontSize: hp(2),
   },
   box: {
@@ -40,7 +40,7 @@ export const styles = StyleSheet.create({
 
     shadowColor: Platform.OS === 'android' ? colors.black : 'grey',
     borderRadius: hp(2),
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
 
     shadowOffset: {
       width: 1,
@@ -85,7 +85,7 @@ export const styles = StyleSheet.create({
   },
   txtdetail: {
     fontSize: 18,
-    color: 'black',
+    color: colors.black,
   },
 
   test: {

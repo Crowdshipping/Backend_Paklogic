@@ -243,6 +243,7 @@ const ReceiverDetailsScreen = ({ navigation, route }: any) => {
                       : 'Name should have atleast 3 alphabets'
                     : ''
                 }
+                editable={!loading}
               />
               <PhoneNumberPicker
                 onChange={(selectedCountry: ICountryCode, text: string) => {
@@ -257,6 +258,7 @@ const ReceiverDetailsScreen = ({ navigation, route }: any) => {
                       : 'Must enter valid phone number'
                     : ''
                 }
+                editable={!loading}
               />
 
               <View style={styles.paymentView}>
@@ -267,6 +269,7 @@ const ReceiverDetailsScreen = ({ navigation, route }: any) => {
               </View>
 
               <TouchableOpacity
+                disabled={loading}
                 style={{ alignSelf: 'center' }}
                 onPress={() => {
                   navigation.navigate('ModifyRequest', {

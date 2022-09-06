@@ -7,6 +7,8 @@ import {MapHeader} from './mapheader';
 import {Datepicker} from './datepicker';
 import {TextInputPencil} from './textboxPencil';
 import {BookingListCard} from './bookingListCard';
+import {History} from './history';
+import CheckBoxState from './checkBoxState';
 
 export {
   Textbox,
@@ -19,4 +21,6 @@ export {
   Datepicker,
   TextInputPencil,
   BookingListCard,
+  History,
+  CheckBoxState,
 };

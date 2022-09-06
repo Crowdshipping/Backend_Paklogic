@@ -124,10 +124,10 @@ const HistoryDetail = ({ navigation, route }: any) => {
                   paddingHorizontal: wp(1),
                 }}>
                 <View style={[styles.viewdetail, { alignItems: 'flex-start', }]}>
-                  <Text style={styles.txtdetail}>{flight.pickupCity}</Text>
+                  <Text style={styles.txtdetail}>{flight?.pickupCity ? flight.pickupCity : route?.params?.item?.request?.pickupCity}</Text>
                 </View>
                 <View style={[styles.viewdetail, { alignItems: 'flex-end' }]}>
-                  <Text style={styles.txtdetail}>{flight.dropoffCity}</Text>
+                  <Text style={styles.txtdetail}>{flight?.dropoffCity ? flight?.dropoffCity : route?.params?.item?.request?.dropoffCity}</Text>
                 </View>
               </View> : type === 'Ship' && <View
                 style={{
@@ -136,10 +136,10 @@ const HistoryDetail = ({ navigation, route }: any) => {
                   paddingHorizontal: wp(1),
                 }}>
                 <View style={[styles.viewdetail, { alignItems: 'flex-start', }]}>
-                  <Text style={styles.txtdetail}>{ship.pickupCity}</Text>
+                  <Text style={styles.txtdetail}>{ship?.pickupCity ? ship.pickupCity : route?.params?.item?.request?.dropoffCity}</Text>
                 </View>
                 <View style={[styles.viewdetail, { alignItems: 'flex-end' }]}>
-                  <Text style={styles.txtdetail}>{ship.dropoffCity}</Text>
+                  <Text style={styles.txtdetail}>{ship?.dropoffCity ? ship.dropoffCity : route?.params?.item?.request?.dropoffCity}</Text>
                 </View>
               </View>}
 
@@ -392,13 +392,20 @@ const HistoryDetail = ({ navigation, route }: any) => {
                   alignItems: 'center',
                   marginBottom: hp(3),
                 }}>
-                <Image
+                {provider.profilepic ? <Image
+                  source={{ uri: prodUrl + provider.profilepic }}
+                  style={[styles.img, {
+                    borderWidth: 2,
+                    borderColor: colors.red,
+                  }]}
+                /> : <Image
                   source={profile}
                   style={[styles.img, {
                     borderWidth: 2,
                     borderColor: colors.red,
                   }]}
-                />
+                />}
+
                 <Text style={{ fontSize: 25, color: colors.red, }}>{provider?.firstname + " " + provider?.lastname}</Text>
               </View>
 

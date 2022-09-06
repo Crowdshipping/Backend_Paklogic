@@ -13,6 +13,7 @@ import { SvgXml } from 'react-native-svg';
 import { signin } from '../../theme/assets/svg';
 import { signIn, AddPlayer } from '../../API';
 import OneSignal from 'react-native-onesignal';
+import { EMAIL_REGEX } from '../../appConstants';
 
 
 const SigninScreen = ({ navigation }: any) => {
@@ -20,8 +21,12 @@ const SigninScreen = ({ navigation }: any) => {
   // const [email, setemail] = useState('');
   const [passwordValue, setpasswordValue] = useState(true);
   const [email, setemail] = useState(__DEV__ ? 'Salman090898@gmail.com' : '');
+  const [password, setpassword] = useState(__DEV__ ? 'Hahaha88*' : '');
+
+  // const [email, setemail] = useState(__DEV__ ? 'Salman@gmail.com' : '');
+  // const [password, setpassword] = useState(__DEV__ ? 'Muneeb1@' : '');
+
   // const [email, setemail] = useState(__DEV__ ? 'harisbakhabarpk1222272@gmail.com' : '');
-  const [password, setpassword] = useState(__DEV__ ? 'Qwerty1@' : '');
   // const [password, setpassword] = useState(__DEV__ ? 'Hahaha88*' : '');
   const [devState, setdevState] = useState<any>();
 
@@ -31,14 +36,12 @@ const SigninScreen = ({ navigation }: any) => {
 
   function handleSubmit() {
     let validate = true;
-    let emailRegx =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     if (!email) {
       setemailValue(false);
       validate = false;
     }
-    if (!emailRegx.test(email)) {
+    if (!EMAIL_REGEX.test(email)) {
       setemailValue(false);
       validate = false;
     }
@@ -50,23 +53,19 @@ const SigninScreen = ({ navigation }: any) => {
       setloading(true);
       signIn(email, password)
         .then((rest: any) => {
-          console.log(rest)
+          console.log('signedx', rest)
           setloading(false);
           if (!rest.user?.role) {
             try {
               AsyncStorage.setItem('@userId', rest.user._id);
               AsyncStorage.setItem('@userEmail', rest.user.email);
-              AsyncStorage.setItem(
-                '@userName',
-                rest.user.firstname + rest.user.lastname,
-              );
+              AsyncStorage.setItem('@userName', rest.user.firstname + ' ' + rest.user.lastname);
+              AsyncStorage.setItem('@useerPic', rest?.user?.profilepic);
             } catch (e) {
               console.log('error', e);
             }
-            console.log('signedx', rest)
             rest.success &&
-              (rest.user.playerID ?
-                navigation.navigate('MyDrawer', { screen: 'Landing' }) : handleDeviceState(rest.user._id))
+              handleDeviceState(rest.user._id)
             // if(rest.user.playerID)
           } else {
             Alert.alert('User does not exist');
@@ -89,7 +88,14 @@ const SigninScreen = ({ navigation }: any) => {
         UserId: user
       }
       AddPlayer(item).then((rest: any) => {
-        console.log(rest)
+        if (rest.success) {
+          try {
+            AsyncStorage.setItem('@userPlayerId', rest.playerID);
+          } catch (e) {
+            console.log('error', e);
+          }; navigation.navigate('MyDrawer', { screen: 'Landing' })
+        }
+
       }).catch(error => { console.log(error) })
     }
 

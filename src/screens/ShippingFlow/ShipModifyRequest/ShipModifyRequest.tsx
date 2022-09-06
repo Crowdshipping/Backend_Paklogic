@@ -198,18 +198,20 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
                   bookingId = rest.booking._id;
                   setloading(false);
                   rest.success && providerId
-                    ? requestProvider(providerId, bookingId, type, shipId, null)
-                      .then((rest: any) => {
-                        rest.success && setsuccess(true);
-                      })
-                      .catch(error => {
-                        setloading(false);
-                        Alert.alert(
-                          error.message
-                            ? error.message
-                            : 'Something went wrong',
-                        );
-                      })
+                    ? (setloading(true),
+                      requestProvider(providerId, bookingId, type, shipId, null)
+                        .then((rest: any) => {
+                          setloading(false);
+                          rest.success && setsuccess(true);
+                        })
+                        .catch(error => {
+                          setloading(false);
+                          Alert.alert(
+                            error.message
+                              ? error.message
+                              : 'Something went wrong',
+                          );
+                        }))
                     : postRequest(
                       bookingId,
                       type,
@@ -305,8 +307,6 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
             });
         }
       }
-
-
     }
   }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Text,
   StyleSheet,
@@ -60,6 +60,11 @@ const BookingListScreen = ({ navigation, route }: any) => {
   const [dobTo2, setdobTo2] = useState<Date>(route?.params?.finalDate);
   const [isLoading, setLoading] = useState(true);
   // const [placeholder , set]
+  const [prevReq, setprevReq] = useState(0)
+  const [prevPost, setprevPost] = useState(0)
+  const [nextReq, setnextReq] = useState(10)
+  const [nextPost, setnextPost] = useState(10)
+  const scrollRef = useRef<ScrollView>(null);
 
   const [pickupLocation, setpickupLocation] = useState<cityArray>({
     name: route.params?.pickupLocation?.name,
@@ -137,7 +142,9 @@ const BookingListScreen = ({ navigation, route }: any) => {
         {
           rest.success &&
             (setdetailsArray(rest?.flightawareflights?.scheduled),
+              setprevReq(rest?.flightawareflights?.scheduled.length),
               setdetailsArrayProvider(rest?.flights),
+              setnextReq(rest?.flights.length),
               setLoading(false));
         }
       })
@@ -152,17 +159,13 @@ const BookingListScreen = ({ navigation, route }: any) => {
       <Header
         title="list of bookings"
         pressMethod={() => navigation.goBack()}
-      // menu={true}
       />
-      {/* {bookings} */}
+
       <View style={styles.row}>
         <TouchableOpacity
           style={[styles.Touch, { flexDirection: 'row', alignItems: 'center' }]}
-          // onPress={() => setModalVisible(!isModalVisible)}
           onPress={() => setisVisible(true)}
-        // onPress={() => {
-        //   <SelectCountryModal isModalVisible={isModalVisible} />;
-        // }}
+
         >
           {/* <Text style={styles.txt1}>{SelectedCountry.name}</Text> */}
           <Text style={styles.txt1}>
@@ -248,11 +251,11 @@ const BookingListScreen = ({ navigation, route }: any) => {
             </View>
           ) : (
             <View style={{ flex: 1 }}>
-              <ScrollView style={styles.detailsbox}>
+              <ScrollView ref={scrollRef} style={styles.detailsbox}>
                 {detailsArrayProvider.length >= 1 && (
                   <View>
                     <Text style={styles.bookingtxt}>Available Booking</Text>
-                    {detailsArrayProvider.map((item: any, index: number) => {
+                    {detailsArrayProvider.slice(prevReq, nextReq).map((item: any, index: number) => {
                       return (
                         <View key={index} style={styles.detailsboxinner}>
                           <View style={styles.flexrow}>
@@ -330,8 +333,61 @@ const BookingListScreen = ({ navigation, route }: any) => {
                     })}
                   </View>
                 )}
-                {detailsArray.length >= 1 ? (
-                  detailsArray.map((item: any, index: number) => {
+                {detailsArrayProvider.length !== 0 && detailsArrayProvider.length > 10 && (
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: wp(5) }}>
+                    <TouchableOpacity
+                      disabled={prevReq === 0 ? true : false}
+                      style={{
+                        borderRadius: wp(2),
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: colors.red,
+                      }}
+                      onPress={() => {
+                        setprevReq(prevReq - 10)
+                        setnextReq(nextReq - 10)
+                        scrollRef.current?.scrollTo({
+                          y: 0,
+                          animated: true
+                        });
+                      }}>
+                      <Text
+                        style={{
+                          marginVertical: wp(1.5),
+                          marginHorizontal: wp(2),
+                          color: colors.white,
+                        }}>
+                        Prev
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      disabled={nextPost >= detailsArrayProvider.length ? true : false}
+                      style={{
+                        borderRadius: wp(2),
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: colors.red,
+                      }}
+                      onPress={() => {
+                        setprevReq(prevReq + 10)
+                        setnextReq(nextReq + 10)
+                        scrollRef.current?.scrollTo({
+                          y: 0,
+                          animated: true
+                        });
+                      }}>
+                      <Text
+                        style={{
+                          marginVertical: wp(1.5),
+                          marginHorizontal: wp(2),
+                          color: colors.white,
+                        }}>
+                        Next
+                      </Text>
+                    </TouchableOpacity>
+                  </View>)}
+                {detailsArray.length >= 1 && (
+                  detailsArray.slice(prevPost, nextPost).map((item: any, index: number) => {
                     return (
                       <View key={index} style={styles.detailsboxinner}>
                         <View style={styles.flexrow}>
@@ -397,31 +453,84 @@ const BookingListScreen = ({ navigation, route }: any) => {
                       </View>
                     );
                   })
-                ) : (
-                  <View style={styles.viewlocation}></View>
+
+
                 )}
-                {detailsArray.length === 0 &&
-                  detailsArrayProvider.length === 0 && (
-                    <View
+                {detailsArray.length !== 0 && detailsArray.length > 10 && (
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: wp(5) }}>
+                    <TouchableOpacity
+                      disabled={prevPost === 0 ? true : false}
                       style={{
-                        backgroundColor: colors.boxBackground,
-                        alignSelf: 'center',
-                        paddingVertical: hp(10),
-                        marginVertical: '50%',
-                        paddingHorizontal: wp(10),
-                        borderRadius: hp(2),
+                        borderRadius: wp(2),
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: colors.red,
+                      }}
+                      onPress={() => {
+                        setprevPost(prevPost - 10)
+                        setnextPost(nextPost - 10)
+                        scrollRef.current?.scrollTo({
+                          y: 0,
+                          animated: true
+                        });
                       }}>
                       <Text
                         style={{
-                          textAlign: 'center',
-                          color: colors.red,
-                          fontSize: hp(2),
+                          marginVertical: wp(1.5),
+                          marginHorizontal: wp(2),
+                          color: colors.white,
                         }}>
-                        Sorry no bookings available
+                        Prev
                       </Text>
-                    </View>
-                  )}
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      disabled={nextPost >= detailsArray.length ? true : false}
+                      style={{
+                        borderRadius: wp(2),
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: colors.red,
+                      }}
+                      onPress={() => {
+                        setprevPost(prevPost + 10)
+                        setnextPost(nextPost + 10)
+                        scrollRef.current?.scrollTo({
+                          y: 0,
+                          animated: true
+                        });
+                      }}>
+                      <Text
+                        style={{
+                          marginVertical: wp(1.5),
+                          marginHorizontal: wp(2),
+                          color: colors.white,
+                        }}>
+                        Next
+                      </Text>
+                    </TouchableOpacity>
+                  </View>)}
               </ScrollView>
+              {detailsArray.length === 0 &&
+                detailsArrayProvider.length === 0 && (
+                  <View
+                    style={{
+                      backgroundColor: colors.boxBackground,
+                      alignSelf: 'center',
+                      paddingVertical: hp(10),
+                      marginVertical: '50%',
+                      paddingHorizontal: wp(10),
+                      borderRadius: hp(2),
+                    }}>
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        color: colors.red,
+                        fontSize: hp(2),
+                      }}>
+                      Sorry no bookings available
+                    </Text>
+                  </View>
+                )}
             </View>
           )
           //  : (

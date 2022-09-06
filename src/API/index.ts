@@ -22,8 +22,13 @@ import {createPaymentsHistory} from './createPaymentsHistory';
 import {createDriverRequest} from './createDriverRequest';
 import {cancelDriverRequest} from './cancelDriverRequest';
 import {editBooking} from './editBooking';
-import {AddPlayer} from './AddPlayer';
+import {AddPlayer} from './addPlayer';
 import {getUser} from './getUser';
+import {updateUser} from './updateUser';
+import {getPostRequests} from './getPostRequests';
+import {LogoutApi} from './logoutApi';
+import {getClaims} from './getClaims';
+import {createClaim} from './createClaim';
 
 export {
   forgotPassword,
@@ -52,4 +57,9 @@ export {
   editBooking,
   AddPlayer,
   getUser,
+  updateUser,
+  getPostRequests,
+  LogoutApi,
+  getClaims,
+  createClaim,
 };

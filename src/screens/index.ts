@@ -30,6 +30,10 @@ import TrackLand from './DrawerScreens/TrackLand/TrackLand';
 import LandModifyRequest from './LandFlow/LandModifyRequest/LandModifyRequest';
 import HistoryDetail from './DrawerScreens/HistoryDetail/HistoryDetail';
 import ViewProfile from './Profile/ViewProfile';
+import EditProfile from './EditProfile/EditProfile';
+import AddClaim from './Claim/AddClaim';
+import Claims from './Claim/Claims';
+import ClaimDetail from './Claim/ClaimDetail';
 
 export {
   RegisterScreen,
@@ -64,4 +68,8 @@ export {
   LandModifyRequest,
   HistoryDetail,
   ViewProfile,
+  EditProfile,
+  AddClaim,
+  Claims,
+  ClaimDetail,
 };

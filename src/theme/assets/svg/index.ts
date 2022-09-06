@@ -37,6 +37,7 @@ import {cyclebgRed} from './cyclebgRed';
 import {carsvgMap} from './carsvgMap';
 import {shipsvgMap} from './shipsvgMap';
 import {planesvgMap} from './planesvgMap';
+import {camera} from './camera';
 
 export {
   register,
@@ -78,4 +79,5 @@ export {
   carsvgMap,
   planesvgMap,
   shipsvgMap,
+  camera,
 };

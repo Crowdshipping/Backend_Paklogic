@@ -55,4 +55,5 @@ export interface IHeader {
   pressMethod?: Function;
   picture?: any;
   menu?: boolean;
+  color?: string;
 }

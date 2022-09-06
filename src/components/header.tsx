@@ -11,7 +11,7 @@ import { IHeader } from './interface';
 import { colors } from '../theme/colors';
 
 export const Header = (props: IHeader) => {
-  const { title, pressMethod, menu } = props;
+  const { title, pressMethod, menu, color } = props;
   return (
     <View style={styles.header}>
       {pressMethod ? (
@@ -21,14 +21,14 @@ export const Header = (props: IHeader) => {
           {menu ? (
             <Entypo name="menu" size={wp(7)} />
           ) : (
-            <AntDesign name="arrowleft" color={colors.black} size={wp(7)} />
+            <AntDesign name="arrowleft" color={color ? color : colors.black} size={wp(7)} />
           )}
         </TouchableOpacity>
       ) : (
         <View style={styles.arrowStyle} />
       )}
       <View>
-        <Text style={styles.textHeader}>{title}</Text>
+        <Text style={[styles.textHeader, { color: color ? color : colors.black }]}>{title}</Text>
       </View>
       <View style={styles.arrowStyle} />
     </View>

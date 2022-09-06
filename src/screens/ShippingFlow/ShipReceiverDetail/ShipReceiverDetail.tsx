@@ -235,6 +235,7 @@ const ShipReceiverDetail = ({ navigation, route }: any) => {
                       : 'Name should have atleast 3 alphabets'
                     : ''
                 }
+                editable={!loading}
               />
               <PhoneNumberPicker
                 onChange={(selectedCountry: ICountryCode, text: string) => {
@@ -249,6 +250,7 @@ const ShipReceiverDetail = ({ navigation, route }: any) => {
                       : 'Must Enter valid phone number'
                     : ''
                 }
+                editable={!loading}
               />
 
               <View style={styles.paymentView}>
@@ -259,6 +261,7 @@ const ShipReceiverDetail = ({ navigation, route }: any) => {
               </View>
               <TouchableOpacity
                 style={{ alignSelf: 'center' }}
+                disabled={loading}
                 onPress={() => {
                   navigation.navigate('ShipModifyRequest', {
                     data: route.params.data,

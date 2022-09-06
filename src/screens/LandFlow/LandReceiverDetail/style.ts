@@ -16,17 +16,17 @@ export const styles = StyleSheet.create({
   bckimg: {
     marginTop: hp(35),
     marginHorizontal: hp(3),
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
   },
   svg: {
     borderWidth: 2,
-    color: 'black',
+    color: colors.black,
     fontSize: wp(4),
   },
   box: {},
   txt: {
     paddingTop: hp(2),
-    color: 'black',
+    color: colors.black,
     fontSize: wp(4),
   },
   main: {

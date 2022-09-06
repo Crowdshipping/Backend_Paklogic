@@ -14,6 +14,7 @@ import { SvgXml } from 'react-native-svg';
 import { register } from '../../theme/assets/svg';
 import { registerUser } from '../../API/registerUser';
 import { SuccessModal } from '../../Modals';
+import { ADDRESS_REGEX, EMAIL_REGEX } from '../../appConstants';
 
 const RegisterScreen = ({ route, navigation }: any) => {
   const [loading, setloading] = useState(false);
@@ -34,14 +35,11 @@ const RegisterScreen = ({ route, navigation }: any) => {
   const [password, setpassword] = useState('');
   function handleSubmit() {
     let validate = true;
-    let emailRegx =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     let passRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     let nameRegex = /^[a-zA-Z]{2,}$/;
 
-    let addressRegex = /^([a-zA-z0-9/\\''(),.#-_\s]{5,255})$/;
 
     if (!nameRegex.test(fname)) {
       setfnameValue(false);
@@ -52,12 +50,12 @@ const RegisterScreen = ({ route, navigation }: any) => {
       validate = false;
     }
 
-    if (!emailRegx.test(email)) {
+    if (!EMAIL_REGEX.test(email)) {
       setemailValue(false);
       validate = false;
     }
 
-    if (!addressRegex.test(address)) {
+    if (!ADDRESS_REGEX.test(address)) {
       setaddressValue(false);
       validate = false;
     }

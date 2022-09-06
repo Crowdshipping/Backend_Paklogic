@@ -61,17 +61,18 @@ const TrackLand = ({ route, navigation }: any) => {
       socket?.on("getuserinfo", (res: any) => {
         if (res.driverID === driverID) {
           setData(res.location)
-          setLoading(false)
         }
       })
       socket?.on('getLocation', (res) => {
         console.log("socketLiveLocation", res);
         if (res.driverID === driverID) {
           setData(res.location)
-          setLoading(false)
+
         }
       })
     }
+    setLoading(false)
+    onMapReadyHandler()
   }, [connected])
 
 
@@ -101,21 +102,19 @@ const TrackLand = ({ route, navigation }: any) => {
     setLoading(false)
   }, [ref]);
 
-  useEffect(() => { onMapReadyHandler }, [])
+  // useEffect(() => { onMapReadyHandler }, [])
 
 
   return (
-    <SafeAreaView style={{ backgroundColor: colors.white }}>
-      <View style={{ paddingBottom: hp(2) }}>
+    <SafeAreaView style={{ backgroundColor: colors.white, flex: 1 }}>
+      <View style={{ height: hp(8) }}>
         <Header
           title="Booking History"
           pressMethod={() => navigation.navigate('BookingHistory')}
         />
       </View>
 
-      {pickupAddress &&
-        dropAddress && data &&
-        console.log('track flight', pickupAddress, dropAddress, data)}
+
       {isLoading ? (
         <ActivityIndicator
           size={'small'}
@@ -129,7 +128,8 @@ const TrackLand = ({ route, navigation }: any) => {
               provider={PROVIDER_GOOGLE} // remove if not using Google Maps
               showsUserLocation={false}
               ref={ref}
-              // onMapReady={onMapReadyHandler}
+              // loadingEnabled={true}
+              onMapReady={onMapReadyHandler}
               region={{
                 latitude: pickupAddress.lat,
                 longitude: pickupAddress.lng,
@@ -192,11 +192,18 @@ const TrackLand = ({ route, navigation }: any) => {
             showsUserLocation={false}
             ref={ref}
             onMapReady={onMapReadyHandler}
-
+            // loadingEnabled={true}
+            region={{
+              latitude: pickupAddress.lat,
+              longitude: pickupAddress.lng,
+              latitudeDelta: 0.09,
+              longitudeDelta: 0.0009
+            }}
             zoomControlEnabled={false}
             style={styles.map}>
             <MapViewDirections
               apikey={GOOGLE_MAPS_APIKEY}
+              onReady={onMapReadyHandler}
               origin={{
                 latitude: pickupAddress.lat,
                 longitude: pickupAddress.lng,
@@ -226,10 +233,10 @@ const TrackLand = ({ route, navigation }: any) => {
             />
           </MapView>}
 
-          <View style={{ width: wp(90) }}>
+          <View style={{ width: wp(90), marginBottom: hp(3), }}>
             <View
               style={{
-                backgroundColor: 'white',
+                backgroundColor: colors.white,
 
                 justifyContent: 'center',
                 alignItems: 'center',
