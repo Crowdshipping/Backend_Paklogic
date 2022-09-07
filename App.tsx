@@ -36,7 +36,6 @@ const App = () => {
   return (
     <NavigationContainer>
       <StackNavigation />
-      {/* <StripePayment /> */}
     </NavigationContainer>
   );
 };
