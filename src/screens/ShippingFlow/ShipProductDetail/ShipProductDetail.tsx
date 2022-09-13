@@ -394,16 +394,16 @@ const ShipProductDetail = ({ navigation, route }: any) => {
                   )}
                 </View>
                 {!ImagesValue && (
-                  <View>
-                    <Text
-                      style={{
-                        paddingHorizontal: wp(5),
-                        textAlign: 'left',
-                        color: 'red',
-                      }}>
-                      Images are Required
-                    </Text>
-                  </View>
+
+                  <Text
+                    style={{
+                      paddingHorizontal: wp(5),
+                      textAlign: 'left',
+                      color: 'red',
+                    }}>
+                    Images are Required
+                  </Text>
+
                 )}
                 <View style={{ paddingHorizontal: wp(8) }}>
                   <Text style={styles.txt}>Instructions</Text>

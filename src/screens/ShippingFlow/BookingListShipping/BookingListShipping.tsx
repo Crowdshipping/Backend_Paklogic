@@ -94,7 +94,7 @@ const BookingListShipping = ({ navigation, route }: any) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
       <Header
         title="list of bookings"
-        pressMethod={() => navigation.goBack()}
+        pressMethod={() => navigation.toggleDrawer()}
         menu={true}
       />
       {/* {bookings} */}
@@ -148,37 +148,37 @@ const BookingListShipping = ({ navigation, route }: any) => {
           />
         </TouchableOpacity>
       </View>
-      <View>
-        <View style={styles.row}>
-          <View style={styles.Touch}>
-            <Datepicker
-              text={'From'}
-              datePrev={moment(dobTo).format('YYYY-MM-DD')}
-              onChange={(selectedDate: Date) => {
-                setdobTo(selectedDate);
-              }}
-              initialDate={moment().clone().add(1, 'days').toDate()}
-            />
-          </View>
-          <View style={styles.Touch}>
-            <Datepicker
-              text={'To'}
-              datePrev={moment(dobTo2).format('YYYY-MM-DD')}
-              onChange={(selectedDate: Date) => {
-                setdobTo2(selectedDate);
-              }}
-              initialDate={moment().clone().add(1, 'days').toDate()}
-            />
-          </View>
+
+      <View style={styles.row}>
+        <View style={styles.Touch}>
+          <Datepicker
+            text={'From'}
+            datePrev={moment(dobTo).format('YYYY-MM-DD')}
+            onChange={(selectedDate: Date) => {
+              setdobTo(selectedDate);
+            }}
+            initialDate={moment().clone().add(1, 'days').toDate()}
+          />
         </View>
-        {dateShow ? (
-          <Text style={styles.errorMsg}>
-            start date must be smaller then end date
-          </Text>
-        ) : (
-          <View></View>
-        )}
+        <View style={styles.Touch}>
+          <Datepicker
+            text={'To'}
+            datePrev={moment(dobTo2).format('YYYY-MM-DD')}
+            onChange={(selectedDate: Date) => {
+              setdobTo2(selectedDate);
+            }}
+            initialDate={moment().clone().add(1, 'days').toDate()}
+          />
+        </View>
       </View>
+      {dateShow ? (
+        <Text style={styles.errorMsg}>
+          start date must be smaller then end date
+        </Text>
+      ) : (
+        <View></View>
+      )}
+
       {/* available booking view */}
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         {
@@ -317,7 +317,7 @@ const BookingListShipping = ({ navigation, route }: any) => {
                         backgroundColor: colors.boxBackground,
                         alignSelf: 'center',
                         paddingVertical: hp(10),
-                        marginVertical: '50%',
+                        marginVertical: '40%',
                         paddingHorizontal: wp(10),
                         borderRadius: hp(2),
                       }}>

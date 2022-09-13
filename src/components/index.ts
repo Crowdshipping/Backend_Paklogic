@@ -9,6 +9,7 @@ import {TextInputPencil} from './textboxPencil';
 import {BookingListCard} from './bookingListCard';
 import {History} from './history';
 import CheckBoxState from './checkBoxState';
+import {MineCard} from './MineCard';
 
 export {
   Textbox,
@@ -23,4 +24,5 @@ export {
   BookingListCard,
   History,
   CheckBoxState,
+  MineCard,
 };

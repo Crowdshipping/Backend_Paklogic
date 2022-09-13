@@ -289,7 +289,7 @@ const ShipReceiverDetail = ({ navigation, route }: any) => {
         isSuccess={isSuccess}
         setsuccess={() => {
           setsuccess(false);
-          navigation.navigate('MyDrawer', { screen: 'Landing' });
+          navigation.navigate('Landing');
         }}
         text={'Submitted Successfuly'}
       />

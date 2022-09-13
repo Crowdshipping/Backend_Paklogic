@@ -27,9 +27,9 @@ export const Header = (props: IHeader) => {
       ) : (
         <View style={styles.arrowStyle} />
       )}
-      <View>
-        <Text style={[styles.textHeader, { color: color ? color : colors.black }]}>{title}</Text>
-      </View>
+
+      <Text style={[styles.textHeader, { color: color ? color : colors.black }]}>{title}</Text>
+
       <View style={styles.arrowStyle} />
     </View>
   );

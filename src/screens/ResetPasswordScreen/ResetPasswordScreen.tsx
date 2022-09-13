@@ -8,6 +8,7 @@ import { forgot_password } from '../../theme/assets/svg';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { setnewPassword } from '../../API/setnewPassword';
 import { SuccessModal } from '../../Modals';
+import { PASS_REGEX } from '../../appConstants';
 
 const ResetPasswordScreen = ({ route, navigation }: any) => {
   const { id } = route.params;
@@ -20,14 +21,11 @@ const ResetPasswordScreen = ({ route, navigation }: any) => {
   const [text, settext] = useState('');
   function handleSubmit() {
     let validate = true;
-    let passRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    // /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-_]).{8,}$/;
 
     if (!password) {
       setpasswordValue(false);
       validate = false;
-    } else if (!passRegex.test(password)) {
+    } else if (!PASS_REGEX.test(password)) {
       setpasswordValue(false);
       validate = false;
     }
@@ -54,74 +52,64 @@ const ResetPasswordScreen = ({ route, navigation }: any) => {
   return (
     <SafeAreaView>
       <KeyboardAwareScrollView>
-        <View>
-          <Header
-            title={'Reset Password'}
-            pressMethod={() => {
-              navigation.navigate('ForgotPassword');
-            }}
-          />
-        </View>
-        <View>
-          <SvgXml xml={forgot_password} width={wp(100)} />
-        </View>
+        <Header
+          title={'Reset Password'}
+          pressMethod={() => {
+            navigation.navigate('ForgotPassword');
+          }}
+        />
+        <SvgXml xml={forgot_password} width={wp(100)} />
         {/* <View style={{width: wp(90), alignSelf: 'center', marginTop: hp(2)}}>
           <Text style={{textAlign: 'left', fontSize: hp(2.5)}}>
             Don't worry! Just enter your password ID below and we'll send you the
             password reset instructions.
           </Text>
         </View> */}
-        <View>
-          <Textbox
-            title={'New Password'}
-            placeholder={'New Password'}
-            errormsg={
-              !passwordValue
-                ? password.length === 0
-                  ? 'Password is Required'
-                  : 'Password must have atleast 8 characters, a uppercase and a lowercase letter, a number, and a symbol(e.g. #, ?, !, @, $, %, ^, &, *, -, _) '
-                : ''
-            }
-            onChangeValue={(text: string) => {
-              setpasswordValue(true);
-              setpassword(text);
-            }}
-            password={true}
-          />
-        </View>
+        <Textbox
+          title={'New Password'}
+          placeholder={'New Password'}
+          errormsg={
+            !passwordValue
+              ? password.length === 0
+                ? 'Password is Required'
+                : 'Password must have atleast 8 characters, a uppercase and a lowercase letter, a number, and a symbol(e.g. #, ?, !, @, $, %, ^, &, *, -, _) '
+              : ''
+          }
+          onChangeValue={(text: string) => {
+            setpasswordValue(true);
+            setpassword(text);
+          }}
+          password={true}
+        />
         {/* !passwordValue
                 ? 'Password must have atleast 8 characters, a uppercase and a lowercase letter, a number, and a symbol(e.g. #, ?, !, @, $, %, ^, &, *, -, _) '
                 : !confirmPasswordValue
                 ? 'password does not match'
                 : '' */}
-        <View>
-          <Textbox
-            title={'Confirm Password'}
-            placeholder={'Confirm Password'}
-            errormsg={
-              !confirmPasswordValue
-                ? confirmPassword.length === 0
-                  ? 'Confirm Password is Required'
-                  : 'password does not match'
-                : ''
-            }
-            onChangeValue={(text: string) => {
-              setconfirmPasswordValue(true);
-              setconfirmPassword(text);
-            }}
-            password={true}
-          />
-        </View>
+        <Textbox
+          title={'Confirm Password'}
+          placeholder={'Confirm Password'}
+          errormsg={
+            !confirmPasswordValue
+              ? confirmPassword.length === 0
+                ? 'Confirm Password is Required'
+                : 'password does not match'
+              : ''
+          }
+          onChangeValue={(text: string) => {
+            setconfirmPasswordValue(true);
+            setconfirmPassword(text);
+          }}
+          password={true}
+        />
 
-        <View>
-          <Button
-            title="Submit"
-            onPress={() => {
-              handleSubmit();
-            }}
-            loading={loading}
-          />
-        </View>
+        <Button
+          title="Submit"
+          onPress={() => {
+            handleSubmit();
+          }}
+          loading={loading}
+        />
       </KeyboardAwareScrollView>
       <SuccessModal
         isSuccess={success}

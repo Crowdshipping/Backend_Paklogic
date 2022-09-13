@@ -160,6 +160,10 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
       validate = false;
       setweightValue(false);
     }
+    if (Images.length === 0) {
+      validate = false;
+      setImagesValue(false)
+    }
     if (validate) {
       setloading(true);
       if (bookingId === '') {
@@ -313,6 +317,9 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
   const getSelectedImage = (result: any) => {
     // imageArray.push(result)
     settoCaptureImage(false);
+
+    setImagesValue(true)
+
     // let imageDirectory = {imagePath: result.uri, imageSize: result.fileSize};
     setImages([...Images, result]);
   };
@@ -582,16 +589,16 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
               )}
             </View>
             {!ImagesValue && (
-              <View>
-                <Text
-                  style={{
-                    paddingHorizontal: wp(5),
-                    textAlign: 'left',
-                    color: 'red',
-                  }}>
-                  Images are Required
-                </Text>
-              </View>
+
+              <Text
+                style={{
+                  paddingHorizontal: wp(5),
+                  textAlign: 'left',
+                  color: 'red',
+                }}>
+                Images are Required
+              </Text>
+
             )}
             <View style={{ paddingHorizontal: wp(8) }}>
               <Text style={styles.txt}>Instructions</Text>
@@ -701,39 +708,39 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
             </View>
             <View style={{ paddingHorizontal: wp(3) }}>
               <Text style={[styles.txt, { paddingHorizontal: wp(5) }]}>Receiver Details</Text>
-              <View>
-                <Textbox
-                  title="Name"
-                  placeholder={route.params?.receiverName}
-                  onChangeValue={(text: string) => {
-                    setreceiverName(text);
-                    setvalueName(true);
-                  }}
-                  errormsg={
-                    !valueName
-                      ? receiverName.length === 0
-                        ? 'Receiver name is required'
-                        : 'Name should have atleast 3 alphabets'
-                      : ''
-                  }
-                />
-                <PhoneNumberPicker
-                  onChange={(selectedCountry: ICountryCode, text: string) => {
-                    setphone(text);
-                    setcountrySelect(selectedCountry)
-                    setvalueNum(true);
-                  }}
-                  errormsg={
-                    !valueNum
-                      ? phone.length
-                        ? 'Receiver Number is required'
-                        : 'Must Enter valid phone number'
-                      : ''
-                  }
-                  phone={route.params?.phone}
-                  countryCode={countrySelect}
-                />
-              </View>
+
+              <Textbox
+                title="Name"
+                placeholder={route.params?.receiverName}
+                onChangeValue={(text: string) => {
+                  setreceiverName(text);
+                  setvalueName(true);
+                }}
+                errormsg={
+                  !valueName
+                    ? receiverName.length === 0
+                      ? 'Receiver name is required'
+                      : 'Name should have atleast 3 alphabets'
+                    : ''
+                }
+              />
+              <PhoneNumberPicker
+                onChange={(selectedCountry: ICountryCode, text: string) => {
+                  setphone(text);
+                  setcountrySelect(selectedCountry)
+                  setvalueNum(true);
+                }}
+                errormsg={
+                  !valueNum
+                    ? phone.length
+                      ? 'Receiver Number is required'
+                      : 'Must Enter valid phone number'
+                    : ''
+                }
+                phone={route.params?.phone}
+                countryCode={countrySelect}
+              />
+
             </View>
             <Button title="next" onPress={handleSubmit} loading={loading} />
           </View>
@@ -774,7 +781,7 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
         isSuccess={isSuccess}
         setsuccess={() => {
           setsuccess(false);
-          navigation.navigate('MyDrawer', { screen: 'Landing' });
+          navigation.navigate('Landing');
         }}
         text={'Submitted Successfuly'}
       />

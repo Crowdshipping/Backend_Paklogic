@@ -10,7 +10,7 @@ import {
     Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button } from '../../components';
+import { Button, Header, Textbox } from '../../components';
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
@@ -20,6 +20,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import PopupModalOfSuccess from '../../components/PopupModalOfSuccess';
 import { createClaim } from '../../API/createClaim';
+import { SuccessModal } from '../../Modals';
 
 const AddClaim = ({ navigation }: any) => {
     const [claimTitle, setClaimTitle] = useState<any>()
@@ -28,74 +29,65 @@ const AddClaim = ({ navigation }: any) => {
     const [claimDetail, setClaimDetail] = useState<any>()
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
-    const toggleModal = () => {
-        setIsModalVisible(!isModalVisible);
-    };
 
-    const validateClaimTitle = () => {
-        if (claimTitle) {
-            setIsClaimTitle(true);
-        } else {
-            setIsClaimTitle(false);
-        }
-    }
-    const validateClaimDetail = () => {
-        if (claimDetail) {
-            setIsClaimDetail(true);
-        } else {
-            setIsClaimDetail(false);
-        }
-    }
+
+
 
     const uploadDataToServer = async () => {
+        let validate = true;
 
-        validateClaimTitle()
-        validateClaimDetail()
-        let props = {
-            claimTitle: claimTitle,
-            claimDescription: claimDetail
+        if (!claimTitle) {
+            setIsClaimTitle(false);
+            validate = false;
+        }
+        if (!claimDetail) {
+            setIsClaimDetail(false);
+            validate = false;
         }
 
-        setIsLoading(true);
-        createClaim(props)
-            .then((response: any) => response.json())
-            .then((result: any) => {
-                if (result.success) {
-                    toggleModal();
+        if (validate) {
+            let props = {
+                claimTitle: claimTitle,
+                claimDescription: claimDetail
+            }
+            setIsLoading(true);
+            createClaim(props)
+                .then((result: any) => {
                     setIsLoading(false)
-                } else {
-                    setIsLoading(false)
-                }
-            });
-
-    };
+                    result.success && setIsModalVisible(true);
+                }).catch(error => {
+                    setIsLoading(false);
+                    Alert.alert(error.message ? error.message : 'something went wrong');
+                    console.log('error', error);
+                });
+        }
+    }
 
     return (
         <SafeAreaView>
             <ScrollView >
+                <Header title={'Add Claim'} pressMethod={() => navigation.navigate('Claims')} />
                 <View style={styles.maincontainer}>
                     <Text style={styles.heading}>Claim Title</Text>
                     <View style={styles.title}>
                         <TextInput
-                            placeholder={'Write Complain Here '}
+                            placeholder={'Write claim title here '}
                             onChangeText={(value: any) => { setClaimTitle(value) }}
+                            style={{ height: '100%' }}
                         />
                     </View>
                     {!isClaimTitle && <Text style={{ color: 'red', marginLeft: '2%' }}>Claim Title is required</Text>}
                     <Text style={styles.heading}>Description</Text>
                     <View style={styles.description}>
                         <TextInput
-                            placeholder={'Write Description Here '}
+                            placeholder={'Write description here '}
                             onChangeText={(value: any) => { setClaimDetail(value) }}
+                            multiline
+                            style={{ flex: 1, }}
                         />
                     </View>
                     {!isClaimDetail && <Text style={{ color: 'red', marginLeft: '2%' }}>Claim Details is required</Text>}
-                    {/* <PopupModalOfSuccess
-                        firstText={"Claim Added"}
-                        isModalVisible={isModalVisible}
-                        closeButtonOnPressed={() => {
-                            navigation.goBack();
-                        }} /> */}
+
                     <Button
                         title='Submit'
                         onPress={uploadDataToServer}
@@ -104,6 +96,7 @@ const AddClaim = ({ navigation }: any) => {
 
                 </View>
             </ScrollView>
+            <SuccessModal text={"Claim successfully added"} isSuccess={isModalVisible} setsuccess={() => { setIsModalVisible(false), navigation.goBack(); }} />
         </SafeAreaView>
     );
 };
@@ -111,7 +104,7 @@ const styles = StyleSheet.create({
     maincontainer: {
         paddingVertical: wp(5),
         paddingHorizontal: hp(3),
-        height: hp(100),
+        // height: hp(100),
     },
     txt: {
         color: 'black',

@@ -297,7 +297,7 @@ const ReceiverDetailsScreen = ({ navigation, route }: any) => {
         isSuccess={isSuccess}
         setsuccess={() => {
           setsuccess(false);
-          navigation.navigate('MyDrawer', { screen: 'Landing' });
+          navigation.navigate('DrawerScreens');
         }}
         text={'Submitted Successfuly'}
       />

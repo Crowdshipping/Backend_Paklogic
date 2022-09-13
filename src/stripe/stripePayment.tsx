@@ -74,7 +74,7 @@ const StripePayment = ({ navigation, route }: any) => {
 
   const fetchClientSecret = async () => {
     const email = await AsyncStorage.getItem('@userEmail');
-    const name = await AsyncStorage.getItem('@userName');
+    const name = await AsyncStorage.getItem('@userFName') + ' ' + await AsyncStorage.getItem('@userLName');
 
     // new Promise((resolve, reject) => {
     const config: AxiosRequestConfig = {

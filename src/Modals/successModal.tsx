@@ -11,7 +11,14 @@ import { SvgXml } from 'react-native-svg';
 import { cross, success } from '../theme/assets/svg';
 import { colors } from '../theme/colors';
 
-export const SuccessModal = (props: any) => {
+interface ISuccessModal {
+  isSuccess: boolean,
+  setsuccess: Function,
+  text: string
+  pressMethod?: Function
+}
+
+export const SuccessModal = (props: ISuccessModal) => {
   const { isSuccess, setsuccess, text, pressMethod } = props;
   return (
     <Modal isVisible={isSuccess} onBackdropPress={() => setsuccess(false)}>

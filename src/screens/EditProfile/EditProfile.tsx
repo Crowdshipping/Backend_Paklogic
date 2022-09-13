@@ -38,7 +38,7 @@ const EditProfile = ({ navigation, route }: any) => {
     const [getLastName, setlastname] = useState<string>(route.params.profileData.lastname)
     const [getemail, setEmail] = useState<string>(route.params.profileData.email)
     const [getaddress, setAddress] = useState<string>(route.params.profileData.address)
-    const [getphone, setPhone] = useState<string>(route.params.profileData.phoneno.toString())
+    const [getphone, setPhone] = useState<string>(route.params.profileData?.phoneno?.toString())
     const [profileImage, setProfileImage] = useState({ uri: prodUrl + route.params.profileData.profilepic })
     const [newImage, setnewImage] = useState<any>({})
     const [isloading, setIsloading] = useState(false)
@@ -59,22 +59,18 @@ const EditProfile = ({ navigation, route }: any) => {
         let validate = true
         if (!NAME_REGEX.test(getfirstName)) {
             validate = false;
-            console.log('rest')
             // setvalueName(false);
         }
         if (!NAME_REGEX.test(getLastName)) {
             validate = false;
-            console.log('rest1')
             // setvalueName(false);
         }
         if (!EMAIL_REGEX.test(getemail)) {
             validate = false;
-            console.log('rest2')
             // setvalueName(false);
         }
         if (!ADDRESS_REGEX.test(getaddress)) {
             validate = false;
-            console.log('rest3')
             // setvalueNum(false);
         }
         if (newImage?.uri) {
@@ -106,7 +102,6 @@ const EditProfile = ({ navigation, route }: any) => {
                 setIsloading(false)
                 Alert.alert(error?.message ? error.message : 'something went wrong')
                 console.log(error)
-                console.log('rest4')
             })
         }
         if (validate) {
@@ -207,9 +202,10 @@ const EditProfile = ({ navigation, route }: any) => {
                                 editable={!isloading}
                                 autoCorrect={false}
                                 autoCapitalize='none'
-                                placeholder={getfirstName}
+                                placeholder={route.params.profileData.firstname}
                                 placeholderTextColor={colors.black}
                                 onChangeText={(text: string) => { console.log(text), setFirstname(text) }}
+                            // onEndEditing={(text: string) => { console.log(text), setFirstname(text) }}
                             />
                         </View>
                     </View>
@@ -231,7 +227,7 @@ const EditProfile = ({ navigation, route }: any) => {
                                 editable={!isloading}
                                 autoCorrect={false}
                                 autoCapitalize='none'
-                                placeholder={getLastName}
+                                placeholder={route.params.profileData.lastname}
                                 placeholderTextColor={colors.black}
                                 onChangeText={(text: string) => setlastname(text)}
                             />
@@ -283,7 +279,7 @@ const EditProfile = ({ navigation, route }: any) => {
                                 editable={!isloading}
                                 autoCorrect={false}
                                 autoCapitalize='none'
-                                placeholder={getaddress}
+                                placeholder={route.params.profileData.address}
                                 placeholderTextColor={colors.black}
                                 onChangeText={(text: string) => setAddress(text)}
                             />

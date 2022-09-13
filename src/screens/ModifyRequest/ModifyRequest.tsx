@@ -155,6 +155,10 @@ const ModifyRequest = ({ navigation, route }: any) => {
       validate = false;
       setweightValue(false);
     }
+    if (Images.length === 0) {
+      validate = false;
+      setImagesValue(false)
+    }
     if (validate) {
       setloading(true);
       if (bookingId === '') {
@@ -306,7 +310,7 @@ const ModifyRequest = ({ navigation, route }: any) => {
 
   const getSelectedImage = (result: any) => {
     settoCaptureImage(false);
-
+    setImagesValue(true)
     setImages([...Images, result]);
   };
 
@@ -582,16 +586,16 @@ const ModifyRequest = ({ navigation, route }: any) => {
               )}
             </View>
             {!ImagesValue && (
-              <View>
-                <Text
-                  style={{
-                    paddingHorizontal: wp(5),
-                    textAlign: 'left',
-                    color: 'red',
-                  }}>
-                  Images are Required
-                </Text>
-              </View>
+
+              <Text
+                style={{
+                  paddingHorizontal: wp(5),
+                  textAlign: 'left',
+                  color: 'red',
+                }}>
+                Images are Required
+              </Text>
+
             )}
             <View style={{ paddingHorizontal: wp(8) }}>
               <Text style={styles.txt}>Instructions</Text>
@@ -773,7 +777,7 @@ const ModifyRequest = ({ navigation, route }: any) => {
         isSuccess={isSuccess}
         setsuccess={() => {
           setsuccess(false);
-          navigation.navigate('MyDrawer', { screen: 'Landing' });
+          navigation.navigate('Landing');
         }}
         text={'Submitted Successfuly'}
       />

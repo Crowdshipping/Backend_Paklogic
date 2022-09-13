@@ -66,13 +66,13 @@ export const PhoneNumberPicker = (props: IPhonePicker) => {
           }}
         />
       </View>
-      <View>
-        {errormsg ? (
-          <Text style={styles.errorMsg}>{errormsg}</Text>
-        ) : (
-          <View></View>
-        )}
-      </View>
+
+      {errormsg ? (
+        <Text style={styles.errorMsg}>{errormsg}</Text>
+      ) : (
+        <View></View>
+      )}
+
       <Modal
         isVisible={isModal}
         onBackButtonPress={() => setIsModal(false)}
@@ -148,13 +148,13 @@ export const PhoneNumberPickerUI = (props: IPhonePicker) => {
           }}
         />
       </View>
-      <View>
-        {errormsg ? (
-          <Text style={styles.errorMsg}>{errormsg}</Text>
-        ) : (
-          <View></View>
-        )}
-      </View>
+
+      {errormsg ? (
+        <Text style={styles.errorMsg}>{errormsg}</Text>
+      ) : (
+        <View></View>
+      )}
+
       <Modal
         isVisible={isModal}
         onBackButtonPress={() => setIsModal(false)}

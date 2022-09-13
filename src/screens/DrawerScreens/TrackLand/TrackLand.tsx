@@ -15,7 +15,6 @@ import {
 
 import { Button, Header } from '../../../components';
 
-import { flightTracking, searchAirport } from '../../../API';
 import { colors } from '../../../theme';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { styles } from './style';

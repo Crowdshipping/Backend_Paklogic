@@ -35,10 +35,18 @@ import {
   HistoryDetail,
   ViewProfile,
   EditProfile,
-  Claims
+  Claims,
+  ClaimDetail,
+  LoggedUserResetPassword,
+  Complain,
+  AddComplain,
+  ComplainDetail,
+  NotifictionHistory,
+  ViewQuery
 } from '../screens';
 import CustomDrawerContent from './DrawerNavigation';
 import { StripePayment } from '../stripe';
+import AddClaim from '../screens/Claim/AddClaim';
 
 type rootStack = {
   Welcome: undefined;
@@ -61,6 +69,7 @@ type rootStack = {
   ShipDelivery: undefined;
   ShipFlowNavigation: undefined;
   LandFlowNavigation: undefined;
+  AirFlowNavigation: undefined;
   BookingListShipping: undefined;
   ShipProviderDetail: undefined;
   ShipProductDetail: undefined;
@@ -81,6 +90,14 @@ type rootStack = {
   ViewProfile: undefined;
   EditProfile: undefined;
   Claims: undefined;
+  AddClaim: undefined;
+  Complain: undefined;
+  ClaimDetail: undefined;
+  AddComplain: undefined;
+  ComplainDetail: undefined;
+  LoggedUserResetPassword: undefined;
+  NotifictionHistory: undefined;
+  ViewQuery: undefined;
 };
 const Stack = createStackNavigator<rootStack>();
 const Drawer = createDrawerNavigator();
@@ -89,11 +106,18 @@ const MyDrawer = () => {
   return (
     <Drawer.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName="Landing"
+      initialRouteName="DrawerScreens"
       drawerContent={props => <CustomDrawerContent {...props} />}>
+      <Drawer.Screen name="DrawerScreens" component={DrawerScreens} />
+    </Drawer.Navigator>
+  );
+};
+
+const DrawerScreens = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Landing">
       <Stack.Screen name="Landing" component={LandingScreen} />
       <Stack.Screen name="SearchShip" component={ShipDelivery} />
-      <Stack.Screen name="SearchAir" component={AirDelivery} />
       <Stack.Screen name="BookingHistory" component={BookingHistory} />
       <Stack.Screen name="HistoryDetail" component={HistoryDetail} />
       <Stack.Screen name="TrackFlight" component={TrackFlight} />
@@ -104,10 +128,22 @@ const MyDrawer = () => {
       <Stack.Screen name="ViewProfile" component={ViewProfile} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
       <Stack.Screen name="Claims" component={Claims} />
-      {/* <Stack.Screen name="Settings" component={Settings} /> */}
-    </Drawer.Navigator>
-  );
-};
+      <Stack.Screen name="AddClaim" component={AddClaim} />
+      <Stack.Screen name="Complain" component={Complain} />
+      <Stack.Screen name="AddComplain" component={AddComplain} />
+      <Stack.Screen name="ClaimDetail" component={ClaimDetail} />
+      <Stack.Screen name="ComplainDetail" component={ComplainDetail} />
+      <Stack.Screen name="ShipFlowNavigation" component={ShipFlowNavigation} />
+      <Stack.Screen name="LandFlowNavigation" component={LandFlowNavigation} />
+      <Stack.Screen name="AirFlowNavigation" component={AirFlowNavigation} />
+      <Stack.Screen name="LoggedUserResetPassword" component={LoggedUserResetPassword} />
+      <Stack.Screen name="NotifictionHistory" component={NotifictionHistory} />
+      <Stack.Screen name="ViewQuery" component={ViewQuery} />
+      <Stack.Screen name="StripePayment" component={StripePayment} />
+
+    </Stack.Navigator>
+  )
+}
 
 const LandFlowNavigation = () => {
   return (
@@ -140,14 +176,28 @@ const ShipFlowNavigation = () => {
   );
 };
 
+const AirFlowNavigation = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{ headerShown: false, gestureEnabled: false }}
+      initialRouteName={'AirDelivery'}>
+      <Stack.Screen name="ProviderDetail" component={ProviderDetailScreen} />
+      <Stack.Screen name="ReceiverDetails" component={ReceiverDetailsScreen} />
+      <Stack.Screen name="BookingList" component={BookingListScreen} />
+      <Stack.Screen name="ProductScreen" component={ProductScreen} />
+      <Stack.Screen name="AirDelivery" component={AirDelivery} />
+      <Stack.Screen name="ModifyRequest" component={ModifyRequest} />
+    </Stack.Navigator>
+  );
+};
 const StackNavigation = () => {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false, gestureEnabled: false }}
       initialRouteName={'Splash'}>
       <Stack.Screen name="MyDrawer" component={MyDrawer} />
-      <Stack.Screen name="ShipFlowNavigation" component={ShipFlowNavigation} />
-      <Stack.Screen name="LandFlowNavigation" component={LandFlowNavigation} />
+      {/* <Stack.Screen name="ShipFlowNavigation" component={ShipFlowNavigation} />
+      <Stack.Screen name="LandFlowNavigation" component={LandFlowNavigation} /> */}
       <Stack.Screen name="Splash" component={SplashScreen} />
       <Stack.Screen name="Welcome" component={WelcomeScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
@@ -155,17 +205,8 @@ const StackNavigation = () => {
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="RegisterNumber" component={RegisterNumberScreen} />
       <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
-
       <Stack.Screen name="VerifyOtp" component={VerifyOtp} />
       <Stack.Screen name="PasswordOtp" component={PasswordOtp} />
-      <Stack.Screen name="ProviderDetail" component={ProviderDetailScreen} />
-      <Stack.Screen name="ReceiverDetails" component={ReceiverDetailsScreen} />
-      <Stack.Screen name="BookingList" component={BookingListScreen} />
-      <Stack.Screen name="ProductScreen" component={ProductScreen} />
-      <Stack.Screen name="AirDelivery" component={AirDelivery} />
-      <Stack.Screen name="ModifyRequest" component={ModifyRequest} />
-
-      <Stack.Screen name="StripePayment" component={StripePayment} />
     </Stack.Navigator>
   );
 };

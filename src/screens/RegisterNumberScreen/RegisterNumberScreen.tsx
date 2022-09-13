@@ -71,22 +71,21 @@ const RegisterNumberScreen = ({ navigation }: any) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
       <KeyboardAwareScrollView>
-        <View>
-          <Header
-            title={'Register'}
-            pressMethod={() => {
-              navigation.goBack();
-            }}
-          />
-        </View>
-        <View>
-          <SvgXml
-            xml={welcome}
-            style={{ alignSelf: 'center' }}
-          // width={wp(90)}
-          // height={hp(50)}
-          />
-        </View>
+
+        <Header
+          title={'Register'}
+          pressMethod={() => {
+            navigation.goBack();
+          }}
+        />
+
+        <SvgXml
+          xml={welcome}
+          style={{ alignSelf: 'center' }}
+        // width={wp(90)}
+        // height={hp(50)}
+        />
+
         <View style={styles.inputContainer}>
           {/* <Text style={{flex: 1, textAlign: 'center'}}>MOBILE</Text> */}
           {/* <View style={{flexWrap: 'wrap'}}> */}
@@ -107,16 +106,16 @@ const RegisterNumberScreen = ({ navigation }: any) => {
           {/* </View> */}
         </View>
 
-        <View>
-          <Button
-            title="Next"
-            onPress={() => {
-              // navigation.navigate('Sign');
-              handleSubmit();
-            }}
-            loading={loading}
-          />
-        </View>
+
+        <Button
+          title="Next"
+          onPress={() => {
+            // navigation.navigate('Sign');
+            handleSubmit();
+          }}
+          loading={loading}
+        />
+
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );

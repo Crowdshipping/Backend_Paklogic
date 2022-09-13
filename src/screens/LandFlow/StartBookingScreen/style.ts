@@ -41,12 +41,12 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {colors} from '../../theme';
+import {colors} from '../../../theme';
 
 export const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    height: hp(65),
+    // height: hp(65),
     // width: wp(100),
     justifyContent: 'flex-end',
     alignItems: 'center',

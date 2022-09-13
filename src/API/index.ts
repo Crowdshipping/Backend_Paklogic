@@ -29,6 +29,11 @@ import {getPostRequests} from './getPostRequests';
 import {LogoutApi} from './logoutApi';
 import {getClaims} from './getClaims';
 import {createClaim} from './createClaim';
+import {loggedResetPassword} from './loggedResetPassword';
+import {getNotifications} from './getNotifications';
+import {getComplains} from './getComplains';
+import {createComplain} from './createComplain';
+import {getQuestions} from './getQuestions';
 
 export {
   forgotPassword,
@@ -62,4 +67,9 @@ export {
   LogoutApi,
   getClaims,
   createClaim,
+  loggedResetPassword,
+  getNotifications,
+  getComplains,
+  createComplain,
+  getQuestions,
 };

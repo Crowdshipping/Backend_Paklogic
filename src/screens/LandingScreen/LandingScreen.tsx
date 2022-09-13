@@ -21,9 +21,9 @@ const LandingScreen = ({ navigation }: any) => {
       <View style={styles.deliveryComponent}>
         <Text style={styles.text}>LOCAL DELIVERY</Text>
         <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('LandFlowNavigation');
-          }}
+          onPress={() =>
+            navigation.navigate('LandFlowNavigation')
+          }
           style={styles.svgView}>
           <SvgXml
             style={styles.svg}
@@ -37,9 +37,9 @@ const LandingScreen = ({ navigation }: any) => {
       <View style={styles.deliveryComponent}>
         <Text style={styles.text}>INTERNATIONAL Air DELIVERY</Text>
         <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('AirDelivery');
-          }}
+          onPress={() =>
+            navigation.navigate('AirFlowNavigation')
+          }
           style={styles.svgView}>
           <SvgXml
             style={styles.svg}
@@ -53,9 +53,9 @@ const LandingScreen = ({ navigation }: any) => {
       <View style={styles.deliveryComponent}>
         <Text style={styles.text}>INTERNATIONAL Ship DELIVERY</Text>
         <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('ShipFlowNavigation');
-          }}
+          onPress={() =>
+            navigation.navigate('ShipFlowNavigation')
+          }
           style={styles.svgView}>
           <SvgXml
             style={styles.svg}
@@ -65,7 +65,7 @@ const LandingScreen = ({ navigation }: any) => {
           />
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </SafeAreaView >
   );
 };
 export default LandingScreen;

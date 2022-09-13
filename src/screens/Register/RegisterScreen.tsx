@@ -14,7 +14,7 @@ import { SvgXml } from 'react-native-svg';
 import { register } from '../../theme/assets/svg';
 import { registerUser } from '../../API/registerUser';
 import { SuccessModal } from '../../Modals';
-import { ADDRESS_REGEX, EMAIL_REGEX } from '../../appConstants';
+import { ADDRESS_REGEX, EMAIL_REGEX, PASS_REGEX } from '../../appConstants';
 
 const RegisterScreen = ({ route, navigation }: any) => {
   const [loading, setloading] = useState(false);
@@ -36,8 +36,6 @@ const RegisterScreen = ({ route, navigation }: any) => {
   function handleSubmit() {
     let validate = true;
 
-    let passRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     let nameRegex = /^[a-zA-Z]{2,}$/;
 
 
@@ -60,7 +58,7 @@ const RegisterScreen = ({ route, navigation }: any) => {
       validate = false;
     }
 
-    if (!passRegex.test(password)) {
+    if (!PASS_REGEX.test(password)) {
       setpasswordValue(false);
       validate = false;
     }
@@ -81,17 +79,16 @@ const RegisterScreen = ({ route, navigation }: any) => {
   return (
     <SafeAreaView style={styles.sectionContainer}>
       <KeyboardAwareScrollView>
-        <View>
-          <Header
-            title={'Register'}
-            pressMethod={() => {
-              navigation.navigate('RegisterNumber');
-            }}
-          />
-        </View>
-        <View>
-          <SvgXml xml={register} width={wp(100)} />
-        </View>
+
+        <Header
+          title={'Register'}
+          pressMethod={() => {
+            navigation.navigate('RegisterNumber');
+          }}
+        />
+
+        <SvgXml xml={register} width={wp(100)} />
+
         <View style={styles.nameView}>
           <View style={styles.innerNameView}>
             <Textbox
@@ -128,64 +125,61 @@ const RegisterScreen = ({ route, navigation }: any) => {
             />
           </View>
         </View>
-        <View>
-          <Textbox
-            placeholder="Enter Email"
-            title="Email"
-            // containerStyle={{width: '90%'}}
-            onChangeValue={(text: string) => {
-              setemail(text);
-              setemailValue(true);
-            }}
-            errormsg={
-              !emailValue
-                ? email.length == 0
-                  ? 'Email is Required'
-                  : 'Invalid Email'
-                : ''
-            }
-          />
-        </View>
-        <View>
-          <PhoneNumberPicker
-            countryCode={countryCode}
-            phone={phone}
-            editable={false}
-          />
-        </View>
-        <View>
-          <Address
-            onChange={(selectedCountry: any, text: string) => {
-              setaddressValue(true);
-              setaddress(text);
-            }}
-            errormsg={
-              !addressValue
-                ? address.length === 0
-                  ? 'Address is Required'
-                  : 'Invalid Address'
-                : ''
-            }
-          />
-        </View>
-        <View>
-          <Textbox
-            placeholder="Enter Password"
-            title="Password"
-            password={true}
-            errormsg={
-              !passwordValue
-                ? password.length === 0
-                  ? 'Password is Required'
-                  : 'Password must have atleast 8 characters, a uppercase and a lowercase letter, a number, and a symbol(e.g. #, ?, !, @, $, %, ^, &, *, -, _) '
-                : ''
-            }
-            onChangeValue={(text: string) => {
-              setpasswordValue(true);
-              setpassword(text);
-            }}
-          />
-        </View>
+
+        <Textbox
+          placeholder="Enter Email"
+          title="Email"
+          // containerStyle={{width: '90%'}}
+          onChangeValue={(text: string) => {
+            setemail(text);
+            setemailValue(true);
+          }}
+          errormsg={
+            !emailValue
+              ? email.length == 0
+                ? 'Email is Required'
+                : 'Invalid Email'
+              : ''
+          }
+        />
+
+        <PhoneNumberPicker
+          countryCode={countryCode}
+          phone={phone}
+          editable={false}
+        />
+
+        <Address
+          onChange={(selectedCountry: any, text: string) => {
+            setaddressValue(true);
+            setaddress(text);
+          }}
+          errormsg={
+            !addressValue
+              ? address.length === 0
+                ? 'Address is Required'
+                : 'Invalid Address'
+              : ''
+          }
+        />
+
+        <Textbox
+          placeholder="Enter Password"
+          title="Password"
+          password={true}
+          errormsg={
+            !passwordValue
+              ? password.length === 0
+                ? 'Password is Required'
+                : 'Password must have atleast 8 characters, a uppercase and a lowercase letter, a number, and a symbol(e.g. #, ?, !, @, $, %, ^, &, *, -, _) '
+              : ''
+          }
+          onChangeValue={(text: string) => {
+            setpasswordValue(true);
+            setpassword(text);
+          }}
+        />
+
         <View style={styles.signinBtnView}>
           <Text>Already have an Account ?</Text>
           <TouchableOpacity
@@ -195,15 +189,15 @@ const RegisterScreen = ({ route, navigation }: any) => {
             <Text style={styles.btnText}>Sign in</Text>
           </TouchableOpacity>
         </View>
-        <View>
-          <Button
-            title="Next"
-            onPress={() => {
-              handleSubmit();
-            }}
-            loading={loading}
-          />
-        </View>
+
+        <Button
+          title="Next"
+          onPress={() => {
+            handleSubmit();
+          }}
+          loading={loading}
+        />
+
       </KeyboardAwareScrollView>
       <SuccessModal
         isSuccess={success}

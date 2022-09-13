@@ -208,31 +208,31 @@ const BookingListScreen = ({ navigation, route }: any) => {
           />
         </TouchableOpacity>
       </View>
-      <View>
-        <View style={styles.row}>
-          <View style={styles.Touch}>
-            <Datepicker
-              text={'From'}
-              datePrev={moment(dobTo).format('YYYY-MM-DD')}
-              onChange={(selectedDate: Date) => {
-                setdobTo(selectedDate);
-                setdateShow('');
-              }}
-            />
-          </View>
-          <View style={styles.Touch}>
-            <Datepicker
-              text={'To'}
-              datePrev={moment(dobTo2).format('YYYY-MM-DD')}
-              onChange={(selectedDate: Date) => {
-                setdobTo2(selectedDate);
-                setdateShow('');
-              }}
-            />
-          </View>
+
+      <View style={styles.row}>
+        <View style={styles.Touch}>
+          <Datepicker
+            text={'From'}
+            datePrev={moment(dobTo).format('YYYY-MM-DD')}
+            onChange={(selectedDate: Date) => {
+              setdobTo(selectedDate);
+              setdateShow('');
+            }}
+          />
         </View>
-        <Text style={[styles.errorMsg, { marginLeft: wp(10) }]}>{dateShow}</Text>
+        <View style={styles.Touch}>
+          <Datepicker
+            text={'To'}
+            datePrev={moment(dobTo2).format('YYYY-MM-DD')}
+            onChange={(selectedDate: Date) => {
+              setdobTo2(selectedDate);
+              setdateShow('');
+            }}
+          />
+        </View>
       </View>
+      <Text style={[styles.errorMsg, { marginLeft: wp(10) }]}>{dateShow}</Text>
+
       {/* available booking view */}
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         {
@@ -515,9 +515,10 @@ const BookingListScreen = ({ navigation, route }: any) => {
                   <View
                     style={{
                       backgroundColor: colors.boxBackground,
+                      // backgroundColor: 'aqua',
                       alignSelf: 'center',
                       paddingVertical: hp(10),
-                      marginVertical: '50%',
+                      marginVertical: '40%',
                       paddingHorizontal: wp(10),
                       borderRadius: hp(2),
                     }}>
@@ -525,7 +526,7 @@ const BookingListScreen = ({ navigation, route }: any) => {
                       style={{
                         textAlign: 'center',
                         color: colors.red,
-                        fontSize: hp(2),
+                        fontSize: 16,
                       }}>
                       Sorry no bookings available
                     </Text>

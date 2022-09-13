@@ -255,7 +255,7 @@ import {
 } from 'react-native';
 import { styles } from './style';
 import MapView, { LatLng, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { Button, Header, MapHeader } from '../../components';
+import { Button, Header, MapHeader } from '../../../components';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -271,14 +271,14 @@ import {
   packagedetails,
   scooter,
   scooterbgRed,
-} from '../../theme/assets/svg';
+} from '../../../theme/assets/svg';
 import MapViewDirections from 'react-native-maps-directions';
 import getDistance from 'geolib/es/getDistance';
-import { colors } from '../../theme';
-import { SearchPlaces } from '../../Modals/searchPlaces';
+import { colors } from '../../../theme';
+import { SearchPlaces } from '../../../Modals/searchPlaces';
 import { useEffect } from 'react';
 import { SvgXml } from 'react-native-svg';
-import { GOOGLE_MAPS_APIKEY } from '../../appConstants';
+import { GOOGLE_MAPS_APIKEY } from '../../../appConstants';
 interface cityArray {
   name: string;
   lat: any;
@@ -460,7 +460,7 @@ const StartBookingScreen = ({ navigation }: any) => {
           // backgroundColor: colors.white
         }}>
         <View>
-          <TouchableOpacity onPress={() => { }} style={styles.menu}>
+          <TouchableOpacity onPress={() => { navigation.toggleDrawer() }} style={styles.menu}>
             <Entypo name="menu" size={25} />
           </TouchableOpacity>
           <View style={styles.location}>
@@ -486,13 +486,11 @@ const StartBookingScreen = ({ navigation }: any) => {
                   : 'Pickup Location'}
               </Text>
             </TouchableOpacity>
-            {!pickValue ? (
+            {!pickValue &&
               <Text style={[styles.errorMsg, { paddingHorizontal: wp(5) }]}>
                 Pickup Location is required
               </Text>
-            ) : (
-              <View></View>
-            )}
+            }
             <TouchableOpacity
               onPress={() => {
                 setisVisible2(true);
@@ -515,13 +513,11 @@ const StartBookingScreen = ({ navigation }: any) => {
                   : 'Dropoff Location'}
               </Text>
             </TouchableOpacity>
-            {!dropValue ? (
+            {!dropValue &&
               <Text style={[styles.errorMsg, { paddingHorizontal: wp(5) }]}>
                 Dropoff Location is required
               </Text>
-            ) : (
-              <View></View>
-            )}
+            }
           </View>
         </View>
         {isSelected === 'none' ? (

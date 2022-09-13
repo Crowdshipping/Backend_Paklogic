@@ -38,6 +38,7 @@ import {carsvgMap} from './carsvgMap';
 import {shipsvgMap} from './shipsvgMap';
 import {planesvgMap} from './planesvgMap';
 import {camera} from './camera';
+import {imagePlaceholderSvg} from './imagePlaceholderSvg';
 
 export {
   register,
@@ -80,4 +81,5 @@ export {
   planesvgMap,
   shipsvgMap,
   camera,
+  imagePlaceholderSvg,
 };

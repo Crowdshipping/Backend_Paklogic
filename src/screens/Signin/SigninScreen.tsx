@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { SafeAreaView, Text, View, TouchableOpacity, Alert } from 'react-native';
 import {
   heightPercentageToDP,
@@ -14,14 +14,16 @@ import { signin } from '../../theme/assets/svg';
 import { signIn, AddPlayer } from '../../API';
 import OneSignal from 'react-native-onesignal';
 import { EMAIL_REGEX } from '../../appConstants';
+import { AppContext } from '../../../App';
 
 
 const SigninScreen = ({ navigation }: any) => {
+  const { setUserData } = useContext(AppContext)
   const [emailValue, setemailValue] = useState(true);
   // const [email, setemail] = useState('');
   const [passwordValue, setpasswordValue] = useState(true);
   const [email, setemail] = useState(__DEV__ ? 'Salman090898@gmail.com' : '');
-  const [password, setpassword] = useState(__DEV__ ? 'Hahaha88*' : '');
+  const [password, setpassword] = useState(__DEV__ ? 'Qwerty1@' : '');
 
   // const [email, setemail] = useState(__DEV__ ? 'Salman@gmail.com' : '');
   // const [password, setpassword] = useState(__DEV__ ? 'Muneeb1@' : '');
@@ -56,10 +58,12 @@ const SigninScreen = ({ navigation }: any) => {
           console.log('signedx', rest)
           setloading(false);
           if (!rest.user?.role) {
+            setUserData(rest.user)
             try {
               AsyncStorage.setItem('@userId', rest.user._id);
               AsyncStorage.setItem('@userEmail', rest.user.email);
-              AsyncStorage.setItem('@userName', rest.user.firstname + ' ' + rest.user.lastname);
+              AsyncStorage.setItem('@userFName', rest.user.firstname);
+              AsyncStorage.setItem('@userLName', rest.user.lastname);
               AsyncStorage.setItem('@useerPic', rest?.user?.profilepic);
             } catch (e) {
               console.log('error', e);
@@ -81,7 +85,6 @@ const SigninScreen = ({ navigation }: any) => {
 
   async function handleDeviceState(user: string) {
     const data = await OneSignal.getDeviceState();
-    console.log("vfgbhn ", data?.userId);
     if (data?.userId) {
       let item = {
         playerId: data.userId,
@@ -91,12 +94,12 @@ const SigninScreen = ({ navigation }: any) => {
         if (rest.success) {
           try {
             AsyncStorage.setItem('@userPlayerId', rest.playerID);
-          } catch (e) {
-            console.log('error', e);
-          }; navigation.navigate('MyDrawer', { screen: 'Landing' })
+          } catch (error) {
+            console.log('error', error);
+          }; navigation.replace('MyDrawer')
         }
 
-      }).catch(error => { console.log(error) })
+      }).catch(error => { console.log(error), Alert.alert(error.message ? error.message : 'something went wrong') })
     }
 
 

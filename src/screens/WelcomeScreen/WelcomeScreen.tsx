@@ -1,10 +1,7 @@
 import React, { useEffect } from 'react';
 import { SafeAreaView, Text, View, Alert, BackHandler } from 'react-native';
 import { styles } from './style';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
+
 import { SvgXml } from 'react-native-svg';
 import { Button, Header } from '../../components';
 import { welcome } from '../../theme/assets/svg';
@@ -39,6 +36,7 @@ const WelcomeScreen = ({ navigation }: any) => {
     () =>
       navigation.addListener('beforeRemove', (e: any) => {
         // Prevent default behavior of leaving the screen
+        console.log('object:::', JSON.stringify(e))
         e.preventDefault();
         Alert.alert('Hold on!', 'Are you sure you want to Exit?', [
           {
@@ -60,34 +58,29 @@ const WelcomeScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={{}}>
-      <View>
-        <Header title={'WELCOME'} />
-      </View>
-      <View>
-        <SvgXml xml={welcome} style={{ alignSelf: 'center' }} />
-      </View>
-      <View>
-        <Button
-          title="sign in"
-          bg={true}
-          onPress={() => {
-            navigation.navigate('Signin');
-            // navigation.navigate('Landing');
-          }}
-        />
-      </View>
-      <View>
-        <Button
-          title="Register"
-          onPress={() => {
-            navigation.navigate('RegisterNumber');
-          }}
-        />
-      </View>
+
+      <Header title={'WELCOME'} />
+
+
+      <SvgXml xml={welcome} style={{ alignSelf: 'center' }} />
+
+
+      <Button
+        title="sign in"
+        bg={true}
+        onPress={() => navigation.navigate('Signin')}
+      />
+
+
+      <Button
+        title="Register"
+        onPress={() => navigation.navigate('RegisterNumber')}
+      />
+
       <View style={styles.textView}>
         <Text style={styles.text}>
           Crowd shipping corporation app is ground breaking crowd delivery
-          platform where multiple businesses and everone shares delivery
+          platform where multiple businesses and everyone shares delivery
           providers to send and receive packages or goods for both local and
           international delieveries
         </Text>

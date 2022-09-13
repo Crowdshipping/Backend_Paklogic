@@ -45,13 +45,13 @@ export const Address = (props: IAddressPicker) => {
           onChangeText={text => onChange && onChange(selectedCountry, text)}
         />
       </View>
-      <View>
-        {errormsg ? (
-          <Text style={styles.errorMsg}>{errormsg}</Text>
-        ) : (
-          <View></View>
-        )}
-      </View>
+
+      {errormsg ? (
+        <Text style={styles.errorMsg}>{errormsg}</Text>
+      ) : (
+        <View></View>
+      )}
+
       <Modal
         isVisible={isModal}
         onBackButtonPress={() => setIsModal(false)}

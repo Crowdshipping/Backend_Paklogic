@@ -11,11 +11,13 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import { Header } from '../../components';
 
-const ClaimDetail = ({ navigation,route }: any) => {
+const ClaimDetail = ({ navigation, route }: any) => {
     return (
         <SafeAreaView>
             <ScrollView>
+                <Header title={'Claim'} pressMethod={() => navigation.navigate('Claims')} />
                 <View style={styles.maincontainer}>
                     <View style={styles.card}>
                         <Text
@@ -34,7 +36,7 @@ const ClaimDetail = ({ navigation,route }: any) => {
                                 paddingVertical: hp(1),
                             }}>
                             {route.params.item.claimTitle}
-                           
+
                         </Text>
                         <Text>{route.params.item.claimDescription}</Text>
                     </View>

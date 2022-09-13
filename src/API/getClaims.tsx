@@ -15,7 +15,7 @@ export const getClaims = async () => {
                 resolve(response.data);
             })
             .catch(error => {
-                reject(error);
+                reject(error.response.data);
             });
     });
 };

@@ -137,14 +137,14 @@ const VerifyOtp = ({ route, navigation }: any) => {
         backgroundColor: colors.white,
       }}>
       <KeyboardAwareScrollView>
-        <View>
-          <Header
-            title="verify otp"
-            pressMethod={() => {
-              navigation.goBack();
-            }}
-          />
-        </View>
+
+        <Header
+          title="verify otp"
+          pressMethod={() => {
+            navigation.goBack();
+          }}
+        />
+
         <View
           style={{
             justifyContent: 'center',
@@ -153,15 +153,14 @@ const VerifyOtp = ({ route, navigation }: any) => {
           }}>
           <SvgXml xml={otp} />
         </View>
-        <View>
-          <Text
-            style={{
-              textAlign: 'center',
-              fontSize: hp(2.5),
-            }}>
-            Enter the OTP code sent to you at {countryCode.dial_code + phone}
-          </Text>
-        </View>
+
+        <Text
+          style={{
+            textAlign: 'center',
+            fontSize: hp(2.5),
+          }}>
+          Enter the OTP code sent to you at {countryCode.dial_code + phone}
+        </Text>
 
         <View
           style={{
@@ -380,14 +379,14 @@ const VerifyOtp = ({ route, navigation }: any) => {
             Resend Code
           </Text>
         </TouchableOpacity>
-        <View>
-          <Button
-            title="NEXT"
-            onPress={() => Validate()}
-            // containerStyle={{width: wp(100)}}
-            loading={loading}
-          />
-        </View>
+
+        <Button
+          title="NEXT"
+          onPress={() => Validate()}
+          // containerStyle={{width: wp(100)}}
+          loading={loading}
+        />
+
       </KeyboardAwareScrollView>
       <SuccessModal
         isSuccess={success}

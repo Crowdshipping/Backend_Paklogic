@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     View,
     ScrollView,
+    ActivityIndicator,
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -13,7 +14,9 @@ import {
 } from 'react-native-responsive-screen';
 import ClaimSingleCard from './ClaimSingleCard';
 import { getClaims } from '../../API';
-import { CheckBoxState } from '../../components'
+import { CheckBoxState, Header } from '../../components'
+import { colors } from '../../theme';
+import { useIsFocused } from '@react-navigation/native';
 
 const Claims = ({ navigation }: any) => {
     const [claimResponse, setClaimResponse] = React.useState([]);
@@ -22,6 +25,7 @@ const Claims = ({ navigation }: any) => {
     // const [isDisabled, setDisabled] = React.useState(false);
     const [pending, setPending] = React.useState(false);
     const [resolved, setResolved] = React.useState(true);
+    const isfocus = useIsFocused();
     function getData() {
         setIsLoading(true);
         getClaims()
@@ -40,18 +44,16 @@ const Claims = ({ navigation }: any) => {
     }
 
     useEffect(() => {
-        getData();
-        const willFocusSubscription = navigation.addListener('focus', () => {
+        if (isfocus) {
             getData();
-        });
-        return willFocusSubscription;
-    }, []);
+        }
+    }, [isfocus]);
 
     const renderClaim = (item: any) => {
         return (
             <ClaimSingleCard
                 onPress={() => {
-                    // navigation.navigate("CLAIMDETAIL", { item })
+                    navigation.navigate("ClaimDetail", { item })
                 }}
                 state={item.claimStatus}
                 title={item.claimTitle}
@@ -59,45 +61,29 @@ const Claims = ({ navigation }: any) => {
         )
     }
 
-    const noClaimAvailable = () => {
-        return (
-            <View style={{ height: '75%', justifyContent: 'center', flex: 1, marginTop: hp('15%') }}>
-                <View style={{ backgroundColor: "#f0f0f0", height: 250, borderRadius: 10, margin: 20, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ color: 'red' }}>No claims available</Text>
-                </View>
-            </View>
-        )
-    }
-
-    const renderClaimCheck = () => {
-        let noClaimResolved = 0;
-        return <View >
-            {claimResponse &&
-                claimResponse.map((item: any) => {
-                    console.log("itemitemitem12233", item);
-                    if (pending === true && item.claimStatus === 'Pending') {
-                        console.log(item.claimStatus)
-                        return renderClaim(item)
-                    }
-                    else if (resolved === true && item.claimStatus === 'Resolved') {
-                        return renderClaim(item)
-                    } else {
-                        noClaimResolved = noClaimResolved + 1;
-                    }
-                    if (noClaimResolved === claimResponse.length) {
-                        return noClaimAvailable()
-
-                    }
-                })}
-        </View>
-    }
-
     return (
         <SafeAreaView>
             <ScrollView>
-                <View style={styles.maincontainer}>
+                <Header
+                    title={'Claims'}
+                    pressMethod={() => {
+                        navigation.goBack()
+                    }}
+                />
+                {isLoading ? <View
+                    style={{
+                        // backgroundColor: colors.boxBackground,
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        // paddingVertical: hp(10),
+                        // paddingHorizontal: wp(10),
+                        // borderRadius: hp(2),
+                    }}>
+                    <ActivityIndicator size={'small'} color={colors.red} />
+                </View> : <View style={styles.maincontainer}>
                     <TouchableOpacity onPress={() => {
-                        // navigation.navigate("ADDCLAIM")
+                        navigation.navigate("AddClaim")
                     }} style={styles.addbtn}>
                         <Text style={styles.txt}>ADD NEW</Text>
                     </TouchableOpacity>
@@ -109,8 +95,37 @@ const Claims = ({ navigation }: any) => {
                         />
                         <CheckBoxState text={'Pending'} onPress={() => { setPending(!pending) }} />
                     </View>
-                    {renderClaimCheck()}
-                </View>
+
+                    {claimResponse && claimResponse.length > 0 ?
+                        claimResponse.map((item: any) => {
+                            if (pending === true && item.claimStatus === 'Pending') {
+                                console.log(item.claimStatus)
+                                return renderClaim(item)
+                            }
+                            if (resolved === true && item.claimStatus === 'Resolved') {
+                                return renderClaim(item)
+                            }
+                        }) : <View
+                            style={{
+                                backgroundColor: colors.boxBackground,
+                                // backgroundColor: 'aqua',
+                                alignSelf: 'center',
+                                paddingVertical: hp(10),
+                                marginVertical: '50%',
+                                paddingHorizontal: wp(10),
+                                borderRadius: hp(2),
+                            }}>
+                            <Text
+                                style={{
+                                    textAlign: 'center',
+                                    color: colors.red,
+                                    fontSize: 16,
+                                }}>
+                                No claims available
+                            </Text>
+                        </View>}
+                </View>}
+
             </ScrollView>
         </SafeAreaView>
     );

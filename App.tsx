@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { useEffect } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { StackNavigation } from './src/navigation';
@@ -26,17 +26,22 @@ const NotificationHandler = () => {
   });
 
 }
-
+let init: any
+export let AppContext = createContext(init)
 
 const App = () => {
+  const [userData, setUserData] = useState({})
+
   useEffect(() => {
     NotificationHandler()
   }, [])
 
   return (
-    <NavigationContainer>
-      <StackNavigation />
-    </NavigationContainer>
+    <AppContext.Provider value={{ userData, setUserData }}>
+      <NavigationContainer>
+        <StackNavigation />
+      </NavigationContainer>
+    </AppContext.Provider>
   );
 };
 

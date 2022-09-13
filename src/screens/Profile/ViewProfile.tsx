@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
     SafeAreaView,
     View,
     Text,
     TouchableOpacity,
     Alert,
-    ScrollView,
     ImageBackground,
     Image,
     ActivityIndicator,
-    StyleSheet,
 } from 'react-native';
 import { getUser } from '../../API';
 import { Header } from '../../components';
@@ -22,7 +20,6 @@ import {
 import { prodUrl } from '../../appConstants';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {
-    camera,
     locationicon,
     mailicon,
     setting,
@@ -32,19 +29,24 @@ import { profileicon } from '../../theme/assets/svg/profileicon';
 import { styles } from './style';
 import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AppContext } from '../../../App';
 
 const ViewProfile = ({ navigation, route }: any) => {
+    const { setUserData } = useContext(AppContext)
     const [loading, setloading] = useState(false);
     const [profileData, setprofileData] = useState<any>({});
     const isfocus = useIsFocused();
     function fetchProfileData() {
+        setloading(true)
         getUser()
             .then(async (rest: any) => {
                 setloading(false);
                 setprofileData(rest.user);
                 if (route?.params?.isEdited) {
+                    setUserData(rest.user)
                     try {
-                        await AsyncStorage.setItem('@userName', rest.user.firstname + ' ' + rest.user.lastname);
+                        await AsyncStorage.setItem('@userFName', rest.user.firstname);
+                        await AsyncStorage.setItem('@userLName', rest.user.lastname);
                         await AsyncStorage.setItem('@useerPic', rest.user.profilepic);
                     } catch (e) {
                         console.log('error', e);
@@ -59,7 +61,6 @@ const ViewProfile = ({ navigation, route }: any) => {
         if (isfocus) {
             fetchProfileData()
         }
-        console.log('dwfklaf jfowel;w', route?.params?.isEdited)
     }, [isfocus]);
     return (
         <SafeAreaView>
@@ -88,7 +89,6 @@ const ViewProfile = ({ navigation, route }: any) => {
                                 }}
                                 color={colors.white}
                             />
-                            {profileData && console.log('profile data console', profileData)}
                             <View style={styles.imgview}>
                                 {profileData.profilepic ? (
                                     <Image

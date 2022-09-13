@@ -130,7 +130,7 @@ const AirDelivery = ({ navigation }: any) => {
         </MapView>
       </View>
 
-      <TouchableOpacity onPress={() => { }} style={styles.menu}>
+      <TouchableOpacity onPress={() => { navigation.toggleDrawer() }} style={styles.menu}>
         <Entypo name="menu" size={25} />
       </TouchableOpacity>
       <View style={styles.location}>
@@ -193,19 +193,20 @@ const AirDelivery = ({ navigation }: any) => {
           <View></View>
         )}
       </View>
+
       <View style={styles.bckimg}>
-        <View style={{}}>
-          <Header
-            title="Package Details"
-            // picture={packagedetails}
-            pressMethod={() => navigation.goBack()}
-          />
-        </View>
+
+        <Header
+          title="Package Details"
+          pressMethod={() => navigation.goBack()}
+        />
+
 
         <View style={styles.main}>
+          <Text style={{ marginTop: hp(3), fontSize: hp(2) }}>Select the time limit within 3 weeks interval.</Text>
           <View
             style={{
-              marginTop: hp(5),
+              marginTop: hp(2),
               paddingHorizontal: wp(15),
               width: wp(70),
             }}>

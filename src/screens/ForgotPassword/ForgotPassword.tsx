@@ -42,50 +42,46 @@ const ForgotPassword = ({ navigation }: any) => {
     <SafeAreaView style={styles.sectionContainer}>
       <KeyboardAwareScrollView>
         {/* <Text>Signin Screen</Text> */}
-        <View>
-          <Header
-            title={'Forgot Password'}
-            pressMethod={() => {
-              navigation.goBack();
-            }}
-          />
-        </View>
-        <View>
-          <SvgXml xml={forgot_password} width={wp(100)} />
-        </View>
+        <Header
+          title={'Forgot Password'}
+          pressMethod={() => {
+            navigation.goBack();
+          }}
+        />
+
+        <SvgXml xml={forgot_password} width={wp(100)} />
+
         <View style={styles.textView}>
           <Text style={styles.text}>
             Don't worry! Just enter your email ID below and we'll send you the
             password reset instructions.
           </Text>
         </View>
-        <View>
-          <Textbox
-            title={''}
-            placeholder={'Email'}
-            errormsg={
-              !emailValue
-                ? email.length == 0
-                  ? 'Email is Required'
-                  : 'Invalid Email'
-                : ''
-            }
-            onChangeValue={(text: string) => {
-              setemailValue(true);
-              setemail(text);
-            }}
-          />
-        </View>
 
-        <View>
-          <Button
-            title="Submit"
-            onPress={() => {
-              handleSubmit();
-            }}
-            loading={loading}
-          />
-        </View>
+        <Textbox
+          title={''}
+          placeholder={'Email'}
+          errormsg={
+            !emailValue
+              ? email.length == 0
+                ? 'Email is Required'
+                : 'Invalid Email'
+              : ''
+          }
+          onChangeValue={(text: string) => {
+            setemailValue(true);
+            setemail(text);
+          }}
+        />
+
+        <Button
+          title="Submit"
+          onPress={() => {
+            handleSubmit();
+          }}
+          loading={loading}
+        />
+
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );

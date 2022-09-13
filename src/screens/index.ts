@@ -8,7 +8,7 @@ import RegisterNumberScreen from './RegisterNumberScreen/RegisterNumberScreen';
 import ResetPasswordScreen from './ResetPasswordScreen/ResetPasswordScreen';
 import VerifyOtp from './VerifyOtp/VerifyOtp';
 import PasswordOtp from './PasswordOtp/PasswordOtp';
-import StartBookingScreen from './StartBookingScreen/StartBookingScreen';
+import StartBookingScreen from './LandFlow/StartBookingScreen/StartBookingScreen';
 import ProviderDetailScreen from './ProviderDetail/ProviderDetailScreen';
 import ReceiverDetailsScreen from './ReceiverDetailsScreen/ReceiverDetailsScreen';
 import BookingListScreen from './BookingListScreen/BookingListScreen';
@@ -34,6 +34,12 @@ import EditProfile from './EditProfile/EditProfile';
 import AddClaim from './Claim/AddClaim';
 import Claims from './Claim/Claims';
 import ClaimDetail from './Claim/ClaimDetail';
+import LoggedUserResetPassword from './LoggedUserResetPassword/LoggedUserResetPassword';
+import Complain from './Complain/Complain';
+import AddComplain from './Complain/AddComplain';
+import ComplainDetail from './Complain/ComplainDetail';
+import NotifictionHistory from './Notification/Notification';
+import ViewQuery from './Support/ViewQuery';
 
 export {
   RegisterScreen,
@@ -72,4 +78,10 @@ export {
   AddClaim,
   Claims,
   ClaimDetail,
+  LoggedUserResetPassword,
+  Complain,
+  AddComplain,
+  ComplainDetail,
+  NotifictionHistory,
+  ViewQuery,
 };
