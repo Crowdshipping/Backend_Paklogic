@@ -168,7 +168,7 @@ const LandReceiverDetail = ({ navigation, route }: any) => {
           // style={styles.bgImage}
           resizeMode={'cover'}
           source={mapp}>
-          <TouchableOpacity onPress={() => { }} style={styles.menu}>
+          <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={styles.menu}>
             <Entypo name="menu" size={25} />
           </TouchableOpacity>
           <View style={styles.location}>

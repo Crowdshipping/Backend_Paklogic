@@ -83,7 +83,7 @@ const AddClaim = ({ navigation }: any) => {
                             placeholder={'Write description here '}
                             onChangeText={(value: any) => { setClaimDetail(value) }}
                             multiline
-                            style={{ flex: 1, }}
+                            style={{ flex: 1, textAlignVertical: 'top' }}
                         />
                     </View>
                     {!isClaimDetail && <Text style={{ color: 'red', marginLeft: '2%' }}>Claim Details is required</Text>}

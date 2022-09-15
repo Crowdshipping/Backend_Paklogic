@@ -44,13 +44,10 @@ export const PhoneNumberPicker = (props: IPhonePicker) => {
           <Text style={styles.countryText}>
             {selectedCountry?.flag}{' '}{selectedCountry.dial_code}{' '}
           </Text>
-          {/* <View style={{flex: 1}}> */}
           <Icon
             name="caretdown"
             size={wp(4)}
-          // style={{alignSelf: 'flex-end', justifyContent: 'center'}}
           />
-          {/* </View> */}
         </TouchableOpacity>
 
         <TextInput

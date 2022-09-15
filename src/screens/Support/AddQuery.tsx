@@ -4,21 +4,17 @@ import {
     StyleSheet,
     View,
     ScrollView,
-    Image,
     TextInput,
-    Platform,
-    Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button } from '../../components';
+import { Button, Header } from '../../components';
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import { addQuery } from '../../services';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import PopupModalOfSuccess from '../../components/PopupModalOfSuccess';
 
+import { SuccessModal } from '../../Modals';
+import { postQuestion } from '../../API';
 const AddQuery = ({ navigation }: any) => {
     const [QueryTitle, setQueryTitle] = useState<any>()
     const [isQueryTitle, setIsQueryTitle] = useState(true)
@@ -60,55 +56,55 @@ const AddQuery = ({ navigation }: any) => {
     }
 
     const uploadDataToServer = async () => {
-        const value = await AsyncStorage.getItem('@user_Id');
-        console.log("userId", value)
+
         const QueryT = validateQueryTitle()
         const QueryD = validateQueryDetail()
-        console.log(isQueryTitle)
         if (QueryT && QueryD) {
-            if (value) {
-                setIsLoading(true);
-                addQuery(QueryTitle, QueryDetail, value)
-                    .then((response) => response.json())
-                    .then((result: any) => {
-                        if (result.success) {
-                            toggleModal();
-                            setIsLoading(false)
-                        } else {
-                            setIsLoading(false)
-                        }
-                    });
+
+            let data = {
+                QueryTitle,
+                QueryDetail
             }
+            setIsLoading(true);
+            postQuestion(data)
+                .then((result: any) => {
+                    if (result.success) {
+                        setIsModalVisible(true);
+                        setIsLoading(false)
+                    } else {
+                        setIsLoading(false)
+                    }
+                });
         }
     };
 
     return (
         <SafeAreaView>
             <ScrollView >
+                <Header title={'Add Query'} pressMethod={() => navigation.goBack()} />
                 <View style={styles.maincontainer}>
                     <Text style={styles.heading}>Query Title</Text>
                     <View style={styles.title}>
                         <TextInput
                             placeholder={'Write Query Title Here '}
-                            onChangeText={(value: any) => { setQueryTitle(value) }}
+                            onChangeText={(value: any) => { setQueryTitle(value), setIsQueryTitle(true); }}
+                            style={{ flex: 1 }}
                         />
                     </View>
-                    {!isQueryTitle && <Text style={{ color: 'red', marginLeft: '2%' }}>Claim Title is required</Text>}
+                    {!isQueryTitle && <Text style={{ color: 'red', marginLeft: '2%' }}>Query Title is required</Text>}
                     <Text style={styles.heading}>Query Description</Text>
                     <View style={styles.description}>
                         <TextInput
                             placeholder={'Write Description Here '}
-                            onChangeText={(value: any) => { setQueryDetail(value) }}
+                            onChangeText={(value: any) => { setQueryDetail(value), setIsQueryDetail(true), setIsQueryDetailLength(true) }}
+                            multiline
+                            style={{ flex: 1, textAlignVertical: 'top' }}
                         />
+
                     </View>
-                    {!isQueryDetail && <Text style={{ color: 'red', marginLeft: '2%' }}>Claim Details is required</Text>}
-                    {!isQueryDetailLength && <Text style={{ color: 'red', marginLeft: '2%' }}>Claim Details have at least 10 words </Text>}
-                    <PopupModalOfSuccess
-                        firstText={"Query Added"}
-                        isModalVisible={isModalVisible}
-                        closeButtonOnPressed={() => {
-                            navigation.goBack();
-                        }} />
+                    {!isQueryDetail && <Text style={{ color: 'red', marginLeft: '2%' }}>Query Details is required</Text>}
+                    {!isQueryDetailLength && <Text style={{ color: 'red', marginLeft: '2%' }}>Query Details have at least 10 words </Text>}
+
                     <Button
                         title='Submit'
                         onPress={uploadDataToServer}
@@ -117,6 +113,8 @@ const AddQuery = ({ navigation }: any) => {
 
                 </View>
             </ScrollView>
+
+            <SuccessModal isSuccess={isModalVisible} setsuccess={() => { setIsModalVisible(false), navigation.goBack() }} text={'Query Added'} />
         </SafeAreaView>
     );
 };
@@ -125,7 +123,7 @@ const styles = StyleSheet.create({
         paddingVertical: wp(5),
         paddingHorizontal: hp(3),
         height: hp(100),
-        backgroundColor: "white"
+        // backgroundColor: "white"
     },
     txt: {
         color: 'black',

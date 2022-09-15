@@ -40,6 +40,8 @@ import AddComplain from './Complain/AddComplain';
 import ComplainDetail from './Complain/ComplainDetail';
 import NotifictionHistory from './Notification/Notification';
 import ViewQuery from './Support/ViewQuery';
+import AddQuery from './Support/AddQuery';
+import QueryDetail from './Support/QueryDetail';
 
 export {
   RegisterScreen,
@@ -84,4 +86,6 @@ export {
   ComplainDetail,
   NotifictionHistory,
   ViewQuery,
+  AddQuery,
+  QueryDetail,
 };

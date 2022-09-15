@@ -61,17 +61,26 @@ const BookingListShipping = ({ navigation, route }: any) => {
   const [pickValue, setpickValue] = useState(true);
   const [dropValue, setdropValue] = useState(true);
   useEffect(() => {
-    const data = {
-      pickupCity: pickupLocation.Name,
-      dropoffCity: dropoffLocation.Name,
-      startingDate: moment(dobTo).format('YYYY-MM-DD'),
-      endingDate: moment(dobTo2).format('YYYY-MM-DD'),
-      pickupPortUnlocode: pickupLocation.Country + pickupLocation.Location,
-      dropoffPortUnlocode: dropoffLocation.Country + dropoffLocation.Location,
-    };
+    let validate = true
     if (dobTo >= dobTo2) {
       setdateShow(true);
-    } else {
+      validate = false;
+    } if (!pickupLocation.Name) {
+      setpickValue(false);
+      validate = false;
+    }
+    if (!dropoffLocation.Name) {
+      setdropValue(false);
+      validate = false;
+    } if (validate) {
+      const data = {
+        pickupCity: pickupLocation.Name,
+        dropoffCity: dropoffLocation.Name,
+        startingDate: moment(dobTo).format('YYYY-MM-DD'),
+        endingDate: moment(dobTo2).format('YYYY-MM-DD'),
+        pickupPortUnlocode: pickupLocation.Country + pickupLocation.Location,
+        dropoffPortUnlocode: dropoffLocation.Country + dropoffLocation.Location,
+      };
       setdateShow(false);
       setLoading(true);
       getShips(data)

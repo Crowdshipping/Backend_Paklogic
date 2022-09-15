@@ -13,10 +13,10 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		1A2C953E239BDF27D3B6A85B /* libPods-CrowdShipping.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0114933DFCA74239F486E67E /* libPods-CrowdShipping.a */; };
+		2C543A7361B46CA4C61D7705 /* libPods-CrowdShipping.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D14BB8B89A0DE043BA964DB /* libPods-CrowdShipping.a */; };
+		77866FB26EFAFCDBD6117E2E /* libPods-CrowdShipping-CrowdShippingTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9DC864D5BE82CF307AE322A /* libPods-CrowdShipping-CrowdShippingTests.a */; };
+		7B64F8428973EC9F116D33C7 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A27810E7F12A50598F0B5D60 /* libPods-OneSignalNotificationServiceExtension.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		DA5CA887E32D24971D8A9793 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B62D7E170523012DA8D2364D /* libPods-OneSignalNotificationServiceExtension.a */; };
-		E077F25585ECDE499D5894F5 /* libPods-CrowdShipping-CrowdShippingTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F38C25DE07DF6540AE097E89 /* libPods-CrowdShipping-CrowdShippingTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,7 +54,6 @@
 		00E356EE1AD99517003FC87E /* CrowdShippingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CrowdShippingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* CrowdShippingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CrowdShippingTests.m; sourceTree = "<group>"; };
-		0114933DFCA74239F486E67E /* libPods-CrowdShipping.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CrowdShipping.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0409A1D428B5FCEA002CA936 /* OneSignalNotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OneSignalNotificationServiceExtension.entitlements; sourceTree = "<group>"; };
 		0415F1C428ACC82100B33C74 /* CrowdShipping.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = CrowdShipping.entitlements; path = CrowdShipping/CrowdShipping.entitlements; sourceTree = "<group>"; };
 		0415F1CA28ACC9A000B33C74 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
@@ -63,6 +62,7 @@
 		04BBDF1E28B5FA9600CBD18B /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		04BBDF2028B5FA9600CBD18B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		06C863FA9F7F4398BE70D768 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		0D14BB8B89A0DE043BA964DB /* libPods-CrowdShipping.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CrowdShipping.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		123FE694FECC4F11B0E46FA0 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* CrowdShipping.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CrowdShipping.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = CrowdShipping/AppDelegate.h; sourceTree = "<group>"; };
@@ -70,30 +70,30 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = CrowdShipping/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = CrowdShipping/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = CrowdShipping/main.m; sourceTree = "<group>"; };
-		157A307F851CF5D577EF8DE8 /* Pods-CrowdShipping.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CrowdShipping.debug.xcconfig"; path = "Target Support Files/Pods-CrowdShipping/Pods-CrowdShipping.debug.xcconfig"; sourceTree = "<group>"; };
 		247FC13228804988BCC92326 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
-		2F8E9FD0247B186BDF89566B /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
+		2CBDBEFFEC369C1A0DBCABCF /* Pods-CrowdShipping-CrowdShippingTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CrowdShipping-CrowdShippingTests.debug.xcconfig"; path = "Target Support Files/Pods-CrowdShipping-CrowdShippingTests/Pods-CrowdShipping-CrowdShippingTests.debug.xcconfig"; sourceTree = "<group>"; };
 		2FA73171AFBB4B0DBDEB10F3 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
-		4E5A9077653DDC3E233DD419 /* Pods-CrowdShipping-CrowdShippingTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CrowdShipping-CrowdShippingTests.debug.xcconfig"; path = "Target Support Files/Pods-CrowdShipping-CrowdShippingTests/Pods-CrowdShipping-CrowdShippingTests.debug.xcconfig"; sourceTree = "<group>"; };
+		33DAAD06BEE04874381A077D /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		5E537BE7977B4322865399D9 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		5FEACC68E4924FA9B76D8BEE /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		622DB286812B489E9B414CD8 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		64CA545955B541D488539E56 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
-		6CDE75067F422CE3173187A1 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 		79639939964F49CE9EA33B9D /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = CrowdShipping/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		9874FD03B7FCDA1253349253 /* Pods-CrowdShipping-CrowdShippingTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CrowdShipping-CrowdShippingTests.release.xcconfig"; path = "Target Support Files/Pods-CrowdShipping-CrowdShippingTests/Pods-CrowdShipping-CrowdShippingTests.release.xcconfig"; sourceTree = "<group>"; };
+		95A2EB7ACF9BFF96E935E24F /* Pods-CrowdShipping.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CrowdShipping.debug.xcconfig"; path = "Target Support Files/Pods-CrowdShipping/Pods-CrowdShipping.debug.xcconfig"; sourceTree = "<group>"; };
+		9E4ADF861A9002C249435CFE /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
+		A27810E7F12A50598F0B5D60 /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3CD9EAD8A9241AC85F93065 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
-		B62D7E170523012DA8D2364D /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B94827E3163D43AC9B45B483 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
+		C9DC864D5BE82CF307AE322A /* libPods-CrowdShipping-CrowdShippingTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CrowdShipping-CrowdShippingTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3CC84B0FD1A4C6892EA990F /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
+		D6A18F6687B621C5A6ABE692 /* Pods-CrowdShipping-CrowdShippingTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CrowdShipping-CrowdShippingTests.release.xcconfig"; path = "Target Support Files/Pods-CrowdShipping-CrowdShippingTests/Pods-CrowdShipping-CrowdShippingTests.release.xcconfig"; sourceTree = "<group>"; };
 		DC5FD800DDB94562901C97DD /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
+		DD4907C382B58CA58D53A2F2 /* Pods-CrowdShipping.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CrowdShipping.release.xcconfig"; path = "Target Support Files/Pods-CrowdShipping/Pods-CrowdShipping.release.xcconfig"; sourceTree = "<group>"; };
 		E206636AB3934C2685CB2D50 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F38C25DE07DF6540AE097E89 /* libPods-CrowdShipping-CrowdShippingTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CrowdShipping-CrowdShippingTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FBDC1D78DEC44EB0B52C9224 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		FC8D9D0998FC49E2AB94C055 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
-		FCA2360489FA32C9B7763898 /* Pods-CrowdShipping.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CrowdShipping.release.xcconfig"; path = "Target Support Files/Pods-CrowdShipping/Pods-CrowdShipping.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,7 +101,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E077F25585ECDE499D5894F5 /* libPods-CrowdShipping-CrowdShippingTests.a in Frameworks */,
+				77866FB26EFAFCDBD6117E2E /* libPods-CrowdShipping-CrowdShippingTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -109,7 +109,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DA5CA887E32D24971D8A9793 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */,
+				7B64F8428973EC9F116D33C7 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,7 +117,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A2C953E239BDF27D3B6A85B /* libPods-CrowdShipping.a in Frameworks */,
+				2C543A7361B46CA4C61D7705 /* libPods-CrowdShipping.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -169,11 +169,11 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				0114933DFCA74239F486E67E /* libPods-CrowdShipping.a */,
-				F38C25DE07DF6540AE097E89 /* libPods-CrowdShipping-CrowdShippingTests.a */,
 				0415F1CA28ACC9A000B33C74 /* UserNotifications.framework */,
 				0415F1CC28ACC9A000B33C74 /* UserNotificationsUI.framework */,
-				B62D7E170523012DA8D2364D /* libPods-OneSignalNotificationServiceExtension.a */,
+				0D14BB8B89A0DE043BA964DB /* libPods-CrowdShipping.a */,
+				C9DC864D5BE82CF307AE322A /* libPods-CrowdShipping-CrowdShippingTests.a */,
+				A27810E7F12A50598F0B5D60 /* libPods-OneSignalNotificationServiceExtension.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -238,12 +238,12 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				157A307F851CF5D577EF8DE8 /* Pods-CrowdShipping.debug.xcconfig */,
-				FCA2360489FA32C9B7763898 /* Pods-CrowdShipping.release.xcconfig */,
-				4E5A9077653DDC3E233DD419 /* Pods-CrowdShipping-CrowdShippingTests.debug.xcconfig */,
-				9874FD03B7FCDA1253349253 /* Pods-CrowdShipping-CrowdShippingTests.release.xcconfig */,
-				2F8E9FD0247B186BDF89566B /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */,
-				6CDE75067F422CE3173187A1 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */,
+				95A2EB7ACF9BFF96E935E24F /* Pods-CrowdShipping.debug.xcconfig */,
+				DD4907C382B58CA58D53A2F2 /* Pods-CrowdShipping.release.xcconfig */,
+				2CBDBEFFEC369C1A0DBCABCF /* Pods-CrowdShipping-CrowdShippingTests.debug.xcconfig */,
+				D6A18F6687B621C5A6ABE692 /* Pods-CrowdShipping-CrowdShippingTests.release.xcconfig */,
+				33DAAD06BEE04874381A077D /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */,
+				9E4ADF861A9002C249435CFE /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -255,12 +255,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "CrowdShippingTests" */;
 			buildPhases = (
-				6820E3D14B37D1B6DA91A5C2 /* [CP] Check Pods Manifest.lock */,
+				3101A9E60285527C889E31E0 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				FE3375454148AA85AD5DCCD4 /* [CP] Embed Pods Frameworks */,
-				7704487520E23A41B4021F08 /* [CP] Copy Pods Resources */,
+				FBF018ED9A7EB9DBF66A7874 /* [CP] Embed Pods Frameworks */,
+				9662B52E3967F247A3EA28B4 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -276,7 +276,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 04BBDF2428B5FA9600CBD18B /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */;
 			buildPhases = (
-				B1BD49A557724985449A9EBF /* [CP] Check Pods Manifest.lock */,
+				DE5DAC332D0769DD37FB5164 /* [CP] Check Pods Manifest.lock */,
 				04BBDF1828B5FA9600CBD18B /* Sources */,
 				04BBDF1928B5FA9600CBD18B /* Frameworks */,
 				04BBDF1A28B5FA9600CBD18B /* Resources */,
@@ -294,15 +294,15 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "CrowdShipping" */;
 			buildPhases = (
-				BF7C1784BE89F75B40EBA912 /* [CP] Check Pods Manifest.lock */,
+				994580B6A03C11FF9B488768 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				1C403429EA7E16EE78234D62 /* [CP] Embed Pods Frameworks */,
-				9504284F2556C27A34FDEDBB /* [CP] Copy Pods Resources */,
 				0415F1DB28ACC9A000B33C74 /* Embed App Extensions */,
+				AB1034CA9CD7E5DC51A4E43E /* [CP] Embed Pods Frameworks */,
+				1C31EF28145C0F2D967C5AC1 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -396,24 +396,24 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		1C403429EA7E16EE78234D62 /* [CP] Embed Pods Frameworks */ = {
+		1C31EF28145C0F2D967C5AC1 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CrowdShipping/Pods-CrowdShipping-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-CrowdShipping/Pods-CrowdShipping-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CrowdShipping/Pods-CrowdShipping-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-CrowdShipping/Pods-CrowdShipping-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CrowdShipping/Pods-CrowdShipping-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CrowdShipping/Pods-CrowdShipping-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		6820E3D14B37D1B6DA91A5C2 /* [CP] Check Pods Manifest.lock */ = {
+		3101A9E60285527C889E31E0 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -435,7 +435,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		7704487520E23A41B4021F08 /* [CP] Copy Pods Resources */ = {
+		9662B52E3967F247A3EA28B4 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -452,46 +452,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CrowdShipping-CrowdShippingTests/Pods-CrowdShipping-CrowdShippingTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9504284F2556C27A34FDEDBB /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CrowdShipping/Pods-CrowdShipping-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CrowdShipping/Pods-CrowdShipping-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CrowdShipping/Pods-CrowdShipping-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B1BD49A557724985449A9EBF /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-OneSignalNotificationServiceExtension-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		BF7C1784BE89F75B40EBA912 /* [CP] Check Pods Manifest.lock */ = {
+		994580B6A03C11FF9B488768 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -513,6 +474,62 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		AB1034CA9CD7E5DC51A4E43E /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CrowdShipping/Pods-CrowdShipping-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CrowdShipping/Pods-CrowdShipping-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CrowdShipping/Pods-CrowdShipping-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DE5DAC332D0769DD37FB5164 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-OneSignalNotificationServiceExtension-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FBF018ED9A7EB9DBF66A7874 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CrowdShipping-CrowdShippingTests/Pods-CrowdShipping-CrowdShippingTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CrowdShipping-CrowdShippingTests/Pods-CrowdShipping-CrowdShippingTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CrowdShipping-CrowdShippingTests/Pods-CrowdShipping-CrowdShippingTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -530,23 +547,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		FE3375454148AA85AD5DCCD4 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CrowdShipping-CrowdShippingTests/Pods-CrowdShipping-CrowdShippingTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CrowdShipping-CrowdShippingTests/Pods-CrowdShipping-CrowdShippingTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CrowdShipping-CrowdShippingTests/Pods-CrowdShipping-CrowdShippingTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -595,7 +595,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4E5A9077653DDC3E233DD419 /* Pods-CrowdShipping-CrowdShippingTests.debug.xcconfig */;
+			baseConfigurationReference = 2CBDBEFFEC369C1A0DBCABCF /* Pods-CrowdShipping-CrowdShippingTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -622,7 +622,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9874FD03B7FCDA1253349253 /* Pods-CrowdShipping-CrowdShippingTests.release.xcconfig */;
+			baseConfigurationReference = D6A18F6687B621C5A6ABE692 /* Pods-CrowdShipping-CrowdShippingTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -646,7 +646,7 @@
 		};
 		04BBDF2528B5FA9600CBD18B /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2F8E9FD0247B186BDF89566B /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */;
+			baseConfigurationReference = 33DAAD06BEE04874381A077D /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -688,7 +688,7 @@
 		};
 		04BBDF2628B5FA9600CBD18B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6CDE75067F422CE3173187A1 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */;
+			baseConfigurationReference = 9E4ADF861A9002C249435CFE /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -730,7 +730,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 157A307F851CF5D577EF8DE8 /* Pods-CrowdShipping.debug.xcconfig */;
+			baseConfigurationReference = 95A2EB7ACF9BFF96E935E24F /* Pods-CrowdShipping.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -763,7 +763,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FCA2360489FA32C9B7763898 /* Pods-CrowdShipping.release.xcconfig */;
+			baseConfigurationReference = DD4907C382B58CA58D53A2F2 /* Pods-CrowdShipping.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;

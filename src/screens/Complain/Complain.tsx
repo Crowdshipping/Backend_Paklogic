@@ -13,7 +13,6 @@ import {
     heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import ComplainSingleCard from './ComplainSingleCard';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getComplains } from '../../API/';
 import { colors } from '../../theme';
 import { Header } from '../../components';

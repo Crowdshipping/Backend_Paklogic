@@ -60,7 +60,6 @@ interface IimageShow {
 }
 interface IimageShow1 extends Array<IimageShow> { }
 const LandModifyRequest = ({ navigation, route }: any) => {
-  console.log('acddddfahfjfie', route.params.data)
   const {
     // SelectedBookingType,
     vehicleType,
@@ -167,12 +166,10 @@ const LandModifyRequest = ({ navigation, route }: any) => {
       setweightValue(false);
     }
     if (!pickupLocation) {
-      console.log('pick loc', pickupLocation);
       setpickValue(false)
       validate = false;
     }
     if (!dropoffLocation) {
-      console.log('drop loc', dropoffLocation);
       setdropValue(false)
       validate = false;
     }
@@ -200,13 +197,11 @@ const LandModifyRequest = ({ navigation, route }: any) => {
         validate = false;
       }
     }
-    // console.log(first)
     if (validate) {
       setloading(true);
       if (bookingId === '') {
         postImage(Images)
           .then((rest: any) => {
-            console.log(rest)
             let validate = true;
             if (rest.length === 2) {
               if (rest[0].success && rest[1].success) {
@@ -584,7 +579,6 @@ const LandModifyRequest = ({ navigation, route }: any) => {
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
               {Images.length >= 1 ? (
                 Images.map((item, index) => {
-                  console.log('item from land modify', item)
                   return (
                     <View key={index} style={{ marginLeft: wp(8) }}>
                       <TouchableOpacity
@@ -834,6 +828,7 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                 }
                 phone={route.params?.phone}
                 countryCode={countrySelect}
+                editable={!loading}
               />
             </View>
             <Button title="next" onPress={handleSubmit} loading={loading} />

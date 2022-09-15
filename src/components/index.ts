@@ -7,7 +7,7 @@ import {MapHeader} from './mapheader';
 import {Datepicker} from './datepicker';
 import {TextInputPencil} from './textboxPencil';
 import {BookingListCard} from './bookingListCard';
-import {History} from './history';
+
 import CheckBoxState from './checkBoxState';
 import {MineCard} from './MineCard';
 
@@ -22,7 +22,6 @@ export {
   Datepicker,
   TextInputPencil,
   BookingListCard,
-  History,
   CheckBoxState,
   MineCard,
 };

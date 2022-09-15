@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useContext } from 'react';
 import {
-  ActivityIndicator,
   Alert,
   Image,
   SafeAreaView,
@@ -27,29 +26,12 @@ import { AppContext } from '../../App';
 
 
 const CustomDrawerContent = (props: any) => {
-  const [email, setemail] = React.useState<any>('');
-  const [name, setname] = React.useState<any>('');
-  const [pic, setpic] = React.useState<any>('');
   const { userData } = useContext(AppContext)
 
   const isfocus = useIsFocused();
 
-  // const [isLoading, setIsLoading] = React.useState(false);
-  // const getUserData = async () => {
-  //   try {
-  //     setemail(await AsyncStorage.getItem('@userEmail'));
-  //     setname(await AsyncStorage.getItem('@userFName'));
-  //     setpic(await AsyncStorage.getItem('@userId'));
-  //     setpic(prodUrl + (await AsyncStorage.getItem('@useerPic')));
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
+
   const removeId = async () => {
-    // await AsyncStorage.removeItem('@user_Id');
-    // await AsyncStorage.removeItem('@userEmail');
-    // await AsyncStorage.removeItem('@userName');
-    // await AsyncStorage.removeItem('@userPlayerId');
     await AsyncStorage.clear()
   };
   const logout = () => {
@@ -152,12 +134,12 @@ const CustomDrawerContent = (props: any) => {
           <SvgXml style={styles.svg} xml={claimicon} width={25} />
           <Text style={styles.txtdetail}>Claim</Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             props.navigation.navigate('LoggedUserResetPassword');
           }}
           style={styles.viewunderline}>
-          {/* <SvgXml style={styles.svg} xml={pass} width={25} /> */}
+
           <Icon
             name="shield"
             color={colors.black}
@@ -165,7 +147,7 @@ const CustomDrawerContent = (props: any) => {
             style={{ alignSelf: 'center', }}
           />
           <Text style={styles.txtdetail}>Reset Password</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity
           onPress={() => {
             props.navigation.navigate('Complain');

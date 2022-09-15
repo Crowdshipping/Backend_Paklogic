@@ -184,18 +184,19 @@ const ShipDelivery = ({ navigation }: any) => {
         )}
       </View>
       <View style={styles.bckimg}>
-        <View style={{}}>
-          <Header
-            title="Package Details"
-            // picture={packagedetails}
-            pressMethod={() => navigation.goBack()}
-          />
-        </View>
+
+        <Header
+          title="Package Details"
+          // picture={packagedetails}
+          pressMethod={() => navigation.goBack()}
+        />
+
 
         <View style={styles.main}>
+          <Text style={{ marginTop: hp(3), fontSize: hp(2) }}>Select the time limit within 3 weeks interval.</Text>
           <View
             style={{
-              marginVertical: hp(5),
+              marginVertical: hp(2),
               paddingHorizontal: wp(15),
               width: wp(70),
             }}>

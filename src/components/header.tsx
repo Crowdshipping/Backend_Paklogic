@@ -2,7 +2,6 @@ import * as React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import { styles } from './style';
 import AntDesign from 'react-native-vector-icons/AntDesign';

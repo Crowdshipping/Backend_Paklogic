@@ -201,7 +201,7 @@ const ReceiverDetailsScreen = ({ navigation, route }: any) => {
           // style={styles.bgImage}
           resizeMode={'cover'}
           source={mapp}>
-          <TouchableOpacity onPress={() => { }} style={styles.menu}>
+          <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={styles.menu}>
             <Entypo name="menu" size={25} />
           </TouchableOpacity>
           <View style={styles.location}>
@@ -297,7 +297,7 @@ const ReceiverDetailsScreen = ({ navigation, route }: any) => {
         isSuccess={isSuccess}
         setsuccess={() => {
           setsuccess(false);
-          navigation.navigate('DrawerScreens');
+          navigation.navigate('MyDrawer');
         }}
         text={'Submitted Successfuly'}
       />

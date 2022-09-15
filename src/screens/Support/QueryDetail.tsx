@@ -13,13 +13,15 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import CheckBoxState from '../../components/CheckBoxState';
+
+import { CheckBoxState, Header } from '../../components';
 const QueryDetail = ({ navigation, route }: any) => {
     return (
         <SafeAreaView>
             <ScrollView>
+                <Header title={'Query Detail'} pressMethod={() => navigation.goBack()} />
                 <View style={styles.maincontainer}>
-                {route.params.item.customerSupportStatus === "Pending" ?
+                    {route.params.item.customerSupportStatus === "Pending" ?
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
                             <CheckBoxState text={'Pending'} isDisabled={true} checked={true} />
                         </View>
@@ -50,8 +52,8 @@ const styles = StyleSheet.create({
     maincontainer: {
         paddingVertical: wp(5),
         paddingHorizontal: hp(3),
-        backgroundColor:'white',
-        height:hp('100%')
+        // backgroundColor: 'white',
+        height: hp('100%')
     },
     txt: {
         color: 'black',

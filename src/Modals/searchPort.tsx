@@ -70,11 +70,11 @@ export const SearchPort = (props: IModal) => {
           </View>
           <TouchableOpacity
             onPress={() => {
-              setLocation({
-                Country: '',
-                Location: '',
-                Name: '',
-              });
+              // setLocation({
+              //   Country: '',
+              //   Location: '',
+              //   Name: '',
+              // });
               setModalVisible(false);
             }}
             style={{ width: '15%' }}>

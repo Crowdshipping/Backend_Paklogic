@@ -1,13 +1,13 @@
 import React from 'react';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-const CheckBoxState = ({ text, onPress, isDisabled,checked }: any) => {
+const CheckBoxState = ({ text, onPress, isDisabled, checked }: any) => {
   const [toggleCheckBox, setToggleCheckBox] = React.useState(false);
   return (
     <View style={styles.container}>
       <BouncyCheckbox
-      
+
         disabled={isDisabled}
         isChecked={checked}
         textStyle={{
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight:6
+    marginRight: 6
   },
   textCheckBox: {
     fontSize: 12,

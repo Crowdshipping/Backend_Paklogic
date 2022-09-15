@@ -45,15 +45,7 @@ const EditProfile = ({ navigation, route }: any) => {
     const [isSuccess, setsuccess] = useState(false)
     const [toCaptureImage, settoCaptureImage] = useState(false);
 
-    // async function updateProfileData(imgUrl: string) {
-    //     try {
-    //         console.log('fgkfjykujyufv', imgUrl)
-    //         await AsyncStorage.setItem('@userName', getfirstName + ' ' + getLastName);
-    //         await AsyncStorage.setItem('@useerPic', imgUrl);
-    //     } catch (e) {
-    //         console.log('error', e);
-    //     }
-    // }
+
 
     function handleProfileUpdate() {
         let validate = true

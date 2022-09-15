@@ -42,7 +42,9 @@ import {
   AddComplain,
   ComplainDetail,
   NotifictionHistory,
-  ViewQuery
+  ViewQuery,
+  AddQuery,
+  QueryDetail
 } from '../screens';
 import CustomDrawerContent from './DrawerNavigation';
 import { StripePayment } from '../stripe';
@@ -98,6 +100,8 @@ type rootStack = {
   LoggedUserResetPassword: undefined;
   NotifictionHistory: undefined;
   ViewQuery: undefined;
+  AddQuery: undefined;
+  QueryDetail: undefined;
 };
 const Stack = createStackNavigator<rootStack>();
 const Drawer = createDrawerNavigator();
@@ -109,6 +113,9 @@ const MyDrawer = () => {
       initialRouteName="DrawerScreens"
       drawerContent={props => <CustomDrawerContent {...props} />}>
       <Drawer.Screen name="DrawerScreens" component={DrawerScreens} />
+      <Stack.Screen name="ShipFlowNavigation" component={ShipFlowNavigation} />
+      <Stack.Screen name="LandFlowNavigation" component={LandFlowNavigation} />
+      <Stack.Screen name="AirFlowNavigation" component={AirFlowNavigation} />
     </Drawer.Navigator>
   );
 };
@@ -139,8 +146,9 @@ const DrawerScreens = () => {
       <Stack.Screen name="LoggedUserResetPassword" component={LoggedUserResetPassword} />
       <Stack.Screen name="NotifictionHistory" component={NotifictionHistory} />
       <Stack.Screen name="ViewQuery" component={ViewQuery} />
+      <Stack.Screen name="AddQuery" component={AddQuery} />
+      <Stack.Screen name="QueryDetail" component={QueryDetail} />
       <Stack.Screen name="StripePayment" component={StripePayment} />
-
     </Stack.Navigator>
   )
 }
@@ -154,6 +162,7 @@ const LandFlowNavigation = () => {
       <Stack.Screen name="LandProductDetail" component={LandProductDetail} />
       <Stack.Screen name="LandReceiverDetail" component={LandReceiverDetail} />
       <Stack.Screen name="LandModifyRequest" component={LandModifyRequest} />
+      <Stack.Screen name="MyDrawer" component={MyDrawer} />
     </Stack.Navigator>
   );
 };
@@ -172,6 +181,7 @@ const ShipFlowNavigation = () => {
       <Stack.Screen name="ShipProductDetail" component={ShipProductDetail} />
       <Stack.Screen name="ShipReceiverDetail" component={ShipReceiverDetail} />
       <Stack.Screen name="ShipModifyRequest" component={ShipModifyRequest} />
+      <Stack.Screen name="MyDrawer" component={MyDrawer} />
     </Stack.Navigator>
   );
 };
@@ -187,6 +197,7 @@ const AirFlowNavigation = () => {
       <Stack.Screen name="ProductScreen" component={ProductScreen} />
       <Stack.Screen name="AirDelivery" component={AirDelivery} />
       <Stack.Screen name="ModifyRequest" component={ModifyRequest} />
+      <Stack.Screen name="MyDrawer" component={MyDrawer} />
     </Stack.Navigator>
   );
 };

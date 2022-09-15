@@ -737,6 +737,7 @@ const ModifyRequest = ({ navigation, route }: any) => {
                 }
                 phone={route.params?.phone}
                 countryCode={countrySelect}
+                editable={!loading}
               />
             </View>
             <Button title="next" onPress={handleSubmit} loading={loading} />

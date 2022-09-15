@@ -30,6 +30,7 @@ import { styles } from './style';
 import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AppContext } from '../../../App';
+import Icon from 'react-native-vector-icons/Feather';
 
 const ViewProfile = ({ navigation, route }: any) => {
     const { setUserData } = useContext(AppContext)
@@ -102,15 +103,7 @@ const ViewProfile = ({ navigation, route }: any) => {
                                     source={profile}
                                     style={styles.img}
                                 />}
-                                {/* <TouchableOpacity
-                                    style={{
-                                        position: 'absolute',
-                                        top: hp(15),
-                                        right: wp(5),
-                                        // backgroundColor: 'yellow',
-                                    }}>
-                                    <SvgXml style={styles.CameraSvg} xml={camera} width={30} />
-                                </TouchableOpacity> */}
+
                             </View>
                         </ImageBackground>
                     </View>
@@ -152,7 +145,9 @@ const ViewProfile = ({ navigation, route }: any) => {
                             </View>
                         </View>
 
-                        <View
+                        <TouchableOpacity onPress={() => {
+                            navigation.navigate('LoggedUserResetPassword');
+                        }}
                             style={{
                                 flexDirection: 'row',
                                 paddingVertical: hp(1),
@@ -163,29 +158,31 @@ const ViewProfile = ({ navigation, route }: any) => {
                                 style={{
                                     flexDirection: 'row',
                                 }}>
-                                <SvgXml style={styles.svg} xml={setting} width={25} />
+                                {/* <SvgXml style={styles.svg} xml={setting} width={25} /> */}
+                                <Icon
+                                    name="shield"
+                                    color={colors.black}
+                                    size={25}
+                                    style={{ alignSelf: 'center', }}
+                                />
                                 <View style={{ paddingLeft: wp(5) }}>
-                                    <Text style={styles.txtdetail}>Setting</Text>
+                                    <Text style={styles.txtdetail}>Reset Password</Text>
                                 </View>
                             </View>
 
-                            <TouchableOpacity>
-                                <AntDesign
-                                    name="right"
-                                    color={colors.black}
-                                    size={wp(5)}
-                                // onPress={() =>
-                                //     navigation.dispatch(DrawerActions.openDrawer())
-                                // }
-                                // onPress={() => console.log('adasdsefsssd')}
-                                />
-                            </TouchableOpacity>
-                        </View>
+                            <AntDesign
+                                name="right"
+                                color={colors.black}
+                                size={wp(5)}
+                            />
+                        </TouchableOpacity>
+
+
                     </View>
                 </View>
             )}
         </SafeAreaView>
-        // <SafeAreaView></SafeAreaView>
+
     );
 };
 

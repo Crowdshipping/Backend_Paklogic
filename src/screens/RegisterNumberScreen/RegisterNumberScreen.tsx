@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, SafeAreaView, Text, View } from 'react-native';
+import { Alert, SafeAreaView, View } from 'react-native';
 import { styles } from './style';
 
 import { Button, PhoneNumberPicker, Header } from '../../components';
 
 import { SvgXml } from 'react-native-svg';
 import { welcome } from '../../theme/assets/svg';
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
 
 import { verifyNumber } from '../../API/verifyPhone';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -102,6 +98,7 @@ const RegisterNumberScreen = ({ navigation }: any) => {
                   : 'Must Enter valid phone number'
                 : ''
             }
+            editable={!loading}
           />
           {/* </View> */}
         </View>

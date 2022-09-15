@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Alert, ActivityIndicator, View, ScrollView, Text, TouchableOpacity, } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Modal from 'react-native-modal';
+
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 import { BookingListCard, Header } from '../../../components';
@@ -10,11 +10,10 @@ import { useIsFocused } from '@react-navigation/native';
 import { cross, plane, shipsvg, success, truck } from '../../../theme/assets/svg';
 import { cancelDriverRequest, getPostRequests, orderHistory } from '../../../API';
 import { colors } from '../../../theme';
-import StripePayment from '../../../stripe/stripePayment';
-import { SvgXml } from 'react-native-svg';
+
 
 import { styles } from './style'
-import { History } from '../../../components/history';
+
 
 
 const BookingHistory = ({ navigation }: any) => {

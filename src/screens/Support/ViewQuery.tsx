@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     Text,
     StyleSheet,
     TouchableOpacity,
     View,
     ScrollView,
+    ActivityIndicator,
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -17,12 +18,16 @@ import { CheckBoxState, Header } from '../../components';
 
 import { getQuestions } from '../../API';
 import QuerySingleCard from './QuerSingleCard';
+import { colors } from '../../theme';
+import { useIsFocused } from '@react-navigation/native';
 
 const ViewQuery = ({ navigation }: any) => {
     const [QueryResponse, setQueryResponse] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
     const [pending, setPending] = React.useState(false);
     const [resolved, setResolved] = React.useState(true);
+    const isfocus = useIsFocused();
+
     const getData = async () => {
         setIsLoading(true);
         getQuestions()
@@ -36,19 +41,17 @@ const ViewQuery = ({ navigation }: any) => {
             });
     };
 
-    React.useEffect(() => {
-        getData();
-        const willFocusSubscription = navigation.addListener('focus', () => {
+    useEffect(() => {
+        if (isfocus) {
             getData();
-        });
-        return willFocusSubscription;
-    }, []);
+        }
+    }, [isfocus]);
 
     const renderQuery = (item: any) => {
         return (
             <QuerySingleCard
                 onPress={() => {
-                    // navigation.navigate("QueryDetail", { item })
+                    navigation.navigate("QueryDetail", { item })
                 }}
                 state={"Pending"}
                 title={item.customerSupportTitle}
@@ -67,26 +70,15 @@ const ViewQuery = ({ navigation }: any) => {
     }
 
     const renderQueryCheck = () => {
-        let noQueryResolved = 0;
         return <View >
             {QueryResponse.length !== 0 ?
                 QueryResponse.map((item: any) => {
-                    console.log("itemitemitem12233", item);
                     if (pending === true && item.customerSupportStatus === 'Pending') {
-                        console.log(item.customerSupportStatus)
                         return renderQuery(item)
                     }
                     else if (resolved === true && item.customerSupportStatus === 'Resolved') {
                         return renderQuery(item)
-                    } else {
-                        noQueryResolved = noQueryResolved + 1;
                     }
-
-                    if (noQueryResolved === QueryResponse.length) {
-                        return noQueryAvailable()
-                    }
-
-
                 })
                 :
                 noQueryAvailable()
@@ -100,25 +92,33 @@ const ViewQuery = ({ navigation }: any) => {
     return (
         <SafeAreaView style={{ backgroundColor: 'white', height: "100%" }}>
             <Header title={'Support'} pressMethod={() => navigation.goBack()} />
-            <ScrollView>
-                <View style={styles.maincontainer}>
-                    <TouchableOpacity onPress={() => {
-                        // navigation.navigate("AddQuery")
-                    }} style={styles.addbtn}>
-                        <Text style={styles.txt}>ADD QUERY</Text>
-                    </TouchableOpacity>
-                    <View style={styles.radio}>
-                        <CheckBoxState
-                            text={'Resolved'}
-                            onPress={() => { setResolved(!resolved) }}
-                            checked={true}
-                        />
-                        <CheckBoxState text={'Pending'} onPress={() => { setPending(!pending) }} />
-                    </View>
-                    {renderQueryCheck()}
-                </View>
-            </ScrollView>
+            {isLoading ?
+                <ActivityIndicator
+                    size={'small'}
+                    color={colors.red}
+                    style={{ justifyContent: 'center', alignSelf: 'center' }}
+                />
 
+                :
+                <ScrollView>
+                    <View style={styles.maincontainer}>
+                        <TouchableOpacity onPress={() => {
+                            navigation.navigate("AddQuery")
+                        }} style={styles.addbtn}>
+                            <Text style={styles.txt}>ADD QUERY</Text>
+                        </TouchableOpacity>
+                        <View style={styles.radio}>
+                            <CheckBoxState
+                                text={'Resolved'}
+                                onPress={() => { setResolved(!resolved) }}
+                                checked={true}
+                            />
+                            <CheckBoxState text={'Pending'} onPress={() => { setPending(!pending) }} />
+                        </View>
+                        {renderQueryCheck()}
+                    </View>
+                </ScrollView>
+            }
         </SafeAreaView>
     );
 };

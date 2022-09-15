@@ -147,7 +147,7 @@ const AddComplain = ({ navigation }: any) => {
                             placeholder={'Write Description Here '}
                             onChangeText={(value: any) => { setcomplainDescription(value) }}
                             multiline
-                            style={{ flex: 1, }}
+                            style={{ flex: 1, textAlignVertical: 'top' }}
                         />
 
                     </View>

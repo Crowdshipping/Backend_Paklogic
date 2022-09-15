@@ -38,7 +38,7 @@ interface IimageShow {
 }
 interface IimageShow1 extends Array<IimageShow> { }
 const ProductScreen = ({ navigation, route }: any) => {
-  // console.log('haris very bad', route.params.item)
+  console.log('haris very bad', route.params.item)
   const pickcoords = route.params?.item?.pickcoords;
   const dropcoords = route.params?.item?.dropcoords;
   const providerId = route.params.item?.providerId;
@@ -89,35 +89,52 @@ const ProductScreen = ({ navigation, route }: any) => {
   ];
   function handleSubmit() {
     let validate = true;
+    console.log('object')
 
     if (!weight) {
+      console.log('objectsfs')
+
       setweightValue(false);
       validate = false;
     }
     if (!SelectedType) {
+      console.log('objecsft')
+
       settypeValue(false);
       validate = false;
     }
     if (!SelectedUnit) {
+      console.log('obsagject')
+
       setunitValue(false);
       validate = false;
     }
     if (!SelectedCategory) {
+      console.log('objegddsrct')
+
       setcategoryValue(false);
       validate = false;
     }
     if (!(Images.length >= 1)) {
+      console.log('obje64ct')
+
       setImagesValue(false);
       validate = false;
     }
     if (validate) {
       // setweight(weight);
+      console.log('object53')
+
       handleNavigation();
     }
   }
 
   function handleNavigation() {
+    console.log('objedae524ct')
+
     if (flightId) {
+      console.log('object65432')
+
       settoCaptureImage(false),
         navigation.navigate('ReceiverDetails', {
           data: {
@@ -140,6 +157,8 @@ const ProductScreen = ({ navigation, route }: any) => {
           },
         });
     } else if (fa_flight_id) {
+      console.log('object09876tre')
+
       settoCaptureImage(false),
         navigation.navigate('ReceiverDetails', {
           data: {
@@ -179,7 +198,7 @@ const ProductScreen = ({ navigation, route }: any) => {
             style={{}}
             showsVerticalScrollIndicator={false}
             scrollToOverflowEnabled={false}>
-            <TouchableOpacity onPress={() => { }} style={styles.menu}>
+            <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={styles.menu}>
               <Entypo name="menu" size={25} />
             </TouchableOpacity>
             <View style={styles.location}>
@@ -533,7 +552,7 @@ const ProductScreen = ({ navigation, route }: any) => {
                 </View>
                 <Button
                   title="next"
-                  onPress={() => handleSubmit()}
+                  onPress={handleSubmit}
                   loading={loading}
                 />
               </View>

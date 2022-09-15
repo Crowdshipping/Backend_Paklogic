@@ -34,6 +34,7 @@ import {getNotifications} from './getNotifications';
 import {getComplains} from './getComplains';
 import {createComplain} from './createComplain';
 import {getQuestions} from './getQuestions';
+import {postQuestion} from './postQuestion';
 
 export {
   forgotPassword,
@@ -72,4 +73,5 @@ export {
   getComplains,
   createComplain,
   getQuestions,
+  postQuestion,
 };

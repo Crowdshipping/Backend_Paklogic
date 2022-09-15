@@ -47,10 +47,10 @@ const NotifictionHistory = ({ navigation }: any) => {
     const renderNotifications = () => {
         return <View >
             {userNotifications && userNotifications.length !== 0 ?
-                userNotifications.map((item: any) => {
+                userNotifications.map((item: any, index: number) => {
                     return (
                         <MineCard>
-                            <View style={{ flexDirection: 'row' }}>
+                            <View key={index} style={{ flexDirection: 'row' }}>
                                 <Icon size={30} color="orange" name="checkmark-circle" />
                                 <Text style={{ marginLeft: wp('5%'), marginTop: hp('0.5%') }}>{item.message}</Text>
                             </View>

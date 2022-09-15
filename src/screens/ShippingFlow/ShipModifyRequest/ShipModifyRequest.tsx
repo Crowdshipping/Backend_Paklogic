@@ -739,6 +739,7 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
                 }
                 phone={route.params?.phone}
                 countryCode={countrySelect}
+                editable={!loading}
               />
 
             </View>

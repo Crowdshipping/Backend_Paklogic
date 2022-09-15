@@ -1,23 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Text,
-  StyleSheet,
   TouchableOpacity,
   View,
   ScrollView,
   Image,
-  TextInput,
-  Platform,
   Alert,
   ActivityIndicator,
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import Entypo from 'react-native-vector-icons/Entypo';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { location, calendar } from '../../theme/assets/svg';
-import { Countries } from '../../appConstants';
+import { location } from '../../theme/assets/svg';
 import { mapp } from '../../theme/assets/images';
 
 import { getFlights } from '../../API';
@@ -27,9 +21,8 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import Modal from 'react-native-modal';
 
-import { Textbox, Button, Header, Datepicker } from '../../components';
+import { Header, Datepicker } from '../../components';
 import { SearchCity } from '../../Modals';
 import { styles } from './style';
 import { colors } from '../../theme/colors';
