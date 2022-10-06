@@ -5,10 +5,14 @@ import { prodUrl } from '../appConstants';
 
 export const getUser = async () => {
     const userId = await AsyncStorage.getItem('@userId');
+    const userToken = await AsyncStorage.getItem('@userToken');
     return new Promise((resolve, reject) => {
         const config: AxiosRequestConfig = {
             method: 'GET',
             url: `${prodUrl}/user/getuser/${userId}`,
+            headers: {
+                Authorization: `Bearer ${userToken}`
+            },
         };
 
         axios(config)

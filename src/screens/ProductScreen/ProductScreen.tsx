@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text,
   View,
@@ -7,6 +7,7 @@ import {
   ScrollView,
   ImageBackground,
   Image,
+  Alert,
 } from 'react-native';
 
 import { Textbox, Button, MapHeader } from '../../components';
@@ -30,6 +31,8 @@ import Modal from 'react-native-modal/dist/modal';
 
 import OpenCamera from '../Cam_Gal/OpenCamera';
 import OpenGallery from '../Cam_Gal/OpenGallery';
+import { getProductCategories, getProductTypes, LogoutApi } from '../../API';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface IimageShow {
   name: string;
@@ -37,8 +40,12 @@ interface IimageShow {
   type: string;
 }
 interface IimageShow1 extends Array<IimageShow> { }
+
+interface ITypes {
+  id: string,
+  name: string
+}
 const ProductScreen = ({ navigation, route }: any) => {
-  console.log('haris very bad', route.params.item)
   const pickcoords = route.params?.item?.pickcoords;
   const dropcoords = route.params?.item?.dropcoords;
   const providerId = route.params.item?.providerId;
@@ -60,28 +67,28 @@ const ProductScreen = ({ navigation, route }: any) => {
   const [unitValue, setunitValue] = useState(true);
   const [ImagesValue, setImagesValue] = useState(true);
 
-  const [SelectedCategory, setSelectedCategory] = useState('');
-  const [SelectedType, setSelectedType] = useState('');
+  const [SelectedCategory, setSelectedCategory] = useState<ITypes>({ id: '', name: '' });
+  const [SelectedType, setSelectedType] = useState<ITypes>({ id: '', name: '' });
   const [SelectedUnit, setSelectedUnit] = useState('');
-  // const [instructions, setinstructions] = useState('');
   const [description, setdescription] = useState('');
   const [weight, setweight] = useState('');
 
-  const [Images, setImages] = useState<IimageShow1>([
-    // {fileName: '', type: '', uri: ''},
-  ]);
+  const [Images, setImages] = useState<IimageShow1>([]);
 
-  const category = [
-    { id: 1, name: 'Wood' },
-    { id: 2, name: 'Iron' },
-    { id: 3, name: 'Plastic' },
-    { id: 4, name: 'Glass' },
-  ];
-  const Type = [
-    { id: 1, name: 'Cargo' },
-    { id: 2, name: 'hand Carry' },
-    { id: 3, name: 'soft' },
-  ];
+  const [Type, setType] = useState<ITypes[]>([])
+  const [category, setcategory] = useState<ITypes[]>([])
+
+  // const category = [
+  //   { id: 1, name: 'Wood' },
+  //   { id: 2, name: 'Iron' },
+  //   { id: 3, name: 'Plastic' },
+  //   { id: 4, name: 'Glass' },
+  // ];
+  // const Type = [
+  //   { id: 1, name: 'Cargo' },
+  //   { id: 2, name: 'hand Carry' },
+  //   { id: 3, name: 'soft' },
+  // ];
   const Unit = [
     { id: 1, name: 'Kilogram' },
     { id: 2, name: 'Gram' },
@@ -89,58 +96,44 @@ const ProductScreen = ({ navigation, route }: any) => {
   ];
   function handleSubmit() {
     let validate = true;
-    console.log('object')
 
     if (!weight) {
-      console.log('objectsfs')
-
       setweightValue(false);
       validate = false;
     }
-    if (!SelectedType) {
-      console.log('objecsft')
-
+    if (!(SelectedType.name.length > 0)) {
       settypeValue(false);
       validate = false;
     }
-    if (!SelectedUnit) {
-      console.log('obsagject')
+    if (SelectedType.id.length > 0) {
+      if (!(SelectedCategory.name.length > 0)) {
+        setcategoryValue(false);
+        validate = false;
+      }
+    }
 
+    if (!SelectedUnit) {
       setunitValue(false);
       validate = false;
     }
-    if (!SelectedCategory) {
-      console.log('objegddsrct')
-
-      setcategoryValue(false);
-      validate = false;
-    }
     if (!(Images.length >= 1)) {
-      console.log('obje64ct')
-
       setImagesValue(false);
       validate = false;
     }
     if (validate) {
-      // setweight(weight);
-      console.log('object53')
-
       handleNavigation();
     }
   }
 
   function handleNavigation() {
-    console.log('objedae524ct')
 
     if (flightId) {
-      console.log('object65432')
 
       settoCaptureImage(false),
         navigation.navigate('ReceiverDetails', {
           data: {
-            SelectedCategory,
-            SelectedType,
-            // instructions,
+            SelectedCategory: SelectedCategory.name,
+            SelectedType: SelectedType.name,
             description,
             weight,
             SelectedUnit,
@@ -157,14 +150,11 @@ const ProductScreen = ({ navigation, route }: any) => {
           },
         });
     } else if (fa_flight_id) {
-      console.log('object09876tre')
-
       settoCaptureImage(false),
         navigation.navigate('ReceiverDetails', {
           data: {
-            SelectedCategory,
-            SelectedType,
-            // instructions,
+            SelectedCategory: SelectedCategory.name,
+            SelectedType: SelectedType.name,
             description,
             weight,
             SelectedUnit,
@@ -184,11 +174,50 @@ const ProductScreen = ({ navigation, route }: any) => {
     }
   }
   const getSelectedImage = (result: any) => {
-    // imageArray.push(result)
     settoCaptureImage(false);
-    // let imageDirectory = {imagePath: result.uri, imageSize: result.fileSize};
+    setImagesValue(true)
     setImages([...Images, result]);
   };
+
+
+  useEffect(() => {
+    getProductTypes().then((result: any) => {
+      setloading(false)
+      result.success && result.productTypes.map((products: any) => {
+        setType((Type) => [...Type, { id: products._id, name: products.productName }])
+      })
+    })
+      .catch(async error => {
+        setloading(false);
+        if (error.response.status === 401) {
+          LogoutApi();
+          await AsyncStorage.clear();
+          navigation.navigate('Welcome')
+        } else {
+          Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+        }
+      });
+  }, [])
+
+  useEffect(() => {
+    if (SelectedType.id.length > 0) {
+      getProductCategories(SelectedType.id).then((result: any) => {
+        result.success && result.productCategories.map((products: any) => {
+          setcategory((category) => [...category, { id: products._id, name: products.productCategoryName }])
+        })
+      })
+        .catch(async error => {
+          setloading(false);
+          if (error.response.status === 401) {
+            LogoutApi();
+            await AsyncStorage.clear();
+            navigation.navigate('Welcome')
+          } else {
+            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+          }
+        });
+    }
+  }, [SelectedType.id])
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
@@ -227,39 +256,6 @@ const ProductScreen = ({ navigation, route }: any) => {
               <View style={styles.main}>
                 <TouchableOpacity
                   style={styles.Touch}
-                  onPress={() => setModalVisible(!isModalVisible)}>
-                  <View style={styles.txtview}>
-                    <Text style={styles.txt1}>Product Category</Text>
-
-                    <AntDesign
-                      name="caretdown"
-                      color={'grey'}
-                      size={wp(3)}
-                      style={{
-                        alignSelf: 'center',
-                        // borderWidth: 2,
-                        marginLeft: hp(1),
-                      }}
-                    />
-                  </View>
-
-                  <Text style={{ borderColor: 'grey' }}>
-                    {SelectedCategory ? SelectedCategory : 'Select Category'}
-                  </Text>
-                </TouchableOpacity>
-                {/* {errormsg ? ( */}
-                {!categoryValue ? (
-                  <Text style={styles.errorMsg}>
-                    Product Category is Required
-                  </Text>
-                ) : (
-                  <View></View>
-                )}
-                {/* ) : (
-                  <Text></Text>
-                )} */}
-                <TouchableOpacity
-                  style={styles.Touch}
                   onPress={() => setModalVisible2(!isModalVisible2)}>
                   <View style={styles.txtview}>
                     <Text style={styles.txt1}>Product Type</Text>
@@ -270,78 +266,59 @@ const ProductScreen = ({ navigation, route }: any) => {
                       size={wp(3)}
                       style={{
                         alignSelf: 'center',
-                        // borderWidth: 2,
                         marginLeft: hp(1),
                       }}
                     />
                   </View>
-                  <Text>{SelectedType ? SelectedType : 'Select Type '}</Text>
-                  {/* <Text style={{borderColor: 'grey'}}>Select Type</Text> */}
+                  <Text>{SelectedType.name.length > 0 ? SelectedType.name : 'Select Type '}</Text>
                 </TouchableOpacity>
                 {!typeValue ? (
                   <Text style={styles.errorMsg}>Product Type is Required</Text>
                 ) : (
                   <View></View>
                 )}
-                {/* <View
-                  style={{
-                    flexDirection: 'row',
-                    // borderWidth: 1,
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}>
-                  <Textbox
-                    title="Product Weight"
-                    placeholder="Enter product's weight"
-                    onChangeValue={(text: string) => {
-                      setweightValue(true), setweight(text);
-                    }}
-                    type={true}
-                    errormsg={
-                      !weightValue && !unitValue
-                        ? 'Weight and Unit are Required'
-                        : !unitValue
-                        ? 'Unit is Required'
-                        : !weightValue
-                        ? 'Weight is Required'
-                        : ''
-                    }
-                  />
+                <TouchableOpacity
+                  disabled={SelectedType?.id?.length > 0 ? false : true}
+                  style={styles.Touch}
+                  onPress={() => setModalVisible(!isModalVisible)}>
+                  <View style={styles.txtview}>
+                    <Text style={styles.txt1}>Product Category</Text>
 
-                  <TouchableOpacity
-                    onPress={() => setModalVisible3(!isModalVisible3)}
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      paddingHorizontal: wp(5),
-                    }}>
-                    <Text>{SelectedUnit ? SelectedUnit : 'Select Unit'}</Text>
                     <AntDesign
                       name="caretdown"
                       color={'grey'}
                       size={wp(3)}
                       style={{
                         alignSelf: 'center',
-                        // borderWidth: 2,
                         marginLeft: hp(1),
                       }}
                     />
-                  </TouchableOpacity>
-                </View> */}
+                  </View>
+
+                  <Text style={{ borderColor: 'grey' }}>
+                    {SelectedCategory.name.length > 0 ? SelectedCategory.name : 'Select Category'}
+                  </Text>
+                </TouchableOpacity>
+                {!categoryValue ? (
+                  <Text style={styles.errorMsg}>
+                    Product Category is Required
+                  </Text>
+                ) : (
+                  <></>
+                )}
+
+
+
 
                 <View
                   style={{
                     flexDirection: 'row',
                     marginLeft: wp(3),
                     marginRight: wp(5),
-                    // borderWidth: 1,
-                    // alignItems: 'center',
-                    // justifyContent: 'space-between',
                   }}>
                   <View
                     style={{
                       width: '50%',
-                      // borderWidth: 1
                     }}>
                     <Textbox
                       title="Product Weight"
@@ -367,19 +344,12 @@ const ProductScreen = ({ navigation, route }: any) => {
                   </View>
                   <TouchableOpacity
                     style={{
-                      // marginTop: 0,
                       width: '47%',
-                      // borderWidth: 1,
                       borderBottomWidth: 1,
                       marginTop: hp(2),
-                      // marginHorizontal: wp(1),
-                      // paddingHorizontal: wp(5),
                       marginBottom: hp(3),
                       borderColor: 'grey',
                       height: '55%',
-                      // alignSelf: 'center',
-
-                      // justifyContent: 'center',
                     }}
                     onPress={() => setModalVisible3(!isModalVisible3)}>
                     <View style={styles.txtview}>
@@ -391,7 +361,6 @@ const ProductScreen = ({ navigation, route }: any) => {
                         size={wp(3)}
                         style={{
                           alignSelf: 'center',
-                          // borderWidth: 2,
                           marginLeft: hp(1),
                         }}
                       />
@@ -408,6 +377,7 @@ const ProductScreen = ({ navigation, route }: any) => {
                   <TouchableOpacity
                     style={styles.arrorwStyle}
                     onPress={() => {
+
                       settoCaptureImage(true);
                     }}
                     disabled={Images.length >= 2 ? true : false}>
@@ -434,7 +404,7 @@ const ProductScreen = ({ navigation, route }: any) => {
                             style={{
                               alignSelf: 'flex-end',
                               borderRadius: 78,
-                              backgroundColor: 'red',
+                              backgroundColor: colors.red,
                               padding: wp(1),
                               left: wp(3),
                               top: wp(3.5),
@@ -448,10 +418,7 @@ const ProductScreen = ({ navigation, route }: any) => {
                             style={{
                               height: wp(37),
                               width: wp(37),
-                              // margin: wp(5),
                               borderRadius: 10,
-                              // borderWidth: 1,
-                              // backgroundColor: '#fedcba',
                             }}
                           />
                         </View>
@@ -484,7 +451,7 @@ const ProductScreen = ({ navigation, route }: any) => {
                     style={{
                       paddingHorizontal: wp(5),
                       textAlign: 'left',
-                      color: 'red',
+                      color: colors.red,
                     }}>
                     Images are Required
                   </Text>
@@ -494,30 +461,21 @@ const ProductScreen = ({ navigation, route }: any) => {
                   <Text style={styles.txt}>Instructions</Text>
                   <View
                     style={{
-                      // marginHorizontal: wp(5),
                       marginVertical: hp(2),
-                      // height: hp(20),
                       backgroundColor: colors.boxBackground,
                       borderRadius: 10,
-                      // width: wp(80),
                     }}>
                     <TextInput
                       placeholder="Upload one or two Images of the Product."
                       editable={false}
                       placeholderTextColor={'#969696'}
                       multiline={true}
-                      // autoCorrect={false}
-                      // autoCapitalize={'none'}
                       style={{
                         width: wp(80),
                         paddingHorizontal: wp(3),
-                        // marginTop: hp(1),
                         paddingVertical: hp(1),
                         flexWrap: 'wrap',
                       }}
-                    // onChangeText={(text: string) => {
-                    //   setinstructions(text);
-                    // }}
                     />
                   </View>
                 </View>
@@ -525,12 +483,10 @@ const ProductScreen = ({ navigation, route }: any) => {
                   <Text style={styles.txt}>Product Description</Text>
                   <View
                     style={{
-                      // marginHorizontal: wp(5),
                       marginVertical: hp(2),
                       height: hp(20),
                       backgroundColor: colors.boxBackground,
                       borderRadius: 10,
-                      // width: wp(80),
                     }}>
                     <TextInput
                       placeholder="Enter product description"
@@ -565,26 +521,34 @@ const ProductScreen = ({ navigation, route }: any) => {
         isModalVisible={isModalVisible}
         setModalVisible={setModalVisible}
         Type={category}
-        setSelectedType={(text: string) => {
+        setSelectedType={(text: string, id: string) => {
           setcategoryValue(true);
-          setSelectedCategory(text);
+          setSelectedCategory({
+            id: id,
+            name: text
+          });
         }}
+        other={true}
       />
       <ModalTypes
         isModalVisible={isModalVisible2}
         setModalVisible={setModalVisible2}
         Type={Type}
-        // setSelectedType={setSelectedType}
-        setSelectedType={(text: string) => {
+        setSelectedType={(text: string, id: string) => {
           settypeValue(true);
-          setSelectedType(text);
+          setSelectedType({
+            id: id,
+            name: text
+          });
+          setSelectedCategory({ id: '', name: '' });
+          setcategory([])
         }}
+        other={true}
       />
       <ModalTypes
         isModalVisible={isModalVisible3}
         setModalVisible={setModalVisible3}
         Type={Unit}
-        // setSelectedType={setSelectedUnit}
         setSelectedType={(text: string) => {
           setunitValue(true);
           setSelectedUnit(text);
@@ -605,19 +569,14 @@ const ProductScreen = ({ navigation, route }: any) => {
           <View
             style={{
               alignSelf: 'flex-end',
-              //   backgroundColor: '#A9A9A9',
               borderRadius: 78,
-              //   marginTop: 8,
-              //   marginRight: 15,
-              //   borderWidth: 1,
-              backgroundColor: 'red',
+              backgroundColor: colors.red,
               padding: 5,
               right: -10,
               top: -10,
             }}>
             <TouchableOpacity onPress={() => settoCaptureImage(false)}>
               <SvgXml
-                // style={styles.cross_img}
                 width="16"
                 height="15"
                 xml={cross}
@@ -629,10 +588,9 @@ const ProductScreen = ({ navigation, route }: any) => {
               borderBottomWidth: 1,
 
               justifyContent: 'center',
-              // paddingVertical: 30,
               paddingBottom: 30,
             }}>
-            <Text style={[styles.txt1, { color: 'red', textAlign: 'center' }]}>
+            <Text style={[styles.txt1, { color: colors.red, textAlign: 'center' }]}>
               Choose a picture
             </Text>
           </View>
@@ -642,7 +600,6 @@ const ProductScreen = ({ navigation, route }: any) => {
               paddingVertical: 5,
               flexDirection: 'row',
               alignItems: 'center',
-              // paddin,
             }}>
             <View style={{ width: '45%', height: hp(5) }}>
               <OpenCamera callbackImage={getSelectedImage.bind(this)} />
@@ -663,20 +620,3 @@ const ProductScreen = ({ navigation, route }: any) => {
   );
 };
 export default ProductScreen;
-
-// settoCaptureImage(false),
-// navigation.navigate('ReceiverDetails', {
-//   data: {
-//     SelectedCategory,
-//     SelectedType,
-//     instructions,
-//     description,
-//     weight,
-//     pickcoords,
-//     dropcoords,
-//     dropoffCity,
-//     pickupCity,
-//     providerId,
-//     flightId,
-//   },
-// });

@@ -4,11 +4,15 @@ import { prodUrl } from '../appConstants';
 
 export const getComplains = async () => {
     const userId = await AsyncStorage.getItem('@userId');
-    console.log({ userId })
+    const userToken = await AsyncStorage.getItem('@userToken');
+
     return new Promise((resolve, reject) => {
         const config: AxiosRequestConfig = {
             method: 'GET',
             url: `${prodUrl}/complainclaim/getcomplainsbyuser/${userId}`,
+            headers: {
+                Authorization: `Bearer ${userToken}`
+            },
         };
 
         axios(config)
@@ -16,7 +20,7 @@ export const getComplains = async () => {
                 resolve(response.data);
             })
             .catch(error => {
-                reject(error.response.data);
+                reject(error);
             });
     });
 };

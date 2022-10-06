@@ -21,6 +21,7 @@ import { forgotPassword } from '../../API/forgotPassword';
 import { colors } from '../../theme/colors';
 import { SuccessModal } from '../../Modals';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PasswordOtp = ({ route, navigation }: any) => {
   const [loading, setloading] = useState(false);
@@ -67,22 +68,27 @@ const PasswordOtp = ({ route, navigation }: any) => {
           let id = rest.user._id;
           rest.success && navigation.navigate('ResetPassword', { id });
         })
-        .catch(error => {
-          Alert.alert(error.message ? error.message : 'Something went wrong');
-          refNum6.current.clear(),
-            setNum6('-'),
-            refNum5.current.clear(),
-            setNum5('-'),
-            refNum4.current.clear(),
-            setNum4('-'),
-            refNum3.current.clear(),
-            setNum3('-'),
-            refNum2.current.clear(),
-            setNum2('-'),
-            refNum1.current.clear(),
-            setNum1('-'),
-            refNum1.current.focus(),
-            setloading(false);
+        .catch(async error => {
+          if (error.response.status === 401) {
+            await AsyncStorage.clear();
+            navigation.navigate('Welcome')
+          } else {
+            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+            refNum6.current.clear(),
+              setNum6('-'),
+              refNum5.current.clear(),
+              setNum5('-'),
+              refNum4.current.clear(),
+              setNum4('-'),
+              refNum3.current.clear(),
+              setNum3('-'),
+              refNum2.current.clear(),
+              setNum2('-'),
+              refNum1.current.clear(),
+              setNum1('-'),
+              refNum1.current.focus()
+          }
+          setloading(false);
         });
     } else {
       setText('Please enter valid OTP code'),
@@ -125,9 +131,16 @@ const PasswordOtp = ({ route, navigation }: any) => {
             refNum1.current.focus(),
             setsuccess(true));
       })
-      .catch(error => {
+      .catch(async error => {
         setloading(false);
-        Alert.alert(error.message ? error.message : 'Something went wrong');
+        if (error.response.status === 401) {
+          await AsyncStorage.clear();
+          navigation.navigate('Welcome')
+        } else {
+
+          Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+
+        }
       });
   };
   return (

@@ -17,6 +17,7 @@ import { getClaims } from '../../API';
 import { CheckBoxState, Header } from '../../components'
 import { colors } from '../../theme';
 import { useIsFocused } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Claims = ({ navigation }: any) => {
     const [claimResponse, setClaimResponse] = React.useState([]);
@@ -34,12 +35,13 @@ const Claims = ({ navigation }: any) => {
                 if (result.success) {
                     setClaimResponse(result.claims);
                 }
-                console.log(claimResponse)
-                console.log('Fvehicle', result);
             })
-            .catch(error => {
+            .catch(async error => {
                 setIsLoading(false);
-                console.log('error', error);
+                if (error.response.status === 401) {
+                    await AsyncStorage.clear();
+                    navigation.navigate('Welcome')
+                }
             });
     }
 
@@ -91,20 +93,19 @@ const Claims = ({ navigation }: any) => {
                         <CheckBoxState
                             text={'Resolved'}
                             onPress={() => { setResolved(!resolved) }}
-                            checked={true}
+                            checked={resolved}
                         />
-                        <CheckBoxState text={'Pending'} onPress={() => { setPending(!pending) }} />
+                        <CheckBoxState text={'Pending'} onPress={() => { setPending(!pending) }} checked={pending} />
                     </View>
 
                     {claimResponse && claimResponse.length > 0 ?
-                        claimResponse.map((item: any) => {
-                            if (pending === true && item.claimStatus === 'Pending') {
-                                console.log(item.claimStatus)
-                                return renderClaim(item)
-                            }
-                            if (resolved === true && item.claimStatus === 'Resolved') {
-                                return renderClaim(item)
-                            }
+                        claimResponse.map((item: any, index: number) => {
+                            return (
+                                <View key={index}>
+                                    {pending && item.claimStatus === 'Pending' ?
+                                        renderClaim(item) : resolved && item.claimStatus === 'Resolved' && renderClaim(item)
+                                    }
+                                </View>)
                         }) : <View
                             style={{
                                 backgroundColor: colors.boxBackground,

@@ -4,10 +4,14 @@ import { prodUrl } from '../appConstants';
 
 export const orderHistory = async () => {
   const value = await AsyncStorage.getItem('@userId');
+  const userToken = await AsyncStorage.getItem('@userToken');
   return new Promise((resolve, reject) => {
     const config: AxiosRequestConfig = {
       method: 'get',
       url: `${prodUrl}/customer/customerorderhistory/${value}`,
+      headers: {
+        Authorization: `Bearer ${userToken}`
+      },
     };
 
     axios(config)
@@ -15,7 +19,7 @@ export const orderHistory = async () => {
         resolve(response.data);
       })
       .catch(error => {
-        reject(error.response.data);
+        reject(error);
       });
   });
 };

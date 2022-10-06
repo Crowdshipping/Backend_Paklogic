@@ -15,6 +15,7 @@ import {
 
 import { SuccessModal } from '../../Modals';
 import { postQuestion } from '../../API';
+import { colors } from '../../theme';
 const AddQuery = ({ navigation }: any) => {
     const [QueryTitle, setQueryTitle] = useState<any>()
     const [isQueryTitle, setIsQueryTitle] = useState(true)
@@ -91,7 +92,7 @@ const AddQuery = ({ navigation }: any) => {
                             style={{ flex: 1 }}
                         />
                     </View>
-                    {!isQueryTitle && <Text style={{ color: 'red', marginLeft: '2%' }}>Query Title is required</Text>}
+                    {!isQueryTitle && <Text style={{ color: colors.red, marginLeft: '2%' }}>Query Title is required</Text>}
                     <Text style={styles.heading}>Query Description</Text>
                     <View style={styles.description}>
                         <TextInput
@@ -102,8 +103,8 @@ const AddQuery = ({ navigation }: any) => {
                         />
 
                     </View>
-                    {!isQueryDetail && <Text style={{ color: 'red', marginLeft: '2%' }}>Query Details is required</Text>}
-                    {!isQueryDetailLength && <Text style={{ color: 'red', marginLeft: '2%' }}>Query Details have at least 10 words </Text>}
+                    {!isQueryDetail && <Text style={{ color: colors.red, marginLeft: '2%' }}>Query Details is required</Text>}
+                    {!isQueryDetailLength && <Text style={{ color: colors.red, marginLeft: '2%' }}>Query Details have at least 10 words </Text>}
 
                     <Button
                         title='Submit'
@@ -123,7 +124,6 @@ const styles = StyleSheet.create({
         paddingVertical: wp(5),
         paddingHorizontal: hp(3),
         height: hp(100),
-        // backgroundColor: "white"
     },
     txt: {
         color: 'black',

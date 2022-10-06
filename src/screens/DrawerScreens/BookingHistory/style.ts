@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     paddingVertical: hp(5),
     fontSize: hp(2.5),
-    color: 'red',
+    color: colors.red,
   },
   detailsbox: {
     marginTop: hp(6),
@@ -53,7 +53,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: wp(5),
     // paddingHorizontal: wp(3),
     paddingVertical: hp(2),
-    borderColor: 'red',
+    borderColor: colors.red,
 
     // borderWidth: 2,
   },
@@ -89,7 +89,7 @@ export const styles = StyleSheet.create({
   },
 
   test: {
-    borderColor: 'orange',
+    borderColor: colors.red,
     borderRadius: 10,
     // marginBottom: 20,
     // borderWidth: 1,

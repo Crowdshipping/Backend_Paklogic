@@ -70,8 +70,8 @@ export const styles = StyleSheet.create({
   },
   errorMsg: {
     textAlign: 'left',
-    color: 'red',
-    marginLeft: wp(5),
+    color: colors.red,
+    marginLeft: wp(8),
   },
 
   inputText: {
@@ -112,5 +112,15 @@ export const styles = StyleSheet.create({
   },
   line: {
     borderWidth: 0.5,
+  },
+  paymentView: {
+    backgroundColor: '#F3F2F2',
+    paddingVertical: hp(1),
+    paddingHorizontal: wp(10),
+    borderRadius: wp(1),
+    marginVertical: hp(2),
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

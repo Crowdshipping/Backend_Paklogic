@@ -43,29 +43,23 @@ export const SearchPlaces = (props: IModal) => {
             };
             setModalVisible(false);
             setLocation(data1);
-            console.log(JSON.stringify(details?.geometry.location));
           }}
           query={{
             key: GOOGLE_MAPS_APIKEY,
             language: 'en',
           }}
           onFail={error => console.error(error)}
+          styles={{
+            container: {
+              marginHorizontal: widthPercentageToDP(3)
+            },
+            textInput: {
+              fontSize: 18
+            },
+
+          }}
         />
         {/* </View> */}
-        {/* <TouchableOpacity
-          onPress={() => {
-            setLocation({
-              name: '',
-              code: '',
-              coordinates: { lat: '', lon: '' },
-              country_code: '',
-              time_zone: '',
-            });
-            setModalVisible(false);
-          }}
-          style={{ width: '15%' }}>
-          <Text style={{ color: colors.red }}>Cancel</Text>
-        </TouchableOpacity> */}
       </SafeAreaView>
     </Modal>
   );

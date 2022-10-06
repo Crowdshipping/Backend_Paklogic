@@ -7,12 +7,12 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-nat
 import { BookingListCard, Header } from '../../../components';
 import { useIsFocused } from '@react-navigation/native';
 
-import { cross, plane, shipsvg, success, truck } from '../../../theme/assets/svg';
+import { plane, shipsvg, truck } from '../../../theme/assets/svg';
 import { cancelDriverRequest, getPostRequests, orderHistory } from '../../../API';
 import { colors } from '../../../theme';
 
 
-import { styles } from './style'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -36,12 +36,15 @@ const BookingHistory = ({ navigation }: any) => {
       .then((rest: any) => {
         {
           rest.success &&
-            (console.log('response of orderhistory', JSON.stringify(rest)),
-              setData(rest.requests),
+            (setData(rest.requests),
               setLoading(false));
         }
       })
-      .catch(error => {
+      .catch(async error => {
+        if (error.response.status === 401) {
+          await AsyncStorage.clear();
+          navigation.navigate('Welcome')
+        }
         // Alert.alert(error.message ? error.message : 'Something went wrong');
         setLoading(false);
       });
@@ -52,19 +55,19 @@ const BookingHistory = ({ navigation }: any) => {
       .then((rest: any) => {
         {
           rest.success &&
-            (console.log('response of post history', JSON.stringify(rest)),
-              setPostData(rest.postrequests),
+            (setPostData(rest.postrequests),
               setLoading(false));
         }
       })
-      .catch(error => {
-        console.log('error of post history')
+      .catch(async error => {
+        if (error.response.status === 401) {
+          await AsyncStorage.clear();
+          navigation.navigate('Welcome')
+        }
         // Alert.alert(error.message ? error.message : 'Something went wrong');
         setLoading(false);
       });
   }
-
-
   useEffect(() => {
     if (isfocus) {
       fetchData();
@@ -76,23 +79,15 @@ const BookingHistory = ({ navigation }: any) => {
     setLoading(true)
     cancelDriverRequest(item)
       .then((rest: any) => {
-        {
-          console.log(
-            'flight Tracking response',
-            JSON.stringify(rest),
-          );
-          rest.success &&
-
-            fetchData()
-          // setLoading(false));
-        }
+        rest.success && fetchData()
       })
-      .catch(error => {
-        console.log(
-          'flight Tracking error',
-          error,
-        );
-        Alert.alert(error.message ? error.message : 'Something went wrong');
+      .catch(async error => {
+        if (error.response.status === 401) {
+          await AsyncStorage.clear();
+          navigation.navigate('Welcome')
+        } else {
+          Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'Something went wrong');
+        }
         setLoading(false);
       });
   }
@@ -120,18 +115,24 @@ const BookingHistory = ({ navigation }: any) => {
       </View>
 
       {isLoading ? (
-        <View
-          style={{
-            // backgroundColor: colors.boxBackground,
-            alignSelf: 'center',
-            justifyContent: 'center',
-            alignItems: 'center',
-            // paddingVertical: hp(10),
-            // paddingHorizontal: wp(10),
-            // borderRadius: hp(2),
-          }}>
-          <ActivityIndicator size={'small'} color={colors.red} />
-        </View>
+        // <View
+        //   style={{
+        //     backgroundColor: colors.white,
+        //     flex: 1,
+        //     alignSelf: 'center',
+        //     justifyContent: 'center',
+        //     alignItems: 'center',
+        //     // paddingVertical: hp(10),
+        //     // paddingHorizontal: wp(10),
+        //     // borderRadius: hp(2),
+        //   }}>
+        //   <ActivityIndicator style={{}} size={'small'} color={colors.red} />
+        // </View>
+        <ActivityIndicator
+          size={'small'}
+          color={colors.red}
+          style={{ justifyContent: 'center', alignSelf: 'center' }}
+        />
       ) : (tabRequest ? data.length > 0 ?
         <ScrollView ref={scrollRef} style={{ height: '90%' }}>
           {data.slice(prev, next).map((item: any, index: number) => {
@@ -209,9 +210,6 @@ const BookingHistory = ({ navigation }: any) => {
                   }
                   // handleNavigation={() => { }}
                   handleCancellation={() => {
-                    console.log('item?.request?.bookingId?._id', item?.request?._id)
-                    // setLoading(true)
-
                     Alert.alert('Alert!', 'Are you sure you want to cancel request?', [
                       {
                         text: 'Yes',
@@ -409,9 +407,6 @@ const BookingHistory = ({ navigation }: any) => {
                     }
                     // handleNavigation={() => { }}
                     handleCancellation={() => {
-                      console.log('item?.request?.bookingId?._id', item?._id)
-                      // setLoading(true)
-
                       Alert.alert('Alert!', 'Are you sure you want to cancel request?', [
                         {
                           text: 'Yes',

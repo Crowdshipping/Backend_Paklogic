@@ -33,11 +33,15 @@ export const createBooking = async (
   finalDate?: string,
 ) => {
   const value = await AsyncStorage.getItem('@userId');
-  console.log(pickcoords, dropcoords);
+  const userToken = await AsyncStorage.getItem('@userToken');
+
   return new Promise((resolve, reject) => {
     const config: AxiosRequestConfig = {
       method: 'post',
       url: `${prodUrl}/booking/`,
+      headers: {
+        Authorization: `Bearer ${userToken}`
+      },
       data: {
         pickupAddress:
           pickcoords !== null
@@ -73,15 +77,15 @@ export const createBooking = async (
         recieverPhoneno: receiverNum,
         bookedBy: value,
       },
+
     };
 
-    console.log(JSON.stringify(config));
     axios(config)
       .then(response => {
         resolve(response.data);
       })
       .catch(error => {
-        reject(error.response.data);
+        reject(error);
       });
   });
 };

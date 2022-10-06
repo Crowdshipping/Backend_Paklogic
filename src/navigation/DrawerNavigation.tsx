@@ -20,7 +20,6 @@ import { profile } from '../theme/assets/images';
 import { prodUrl } from '../appConstants';
 import { LogoutApi } from '../API';
 import { useIsFocused } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/Feather';
 import { AppContext } from '../../App';
 
 
@@ -48,10 +47,16 @@ const CustomDrawerContent = (props: any) => {
                 rest.success && (removeId(),
                   props.navigation.replace('Signin'))
               })
-              .catch(error =>
-                Alert.alert(
-                  error.message ? error.message : 'Something went wrong',
-                ),
+              .catch(async error => {
+                if (error.response.status === 401) {
+                  await AsyncStorage.clear();
+                  props.navigation.navigate('Welcome')
+                } else {
+                  Alert.alert(
+                    error?.response?.data?.message ? error?.response?.data?.message : 'Something went wrong',
+                  )
+                }
+              }
               );
           },
           style: 'default',
@@ -62,18 +67,10 @@ const CustomDrawerContent = (props: any) => {
     );
   };
 
-  // getUserData();
-  // React.useEffect(() => {
-  //   if (isfocus) {
-  //     // console.log('drawer drawer')
-  //     // getUserData();
-  //   }
-  // }, [isfocus]);
+
   return (
     <SafeAreaView>
-      {/* {isLoading ? (
-        <ActivityIndicator />
-      ) : ( */}
+
 
       <View style={styles.ViewTop}>
         {userData.profilepic ? (

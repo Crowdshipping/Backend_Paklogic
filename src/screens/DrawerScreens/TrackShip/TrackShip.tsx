@@ -26,10 +26,10 @@ import { useFocusEffect } from '@react-navigation/native';
 import moment from 'moment';
 import { shipsvgMap } from '../../../theme/assets/svg';
 import { SvgXml } from 'react-native-svg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TrackShip = ({ route, navigation }: any) => {
   const { mmsiNumber, pickupAddress, dropAddress, eta } = route.params;
-  console.log([route.params]);
   // const [isLoading, setLoading] = useState(true);
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState<any>();
@@ -39,15 +39,17 @@ const TrackShip = ({ route, navigation }: any) => {
     shipTracking(mmsiNumber)
       .then((rest: any) => {
         {
-          console.log(
-            'ship Tracking response',
-            JSON.stringify(rest.shipposition[0].$),
-          );
-          rest.success && (setData(rest.shipposition[0].$), console.log('ship ki loc', rest.shipposition[0].$), setLoading(false));
+          rest.success && (setData(rest.shipposition[0].$), setLoading(false));
         }
       })
-      .catch(error => {
-        Alert.alert(error.message ? error.message : 'Something went wrong');
+      .catch(async error => {
+        if (error.response.status === 401) {
+          await AsyncStorage.clear();
+          navigation.navigate('Welcome')
+        } else {
+          Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'Something went wrong');
+
+        }
         setLoading(false);
       });
   }

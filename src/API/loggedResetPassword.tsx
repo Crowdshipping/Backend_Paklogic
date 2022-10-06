@@ -10,10 +10,14 @@ interface ILogResPas {
 
 export const loggedResetPassword = async (data: ILogResPas) => {
   const value = await AsyncStorage.getItem('@userId');
+  const userToken = await AsyncStorage.getItem('@userToken');
   return new Promise((resolve, reject) => {
     const config: AxiosRequestConfig = {
       method: 'post',
       url: `${prodUrl}/user/resetpassword2`,
+      headers: {
+        Authorization: `Bearer ${userToken}`
+      },
       data: {
         currentpassword: data.currentpassword,
         password: data.password,
@@ -26,7 +30,7 @@ export const loggedResetPassword = async (data: ILogResPas) => {
         resolve(response.data);
       })
       .catch(error => {
-        reject(error.response.data);
+        reject(error);
       });
   });
 };

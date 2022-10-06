@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios, { AxiosRequestConfig } from 'axios';
 import { prodUrl } from '../appConstants';
 
@@ -11,6 +12,7 @@ export const AddPlayer = async (props: IFlightData) => {
         playerId,
         UserId
     } = props;
+    const userToken = await AsyncStorage.getItem('@userToken');
     return new Promise((resolve, reject) => {
         const config: AxiosRequestConfig = {
             method: 'post',
@@ -18,6 +20,9 @@ export const AddPlayer = async (props: IFlightData) => {
             data: {
                 playerId: playerId
             },
+            headers: {
+                Authorization: `Bearer ${userToken}`,
+            }
         };
 
         axios(config)

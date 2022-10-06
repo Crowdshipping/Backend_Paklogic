@@ -16,6 +16,7 @@ import ComplainSingleCard from './ComplainSingleCard';
 import { getComplains } from '../../API/';
 import { colors } from '../../theme';
 import { Header } from '../../components';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Complain = ({ navigation }: any) => {
     const [complainResponse, setComplainesponse] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(false);
@@ -31,13 +32,13 @@ const Complain = ({ navigation }: any) => {
                     setComplainesponse(result.complains);
                     setIsLoading(false)
                 }
-                // setFlightResponse(result.flights);
-                console.log(complainResponse)
-                console.log('Fvehicle', result);
             })
-            .catch(error => {
+            .catch(async error => {
+                if (error.response.status === 401) {
+                    await AsyncStorage.clear();
+                    navigation.navigate('Welcome')
+                }
                 setIsLoading(false);
-                console.log('error', error);
             });
 
     };
@@ -62,8 +63,8 @@ const Complain = ({ navigation }: any) => {
     const noComplainAvailable = () => {
         return (
             <View style={{ height: '75%', justifyContent: 'center', flex: 1, marginTop: hp('15%') }}>
-                <View style={{ backgroundColor: "#f0f0f0", height: 250, borderRadius: 10, margin: 20, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ color: 'red' }}>No complain available</Text>
+                <View style={{ backgroundColor: colors.boxBackground, height: 250, borderRadius: 10, margin: 20, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ color: colors.red }}>No complain available</Text>
                 </View>
             </View>
         )
@@ -74,7 +75,6 @@ const Complain = ({ navigation }: any) => {
         return <View >
             {complainResponse.length !== 0 ?
                 complainResponse.map((item: any) => {
-                    console.log("itemitemitem12233", item);
                     return renderComplain(item);
                 }) :
                 noComplainAvailable()
@@ -99,7 +99,7 @@ const Complain = ({ navigation }: any) => {
                 />
 
                 :
-                <ScrollView style={{ backgroundColor: 'white', height: '100%' }}>
+                <ScrollView style={{ backgroundColor: colors.white, height: '100%' }}>
                     <Header title={'Complains'} pressMethod={() => navigation.goBack()} />
                     <View style={styles.maincontainer}>
                         <TouchableOpacity onPress={() => {

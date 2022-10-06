@@ -29,6 +29,7 @@ import OpenGallery from '../Cam_Gal/OpenGallery';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { postImage } from '../../API/postImage';
 import { SuccessModal } from '../../Modals';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const EditProfile = ({ navigation, route }: any) => {
@@ -70,7 +71,6 @@ const EditProfile = ({ navigation, route }: any) => {
             setIsloading(true)
             postImage([newImage]).then((rest: any) => {
                 let imgUrl = rest[0].imageUrl
-                console.log('postImage', rest)
                 let data = {
                     address: getaddress,
                     email: getemail,
@@ -83,17 +83,25 @@ const EditProfile = ({ navigation, route }: any) => {
                 updateUser(data).then((rest: any) => {
                     setIsloading(false)
                     rest.success && setsuccess(true)
-                    console.log('updateUser', JSON.stringify(rest))
 
-                }).catch(error => {
+                }).catch(async error => {
                     setIsloading(false)
-                    Alert.alert(error?.message ? error.message : 'something went wrong')
-                    console.log(error)
+                    if (error.response.status === 401) {
+                        await AsyncStorage.clear();
+                        navigation.navigate('Welcome')
+                    } else {
+                        Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+                    }
                 })
-            }).catch(error => {
+            }).catch(async error => {
                 setIsloading(false)
-                Alert.alert(error?.message ? error.message : 'something went wrong')
-                console.log(error)
+                if (error.response.status === 401) {
+                    await AsyncStorage.clear();
+                    navigation.navigate('Welcome')
+                } else {
+                    Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+                }
+
             })
         }
         if (validate) {
@@ -110,21 +118,23 @@ const EditProfile = ({ navigation, route }: any) => {
             phoneno: getphone,
             countrycode: route.params.profileData.countrycode
         }
-        // console.log(data, JSON.stringify(profileImage))
         updateUser(data).then(async (rest: any) => {
             setIsloading(false)
             rest.success && setsuccess(true)
-        }).catch(error => {
+        }).catch(async error => {
             setIsloading(false)
-            Alert.alert(error?.message ? error.message : 'something went wrong')
-            console.log(error)
+            if (error.response.status === 401) {
+                await AsyncStorage.clear();
+                navigation.navigate('Welcome')
+            } else {
+                Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+            }
         })
 
     }
     const getSelectedImage = (result: any) => {
         // imageArray.push(result)
         // let imageDirectory = {imagePath: result.uri, imageSize: result.fileSize};
-        console.log('route', result)
         setProfileImage({ uri: result.uri })
         setnewImage(result);
         settoCaptureImage(false);
@@ -146,7 +156,6 @@ const EditProfile = ({ navigation, route }: any) => {
                             title="Edit Profile"
                             pressMethod={() => {
                                 navigation.navigate("ViewProfile")
-                                console.log('Error in Go Back');
                             }}
                             color={colors.white}
                         />
@@ -196,8 +205,7 @@ const EditProfile = ({ navigation, route }: any) => {
                                 autoCapitalize='none'
                                 placeholder={route.params.profileData.firstname}
                                 placeholderTextColor={colors.black}
-                                onChangeText={(text: string) => { console.log(text), setFirstname(text) }}
-                            // onEndEditing={(text: string) => { console.log(text), setFirstname(text) }}
+                                onChangeText={(text: string) => { setFirstname(text) }}
                             />
                         </View>
                     </View>
@@ -310,12 +318,11 @@ const EditProfile = ({ navigation, route }: any) => {
                     <View
                         style={{
                             alignSelf: 'flex-end',
-                            //   backgroundColor: '#A9A9A9',
                             borderRadius: 78,
                             //   marginTop: 8,
                             //   marginRight: 15,
                             //   borderWidth: 1,
-                            backgroundColor: 'red',
+                            backgroundColor: colors.red,
                             padding: 5,
                             right: -10,
                             top: -10,
@@ -337,7 +344,7 @@ const EditProfile = ({ navigation, route }: any) => {
                             // paddingVertical: 30,
                             paddingBottom: 30,
                         }}>
-                        <Text style={[styles.txt1, { color: 'red', textAlign: 'center' }]}>
+                        <Text style={[styles.txt1, { color: colors.red, textAlign: 'center' }]}>
                             Choose a picture
                         </Text>
                     </View>

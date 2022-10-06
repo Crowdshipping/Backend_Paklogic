@@ -22,6 +22,7 @@ import {
 import { SuccessModal } from '../../Modals';
 import { colors } from '../../theme';
 import { NAME_REGEX, NUM_REGEX } from '../../appConstants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface ICountryCode {
   name: string;
@@ -85,7 +86,6 @@ const ReceiverDetailsScreen = ({ navigation, route }: any) => {
       setloading(true);
       postImage(Images)
         .then((rest: any) => {
-          console.log('post image', { rest });
           let validate = true;
           if (rest.length === 2) {
             if (rest[0].success && rest[1].success) {
@@ -115,7 +115,6 @@ const ReceiverDetailsScreen = ({ navigation, route }: any) => {
               productImage2,
             )
               .then((rest: any) => {
-                console.log('create booking', { rest });
                 bookingId = rest.booking._id;
                 setloading(false);
                 // navigation.navigate('StripePayment', {
@@ -135,17 +134,16 @@ const ReceiverDetailsScreen = ({ navigation, route }: any) => {
                 rest.success && providerId
                   ? requestProvider(providerId, bookingId, type, null, flightId)
                     .then((rest: any) => {
-                      console.log('request provider', { rest });
                       rest.success && setsuccess(true);
                     })
-                    .catch(error => {
-                      console.log('request provider', { error });
+                    .catch(async error => {
                       setloading(false);
-                      Alert.alert(
-                        error.message
-                          ? error.message
-                          : 'Something went wrong',
-                      );
+                      if (error.response.status === 401) {
+                        await AsyncStorage.clear();
+                        navigation.navigate('Welcome')
+                      } else {
+                        Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+                      }
                     })
                   : postRequest(
                     bookingId,
@@ -163,32 +161,37 @@ const ReceiverDetailsScreen = ({ navigation, route }: any) => {
                     null,
                   )
                     .then((rest: any) => {
-                      // console.log('post request', {rest});
                       rest.success && setsuccess(true);
                     })
-                    .catch(error => {
-                      // console.log('posting request ', {error});
+                    .catch(async error => {
                       setloading(false);
-                      Alert.alert(
-                        error.message
-                          ? error.message
-                          : 'Something went wrong',
-                      );
+                      if (error.response.status === 401) {
+                        await AsyncStorage.clear();
+                        navigation.navigate('Welcome')
+                      } else {
+                        Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+                      }
                     });
               })
-              .catch(error => {
-                console.log('create booking', { error });
+              .catch(async error => {
                 setloading(false);
-                Alert.alert(
-                  error.message ? error.message : 'Something went wrong',
-                );
+                if (error.response.status === 401) {
+                  await AsyncStorage.clear();
+                  navigation.navigate('Welcome')
+                } else {
+                  Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+                }
               });
           }
         })
-        .catch(error => {
-          console.log('post image', { error });
+        .catch(async error => {
           setloading(false);
-          Alert.alert(error.message ? error.message : 'Something went wrong');
+          if (error.response.status === 401) {
+            await AsyncStorage.clear();
+            navigation.navigate('Welcome')
+          } else {
+            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+          }
         });
     }
   }

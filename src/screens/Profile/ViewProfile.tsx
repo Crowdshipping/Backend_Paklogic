@@ -48,14 +48,19 @@ const ViewProfile = ({ navigation, route }: any) => {
                     try {
                         await AsyncStorage.setItem('@userFName', rest.user.firstname);
                         await AsyncStorage.setItem('@userLName', rest.user.lastname);
-                        await AsyncStorage.setItem('@useerPic', rest.user.profilepic);
+                        await AsyncStorage.setItem('@userPic', rest.user.profilepic);
                     } catch (e) {
                         console.log('error', e);
                     }
                 }
             })
-            .catch(error => {
-                Alert.alert(error.message ? error.message : 'Something went wrong');
+            .catch(async error => {
+                if (error.response.status === 401) {
+                    await AsyncStorage.clear();
+                    navigation.navigate('Welcome')
+                } else {
+                    Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+                }
             })
     }
     useEffect(() => {
@@ -86,7 +91,6 @@ const ViewProfile = ({ navigation, route }: any) => {
                                 title="My Profile"
                                 pressMethod={() => {
                                     navigation.goBack()
-                                    console.log('Error in Go Back');
                                 }}
                                 color={colors.white}
                             />

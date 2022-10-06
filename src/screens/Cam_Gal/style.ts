@@ -91,7 +91,7 @@ export const styles = StyleSheet.create({
   },
   errorMsg: {
     textAlign: 'left',
-    color: 'red',
+    color: colors.red,
     marginLeft: wp(5),
   },
 

@@ -26,12 +26,11 @@ export const SuccessModal = (props: ISuccessModal) => {
         <View
           style={{
             alignSelf: 'flex-end',
-            //   backgroundColor: '#A9A9A9',
             borderRadius: 78,
             //   marginTop: 8,
             //   marginRight: 15,
             //   borderWidth: 1,
-            backgroundColor: 'red',
+            backgroundColor: colors.red,
             padding: 5,
             left: 10,
             bottom: 10,

@@ -10,11 +10,15 @@ interface IPostQuestion {
 
 export const postQuestion = async (data: IPostQuestion) => {
   const userId = await AsyncStorage.getItem('@userId');
+  const userToken = await AsyncStorage.getItem('@userToken');
 
   return new Promise((resolve, reject) => {
     const config: AxiosRequestConfig = {
       method: 'post',
       url: `${prodUrl}/customersupport/askquestion`,
+      headers: {
+        Authorization: `Bearer ${userToken}`
+      },
       data: {
         customerSupportTitle: data.QueryTitle,
         customerSupportDescription: data.QueryDetail,
@@ -26,7 +30,7 @@ export const postQuestion = async (data: IPostQuestion) => {
         resolve(response.data);
       })
       .catch(error => {
-        reject(error.response.data);
+        reject(error);
       });
   });
 };

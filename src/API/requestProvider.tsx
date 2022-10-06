@@ -1,5 +1,5 @@
-import axios, {AxiosRequestConfig} from 'axios';
-import {prodUrl} from '../appConstants';
+import axios, { AxiosRequestConfig } from 'axios';
+import { prodUrl } from '../appConstants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const requestProvider = async (
@@ -10,11 +10,15 @@ export const requestProvider = async (
   flightId?: string | null,
 ) => {
   const userId = await AsyncStorage.getItem('@userId');
+  const userToken = await AsyncStorage.getItem('@userToken');
 
   return new Promise((resolve, reject) => {
     const config: AxiosRequestConfig = {
       method: 'post',
       url: `${prodUrl}/customer/requestprovider`,
+      headers: {
+        Authorization: `Bearer ${userToken}`
+      },
       data: {
         shipId: shipId ? shipId : null,
         flightId: flightId ? flightId : null,
@@ -30,7 +34,7 @@ export const requestProvider = async (
         resolve(response.data);
       })
       .catch(error => {
-        reject(error.response.data);
+        reject(error);
       });
   });
 };

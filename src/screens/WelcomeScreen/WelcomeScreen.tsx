@@ -36,7 +36,6 @@ const WelcomeScreen = ({ navigation }: any) => {
     () =>
       navigation.addListener('beforeRemove', (e: any) => {
         // Prevent default behavior of leaving the screen
-        console.log('object:::', JSON.stringify(e))
         e.preventDefault();
         Alert.alert('Hold on!', 'Are you sure you want to Exit?', [
           {

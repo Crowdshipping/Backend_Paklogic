@@ -1,5 +1,6 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
+import { colors } from '../theme'
 
 export const MineCard = ({ children }: any) => {
     return (
@@ -15,8 +16,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         margin: 5,
         padding: 12,
-        backgroundColor: "white",
-        shadowColor: "#000",
+        backgroundColor: colors.white,
+        shadowColor: colors.black,
         shadowOffset: {
             width: 0,
             height: 3,

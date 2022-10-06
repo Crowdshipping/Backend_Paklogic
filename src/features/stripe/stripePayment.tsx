@@ -6,14 +6,14 @@ import {
   useConfirmPayment,
 } from '@stripe/stripe-react-native';
 
-import { Button, Header } from '../components';
+import { Button, Header } from '../../components';
 import { Alert, SafeAreaView, Text } from 'react-native';
-import { prodUrl } from '../appConstants';
+import { prodUrl } from '../../appConstants';
 import axios, { AxiosRequestConfig } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createPaymentsHistory } from '../API';
-import { SuccessModal } from '../Modals';
-import { colors } from '../theme';
+import { createPaymentsHistory } from '../../API';
+import { SuccessModal } from '../../Modals';
+import { colors } from '../../theme';
 // import {PUBLISH_KEY, SECRET_KEY} from '@env';
 
 const StripePayment = ({ navigation, route }: any) => {
@@ -37,32 +37,42 @@ const StripePayment = ({ navigation, route }: any) => {
       })
         .then(result => {
           if (result.paymentIntent) {
+            let data = {
+              amount: amount,
+              requestId: requestId,
+              paymentIntentId: paymentIntent.id
+            }
             result.paymentIntent.status === 'Succeeded' &&
-              createPaymentsHistory(amount, requestId)
+              createPaymentsHistory(data)
                 .then((rest: any) => {
                   setLoading(false);
                   {
                     rest.success && setsuccess(true);
                   }
                 })
-                .catch((error: any) => {
-                  Alert.alert(
-                    error.message ? error.message : 'Something went wrong',
-                  );
+                .catch(async (error: any) => {
                   setLoading(false);
+                  if (error.response.status === 401) {
+                    await AsyncStorage.clear();
+                    navigation.navigate('Welcome')
+                  } else {
+                    Alert.alert(
+                      error?.response?.data?.message ? error?.response?.data?.message : 'Something went wrong',
+                    );
+                  }
                 });
           } else if (result.error) {
-            console.log('payment time error', result.error)
             setLoading(false);
             Alert.alert(result.error.localizedMessage ? result.error.localizedMessage : 'Something went wrong');
           }
         })
-        .catch(error => {
-          Alert.alert(error.message ? error.message : 'Something went wrong');
-          console.log('failure', error), setLoading(false);
+        .catch(async error => {
+          setLoading(false);
+          if (error.response.status === 401) {
+            await AsyncStorage.clear();
+            navigation.navigate('Welcome')
+          } else Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'Something went wrong');
         });
-    } else {
-      console.log('no secret initiated');
     }
 
     // if (error) {
@@ -91,11 +101,15 @@ const StripePayment = ({ navigation, route }: any) => {
       .then(response => {
         setPaymentIntent(response.data.paymentIntent);
         setLoading(false)
-        console.log('data from api', JSON.stringify(response.data));
       })
-      .catch(error => {
+      .catch(async error => {
         setLoading(false)
-        Alert.alert(error.message ? error.message : 'Something went wrong');
+        if (error.response.status === 401) {
+          await AsyncStorage.clear();
+          navigation.navigate('Welcome')
+        } else {
+          Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'Something went wrong');
+        }
       });
     // });
   };
@@ -132,12 +146,7 @@ const StripePayment = ({ navigation, route }: any) => {
             height: 50,
             marginVertical: 30,
           }}
-        // onCardChange={cardDetails => {
-        //   console.log('cardDetails', cardDetails);
-        // }}
-        // onFocus={focusedField => {
-        //   console.log('focusField', focusedField);
-        // }}
+
         />
         <Button title={'Pay'} onPress={handlePayment} loading={loading} />
 

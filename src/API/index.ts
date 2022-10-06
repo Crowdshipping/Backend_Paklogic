@@ -35,6 +35,14 @@ import {getComplains} from './getComplains';
 import {createComplain} from './createComplain';
 import {getQuestions} from './getQuestions';
 import {postQuestion} from './postQuestion';
+import {createChat} from './createChat';
+import {getChat} from './getChat';
+import {rateRider} from './rateRider';
+import {getRatings} from './getRatings';
+import {getProductTypes} from './getProductTypes';
+import {getProductCategories} from './getProductCategories';
+import {readChat} from './onChatRead';
+import {calculateBookingFare} from './calculateBookingFare';
 
 export {
   forgotPassword,
@@ -74,4 +82,12 @@ export {
   createComplain,
   getQuestions,
   postQuestion,
+  createChat,
+  getChat,
+  rateRider,
+  getRatings,
+  getProductTypes,
+  getProductCategories,
+  readChat,
+  calculateBookingFare,
 };

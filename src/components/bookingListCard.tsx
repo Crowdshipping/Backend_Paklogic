@@ -94,7 +94,7 @@ export const BookingListCard = (props: card) => {
             style={{
               fontSize: 20,
               fontWeight: '600',
-              color: 'red',
+              color: colors.red,
             }}>
             {price}
           </Text>
@@ -135,7 +135,7 @@ export const BookingListCard = (props: card) => {
           flexDirection: 'row',
           paddingHorizontal: wp(1),
         }}>
-        {/* <Text style={{ color: 'green' }}> {requestText}</Text> */}
+        {/* bottom start */}
         {handleNavigation ? <TouchableOpacity style={{
           borderRadius: wp(2),
           alignItems: 'center',
@@ -150,48 +150,47 @@ export const BookingListCard = (props: card) => {
         </TouchableOpacity>
           : requestText && <Text style={{ color: 'green' }}>{requestText}</Text>}
 
-        <View style={{ flexDirection: 'row' }}>
+        {/* bottom center */}
+        {handleCancellation && btn1 && <TouchableOpacity style={{
+          borderRadius: wp(2),
+          marginRight: wp(2),
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: colors.red,
+        }} onPress={() => handleCancellation()}>
+          <Text style={{
+            marginVertical: wp(1.5),
+            marginHorizontal: wp(2),
+            color: colors.white,
+          }}>Cancel</Text>
+        </TouchableOpacity>}
 
-          {handleCancellation && btn1 && <TouchableOpacity style={{
-            borderRadius: wp(2),
-            marginRight: wp(2),
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: colors.red,
-          }} onPress={() => handleCancellation()}>
-            <Text style={{
-              marginVertical: wp(1.5),
-              marginHorizontal: wp(2),
-              color: colors.white,
-            }}>Cancel</Text>
-          </TouchableOpacity>}
-
-          {shipDate ? (
-            <Text style={{ fontSize: 14 }}>
-              {moment(shipDate).format('YYYY-MM-DD hh:mm:ss')}
-            </Text>
-          ) : btn && handleTracking ? (
-            <TouchableOpacity
+        {/* bottom end */}
+        {shipDate ? (
+          <Text style={{ fontSize: 14 }}>
+            {moment(shipDate).format('YYYY-MM-DD hh:mm:ss')}
+          </Text>
+        ) : btn && handleTracking ? (
+          <TouchableOpacity
+            style={{
+              borderRadius: wp(2),
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: colors.red,
+            }}
+            onPress={() => {
+              handleTracking();
+            }}>
+            <Text
               style={{
-                borderRadius: wp(2),
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: colors.red,
-              }}
-              onPress={() => {
-                handleTracking();
+                marginVertical: wp(1.5),
+                marginHorizontal: wp(2),
+                color: colors.white,
               }}>
-              <Text
-                style={{
-                  marginVertical: wp(1.5),
-                  marginHorizontal: wp(2),
-                  color: colors.white,
-                }}>
-                {buttonText}
-              </Text>
-            </TouchableOpacity>
-          ) : null}
-        </View>
+              {buttonText}
+            </Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
     </View>
   );
@@ -220,7 +219,7 @@ export const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   Touch: {
-    backgroundColor: '#F0F0F0',
+    backgroundColor: colors.boxBackground,
     borderRadius: hp(1),
     paddingHorizontal: hp(1),
     paddingVertical: hp(1),
@@ -234,7 +233,7 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     paddingVertical: hp(5),
     fontSize: hp(2.5),
-    color: 'red',
+    color: colors.red,
   },
   detailsbox: {
     flex: 1,
@@ -305,7 +304,7 @@ export const styles = StyleSheet.create({
   },
   errorMsg: {
     textAlign: 'left',
-    color: 'red',
+    color: colors.red,
     paddingHorizontal: hp(2),
     paddingTop: hp(1),
   },

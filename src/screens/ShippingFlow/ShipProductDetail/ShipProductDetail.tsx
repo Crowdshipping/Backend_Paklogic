@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text,
   View,
@@ -7,6 +7,7 @@ import {
   ScrollView,
   ImageBackground,
   Image,
+  Alert,
 } from 'react-native';
 
 import { Textbox, Button, MapHeader } from '../../../components';
@@ -31,11 +32,17 @@ import Modal from 'react-native-modal/dist/modal';
 
 import OpenCamera from '../../Cam_Gal/OpenCamera';
 import OpenGallery from '../../Cam_Gal/OpenGallery';
+import { getProductTypes, LogoutApi, getProductCategories } from '../../../API';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface IimageShow {
   name: string;
   uri: string;
   type: string;
+}
+interface ITypes {
+  id: string,
+  name: string
 }
 interface IimageShow1 extends Array<IimageShow> { }
 const ShipProductDetail = ({ navigation, route }: any) => {
@@ -75,8 +82,8 @@ const ShipProductDetail = ({ navigation, route }: any) => {
   const [unitValue, setunitValue] = useState(true);
   const [ImagesValue, setImagesValue] = useState(true);
 
-  const [SelectedCategory, setSelectedCategory] = useState('');
-  const [SelectedType, setSelectedType] = useState('');
+  const [SelectedCategory, setSelectedCategory] = useState<ITypes>({ id: '', name: '' });
+  const [SelectedType, setSelectedType] = useState<ITypes>({ id: '', name: '' });
   const [SelectedUnit, setSelectedUnit] = useState('');
   // const [instructions, setinstructions] = useState('');
   const [description, setdescription] = useState('');
@@ -86,17 +93,20 @@ const ShipProductDetail = ({ navigation, route }: any) => {
     // {fileName: '', type: '', uri: ''},
   ]);
 
-  const category = [
-    { id: 1, name: 'Wood' },
-    { id: 2, name: 'Iron' },
-    { id: 3, name: 'Plastic' },
-    { id: 4, name: 'Glass' },
-  ];
-  const Type = [
-    { id: 1, name: 'Cargo' },
-    { id: 2, name: 'hand Carry' },
-    { id: 3, name: 'soft' },
-  ];
+  const [Type, setType] = useState<ITypes[]>([])
+  const [category, setcategory] = useState<ITypes[]>([])
+
+  // const category = [
+  //   { id: 1, name: 'Wood' },
+  //   { id: 2, name: 'Iron' },
+  //   { id: 3, name: 'Plastic' },
+  //   { id: 4, name: 'Glass' },
+  // ];
+  // const Type = [
+  //   { id: 1, name: 'Cargo' },
+  //   { id: 2, name: 'hand Carry' },
+  //   { id: 3, name: 'soft' },
+  // ];
   const Unit = [
     { id: 1, name: 'Kilogram' },
     { id: 2, name: 'Gram' },
@@ -108,16 +118,18 @@ const ShipProductDetail = ({ navigation, route }: any) => {
       setweightValue(false);
       validate = false;
     }
-    if (!SelectedType) {
+    if (!(SelectedType.name.length > 0)) {
       settypeValue(false);
       validate = false;
     }
+    if (SelectedType.id.length > 0) {
+      if (!(SelectedCategory.name.length > 0)) {
+        setcategoryValue(false);
+        validate = false;
+      }
+    }
     if (!SelectedUnit) {
       setunitValue(false);
-      validate = false;
-    }
-    if (!SelectedCategory) {
-      setcategoryValue(false);
       validate = false;
     }
     if (!(Images.length > 0)) {
@@ -156,8 +168,8 @@ const ShipProductDetail = ({ navigation, route }: any) => {
           pickupCity,
           dropoffCity,
 
-          SelectedCategory,
-          SelectedType,
+          SelectedCategory: SelectedCategory.name,
+          SelectedType: SelectedType.name,
           description,
           weight,
           SelectedUnit,
@@ -166,11 +178,49 @@ const ShipProductDetail = ({ navigation, route }: any) => {
       });
   }
   const getSelectedImage = (result: any) => {
-    // imageArray.push(result)
     settoCaptureImage(false);
-    // let imageDirectory = {imagePath: result.uri, imageSize: result.fileSize};
+    setImagesValue(true)
     setImages([...Images, result]);
   };
+
+  useEffect(() => {
+    getProductTypes().then((result: any) => {
+      setloading(false)
+      result.success && result.productTypes.map((products: any) => {
+        setType((Type) => [...Type, { id: products._id, name: products.productName }])
+      })
+    })
+      .catch(async error => {
+        setloading(false);
+        if (error.response.status === 401) {
+          LogoutApi();
+          await AsyncStorage.clear();
+          navigation.navigate('Welcome')
+        } else {
+          Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+        }
+      });
+  }, [])
+
+  useEffect(() => {
+    if (SelectedType.id.length > 0) {
+      getProductCategories(SelectedType.id).then((result: any) => {
+        result.success && result.productCategories.map((products: any) => {
+          setcategory((category) => [...category, { id: products._id, name: products.productCategoryName }])
+        })
+      })
+        .catch(async error => {
+          setloading(false);
+          if (error.response.status === 401) {
+            LogoutApi();
+            await AsyncStorage.clear();
+            navigation.navigate('Welcome')
+          } else {
+            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+          }
+        });
+    }
+  }, [SelectedType.id])
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
@@ -209,39 +259,6 @@ const ShipProductDetail = ({ navigation, route }: any) => {
               <View style={styles.main}>
                 <TouchableOpacity
                   style={styles.Touch}
-                  onPress={() => setModalVisible(!isModalVisible)}>
-                  <View style={styles.txtview}>
-                    <Text style={styles.txt1}>Product Category</Text>
-
-                    <AntDesign
-                      name="caretdown"
-                      color={'grey'}
-                      size={wp(3)}
-                      style={{
-                        alignSelf: 'center',
-                        // borderWidth: 2,
-                        marginLeft: hp(1),
-                      }}
-                    />
-                  </View>
-
-                  <Text style={{ borderColor: 'grey' }}>
-                    {SelectedCategory ? SelectedCategory : 'Select Category'}
-                  </Text>
-                </TouchableOpacity>
-                {/* {errormsg ? ( */}
-                {!categoryValue ? (
-                  <Text style={styles.errorMsg}>
-                    Product Category is Required
-                  </Text>
-                ) : (
-                  <View></View>
-                )}
-                {/* ) : (
-                  <Text></Text>
-                )} */}
-                <TouchableOpacity
-                  style={styles.Touch}
                   onPress={() => setModalVisible2(!isModalVisible2)}>
                   <View style={styles.txtview}>
                     <Text style={styles.txt1}>Product Type</Text>
@@ -257,14 +274,43 @@ const ShipProductDetail = ({ navigation, route }: any) => {
                       }}
                     />
                   </View>
-                  <Text>{SelectedType ? SelectedType : 'Select Type '}</Text>
-                  {/* <Text style={{borderColor: 'grey'}}>Select Type</Text> */}
+                  <Text>{SelectedType.name.length > 0 ? SelectedType.name : 'Select Type '}</Text>
                 </TouchableOpacity>
                 {!typeValue ? (
                   <Text style={styles.errorMsg}>Product Type is Required</Text>
                 ) : (
                   <View></View>
                 )}
+                <TouchableOpacity
+                  style={styles.Touch}
+                  disabled={SelectedType?.id?.length > 0 ? false : true}
+                  onPress={() => setModalVisible(!isModalVisible)}>
+                  <View style={styles.txtview}>
+                    <Text style={styles.txt1}>Product Category</Text>
+
+                    <AntDesign
+                      name="caretdown"
+                      color={'grey'}
+                      size={wp(3)}
+                      style={{
+                        alignSelf: 'center',
+                        // borderWidth: 2,
+                        marginLeft: hp(1),
+                      }}
+                    />
+                  </View>
+                  <Text style={{ borderColor: 'grey' }}>
+                    {SelectedCategory.name.length > 0 ? SelectedCategory.name : 'Select Category'}
+                  </Text>
+                </TouchableOpacity>
+                {!categoryValue ? (
+                  <Text style={styles.errorMsg}>
+                    Product Category is Required
+                  </Text>
+                ) : (
+                  <View></View>
+                )}
+
                 <View
                   style={{
                     flexDirection: 'row',
@@ -290,11 +336,6 @@ const ShipProductDetail = ({ navigation, route }: any) => {
                     }
                   />
 
-                  {/* !weightValue
-                        ? weight.length == 0
-                          ? 'Weight is Required'
-                          : 'Invalid weight'
-                        : '' */}
                   <TouchableOpacity
                     onPress={() => setModalVisible3(!isModalVisible3)}
                     style={{
@@ -349,7 +390,7 @@ const ShipProductDetail = ({ navigation, route }: any) => {
                             style={{
                               alignSelf: 'flex-end',
                               borderRadius: 78,
-                              backgroundColor: 'red',
+                              backgroundColor: colors.red,
                               padding: wp(1),
                               left: wp(3),
                               top: wp(3.5),
@@ -366,7 +407,6 @@ const ShipProductDetail = ({ navigation, route }: any) => {
                               // margin: wp(5),
                               borderRadius: 10,
                               // borderWidth: 1,
-                              // backgroundColor: '#fedcba',
                             }}
                           />
                         </View>
@@ -399,7 +439,7 @@ const ShipProductDetail = ({ navigation, route }: any) => {
                     style={{
                       paddingHorizontal: wp(5),
                       textAlign: 'left',
-                      color: 'red',
+                      color: colors.red,
                     }}>
                     Images are Required
                   </Text>
@@ -480,20 +520,29 @@ const ShipProductDetail = ({ navigation, route }: any) => {
         isModalVisible={isModalVisible}
         setModalVisible={setModalVisible}
         Type={category}
-        setSelectedType={(text: string) => {
+        setSelectedType={(text: string, id: string) => {
           setcategoryValue(true);
-          setSelectedCategory(text);
+          setSelectedCategory({
+            id: id,
+            name: text
+          });
         }}
+        other={true}
       />
       <ModalTypes
         isModalVisible={isModalVisible2}
         setModalVisible={setModalVisible2}
         Type={Type}
-        // setSelectedType={setSelectedType}
-        setSelectedType={(text: string) => {
+        setSelectedType={(text: string, id: string) => {
           settypeValue(true);
-          setSelectedType(text);
+          setSelectedType({
+            id: id,
+            name: text
+          });
+          setSelectedCategory({ id: '', name: '' });
+          setcategory([])
         }}
+        other={true}
       />
       <ModalTypes
         isModalVisible={isModalVisible3}
@@ -521,12 +570,11 @@ const ShipProductDetail = ({ navigation, route }: any) => {
           <View
             style={{
               alignSelf: 'flex-end',
-              //   backgroundColor: '#A9A9A9',
               borderRadius: 78,
               //   marginTop: 8,
               //   marginRight: 15,
               //   borderWidth: 1,
-              backgroundColor: 'red',
+              backgroundColor: colors.red,
               padding: 5,
               right: -10,
               top: -10,
@@ -548,7 +596,7 @@ const ShipProductDetail = ({ navigation, route }: any) => {
               // paddingVertical: 30,
               paddingBottom: 30,
             }}>
-            <Text style={[styles.txt1, { color: 'red', textAlign: 'center' }]}>
+            <Text style={[styles.txt1, { color: colors.red, textAlign: 'center' }]}>
               Choose a picture
             </Text>
           </View>

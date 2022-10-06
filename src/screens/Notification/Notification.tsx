@@ -20,13 +20,15 @@ const NotifictionHistory = ({ navigation }: any) => {
         setIsloading(true);
         getNotifications()
             .then((result: any) => {
-                console.log("user data", result)
                 setUserNotifications(result.notifications);
                 setIsloading(false);
             })
-            .catch(error => {
+            .catch(async error => {
                 setIsloading(false);
-                console.log('error', error);
+                if (error.response.status === 401) {
+                    await AsyncStorage.clear();
+                    navigation.navigate('Welcome')
+                }
             });
 
     };
@@ -38,8 +40,8 @@ const NotifictionHistory = ({ navigation }: any) => {
     const noNotificationAvailable = () => {
         return (
             <View style={{ height: '75%', justifyContent: 'center', flex: 1, marginTop: hp('25%') }}>
-                <View style={{ backgroundColor: "#f0f0f0", height: 250, borderRadius: 10, margin: 20, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ color: 'red' }}>No Notifications available</Text>
+                <View style={{ backgroundColor: colors.boxBackground, height: 250, borderRadius: 10, margin: 20, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ color: colors.red }}>No Notifications available</Text>
                 </View>
             </View>
         )
@@ -49,12 +51,14 @@ const NotifictionHistory = ({ navigation }: any) => {
             {userNotifications && userNotifications.length !== 0 ?
                 userNotifications.map((item: any, index: number) => {
                     return (
-                        <MineCard>
-                            <View key={index} style={{ flexDirection: 'row' }}>
-                                <Icon size={30} color="orange" name="checkmark-circle" />
-                                <Text style={{ marginLeft: wp('5%'), marginTop: hp('0.5%') }}>{item.message}</Text>
-                            </View>
-                        </MineCard>
+                        <View key={index}>
+                            <MineCard>
+                                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                    <Icon size={30} color="green" name="checkmark-circle" />
+                                    <Text style={{ marginLeft: wp('3%'), flex: 1, textAlignVertical: 'center' }}>{item.message}</Text>
+                                </View>
+                            </MineCard>
+                        </View>
                     )
                 })
                 :
@@ -68,7 +72,7 @@ const NotifictionHistory = ({ navigation }: any) => {
 
 
     return (
-        <SafeAreaView style={{ backgroundColor: 'white', height: hp('100%') }}>
+        <SafeAreaView style={{ backgroundColor: colors.white, height: hp('100%') }}>
             <Header title='Notifications' pressMethod={() => navigation.goBack()} />
             {isloading ?
                 <ActivityIndicator

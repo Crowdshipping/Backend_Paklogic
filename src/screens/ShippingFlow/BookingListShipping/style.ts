@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   Touch: {
-    backgroundColor: '#F0F0F0',
+    backgroundColor: colors.boxBackground,
     borderRadius: hp(1),
     paddingHorizontal: hp(1),
     paddingVertical: hp(1),
@@ -42,7 +42,7 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     paddingVertical: hp(5),
     fontSize: hp(2.5),
-    color: 'red',
+    color: colors.red,
   },
   detailsbox: {
     flex: 1,
@@ -125,7 +125,7 @@ export const styles = StyleSheet.create({
     // height: hp(6),
     // width: wp(12),
     // borderWidth: 2,
-    // borderColor: 'orange',
+
     justifyContent: 'center',
     // alignItems: 'center',
     borderRadius: 10,
@@ -134,7 +134,7 @@ export const styles = StyleSheet.create({
   },
   errorMsg: {
     textAlign: 'left',
-    color: 'red',
+    color: colors.red,
     paddingHorizontal: hp(2),
     paddingTop: hp(1),
   },

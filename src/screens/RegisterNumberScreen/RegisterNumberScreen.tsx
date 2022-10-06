@@ -11,18 +11,19 @@ import { verifyNumber } from '../../API/verifyPhone';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { NUM_REGEX } from '../../appConstants';
 import { colors } from '../../theme';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const RegisterNumberScreen = ({ navigation }: any) => {
-  useEffect(() => {
-    setphone(''),
-      setcountryCode({
-        name: 'United States',
-        dial_code: '+1',
-        code: 'US',
-        preferred: true,
-        flag: '🇺🇸',
-      });
-  }, []);
+  // useEffect(() => {
+  //   setphone(''),
+  //     setcountryCode({
+  //       name: 'United States',
+  //       dial_code: '+1',
+  //       code: 'US',
+  //       preferred: true,
+  //       flag: '🇺🇸',
+  //     });
+  // }, []);
   const [phoneValue, setphoneValue] = useState(true);
   const [loading, setloading] = useState(false);
   const [phone, setphone] = useState('');
@@ -36,10 +37,6 @@ const RegisterNumberScreen = ({ navigation }: any) => {
 
   async function handleSubmit() {
     let validate = true;
-    // if (!phone) {
-    //   setphoneValue(false);
-    //   validate = false;
-    // }
     if (!NUM_REGEX.test(phone)) {
       setphoneValue(false);
       validate = false;
@@ -58,9 +55,13 @@ const RegisterNumberScreen = ({ navigation }: any) => {
               navigation.navigate('VerifyOtp', { countryCode, phone });
           }
         })
-        .catch(error => {
-          Alert.alert(error.message ? error.message : 'Something went wrong');
-          setloading(false);
+        .catch(async error => {
+          if (error.response.status === 401) {
+            await AsyncStorage.clear();
+            navigation.navigate('Welcome')
+          } else {
+            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+          } setloading(false);
         });
     }
   }

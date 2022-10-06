@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { SafeAreaView, Text, View, TouchableOpacity, Alert } from 'react-native';
 import {
   heightPercentageToDP,
@@ -20,20 +20,17 @@ import { AppContext } from '../../../App';
 const SigninScreen = ({ navigation }: any) => {
   const { setUserData } = useContext(AppContext)
   const [emailValue, setemailValue] = useState(true);
-  // const [email, setemail] = useState('');
   const [passwordValue, setpasswordValue] = useState(true);
-  const [email, setemail] = useState(__DEV__ ? 'Salman090898@gmail.com' : '');
-  const [password, setpassword] = useState(__DEV__ ? 'Qwerty1@' : '');
+  // const [email, setemail] = useState(__DEV__ ? 'Salman090898@gmail.com' : '');
+  // const [password, setpassword] = useState(__DEV__ ? 'Qwerty1@' : '');
 
-  // const [email, setemail] = useState(__DEV__ ? 'Salman@gmail.com' : '');
-  // const [password, setpassword] = useState(__DEV__ ? 'Muneeb1@' : '');
+  // const [email, setemail] = useState('');
+  // const [password, setpassword] = useState('');
+  const [email, setemail] = useState(__DEV__ ? 'Salman@gmail.com' : '');
+  const [password, setpassword] = useState(__DEV__ ? 'Muneeb1@' : '');
 
   // const [email, setemail] = useState(__DEV__ ? 'harisbakhabarpk1222272@gmail.com' : '');
   // const [password, setpassword] = useState(__DEV__ ? 'Hahaha88*' : '');
-  const [devState, setdevState] = useState<any>();
-
-  // const [password, setpassword] = useState('');
-
   const [loading, setloading] = useState(false);
 
   function handleSubmit() {
@@ -55,7 +52,6 @@ const SigninScreen = ({ navigation }: any) => {
       setloading(true);
       signIn(email, password)
         .then((rest: any) => {
-          console.log('signedx', rest)
           setloading(false);
           if (!rest.user?.role) {
             setUserData(rest.user)
@@ -64,7 +60,8 @@ const SigninScreen = ({ navigation }: any) => {
               AsyncStorage.setItem('@userEmail', rest.user.email);
               AsyncStorage.setItem('@userFName', rest.user.firstname);
               AsyncStorage.setItem('@userLName', rest.user.lastname);
-              AsyncStorage.setItem('@useerPic', rest?.user?.profilepic);
+              AsyncStorage.setItem('@userPic', rest?.user?.profilepic);
+              AsyncStorage.setItem('@userToken', rest?.accessToken);
             } catch (e) {
               console.log('error', e);
             }
@@ -76,9 +73,9 @@ const SigninScreen = ({ navigation }: any) => {
           }
         })
         .catch(error => {
+          console.log({ error })
           setloading(false);
-          console.log(error);
-          Alert.alert(error.message ? error.message : 'User does not exist');
+          Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'User does not exist');
         });
     }
   }
@@ -99,15 +96,18 @@ const SigninScreen = ({ navigation }: any) => {
           }; navigation.replace('MyDrawer')
         }
 
-      }).catch(error => { console.log(error), Alert.alert(error.message ? error.message : 'something went wrong') })
+      }).catch(error => { Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong') })
     }
 
 
   }
 
   // useEffect(() => {
-  //   handleDeviceState();
-  // }, [])
+  //   if (focus) {
+  //     setemail('');
+  //     setpassword('');
+  //   }
+  // }, [focus])
   return (
     <SafeAreaView>
       <KeyboardAwareScrollView>

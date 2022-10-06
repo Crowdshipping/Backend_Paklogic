@@ -19,6 +19,7 @@ export const Button = (props: IButton) => {
         {isLoading ? (
           <ActivityIndicator size={'small'} color={colors.white} />
         ) : (
+
           <Text style={[styles.btnText, { color: bg ? colors.red : colors.white }]}>
             {title}
           </Text>

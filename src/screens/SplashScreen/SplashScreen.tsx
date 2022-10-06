@@ -19,12 +19,14 @@ const SplashScreen = ({ navigation }: any) => {
       const userEmail = await AsyncStorage.getItem('@userEmail');
       const userFName = await AsyncStorage.getItem('@userFName');
       const userLName = await AsyncStorage.getItem('@userLName');
-      const userPic = await AsyncStorage.getItem('@useerPic');
+      const userPic = await AsyncStorage.getItem('@userPic');
+      const userId = await AsyncStorage.getItem('@userId');
       setUserData({
+        _id: userId,
         firstname: userFName,
         lastname: userLName,
         email: userEmail,
-        profilepic: userPic
+        profilepic: userPic,
       })
       navigation.navigate('MyDrawer')
     } else setTimeout(() => {

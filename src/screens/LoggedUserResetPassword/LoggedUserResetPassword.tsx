@@ -14,6 +14,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { SvgXml } from 'react-native-svg';
 import { forgot_password } from '../../theme/assets/svg';
 import { PASS_REGEX } from '../../appConstants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import {validatePassword} from '../validation';
 
 
@@ -65,7 +66,6 @@ const LoggedUserResetPassword = ({ navigation }: any) => {
               {
                 text: 'Ok',
                 onPress: () => {
-                  // console.log('knvsldxkn')
                   navigation.goBack();
                   // props.navigation.navigate('SignIn')
                 },
@@ -73,9 +73,13 @@ const LoggedUserResetPassword = ({ navigation }: any) => {
               },
             ]);
           }
-          console.log(result);
         })
-        .catch(error => { setLoading(false); console.log('error', error) });
+        .catch(async error => {
+          setLoading(false); if (error.response.status === 401) {
+            await AsyncStorage.clear();
+            navigation.navigate('Welcome')
+          }
+        });
     }
 
   };

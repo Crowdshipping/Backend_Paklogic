@@ -60,7 +60,7 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     paddingVertical: hp(5),
     fontSize: hp(2.5),
-    color: 'red',
+    color: colors.red,
   },
   detailsbox: {
     marginHorizontal: wp(5),
@@ -81,7 +81,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: wp(5),
     // paddingHorizontal: wp(3),
     paddingVertical: hp(2),
-    borderColor: 'red',
+    borderColor: colors.red,
 
     // borderWidth: 2,
   },
@@ -134,7 +134,7 @@ export const styles = StyleSheet.create({
   },
 
   test: {
-    borderColor: 'orange',
+    borderColor: colors.red,
     borderRadius: 10,
     marginBottom: 20,
     // borderWidth: 1,
@@ -142,4 +142,14 @@ export const styles = StyleSheet.create({
     // flex: 1,
   },
   svg: {},
+  description: {
+    // height: hp(20),
+    flex: 1,
+    minHeight: hp(15),
+    paddingVertical: hp(1),
+    paddingHorizontal: wp(5),
+    borderRadius: wp(5),
+    borderWidth: 1,
+    width: wp('80%'),
+  },
 });

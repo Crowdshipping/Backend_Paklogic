@@ -25,6 +25,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import moment from 'moment';
 import { SvgXml } from 'react-native-svg';
 import { plane, planesvgMap } from '../../../theme/assets/svg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TrackFlight = ({ route, navigation }: any) => {
   const {
@@ -44,16 +45,16 @@ const TrackFlight = ({ route, navigation }: any) => {
       .then((rest: any) => {
         {
           setLoading(false)
-          console.log(
-            'flight Tracking response',
-            JSON.stringify(rest.flightlatestPosition),
-          );
-          // rest.success &&
-          //   setData(rest.flightlatestPosition)
+          rest.success && setData(rest.flightlatestPosition)
         }
       })
-      .catch(error => {
-        Alert.alert(error.message ? error.message : 'Something went wrong');
+      .catch(async error => {
+        if (error.response.status === 401) {
+          await AsyncStorage.clear();
+          navigation.navigate('Welcome')
+        } else {
+          Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'Something went wrong');
+        }
         setLoading(false);
       });
   }
@@ -96,19 +97,20 @@ const TrackFlight = ({ route, navigation }: any) => {
       searchAirport(destinationAirport),
     ])
       .then((res: any) => {
-        console.log(
-          'promise response from search airport',
-          JSON.stringify(res),
-        );
         setResponse([
           res[0].airports[0].coordinates,
           res[1].airports[0].coordinates,
         ]);
         setLoading(false);
       })
-      .catch(error => {
-        Alert.alert(error.message ? error.message : 'Something went wrong');
-        console.log(error);
+      .catch(async error => {
+        if (error.response.status === 401) {
+          await AsyncStorage.clear();
+          navigation.navigate('Welcome')
+        } else {
+          Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'Something went wrong');
+
+        }
         setLoading(false);
       });
 

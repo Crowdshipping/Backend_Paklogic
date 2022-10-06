@@ -52,7 +52,7 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: hp(3),
     fontWeight: 'bold',
-    color: 'orange',
+    color: colors.red,
     paddingBottom: hp(4),
   },
   attachment: {

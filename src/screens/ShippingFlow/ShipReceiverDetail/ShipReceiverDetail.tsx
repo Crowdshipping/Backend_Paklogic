@@ -29,6 +29,7 @@ import moment from 'moment';
 import { colors } from '../../../theme';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { NAME_REGEX, NUM_REGEX } from '../../../appConstants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface ICountryCode {
   name: string;
@@ -135,13 +136,14 @@ const ShipReceiverDetail = ({ navigation, route }: any) => {
                     .then((rest: any) => {
                       rest.success && setsuccess(true);
                     })
-                    .catch(error => {
+                    .catch(async error => {
                       setloading(false);
-                      Alert.alert(
-                        error.message
-                          ? error.message
-                          : 'Something went wrong',
-                      );
+                      if (error.response.status === 401) {
+                        await AsyncStorage.clear();
+                        navigation.navigate('Welcome')
+                      } else {
+                        Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+                      }
                     })
                   : postRequest(
                     bookingId,
@@ -161,26 +163,35 @@ const ShipReceiverDetail = ({ navigation, route }: any) => {
                     .then((rest: any) => {
                       rest.success && setsuccess(true);
                     })
-                    .catch(error => {
+                    .catch(async error => {
                       setloading(false);
-                      Alert.alert(
-                        error.message
-                          ? error.message
-                          : 'Something went wrong',
-                      );
+                      if (error.response.status === 401) {
+                        await AsyncStorage.clear();
+                        navigation.navigate('Welcome')
+                      } else {
+                        Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+                      }
                     });
               })
-              .catch(error => {
+              .catch(async error => {
                 setloading(false);
-                Alert.alert(
-                  error.message ? error.message : 'Something went wrong',
-                );
+                if (error.response.status === 401) {
+                  await AsyncStorage.clear();
+                  navigation.navigate('Welcome')
+                } else {
+                  Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+                }
               });
           }
         })
-        .catch(error => {
+        .catch(async error => {
           setloading(false);
-          Alert.alert(error.message ? error.message : 'Something went wrong');
+          if (error.response.status === 401) {
+            await AsyncStorage.clear();
+            navigation.navigate('Welcome')
+          } else {
+            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+          }
         });
     }
   }

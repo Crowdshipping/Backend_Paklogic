@@ -45,7 +45,6 @@ export const SearchPort = (props: IModal) => {
         setports(rest.ports);
       })
       .catch(error => {
-        console.log(error);
         // Alert.alert(error.message ? error.message : 'Something went wrong');
       });
   }
@@ -85,12 +84,13 @@ export const SearchPort = (props: IModal) => {
           {ports?.map((item: portArray, index: number) => {
             return (
               <TouchableOpacity
+                style={{ flexDirection: 'row', borderWidth: 0.5, borderRadius: 5, marginVertical: hp(1) }}
                 key={index}
                 onPress={() => {
                   setModalVisible(false);
                   setLocation(item);
                 }}>
-                <Text>
+                <Text style={{ textAlign: 'center', fontSize: 18, padding: wp(3) }}>
                   {item.Name} {item.Country && ((item.Country))}
                 </Text>
               </TouchableOpacity>

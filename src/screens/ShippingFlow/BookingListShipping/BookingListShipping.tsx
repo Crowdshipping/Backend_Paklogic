@@ -30,6 +30,7 @@ interface portArray {
 import { styles } from './style';
 import { colors } from '../../../theme/colors';
 import { mapp } from '../../../theme/assets/images';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const BookingListShipping = ({ navigation, route }: any) => {
   const [isVisible, setisVisible] = useState(false);
@@ -92,9 +93,13 @@ const BookingListShipping = ({ navigation, route }: any) => {
                 setLoading(false));
           }
         })
-        .catch(error => {
-          Alert.alert(error.message ? error.message : 'Something went wrong');
-          setLoading(false);
+        .catch(async error => {
+          if (error.response.status === 401) {
+            await AsyncStorage.clear();
+            navigation.navigate('Welcome')
+          } else {
+            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+          } setLoading(false);
         });
     }
   }, [pickupLocation, dropoffLocation, dobTo, dobTo2]);

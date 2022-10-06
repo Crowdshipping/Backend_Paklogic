@@ -20,13 +20,13 @@ export const styles = StyleSheet.create({
   },
   svg: {
     borderWidth: 2,
-    color: colors.blackblack,
+    color: colors.black,
     fontSize: wp(4),
   },
   box: {},
   txt: {
     paddingTop: hp(2),
-    color: colors.blackblack,
+    color: colors.black,
     fontSize: wp(4),
   },
   main: {

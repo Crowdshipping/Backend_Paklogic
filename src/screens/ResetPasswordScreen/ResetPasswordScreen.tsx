@@ -9,31 +9,32 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { setnewPassword } from '../../API/setnewPassword';
 import { SuccessModal } from '../../Modals';
 import { PASS_REGEX } from '../../appConstants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ResetPasswordScreen = ({ route, navigation }: any) => {
   const { id } = route.params;
   const [loading, setloading] = useState(false);
   const [success, setsuccess] = useState(false);
-  const [passwordValue, setpasswordValue] = useState(true);
+  const [passwordValue, setpasswordValue] = useState('');
   const [password, setpassword] = useState('');
-  const [confirmPasswordValue, setconfirmPasswordValue] = useState(true);
+  const [confirmPasswordValue, setconfirmPasswordValue] = useState('');
   const [confirmPassword, setconfirmPassword] = useState('');
   const [text, settext] = useState('');
   function handleSubmit() {
     let validate = true;
 
     if (!password) {
-      setpasswordValue(false);
+      setpasswordValue('Password is Required');
       validate = false;
     } else if (!PASS_REGEX.test(password)) {
-      setpasswordValue(false);
+      setpasswordValue('Password must have atleast 8 characters, a uppercase and a lowercase letter, a number, and a symbol(e.g. #, ?, !, @, $, %, ^, &, *, -, _) ');
       validate = false;
     }
-    if (!confirmPassword) {
-      setconfirmPasswordValue(false);
+    if (password !== confirmPassword) {
+      setconfirmPasswordValue('Password does not match');
       validate = false;
-    } else if (password !== confirmPassword) {
-      setconfirmPasswordValue(false);
+    } else if (!confirmPassword) {
+      setconfirmPasswordValue('Confirm Password is Required');
       validate = false;
     }
     if (validate) {
@@ -43,9 +44,13 @@ const ResetPasswordScreen = ({ route, navigation }: any) => {
           setloading(false);
           rest.success && (settext(rest.message), setsuccess(true));
         })
-        .catch(error => {
-          Alert.alert(error.message ? error.message : 'Something went wrong');
-          setloading(false);
+        .catch(async error => {
+          if (error.response.status === 401) {
+            await AsyncStorage.clear();
+            navigation.navigate('Welcome')
+          } else {
+            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+          } setloading(false);
         });
     }
   }
@@ -68,15 +73,9 @@ const ResetPasswordScreen = ({ route, navigation }: any) => {
         <Textbox
           title={'New Password'}
           placeholder={'New Password'}
-          errormsg={
-            !passwordValue
-              ? password.length === 0
-                ? 'Password is Required'
-                : 'Password must have atleast 8 characters, a uppercase and a lowercase letter, a number, and a symbol(e.g. #, ?, !, @, $, %, ^, &, *, -, _) '
-              : ''
-          }
+          errormsg={passwordValue}
           onChangeValue={(text: string) => {
-            setpasswordValue(true);
+            setpasswordValue('');
             setpassword(text);
           }}
           password={true}
@@ -89,15 +88,9 @@ const ResetPasswordScreen = ({ route, navigation }: any) => {
         <Textbox
           title={'Confirm Password'}
           placeholder={'Confirm Password'}
-          errormsg={
-            !confirmPasswordValue
-              ? confirmPassword.length === 0
-                ? 'Confirm Password is Required'
-                : 'password does not match'
-              : ''
-          }
+          errormsg={confirmPasswordValue}
           onChangeValue={(text: string) => {
-            setconfirmPasswordValue(true);
+            setconfirmPasswordValue('');
             setconfirmPassword(text);
           }}
           password={true}

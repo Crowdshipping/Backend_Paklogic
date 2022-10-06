@@ -4,6 +4,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {
     widthPercentageToDP as wp, heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import { colors } from '../../theme';
 
 const QuerySingleCard = ({ title, subtitle, state, onPress }: any) => {
 
@@ -24,11 +25,11 @@ const QuerySingleCard = ({ title, subtitle, state, onPress }: any) => {
                     <Text numberOfLines={1}>
                         {subtitle}
                     </Text>
-                    <Text style={{ color: state === "Resolved" ? 'green' : 'red' }}>
+                    <Text style={{ color: state === "Resolved" ? 'green' : colors.red }}>
                         {state}
                     </Text>
                 </View>
-                
+
             </View>
         </TouchableOpacity>
     )
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
         borderRadius: wp(1.5),
     },
     redbox: {
-        backgroundColor: 'red',
+        backgroundColor: colors.red,
         paddingHorizontal: wp(4),
         borderLeftWidth: 1,
         alignItems: 'center',

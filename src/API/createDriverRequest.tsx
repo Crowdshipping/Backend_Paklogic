@@ -6,25 +6,26 @@ export const createDriverRequest = async (
   bookingId: string,
 ) => {
   const userId = await AsyncStorage.getItem('@userId');
+  const userToken = await AsyncStorage.getItem('@userToken');
 
   return new Promise((resolve, reject) => {
     const config: AxiosRequestConfig = {
       method: 'post',
       url: `${prodUrl}/customer/createdriverrequest`,
+      headers: {
+        Authorization: `Bearer ${userToken}`
+      },
       data: {
         bookingId: bookingId,
         customerId: userId,
       },
     };
-    console.log('post request success', { config });
     axios(config)
       .then(response => {
-        console.log('data from create driver request', [response.data]);
         resolve(response.data);
       })
       .catch(error => {
-        console.log('post request', error.response.data);
-        reject(error.response.data);
+        reject(error);
       });
   });
 };

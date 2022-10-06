@@ -15,19 +15,8 @@ interface IComplain {
 
 export const createComplain = async (props: IComplain) => {
     const userId = await AsyncStorage.getItem('@userId');
+    const userToken = await AsyncStorage.getItem('@userToken');
     return new Promise((resolve, reject) => {
-        // const config: AxiosRequestConfig = {
-        //     method: 'POST',
-        //     url: `${prodUrl}/complainclaim/`,
-        //     data: {
-        //         complainTitle: props.complainTitle,
-        //         complainDescription: props.complainDescription,
-        //         // complainImage: props.complainImage,
-        //         complainBy: userId
-        //     }
-        // };
-        console.log(props)
-
         var formdata = new FormData();
         formdata.append('complainTitle', props.complainTitle);
         formdata.append('complainDescription', props.complainDescription);
@@ -39,6 +28,9 @@ export const createComplain = async (props: IComplain) => {
             method: 'post',
             body: formdata,
             redirect: 'follow',
+            headers: {
+                Authorization: `Bearer ${userToken}`
+            },
         };
 
         fetch(`${prodUrl}/complainclaim/`, config).then(async item => await item.json()).then(result => resolve(result)).catch(error => reject(error))

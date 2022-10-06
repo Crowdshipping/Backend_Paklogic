@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text,
   View,
@@ -38,12 +38,16 @@ import {
   postRequest,
   postImage,
   editBooking,
+  getProductCategories,
+  getProductTypes,
+  LogoutApi,
 } from '../../../API';
 
 import { cross } from '../../../theme/assets/svg';
 import moment from 'moment';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { NAME_REGEX, NUM_REGEX } from '../../../appConstants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface ICountryCode {
   name: string;
@@ -54,8 +58,11 @@ export interface ICountryCode {
 interface IimageShow {
   name: string;
   uri: string;
-
   type: string;
+}
+interface ITypes {
+  id: string,
+  name: string
 }
 interface IimageShow1 extends Array<IimageShow> { }
 const ShipModifyRequest = ({ navigation, route }: any) => {
@@ -103,13 +110,16 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
     route?.params?.data?.Images,
   );
 
-  const [SelectedCategory, setSelectedCategory] = useState(
-    route.params?.data?.SelectedCategory,
-  );
+  // const [SelectedCategory, setSelectedCategory] = useState(
+  //   route.params?.data?.SelectedCategory,
+  // );
   const [categoryValue, setcategoryValue] = useState(true);
-  const [SelectedType, setSelectedType] = useState(
-    route.params?.data?.SelectedType,
-  );
+  // const [SelectedType, setSelectedType] = useState(
+  //   route.params?.data?.SelectedType,
+  // );
+  const [SelectedCategory, setSelectedCategory] = useState<ITypes>({ id: '', name: route.params?.data?.SelectedCategory });
+  const [SelectedType, setSelectedType] = useState<ITypes>({ id: '', name: route.params?.data?.SelectedType });
+
   const [typeValue, settypeValue] = useState(true);
   const [SelectedUnit, setSelectedUnit] = useState(
     route.params?.data?.SelectedUnit,
@@ -125,20 +135,23 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
   const [valueName, setvalueName] = useState(true);
   const [weight, setweight] = useState(route.params?.data?.weight);
   const [weightValue, setweightValue] = useState(true);
+  const [Type, setType] = useState<ITypes[]>([])
+  const [category, setcategory] = useState<ITypes[]>([])
   let productImage: string;
   let productImage2: string;
   let bookingId: string = route.params.data?.bookingId ? route.params.data?.bookingId : ''
-  const category = [
-    { id: 1, name: 'Wood' },
-    { id: 2, name: 'Iron' },
-    { id: 3, name: 'Plastic' },
-    { id: 4, name: 'Glass' },
-  ];
-  const Type = [
-    { id: 1, name: 'Cargo' },
-    { id: 2, name: 'hand Carry' },
-    { id: 3, name: 'soft' },
-  ];
+
+  // const category = [
+  //   { id: 1, name: 'Wood' },
+  //   { id: 2, name: 'Iron' },
+  //   { id: 3, name: 'Plastic' },
+  //   { id: 4, name: 'Glass' },
+  // ];
+  // const Type = [
+  //   { id: 1, name: 'Cargo' },
+  //   { id: 2, name: 'hand Carry' },
+  //   { id: 3, name: 'soft' },
+  // ];
   const Unit = [
     { id: 1, name: 'Kilogram' },
     { id: 2, name: 'Gram' },
@@ -183,8 +196,8 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
             }
             if (validate) {
               createBooking(
-                SelectedCategory,
-                SelectedType,
+                SelectedCategory.name,
+                SelectedType.name,
                 description,
                 weight,
                 SelectedUnit,
@@ -208,13 +221,14 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
                           setloading(false);
                           rest.success && setsuccess(true);
                         })
-                        .catch(error => {
+                        .catch(async error => {
                           setloading(false);
-                          Alert.alert(
-                            error.message
-                              ? error.message
-                              : 'Something went wrong',
-                          );
+                          if (error.response.status === 401) {
+                            await AsyncStorage.clear();
+                            navigation.navigate('Welcome')
+                          } else {
+                            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+                          }
                         }))
                     : postRequest(
                       bookingId,
@@ -234,33 +248,39 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
                       .then((rest: any) => {
                         rest.success && setsuccess(true);
                       })
-                      .catch(error => {
+                      .catch(async error => {
                         setloading(false);
-                        Alert.alert(
-                          error.message
-                            ? error.message
-                            : 'Something went wrong',
-                        );
+                        if (error.response.status === 401) {
+                          await AsyncStorage.clear();
+                          navigation.navigate('Welcome')
+                        } else {
+                          Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+                        }
                       });
                 })
-                .catch(error => {
+                .catch(async error => {
                   setloading(false);
-                  Alert.alert(
-                    error.message ? error.message : 'Something went wrong',
-                  );
+                  if (error.response.status === 401) {
+                    await AsyncStorage.clear();
+                    navigation.navigate('Welcome')
+                  } else {
+                    Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+                  }
                 });
             }
           })
-          .catch(error => {
+          .catch(async error => {
             setloading(false);
-            Alert.alert(error.message ? error.message : 'Something went wrong');
+            if (error.response.status === 401) {
+              await AsyncStorage.clear();
+              navigation.navigate('Welcome')
+            } else {
+              Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+            }
           });
       } else {
         if (!(Images[0]?.uri?.includes("https://"))) {
-          console.log('image 1', !(Images[0].uri.includes("https://")))
           await postImage([Images[0]]).then((rest: any) => {
-            console.log(rest)
-
             if (rest[0].success) {
               productImage = rest[0].imageUrl;
             } else { validate = false; setloading(false); Alert.alert('Something went wrong') }
@@ -268,10 +288,7 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
           })
         } else productImage = Images[0].uri
         if (Images.length > 1 && Images[1]?.uri !== null && !(Images[1]?.uri?.includes("https://"))) {
-          console.log('image 2', !(Images[1]?.uri?.includes("https://")))
           await postImage([Images[1]]).then((rest: any) => {
-            console.log(rest)
-
             if (rest[0].success) {
               productImage2 = rest[0].imageUrl;
             } else { validate = false; setloading(false); Alert.alert('Something went wrong') }
@@ -281,8 +298,8 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
         if (validate) {
           editBooking(
             bookingId,
-            SelectedCategory,
-            SelectedType,
+            SelectedCategory.name,
+            SelectedType.name,
             description,
             weight,
             SelectedUnit,
@@ -297,17 +314,18 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
             productImage2,
           )
             .then((rest: any) => {
-              console.log('create booking', { rest });
               Alert.alert(rest.message)
               navigation.navigate('BookingHistory')
               setloading(false);
             })
-            .catch(error => {
-              console.log('create booking', { error });
+            .catch(async error => {
               setloading(false);
-              Alert.alert(
-                error.message ? error.message : 'Something went wrong',
-              );
+              if (error.response.status === 401) {
+                await AsyncStorage.clear();
+                navigation.navigate('Welcome')
+              } else {
+                Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+              }
             });
         }
       }
@@ -324,6 +342,45 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
     setImages([...Images, result]);
   };
 
+  useEffect(() => {
+    getProductTypes().then((result: any) => {
+      setloading(false)
+      result.success && result.productTypes.map((products: any) => {
+        setType((Type) => [...Type, { id: products._id, name: products.productName }])
+      })
+    })
+      .catch(async error => {
+        setloading(false);
+        if (error.response.status === 401) {
+          LogoutApi();
+          await AsyncStorage.clear();
+          navigation.navigate('Welcome')
+        } else {
+          Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+        }
+      });
+  }, [])
+
+  useEffect(() => {
+    if (SelectedType.id.length > 0) {
+      getProductCategories(SelectedType.id).then((result: any) => {
+        result.success && result.productCategories.map((products: any) => {
+          setcategory((category) => [...category, { id: products._id, name: products.productCategoryName }])
+        })
+      })
+        .catch(async error => {
+          setloading(false);
+          if (error.response.status === 401) {
+            LogoutApi();
+            await AsyncStorage.clear();
+            navigation.navigate('Welcome')
+          } else {
+            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+          }
+        });
+    }
+  }, [SelectedType.id])
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
       <KeyboardAwareScrollView>
@@ -337,6 +394,31 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
           />
 
           <View style={styles.main}>
+            <TouchableOpacity
+              style={styles.Touch}
+              onPress={() => setModalVisible2(!isModalVisible2)}>
+              <View style={styles.txtview}>
+                <Text style={styles.txt1}>Product Type</Text>
+
+                <AntDesign
+                  name="caretdown"
+                  color={'grey'}
+                  size={wp(3)}
+                  style={{
+                    alignSelf: 'center',
+                    // borderWidth: 2,
+                    marginLeft: hp(1),
+                  }}
+                />
+              </View>
+              <Text>{SelectedType.name.length > 0 ? SelectedType.name : 'Select Type '}</Text>
+            </TouchableOpacity>
+            {!typeValue ? (
+              <Text style={styles.errorMsg}>Product Type is Required</Text>
+            ) : (
+              <View></View>
+            )}
+
             <TouchableOpacity
               style={styles.Touch}
               onPress={() => setModalVisible(!isModalVisible)}>
@@ -356,7 +438,7 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
               </View>
 
               <Text style={{ borderColor: 'grey' }}>
-                {SelectedCategory ? SelectedCategory : 'Select Category'}
+                {SelectedCategory.name.length > 0 ? SelectedCategory.name : 'Select Category'}
               </Text>
             </TouchableOpacity>
             {/* {errormsg ? ( */}
@@ -372,31 +454,6 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
             {/* ) : (
                   <Text></Text>
                 )} */}
-            <TouchableOpacity
-              style={styles.Touch}
-              onPress={() => setModalVisible2(!isModalVisible2)}>
-              <View style={styles.txtview}>
-                <Text style={styles.txt1}>Product Type</Text>
-
-                <AntDesign
-                  name="caretdown"
-                  color={'grey'}
-                  size={wp(3)}
-                  style={{
-                    alignSelf: 'center',
-                    // borderWidth: 2,
-                    marginLeft: hp(1),
-                  }}
-                />
-              </View>
-              <Text>{SelectedType ? SelectedType : 'Select Type '}</Text>
-              {/* <Text style={{borderColor: 'grey'}}>Select Type</Text> */}
-            </TouchableOpacity>
-            {!typeValue ? (
-              <Text style={styles.errorMsg}>Product Type is Required</Text>
-            ) : (
-              <View></View>
-            )}
 
             <View
               style={{
@@ -544,7 +601,7 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
                         style={{
                           alignSelf: 'flex-end',
                           borderRadius: 78,
-                          backgroundColor: 'red',
+                          backgroundColor: colors.red,
                           padding: wp(1),
                           left: wp(3),
                           top: wp(3.5),
@@ -561,7 +618,6 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
                           // margin: wp(5),
                           borderRadius: 10,
                           // borderWidth: 1,
-                          // backgroundColor: '#fedcba',
                         }}
                       />
                     </View>
@@ -594,7 +650,7 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
                 style={{
                   paddingHorizontal: wp(5),
                   textAlign: 'left',
-                  color: 'red',
+                  color: colors.red,
                 }}>
                 Images are Required
               </Text>
@@ -753,20 +809,29 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
         isModalVisible={isModalVisible}
         setModalVisible={setModalVisible}
         Type={category}
-        setSelectedType={(text: string) => {
-          setSelectedCategory(text);
+        setSelectedType={(text: string, id: string) => {
           setcategoryValue(true);
+          setSelectedCategory({
+            id: id,
+            name: text
+          });
         }}
+        other={true}
       />
       <ModalTypes
         isModalVisible={isModalVisible2}
         setModalVisible={setModalVisible2}
         Type={Type}
-        // setSelectedType={setSelectedType}
-        setSelectedType={(text: string) => {
-          setSelectedType(text);
+        setSelectedType={(text: string, id: string) => {
           settypeValue(true);
+          setSelectedType({
+            id: id,
+            name: text
+          });
+          setSelectedCategory({ id: '', name: '' });
+          setcategory([])
         }}
+        other={true}
       />
       <ModalTypes
         isModalVisible={isModalVisible3}
@@ -801,12 +866,11 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
           <View
             style={{
               alignSelf: 'flex-end',
-              //   backgroundColor: '#A9A9A9',
               borderRadius: 78,
               //   marginTop: 8,
               //   marginRight: 15,
               //   borderWidth: 1,
-              backgroundColor: 'red',
+              backgroundColor: colors.red,
               padding: 5,
               right: -10,
               top: -10,
@@ -828,7 +892,7 @@ const ShipModifyRequest = ({ navigation, route }: any) => {
               // paddingVertical: 30,
               paddingBottom: 30,
             }}>
-            <Text style={[styles.txt1, { color: 'red', textAlign: 'center' }]}>
+            <Text style={[styles.txt1, { color: colors.red, textAlign: 'center' }]}>
               Choose a picture
             </Text>
           </View>

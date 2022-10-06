@@ -12,7 +12,7 @@ const NotificationHandler = () => {
   OneSignal.setAppId(ONESIGNAL_APP_ID);
 
   OneSignal.promptForPushNotificationsWithUserResponse(response => {
-    console.log('Prompt response:', response);
+    // console.log('Prompt response:', response);
   });
   //Method for handling notifications received while app in foreground
   OneSignal.setNotificationWillShowInForegroundHandler(notificationReceivedEvent => {

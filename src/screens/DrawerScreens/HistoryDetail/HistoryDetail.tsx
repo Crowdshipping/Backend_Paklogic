@@ -10,7 +10,7 @@ import {
 import { SvgXml } from 'react-native-svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Header } from '../../../components/header';
-import { location, car, cross, plane, truck, shipsvg } from '../../../theme/assets/svg';
+import { location, plane, truck, shipsvg } from '../../../theme/assets/svg';
 
 import {
   widthPercentageToDP as wp,
@@ -18,11 +18,13 @@ import {
 } from 'react-native-responsive-screen';
 import { styles } from './style';
 import { profile } from '../../../theme/assets/images';
-import Entypo from 'react-native-vector-icons/Entypo';
 import { colors } from '../../../theme';
 import { prodUrl } from '../../../appConstants';
 import { Button } from '../../../components';
-import { useFocusEffect, useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
+import { getRatings } from '../../../API';
+import { Rating } from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 interface IimageShow {
   // name: string;
   uri: string;
@@ -30,10 +32,12 @@ interface IimageShow {
 }
 interface IimageShow1 extends Array<IimageShow> { }
 
+
 const HistoryDetail = ({ navigation, route }: any) => {
-  const { status, bookingId, provider, type, state, flight, ship } = route.params.item.request
-  console.log(JSON.stringify(route.params))
+  console.log([route.params.item.request])
+  const { status, bookingId, provider, type, state, flight, ship, _id } = route.params.item.request
   const [Images, setImages] = useState<IimageShow1>([]);
+  const [rateData, setrateData] = useState<any>({});
   const isfocus = useIsFocused();
 
   useEffect(() => {
@@ -42,14 +46,29 @@ const HistoryDetail = ({ navigation, route }: any) => {
     }
     if (bookingId?.productImage2) {
       setImages((Images) => [...Images, { uri: prodUrl + bookingId?.productImage2 }])
-      console.log('working')
     }
     if (!isfocus) {
-      console.log('asdfghlkla;kld', Images)
       setImages([])
     }
 
   }, [bookingId, isfocus])
+
+  useEffect(() => {
+    if (provider) {
+      getRatings(_id, provider._id).then((result: any) => {
+        result.success && setrateData(result.rating)
+      })
+        .catch(async error => {
+          if (error.response.status === 401) {
+            await AsyncStorage.clear();
+            navigation.navigate('Welcome')
+          }
+          // setLoading(false);
+        });
+    }
+
+  }, [])
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
       <ScrollView>
@@ -174,12 +193,10 @@ const HistoryDetail = ({ navigation, route }: any) => {
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
               {Images && Images.length >= 1 ? (
                 Images.map((item, index) => {
-                  console.log('history detail', { item })
                   return (
                     <View key={index} style={{ marginHorizontal: wp(3), alignSelf: 'center', justifyContent: 'center' }}>
                       <Image
                         source={{ uri: item?.uri }}
-                        onError={() => { console.log('failed to load image') }}
                         resizeMode={'cover'}
                         style={{
                           height: wp(33),
@@ -222,7 +239,7 @@ const HistoryDetail = ({ navigation, route }: any) => {
             </View>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: hp(2) }}>
               {status === 'Pending'
-                ?
+                &&
                 <View style={{ width: '50%', paddingHorizontal: '5%', }}>
                   <TouchableOpacity
                     style={{
@@ -233,7 +250,6 @@ const HistoryDetail = ({ navigation, route }: any) => {
                     }}
                     onPress={() => {
                       let weightUnit = bookingId?.productWeight.split(/(\d+)/)
-                      console.log('separator', weightUnit[2])
                       type === 'Flight'
                         ? navigation.navigate('ModifyRequest', {
                           data: {
@@ -327,11 +343,9 @@ const HistoryDetail = ({ navigation, route }: any) => {
                       Edit Booking
                     </Text>
                   </TouchableOpacity>
-                </View>
-                : null}
-              {state === 'Reached' || state === undefined || state === 'Completed'
-                ? null
-                : <View style={{ width: '50%', paddingHorizontal: '5%' }}>
+                </View>}
+              {(state === 'Reached' || state === undefined || state === 'Completed') && provider
+                && <View style={{ width: '50%', paddingHorizontal: '5%' }}>
                   <TouchableOpacity
                     style={{
                       borderRadius: wp(2),
@@ -340,28 +354,22 @@ const HistoryDetail = ({ navigation, route }: any) => {
                       backgroundColor: colors.red,
                     }}
                     onPress={() => {
-                      console.log('history detal', JSON.stringify(route.params.item))
-                      type === 'Flight'
-                        ? navigation.navigate('TrackFlight', {
-                          fa_flight_id: route.params.item?.flight?.fa_flight_id,
-                          flightarrivalDate: route.params.item?.flight?.flightarrivalDate,
-                          departureAirport: route.params.item?.flight?.departureAirport,
-                          destinationAirport:
-                            route.params.item?.flight?.destinationAirport,
-                        })
-                        : type === 'Ship'
-                          ? navigation.navigate('TrackShip', {
-                            mmsiNumber: route.params.item?.ship?.mmsiNumber,
-                            eta: route.params.item?.ship?.eta,
-                            pickupAddress: route.params.item?.bookingId?.pickupAddress,
-                            dropAddress: route.params.item?.bookingId?.dropAddress,
-                          }) : type === 'Land'
-                            ? navigation.navigate('TrackLand', {
-                              driverID: route?.params?.item?.request?.provider?._id,
-                              pickupAddress: route?.params?.item?.request?.bookingId?.pickupAddress,
-                              dropAddress: route?.params?.item?.request?.bookingId?.dropAddress,
-                            })
-                            : null;
+                      // type === 'Flight'
+                      //   ? 
+                      navigation.navigate('RateDriver', { item: route.params.item.request })
+                      //   : type === 'Ship'
+                      //     ? navigation.navigate('RateDriver', {
+                      //       mmsiNumber: route.params.item?.ship?.mmsiNumber,
+                      //       eta: route.params.item?.ship?.eta,
+                      //       pickupAddress: route.params.item?.bookingId?.pickupAddress,
+                      //       dropAddress: route.params.item?.bookingId?.dropAddress,
+                      //     }) : type === 'Land'
+                      //       ? navigation.navigate('RateDriver', {
+                      //         driverID: route?.params?.item?.request?.provider?._id,
+                      //         pickupAddress: route?.params?.item?.request?.bookingId?.pickupAddress,
+                      //         dropAddress: route?.params?.item?.request?.bookingId?.dropAddress,
+                      //       })
+                      //       : null;
                     }}>
                     <Text
                       style={{
@@ -369,11 +377,52 @@ const HistoryDetail = ({ navigation, route }: any) => {
                         marginHorizontal: wp(2),
                         color: colors.white,
                       }}>
-                      Live Tracking
+                      Rate the Rider
                     </Text>
                   </TouchableOpacity>
-
                 </View>}
+              {!(state === 'Reached' || state === undefined || state === 'Completed') && <View style={{ width: '50%', paddingHorizontal: '5%' }}>
+                <TouchableOpacity
+                  style={{
+                    borderRadius: wp(2),
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: colors.red,
+                  }}
+                  onPress={() => {
+                    type === 'Flight'
+                      ? navigation.navigate('TrackFlight', {
+                        fa_flight_id: route.params.item?.flight?.fa_flight_id,
+                        flightarrivalDate: route.params.item?.flight?.flightarrivalDate,
+                        departureAirport: route.params.item?.flight?.departureAirport,
+                        destinationAirport:
+                          route.params.item?.flight?.destinationAirport,
+                      })
+                      : type === 'Ship'
+                        ? navigation.navigate('TrackShip', {
+                          mmsiNumber: route.params.item?.ship?.mmsiNumber,
+                          eta: route.params.item?.ship?.eta,
+                          pickupAddress: route.params.item?.bookingId?.pickupAddress,
+                          dropAddress: route.params.item?.bookingId?.dropAddress,
+                        }) : type === 'Land'
+                          ? navigation.navigate('TrackLand', {
+                            driverID: route?.params?.item?.request?.provider?._id,
+                            pickupAddress: route?.params?.item?.request?.bookingId?.pickupAddress,
+                            dropAddress: route?.params?.item?.request?.bookingId?.dropAddress,
+                          })
+                          : null;
+                  }}>
+                  <Text
+                    style={{
+                      marginVertical: wp(1.5),
+                      marginHorizontal: wp(2),
+                      color: colors.white,
+                    }}>
+                    Live Tracking
+                  </Text>
+                </TouchableOpacity>
+
+              </View>}
             </View>
           </View>
         </View>
@@ -418,26 +467,39 @@ const HistoryDetail = ({ navigation, route }: any) => {
                 <Text style={styles.txtdetailbox}>Email</Text>
                 <Text style={styles.txtdetailbox}>{provider.email}</Text>
               </View>
-              {/* <View style={styles.viewdetail}>
-                <Text style={styles.txtdetailbox}>Dropoff City</Text>
-                <Text style={styles.txtdetailbox}>America</Text>
-              </View>
-              <View style={styles.viewdetail}>
-                <Text style={styles.txtdetailbox}>Arival Date</Text>
-                <Text style={styles.txtdetailbox}>18-02-2020</Text>
-              </View>
-              <View style={styles.viewdetail}>
-                <Text style={styles.txtdetailbox}>Departure Date</Text>
-                <Text style={styles.txtdetailbox}>18-02-2020</Text>
-              </View>
-              <View style={styles.viewdetail}>
-                <Text style={styles.txtdetailbox}>Airline</Text>
-                <Text style={styles.txtdetailbox}>PIA</Text>
-              </View> */}
+
+              {rateData?.rate ?
+                <View>
+                  <Text style={styles.txtheading}>Your rating from provider</Text>
+                  <View style={{ bottom: hp(5) }}>
+                    <Rating
+                      type='custom'
+                      ratingColor={colors.red}
+                      ratingBackgroundColor={colors.white}
+                      imageSize={35}
+                      // showRating
+                      readonly
+                      ratingCount={5}
+                      style={{ paddingVertical: hp(5) }}
+                      // onFinishRating={ratingCompleted}
+                      // style={{ padd: hp(5) }}
+
+                      startingValue={rateData.rate}
+                    />
+                    {rateData.review ?
+                      <View style={{ bottom: hp(3) }}>
+                        <Text style={styles.txtheading}>Review</Text>
+                        <View style={styles.description}>
+                          <Text>{rateData.review}</Text>
+                        </View>
+                      </View> : null}
+
+                  </View>
+                </View> : null}
             </View>
           </View>
 
-          <Button title={'Chat'} onPress={() => { }} />
+          <Button title={'Chat'} onPress={() => { navigation.navigate('ChatScreen', { receiverId: provider?._id, requestId: _id }) }} />
         </View>}
 
         {/* //available booking viewend */}

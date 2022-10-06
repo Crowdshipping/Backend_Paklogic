@@ -77,19 +77,6 @@ const AddComplain = ({ navigation }: any) => {
             return false;
         }
     }
-    // const validateComplainImage = () => {
-    //     console.log("Image:::", image)
-    //     if (image.uri === undefined) {
-    //         setImage(null);
-    //         return false;
-    //     } else {
-    //         setIsImage(true);
-    //         console.log("true.............")
-    //         return true;
-    //     }
-    // }
-
-
 
     const uploadDataToServer = async () => {
         const complainT = validateComplainTitle();
@@ -104,13 +91,16 @@ const AddComplain = ({ navigation }: any) => {
             setIsLoading(true);
             createComplain(data)
                 .then((result: any) => {
-                    console.log(result)
                     setIsLoading(false)
                     result.success && setIsModalVisible(!isModalVisible)
-                }).catch(error => {
+                }).catch(async error => {
                     setIsLoading(false);
-                    Alert.alert(error.message ? error.message : 'something went wrong');
-                    console.log('error', error);
+                    if (error.response.status === 401) {
+                        await AsyncStorage.clear();
+                        navigation.navigate('Welcome')
+                    } else {
+                        Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong');
+                    }
                 });
 
         }
@@ -140,7 +130,7 @@ const AddComplain = ({ navigation }: any) => {
                             style={{ flex: 1 }}
                         />
                     </View>
-                    {!isComplainTitle && <Text style={{ color: 'red', marginLeft: '2%' }}>Complain Title is required</Text>}
+                    {!isComplainTitle && <Text style={{ color: colors.red, marginLeft: '2%' }}>Complain Title is required</Text>}
                     <Text style={styles.heading}>Description</Text>
                     <View style={styles.description}>
                         <TextInput
@@ -151,8 +141,8 @@ const AddComplain = ({ navigation }: any) => {
                         />
 
                     </View>
-                    {!isComplainDescription && <Text style={{ color: 'red', marginLeft: '2%' }}>Complain descripton is required</Text>}
-                    {!isComplainDescriptionLength && <Text style={{ color: 'red', marginLeft: '2%' }}>Complain descripton have at least 10 words</Text>}
+                    {!isComplainDescription && <Text style={{ color: colors.red, marginLeft: '2%' }}>Complain descripton is required</Text>}
+                    {!isComplainDescriptionLength && <Text style={{ color: colors.red, marginLeft: '2%' }}>Complain descripton have at least 10 words</Text>}
                     <Text style={styles.heading}>Upload Photo</Text>
                     {!image?.uri ? (
                         <TouchableOpacity onPress={() => settoCaptureImage(true)}>
@@ -198,12 +188,11 @@ const AddComplain = ({ navigation }: any) => {
                     <View
                         style={{
                             alignSelf: 'flex-end',
-                            //   backgroundColor: '#A9A9A9',
                             borderRadius: 78,
                             //   marginTop: 8,
                             //   marginRight: 15,
                             //   borderWidth: 1,
-                            backgroundColor: 'red',
+                            backgroundColor: colors.red,
                             padding: 5,
                             right: -10,
                             top: -10,
@@ -225,7 +214,7 @@ const AddComplain = ({ navigation }: any) => {
                             // paddingVertical: 30,
                             paddingBottom: 30,
                         }}>
-                        <Text style={[styles.txt1, { color: 'red', textAlign: 'center' }]}>
+                        <Text style={[styles.txt1, { color: colors.red, textAlign: 'center' }]}>
                             Choose a picture
                         </Text>
                     </View>

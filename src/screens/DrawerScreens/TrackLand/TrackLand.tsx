@@ -29,7 +29,6 @@ import { plane } from '../../../theme/assets/svg';
 import { carsvgMap } from '../../../theme/assets/svg/carsvgMap';
 
 const TrackLand = ({ route, navigation }: any) => {
-  console.log('tracking land', route.params)
   const {
     driverID, pickupAddress,
     dropAddress
@@ -48,7 +47,6 @@ const TrackLand = ({ route, navigation }: any) => {
       transports: ['websocket'],
     });
     newSocket.on('connect', () => { setConnected(true) });
-    // newSocket.on('disconnect', () => console.log(false));
     setSocket(newSocket)
   }, []);
 
@@ -63,7 +61,6 @@ const TrackLand = ({ route, navigation }: any) => {
         }
       })
       socket?.on('getLocation', (res) => {
-        console.log("socketLiveLocation", res);
         if (res.driverID === driverID) {
           setData(res.location)
 
@@ -77,7 +74,6 @@ const TrackLand = ({ route, navigation }: any) => {
 
 
   const onMapReadyHandler = useCallback(() => {
-    console.log('object on ready')
     if (Platform.OS === 'ios') {
       ref?.current?.fitToElements({
         animated: true,
@@ -254,7 +250,7 @@ const TrackLand = ({ route, navigation }: any) => {
               </Text>
             </View>
 
-            <Button title={'Chat'} onPress={() => { }} />
+            <Button title={'Chat'} onPress={() => { navigation.navigate('ChatScreen', { receiverId: driverID }) }} />
           </View>
         </View>
       )}

@@ -1,5 +1,5 @@
-import axios, {AxiosRequestConfig} from 'axios';
-import {prodUrl} from '../appConstants';
+import axios, { AxiosRequestConfig } from 'axios';
+import { prodUrl } from '../appConstants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const postRequest = async (
@@ -20,11 +20,15 @@ export const postRequest = async (
   ETA?: string | null,
 ) => {
   const userId = await AsyncStorage.getItem('@userId');
+  const userToken = await AsyncStorage.getItem('@userToken');
 
   return new Promise((resolve, reject) => {
     const config: AxiosRequestConfig = {
       method: 'post',
       url: `${prodUrl}/customer/postflightrequest`,
+      headers: {
+        Authorization: `Bearer ${userToken}`
+      },
       data: {
         fa_flight_id: fa_flight_id ? fa_flight_id : null,
         mmsiNumber: MMSI ? MMSI : null,
@@ -42,15 +46,12 @@ export const postRequest = async (
         ETA: ETA ? ETA : null,
       },
     };
-    console.log('post request success', {config});
     axios(config)
       .then(response => {
-        console.log('data', [response.data]);
         resolve(response.data);
       })
       .catch(error => {
-        console.log('post request', error.response.data);
-        reject(error.response.data);
+        reject(error);
       });
   });
 };

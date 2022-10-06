@@ -26,6 +26,7 @@ import { Header, Datepicker } from '../../components';
 import { SearchCity } from '../../Modals';
 import { styles } from './style';
 import { colors } from '../../theme/colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 interface cityArray {
   name: string;
   code: string;
@@ -80,12 +81,10 @@ const BookingListScreen = ({ navigation, route }: any) => {
     // time_zone: '',
   });
 
-  const [pickValue, setpickValue] = useState(true);
-  const [dropValue, setdropValue] = useState(true);
+
   useEffect(() => {
     let mounted = true;
     let validate = true;
-    let today = new Date();
     if (!dobTo && !dobTo2) {
       setdateShow('Initial and final dates are Required');
       validate = false;
@@ -135,15 +134,19 @@ const BookingListScreen = ({ navigation, route }: any) => {
         {
           rest.success &&
             (setdetailsArray(rest?.flightawareflights?.scheduled),
-              setprevReq(rest?.flightawareflights?.scheduled.length),
               setdetailsArrayProvider(rest?.flights),
-              setnextReq(rest?.flights.length),
               setLoading(false));
         }
       })
-      .catch(error => {
-        Alert.alert(error.message ? error.message : 'Something went wrong');
+      .catch(async error => {
         setLoading(false);
+        if (error.response.status === 401) {
+          await AsyncStorage.clear();
+          navigation.navigate('Welcome')
+        } else {
+
+          Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'Something went wrong');
+        }
       });
   }
 
@@ -245,7 +248,7 @@ const BookingListScreen = ({ navigation, route }: any) => {
           ) : (
             <View style={{ flex: 1 }}>
               <ScrollView ref={scrollRef} style={styles.detailsbox}>
-                {detailsArrayProvider.length >= 1 && (
+                {detailsArrayProvider.length > 0 && (
                   <View>
                     <Text style={styles.bookingtxt}>Available Booking</Text>
                     {detailsArrayProvider.slice(prevReq, nextReq).map((item: any, index: number) => {
@@ -382,7 +385,7 @@ const BookingListScreen = ({ navigation, route }: any) => {
                 {detailsArray.length >= 1 && (
                   detailsArray.slice(prevPost, nextPost).map((item: any, index: number) => {
                     return (
-                      <View key={index} style={styles.detailsboxinner}>
+                      item.fa_flight_id && <View key={index} style={styles.detailsboxinner}>
                         <View style={styles.flexrow}>
                           <Image source={mapp} style={styles.img} />
                           <View style={styles.test}>
@@ -442,8 +445,9 @@ const BookingListScreen = ({ navigation, route }: any) => {
                             </View>
                           </View>
                         </View>
-                        {/* 2ndView */}
                       </View>
+
+
                     );
                   })
 
@@ -541,7 +545,6 @@ const BookingListScreen = ({ navigation, route }: any) => {
         }}
         setLocation={(d: any) => {
           setpickupLocation(d);
-          setpickValue(true);
         }}
       />
       <SearchCity
@@ -551,7 +554,6 @@ const BookingListScreen = ({ navigation, route }: any) => {
         }}
         setLocation={(d: any) => {
           setdropoffLocation(d);
-          setdropValue(true);
         }}
       />
     </SafeAreaView>

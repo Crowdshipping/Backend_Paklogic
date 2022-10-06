@@ -75,8 +75,8 @@ export const styles = StyleSheet.create({
   },
   errorMsg: {
     textAlign: 'left',
-    color: 'red',
-    marginLeft: wp(5),
+    color: colors.red,
+    marginLeft: wp(8),
   },
 
   inputText: {

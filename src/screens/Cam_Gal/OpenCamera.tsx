@@ -13,7 +13,6 @@ import {
 } from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 import { styles } from './style';
-import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 interface IimageShow {
   name: string;
@@ -85,9 +84,8 @@ const OpenCamera = (props: any) => {
             };
             callbackImage(ImageObject);
           })
-          .catch((err: any) => {
-            console.log(err);
-            Alert.alert(err.message ? err.message : 'Something went wrong');
+          .catch((error: any) => {
+            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'Something went wrong');
           });
       }
     });

@@ -42,6 +42,7 @@ import NotifictionHistory from './Notification/Notification';
 import ViewQuery from './Support/ViewQuery';
 import AddQuery from './Support/AddQuery';
 import QueryDetail from './Support/QueryDetail';
+import RateDriver from './Rate/RateDriver';
 
 export {
   RegisterScreen,
@@ -88,4 +89,5 @@ export {
   ViewQuery,
   AddQuery,
   QueryDetail,
+  RateDriver,
 };

@@ -113,7 +113,7 @@ export const styles = StyleSheet.create({
   },
   errorMsg: {
     textAlign: 'left',
-    color: 'red',
+    color: colors.red,
     // paddingHorizontal: hp(2),
     // paddingTop: hp(1),
   },

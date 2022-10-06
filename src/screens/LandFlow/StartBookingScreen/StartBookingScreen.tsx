@@ -37,8 +37,16 @@ interface cityArray {
   lon: any;
 }
 const StartBookingScreen = ({ navigation }: any) => {
-  const [pickupLocation, setpickupLocation] = useState<cityArray>();
-  const [dropoffLocation, setdropoffLocation] = useState<cityArray>();
+  const [pickupLocation, setpickupLocation] = useState<cityArray>({
+    name: 'Islamabad',
+    lat: 33.738045,
+    lon: 73.084488,
+  })
+  const [dropoffLocation, setdropoffLocation] = useState<cityArray>({
+    name: 'Rawalpindi',
+    lat: 33.626057,
+    lon: 73.071442,
+  });
   const [distance, setDistance] = useState(0);
   const [isSelected, setSelected] = useState('none');
 
@@ -81,27 +89,24 @@ const StartBookingScreen = ({ navigation }: any) => {
   function handleNext() {
     let validate = true;
     if (!pickupLocation) {
-      console.log('pick loc', pickupLocation);
       setpickValue(false)
       validate = false;
     }
     if (!dropoffLocation) {
-      console.log('drop loc', dropoffLocation);
       setdropValue(false)
       validate = false;
     }
     if (!isSelected) {
-      console.log('not selected', isSelected);
       // setunitValue(false);
       validate = false;
     }
     if (validate) {
-      console.log('validated');
       navigation.navigate('LandProductDetail', {
         data: {
           pickupLocation,
           dropoffLocation,
           vehicleType: isSelected,
+          distance
         },
       });
     }
@@ -114,7 +119,7 @@ const StartBookingScreen = ({ navigation }: any) => {
         (getDistance(
           { latitude: pickupLocation.lat, longitude: pickupLocation.lon },
           { latitude: dropoffLocation.lat, longitude: dropoffLocation.lon },
-        ) / 1000),
+        ) * 0.000621),
       );
     }
   }, [pickupLocation, dropoffLocation]);
@@ -149,7 +154,7 @@ const StartBookingScreen = ({ navigation }: any) => {
               title={'dropoff'}
             />
           )}
-          {pickupLocation && dropoffLocation && (
+          {/* {pickupLocation && dropoffLocation && (
             <MapViewDirections
               apikey={GOOGLE_MAPS_APIKEY}
               origin={{
@@ -163,7 +168,7 @@ const StartBookingScreen = ({ navigation }: any) => {
               strokeWidth={wp(1)}
               strokeColor={colors.red}
             />
-          )}
+          )} */}
         </MapView>
       </View>
       <View
@@ -327,25 +332,11 @@ const StartBookingScreen = ({ navigation }: any) => {
             </View>
             <Text style={{ textAlign: 'center', fontSize: 18 }}>
               Total Distance:{' '}
-              <Text style={{ fontWeight: 'bold' }}>{distance}KM</Text>
+              <Text style={{ fontWeight: 'bold' }}>{distance} Miles</Text>
             </Text>
             <Button title="next" onPress={handleNext} />
           </View>
         )}
-
-        {/* <View style={styles.bckimg}>
-          <View style={{bottom: hp(5)}}>
-            <MapHeader
-              title="Vehicle Scooter"
-              picture={packagedetails}
-              pressMethod={() => navigation.goBack()}
-            />
-          </View>
-          <Text style={{textAlign: 'center', fontSize: 18}}>
-            Total Distance: <Text style={{fontWeight: 'bold'}}>{distance}</Text>
-          </Text>
-          <Button title="next" onPress={() => {}} />
-        </View> */}
       </View>
 
       <SearchPlaces

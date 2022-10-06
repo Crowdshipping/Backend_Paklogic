@@ -78,7 +78,7 @@ export const styles = StyleSheet.create({
   },
   errorMsg: {
     textAlign: 'left',
-    color: 'red',
+    color: colors.red,
   },
   modalView: {
     width: wp(90),

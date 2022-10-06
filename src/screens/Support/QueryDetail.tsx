@@ -52,7 +52,6 @@ const styles = StyleSheet.create({
     maincontainer: {
         paddingVertical: wp(5),
         paddingHorizontal: hp(3),
-        // backgroundColor: 'white',
         height: hp('100%')
     },
     txt: {

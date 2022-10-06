@@ -20,6 +20,7 @@ import { getQuestions } from '../../API';
 import QuerySingleCard from './QuerSingleCard';
 import { colors } from '../../theme';
 import { useIsFocused } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ViewQuery = ({ navigation }: any) => {
     const [QueryResponse, setQueryResponse] = React.useState([]);
@@ -35,9 +36,12 @@ const ViewQuery = ({ navigation }: any) => {
                 setIsLoading(false);
                 result.success && setQueryResponse(result.customerSupportQuestions);
             })
-            .catch(error => {
+            .catch(async error => {
                 setIsLoading(false);
-                console.log('error', error);
+                if (error.response.status === 401) {
+                    await AsyncStorage.clear();
+                    navigation.navigate('Welcome')
+                }
             });
     };
 
@@ -63,7 +67,7 @@ const ViewQuery = ({ navigation }: any) => {
         return (
             <View style={{ height: '75%', justifyContent: 'center', flex: 1, marginTop: hp('15%') }}>
                 <View style={{ backgroundColor: "#f0f0f0", height: 250, borderRadius: 10, margin: 20, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ color: 'red' }}>No query available</Text>
+                    <Text style={{ color: colors.red }}>No query available</Text>
                 </View>
             </View>
         )
@@ -90,7 +94,7 @@ const ViewQuery = ({ navigation }: any) => {
 
 
     return (
-        <SafeAreaView style={{ backgroundColor: 'white', height: "100%" }}>
+        <SafeAreaView style={{ backgroundColor: colors.white, height: "100%" }}>
             <Header title={'Support'} pressMethod={() => navigation.goBack()} />
             {isLoading ?
                 <ActivityIndicator

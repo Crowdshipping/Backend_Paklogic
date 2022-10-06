@@ -14,11 +14,14 @@ interface profile {
 
 export const updateUser = async (data: profile) => {
     const userId = await AsyncStorage.getItem('@userId');
-    console.log('updateUser request', data)
+    const userToken = await AsyncStorage.getItem('@userToken');
     return new Promise((resolve, reject) => {
         const config: AxiosRequestConfig = {
             method: 'PATCH',
             url: `${prodUrl}/user/updateuser/${userId}`,
+            headers: {
+                Authorization: `Bearer ${userToken}`
+            },
             data: {
                 address: data?.address,
                 email: data?.email,

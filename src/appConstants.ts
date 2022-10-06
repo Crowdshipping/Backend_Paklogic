@@ -242,8 +242,13 @@ export const Countries = [
   {name: 'Åland Islands', dial_code: '+358', code: 'AX', flag: '🇦🇽'},
 ];
 
-export const prodUrl = 'https://backend-crowdshipping.herokuapp.com';
-export const GOOGLE_MAPS_APIKEY = 'AIzaSyBnzRyirdu4C6br2saqLU0ExTV2U7qxVLg';
+// export const prodUrl = 'https://backend-crowdshipping.herokuapp.com';
+// export const prodUrl = 'http://20.127.170.198';
+// export const prodUrl = 'http://www.crowdshipping.net/app';
+export const prodUrl = 'https://crowdshipping.net/app';
+export const CHAT_URL = 'https://crowdshipping-chat.herokuapp.com/chat/chat';
+// export const GOOGLE_MAPS_APIKEY = 'AIzaSyBnzRyirdu4C6br2saqLU0ExTV2U7qxVLg';
+export const GOOGLE_MAPS_APIKEY = 'AIzaSyDsK8_E12WZ1Wixbh30QPJxc10JJb4ukFI';
 export const ONESIGNAL_APP_ID = 'e98b3642-ab77-4f66-bbcb-cae1f102b2e8'
 
 export const PASS_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;

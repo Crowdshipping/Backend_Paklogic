@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -6,7 +6,6 @@ import {
   Alert,
   SafeAreaView,
   Text,
-  ActivityIndicator,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -21,16 +20,15 @@ import { receiver_derails } from '../../../theme/assets/svg';
 import { mapp } from '../../../theme/assets/images';
 import {
   createBooking,
-  requestProvider,
-  postRequest,
   postImage,
   createDriverRequest,
+  calculateBookingFare,
 } from '../../../API';
 import { SuccessModal } from '../../../Modals';
 import { colors } from '../../../theme';
 import moment from 'moment';
-import { success } from '../../../theme/assets/svg/success';
 import { NAME_REGEX, NUM_REGEX } from '../../../appConstants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface ICountryCode {
   name: string;
@@ -59,8 +57,10 @@ const LandReceiverDetail = ({ navigation, route }: any) => {
     vehicleType,
     initialDate,
     finalDate,
+    distance
   } = route.params?.data;
   const [receiverName, setreceiverName] = useState('');
+  const [totalFare, settotalFare] = useState('');
   const [valueNum, setvalueNum] = useState(true);
   const [valueName, setvalueName] = useState(true);
   const [loading, setloading] = useState(false);
@@ -90,7 +90,6 @@ const LandReceiverDetail = ({ navigation, route }: any) => {
       setloading(true);
       postImage(Images)
         .then((rest: any) => {
-          console.log('post image', { rest });
           let validate = true;
           // setloading(false);
           if (rest.length === 2) {
@@ -129,38 +128,56 @@ const LandReceiverDetail = ({ navigation, route }: any) => {
                 {
                   rest.success && createDriverRequest(bookingId)
                     .then((rest: any) => {
-                      console.log('request driver', { rest });
                       rest.success && setsuccess(true);
                     })
-                    .catch(error => {
-                      console.log('request driver', { error });
+                    .catch(async error => {
                       setloading(false);
-                      Alert.alert(
-                        error.message
-                          ? error.message
-                          : 'Something went wrong',
-                      );
+                      if (error.response.status === 401) {
+                        await AsyncStorage.clear();
+                        navigation.navigate('Welcome')
+                      } else {
+                        Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+                      }
                     })
                 }
                 setloading(false);
               })
-              .catch(error => {
+              .catch(async error => {
                 setloading(false);
-                Alert.alert(
-                  error.message ? error.message : 'Something went wrong',
-                );
+                if (error.response.status === 401) {
+                  await AsyncStorage.clear();
+                  navigation.navigate('Welcome')
+                } else {
+                  Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+                }
               });
           }
         })
-        .catch(error => {
-          console.log('post image', { error });
+        .catch(async error => {
           setloading(false);
-          Alert.alert(error.message ? error.message : 'Something went wrong');
+          if (error.response.status === 401) {
+            await AsyncStorage.clear();
+            navigation.navigate('Welcome')
+          } else {
+            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+          }
         });
     }
   }
 
-  // const {} = route.params?.data?.item?.provider;
+  useEffect(() => {
+    calculateBookingFare(distance, 0.99, 1.99)
+      .then((result: any) => result.success && settotalFare(result.amount))
+      .catch(async error => {
+        setloading(false);
+        if (error.response.status === 401) {
+          await AsyncStorage.clear();
+          navigation.navigate('Welcome')
+        } else {
+          Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+        }
+      });
+  }, [])
   return (
     <SafeAreaView>
       <KeyboardAwareScrollView>
@@ -231,7 +248,7 @@ const LandReceiverDetail = ({ navigation, route }: any) => {
               <View style={styles.paymentView}>
                 <Text style={{ fontSize: 16, padding: 1 }}>Total Amount</Text>
                 <Text style={{ color: colors.red, fontSize: 20, padding: 1 }}>
-                  $30
+                  {totalFare}
                 </Text>
               </View>
 
@@ -244,6 +261,7 @@ const LandReceiverDetail = ({ navigation, route }: any) => {
                     receiverName,
                     countrySelect,
                     phone,
+                    totalFare
                   });
                 }}>
                 <Text style={{ color: colors.red }}>Modify request</Text>

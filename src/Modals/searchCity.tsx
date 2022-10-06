@@ -7,6 +7,8 @@ import {
   SafeAreaView,
   Modal,
   Alert,
+  TextInput,
+  Platform,
 } from 'react-native';
 // import Modal from 'react-native-modal';
 import {
@@ -17,6 +19,7 @@ import { Countries } from '../appConstants';
 import { Textbox } from '../components';
 import { colors } from '../theme';
 import { searchCity } from '../API';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface IModal {
   setModalVisible: Function;
@@ -33,6 +36,7 @@ interface cityArray {
 interface cityArray1 extends Array<cityArray> { }
 
 export const SearchCity = (props: IModal) => {
+
   const [cities, setcities] = useState<cityArray1>([
     {
       name: '',
@@ -47,8 +51,7 @@ export const SearchCity = (props: IModal) => {
       .then((rest: any) => {
         setcities(rest.cities);
       })
-      .catch(error => {
-        console.log(error);
+      .catch(async error => {
         // Alert.alert(error.message ? error.message : 'Something went wrong');
       });
   }
@@ -61,41 +64,49 @@ export const SearchCity = (props: IModal) => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-around',
+            marginHorizontal: wp(5)
           }}>
-          <View style={{ width: '85%' }}>
-            <Textbox
+          <View style={{ width: '75%', }}>
+            <TextInput
+              autoFocus
               placeholder={'Search City'}
-              onChangeValue={(text: string) => {
+              onChangeText={(text: string) => {
                 handleSearch(text);
               }}
-              focus={true}
+              style={{
+                paddingVertical: Platform.OS === 'ios' ? wp(2) : 0,
+                borderBottomWidth: 1,
+                borderColor: 'grey',
+                fontSize: 18
+              }}
             />
           </View>
           <TouchableOpacity
             onPress={() => {
-              setLocation({
-                name: '',
-                code: '',
-                coordinates: { lat: '', lon: '' },
-                country_code: '',
-                time_zone: '',
-              });
+              // setLocation({
+              //   name: '',
+              //   code: '',
+              //   coordinates: { lat: '', lon: '' },
+              //   country_code: '',
+              //   time_zone: '',
+              // });
               setModalVisible(false);
             }}
-            style={{ width: '15%' }}>
-            <Text style={{ color: colors.red }}>Cancel</Text>
+            style={{ width: '20%' }}>
+            <Text style={{ color: colors.red, fontSize: 18 }}>Cancel</Text>
           </TouchableOpacity>
         </View>
-        <ScrollView style={{ paddingHorizontal: wp(5) }}>
+        <ScrollView style={{ padding: wp(5) }}>
           {cities?.map((item: cityArray, index: number) => {
             return (
               <TouchableOpacity
+                style={{ flexDirection: 'row', borderWidth: 0.5, borderRadius: 5, marginVertical: hp(1) }}
                 key={index}
                 onPress={() => {
                   setModalVisible(false);
                   setLocation(item);
                 }}>
-                <Text>{item.name}</Text>
+                <Text style={{ textAlign: 'center', fontSize: 18, padding: wp(3) }}>{item.name}</Text>
               </TouchableOpacity>
             );
           })}

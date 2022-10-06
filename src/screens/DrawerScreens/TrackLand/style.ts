@@ -3,13 +3,14 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import {colors} from '../../../theme';
 export const styles = StyleSheet.create({
   container: {
     // ...StyleSheet.absoluteFillObject,
     // top: hp(7),
     // height: hp(85),
     flex: 1,
-    backgroundColor: 'red',
+    backgroundColor: colors.red,
     // width: wp(100),
     justifyContent: 'flex-end',
     alignItems: 'center',

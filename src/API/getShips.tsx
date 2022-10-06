@@ -1,5 +1,6 @@
-import axios, {AxiosRequestConfig} from 'axios';
-import {prodUrl} from '../appConstants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios, { AxiosRequestConfig } from 'axios';
+import { prodUrl } from '../appConstants';
 
 interface IShipData {
   pickupCity: string;
@@ -11,6 +12,7 @@ interface IShipData {
 }
 
 export const getShips = async (props: IShipData) => {
+  const userToken = await AsyncStorage.getItem('@userToken');
   const {
     pickupCity,
     dropoffCity,
@@ -24,6 +26,9 @@ export const getShips = async (props: IShipData) => {
     const config: AxiosRequestConfig = {
       method: 'post',
       url: `${prodUrl}/customer/getships`,
+      headers: {
+        Authorization: `Bearer ${userToken}`
+      },
       data: {
         pickupCity,
         dropoffCity,
@@ -39,7 +44,7 @@ export const getShips = async (props: IShipData) => {
         resolve(response.data);
       })
       .catch(error => {
-        reject(error.response.data);
+        reject(error);
       });
   });
 };

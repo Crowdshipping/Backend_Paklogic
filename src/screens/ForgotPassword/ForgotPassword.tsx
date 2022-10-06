@@ -9,6 +9,7 @@ import { forgot_password } from '../../theme/assets/svg';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { forgotPassword } from '../../API/forgotPassword';
 import { EMAIL_REGEX } from '../../appConstants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ForgotPassword = ({ navigation }: any) => {
   const [emailValue, setemailValue] = useState(true);
@@ -32,9 +33,14 @@ const ForgotPassword = ({ navigation }: any) => {
 
           rest.success && navigation.navigate('PasswordOtp', { email });
         })
-        .catch(error => {
+        .catch(async error => {
           setloading(false);
-          Alert.alert(error.message ? error.message : 'Something went wrong');
+          if (error.response.status === 401) {
+            await AsyncStorage.clear();
+            navigation.navigate('Welcome')
+          } else {
+            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+          }
         });
     }
   }

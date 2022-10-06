@@ -26,14 +26,14 @@ export const styles = StyleSheet.create({
     // marginVertical: hp(5),
     // paddingVertical: hp(5),
     // marginHorizontal: wp(40),
-    color: colors.blackblack,
+    color: colors.black,
     fontSize: wp(4),
     // bottom: 15,
   },
 
   txt: {
     paddingTop: hp(2),
-    color: colors.blackblack,
+    color: colors.black,
     fontSize: wp(4),
   },
 
@@ -71,7 +71,7 @@ export const styles = StyleSheet.create({
   txt1: {
     fontSize: wp(4),
     // textTransform: 'uppercase',
-    color: colors.blackblack,
+    color: colors.black,
   },
 
   Touch: {
@@ -91,7 +91,7 @@ export const styles = StyleSheet.create({
   },
   errorMsg: {
     textAlign: 'left',
-    color: 'red',
+    color: colors.red,
     marginLeft: wp(5),
   },
 

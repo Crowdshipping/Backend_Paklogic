@@ -15,6 +15,7 @@ import { register } from '../../theme/assets/svg';
 import { registerUser } from '../../API/registerUser';
 import { SuccessModal } from '../../Modals';
 import { ADDRESS_REGEX, EMAIL_REGEX, PASS_REGEX } from '../../appConstants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const RegisterScreen = ({ route, navigation }: any) => {
   const [loading, setloading] = useState(false);
@@ -36,14 +37,16 @@ const RegisterScreen = ({ route, navigation }: any) => {
   function handleSubmit() {
     let validate = true;
 
-    let nameRegex = /^[a-zA-Z]{2,}$/;
+    // let nameRegex = /^[a-zA-Z]{2,}$/;
 
 
-    if (!nameRegex.test(fname)) {
+    // if (!nameRegex.test(fname)) 
+    if (!(fname.length > 0)) {
       setfnameValue(false);
       validate = false;
     }
-    if (!nameRegex.test(lname)) {
+    // if (!nameRegex.test(lname)) {
+    if (!(lname.length > 0)) {
       setlnameValue(false);
       validate = false;
     }
@@ -53,7 +56,8 @@ const RegisterScreen = ({ route, navigation }: any) => {
       validate = false;
     }
 
-    if (!ADDRESS_REGEX.test(address)) {
+    // if (!ADDRESS_REGEX.test(address)) {
+    if (!(address.length > 0)) {
       setaddressValue(false);
       validate = false;
     }
@@ -69,9 +73,13 @@ const RegisterScreen = ({ route, navigation }: any) => {
           setloading(false);
           rest.success && (settext(rest.message), setsuccess(true));
         })
-        .catch(error => {
-          Alert.alert(error.message ? error.message : 'Something went wrong');
-          setloading(false);
+        .catch(async error => {
+          if (error.response.status === 401) {
+            await AsyncStorage.clear();
+            navigation.navigate('Welcome')
+          } else {
+            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+          } setloading(false);
         });
     }
   }

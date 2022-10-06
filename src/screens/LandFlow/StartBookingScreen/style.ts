@@ -30,7 +30,7 @@
 //   },
 //   errorMsg: {
 //     textAlign: 'left',
-//     color: 'red',
+//     color: colors.red,
 //     // paddingHorizontal: hp(2),
 //     // paddingBottom: hp(4),
 //   },
@@ -153,7 +153,7 @@ export const styles = StyleSheet.create({
   },
   errorMsg: {
     textAlign: 'left',
-    color: 'red',
+    color: colors.red,
     // paddingHorizontal: hp(2),
     // paddingBottom: hp(4),
   },

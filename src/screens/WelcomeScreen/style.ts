@@ -3,6 +3,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import {colors} from '../../theme';
 
 export const styles = StyleSheet.create({
   sectionContainer: {
@@ -32,7 +33,7 @@ export const styles = StyleSheet.create({
   button: {
     marginTop: hp(3),
     textAlign: 'center',
-    borderColor: 'red',
+    borderColor: colors.red,
     borderWidth: 1,
     borderRadius: 5,
   },
@@ -40,7 +41,7 @@ export const styles = StyleSheet.create({
     marginTop: hp(3),
     marginBottom: hp(4),
     textAlign: 'center',
-    backgroundColor: 'red',
+    backgroundColor: colors.red,
     borderRadius: 5,
   },
 });

@@ -8,7 +8,6 @@ import {
 import { Header } from '../../components';
 import { SvgXml } from 'react-native-svg';
 import { truck, plane, shipsvg } from '../../theme/assets/svg';
-import { DrawerActions } from '@react-navigation/native';
 
 const LandingScreen = ({ navigation }: any) => {
   return (

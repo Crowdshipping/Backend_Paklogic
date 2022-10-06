@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+
 import {
   RegisterScreen,
   SigninScreen,
@@ -44,13 +45,14 @@ import {
   NotifictionHistory,
   ViewQuery,
   AddQuery,
-  QueryDetail
+  QueryDetail,
+  RateDriver,
+  AddClaim
 } from '../screens';
 import CustomDrawerContent from './DrawerNavigation';
-import { StripePayment } from '../stripe';
-import AddClaim from '../screens/Claim/AddClaim';
+import { StripePayment, ChatScreen } from '../features';
 
-type rootStack = {
+export type rootStack = {
   Welcome: undefined;
   Register: { countryCode: string; phone: string };
   Signin: undefined;
@@ -79,6 +81,7 @@ type rootStack = {
   ShipModifyRequest: undefined;
   MyDrawer: undefined;
   StripePayment: undefined;
+  ChatScreen: undefined;
   SearchShip: undefined;
   SearchAir: undefined;
   BookingHistory: undefined;
@@ -102,6 +105,7 @@ type rootStack = {
   ViewQuery: undefined;
   AddQuery: undefined;
   QueryDetail: undefined;
+  RateDriver: undefined;
 };
 const Stack = createStackNavigator<rootStack>();
 const Drawer = createDrawerNavigator();
@@ -149,6 +153,8 @@ const DrawerScreens = () => {
       <Stack.Screen name="AddQuery" component={AddQuery} />
       <Stack.Screen name="QueryDetail" component={QueryDetail} />
       <Stack.Screen name="StripePayment" component={StripePayment} />
+      <Stack.Screen name="ChatScreen" component={ChatScreen} />
+      <Stack.Screen name="RateDriver" component={RateDriver} />
     </Stack.Navigator>
   )
 }
@@ -221,5 +227,7 @@ const StackNavigation = () => {
     </Stack.Navigator>
   );
 };
+
+
 
 export default StackNavigation;

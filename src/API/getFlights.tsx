@@ -1,5 +1,6 @@
-import axios, {AxiosRequestConfig} from 'axios';
-import {prodUrl} from '../appConstants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios, { AxiosRequestConfig } from 'axios';
+import { prodUrl } from '../appConstants';
 
 interface IFlightData {
   pickupCity: string;
@@ -11,6 +12,8 @@ interface IFlightData {
 }
 
 export const getFlights = async (props: IFlightData) => {
+  const userToken = await AsyncStorage.getItem('@userToken');
+
   const {
     pickupCity,
     dropoffCity,
@@ -23,6 +26,9 @@ export const getFlights = async (props: IFlightData) => {
     const config: AxiosRequestConfig = {
       method: 'post',
       url: `${prodUrl}/customer/getflights`,
+      headers: {
+        Authorization: `Bearer ${userToken}`
+      },
       data: {
         pickupCity,
         dropoffCity,
