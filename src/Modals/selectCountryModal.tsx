@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, ScrollView, TouchableOpacity, Text } from 'react-native';
+import {View, ScrollView, TouchableOpacity, Text} from 'react-native';
 import Modal from 'react-native-modal';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import { Countries } from '../appConstants';
-import { colors } from '../theme';
+import {Countries} from '../appConstants';
+import {colors} from '../theme';
 interface IModal {
   setModalVisible: Function;
   setSelectedCountry: Function;
@@ -14,7 +14,7 @@ interface IModal {
 }
 
 export const SelectCountryModal = (props: IModal) => {
-  const { isModalVisible, setModalVisible, setSelectedCountry } = props;
+  const {isModalVisible, setModalVisible, setSelectedCountry} = props;
   return (
     <Modal
       isVisible={isModalVisible}
@@ -31,16 +31,18 @@ export const SelectCountryModal = (props: IModal) => {
         <ScrollView>
           {Countries.map((d, i) => {
             return (
-              <View key={d.code} style={{ backgroundColor: colors.white }}>
+              <View key={d.code} style={{backgroundColor: colors.white}}>
                 <TouchableOpacity
-                  style={{ marginVertical: hp(1), flexDirection: 'row' }}
+                  style={{marginVertical: hp(1), flexDirection: 'row'}}
                   onPress={() => {
                     setSelectedCountry(d);
                     setModalVisible(false);
                   }}>
-                  <Text>{d.flag + ' ' + d.name}</Text>
+                  <Text style={{color: colors.black}}>
+                    {d.flag + ' ' + d.name}
+                  </Text>
                 </TouchableOpacity>
-                <View style={{ height: hp(0.1), backgroundColor: 'lightgrey' }} />
+                <View style={{height: hp(0.1), backgroundColor: 'lightgrey'}} />
               </View>
             );
           })}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 import moment from 'moment';
 import {
@@ -16,9 +16,9 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-import { getShips } from '../../../API';
-import { Header, Datepicker, BookingListCard } from '../../../components';
-import { SearchPort } from '../../../Modals';
+import {getShips, LogoutApi} from '../../../API';
+import {Header, Datepicker, BookingListCard} from '../../../components';
+import {SearchPort} from '../../../Modals';
 
 interface portArray {
   Country: string;
@@ -27,12 +27,12 @@ interface portArray {
   Name: string;
 }
 
-import { styles } from './style';
-import { colors } from '../../../theme/colors';
-import { mapp } from '../../../theme/assets/images';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {styles} from './style';
+import {colors} from '../../../theme/colors';
+import {mapp} from '../../../theme/assets/images';
+import {CommonActions} from '@react-navigation/native';
 
-const BookingListShipping = ({ navigation, route }: any) => {
+const BookingListShipping = ({navigation, route}: any) => {
   const [isVisible, setisVisible] = useState(false);
   const [isVisible2, setisVisible2] = useState(false);
   const [marinetrafficships, setmarinetrafficships] = useState([]);
@@ -62,18 +62,20 @@ const BookingListShipping = ({ navigation, route }: any) => {
   const [pickValue, setpickValue] = useState(true);
   const [dropValue, setdropValue] = useState(true);
   useEffect(() => {
-    let validate = true
+    let validate = true;
     if (dobTo >= dobTo2) {
       setdateShow(true);
       validate = false;
-    } if (!pickupLocation.Name) {
+    }
+    if (!pickupLocation.Name) {
       setpickValue(false);
       validate = false;
     }
     if (!dropoffLocation.Name) {
       setdropValue(false);
       validate = false;
-    } if (validate) {
+    }
+    if (validate) {
       const data = {
         pickupCity: pickupLocation.Name,
         dropoffCity: dropoffLocation.Name,
@@ -89,23 +91,34 @@ const BookingListShipping = ({ navigation, route }: any) => {
           {
             rest.success &&
               (setmarinetrafficships(rest.marinetrafficships),
-                setmarineShipsProvider(rest.ships),
-                setLoading(false));
+              setmarineShipsProvider(rest.ships),
+              setLoading(false));
           }
         })
         .catch(async error => {
           if (error.response.status === 401) {
-            await AsyncStorage.clear();
-            navigation.navigate('Welcome')
+            Alert.alert('Session Expired', 'Please login again');
+            LogoutApi();
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{name: 'Welcome'}],
+              }),
+            );
           } else {
-            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
-          } setLoading(false);
+            Alert.alert(
+              error?.response?.data?.message
+                ? error?.response?.data?.message
+                : 'something went wrong',
+            );
+          }
+          setLoading(false);
         });
     }
   }, [pickupLocation, dropoffLocation, dobTo, dobTo2]);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
+    <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <Header
         title="list of bookings"
         pressMethod={() => navigation.toggleDrawer()}
@@ -114,14 +127,8 @@ const BookingListShipping = ({ navigation, route }: any) => {
       {/* {bookings} */}
       <View style={styles.row}>
         <TouchableOpacity
-          style={[styles.Touch, { flexDirection: 'row', alignItems: 'center' }]}
-          // onPress={() => setModalVisible(!isModalVisible)}
-          onPress={() => setisVisible(true)}
-        // onPress={() => {
-        //   <SelectCountryModal isModalVisible={isModalVisible} />;
-        // }}
-        >
-          {/* <Text style={styles.txt1}>{SelectedCountry.name}</Text> */}
+          style={[styles.Touch, {flexDirection: 'row', alignItems: 'center'}]}
+          onPress={() => setisVisible(true)}>
           <Text style={styles.txt1}>
             {pickupLocation?.Name !== ''
               ? pickupLocation.Name
@@ -140,10 +147,9 @@ const BookingListShipping = ({ navigation, route }: any) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.Touch, { flexDirection: 'row', alignItems: 'center' }]}
+          style={[styles.Touch, {flexDirection: 'row', alignItems: 'center'}]}
           // onPress={() => setModalVisible2(!isModalVisible2)}>
           onPress={() => setisVisible2(true)}>
-          {/* <Text style={styles.txt1}>{SelectedCountry2.name}</Text> */}
           <Text style={styles.txt1}>
             {dropoffLocation?.Name !== ''
               ? dropoffLocation.Name
@@ -171,7 +177,8 @@ const BookingListShipping = ({ navigation, route }: any) => {
             onChange={(selectedDate: Date) => {
               setdobTo(selectedDate);
             }}
-            initialDate={moment().clone().add(1, 'days').toDate()}
+            // initialDate={moment().clone().add(1, 'days').toDate()}
+            initialDate={moment().clone().add(0, 'days').toDate()}
           />
         </View>
         <View style={styles.Touch}>
@@ -185,16 +192,14 @@ const BookingListShipping = ({ navigation, route }: any) => {
           />
         </View>
       </View>
-      {dateShow ? (
+      {dateShow && (
         <Text style={styles.errorMsg}>
           start date must be smaller then end date
         </Text>
-      ) : (
-        <View></View>
       )}
 
       {/* available booking view */}
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         {
           isLoading ? (
             <View
@@ -210,10 +215,10 @@ const BookingListShipping = ({ navigation, route }: any) => {
               <ActivityIndicator size={'small'} color={colors.red} />
             </View>
           ) : (
-            <View style={{ flex: 1 }}>
+            <View style={{flex: 1}}>
               <ScrollView style={styles.detailsbox}>
                 {marineShipsProvider && marineShipsProvider.length >= 1 && (
-                  <View>
+                  <>
                     <Text style={styles.bookingtxt}>Available Booking</Text>
                     {marineShipsProvider.map((item: any, index: number) => {
                       return (
@@ -268,7 +273,7 @@ const BookingListShipping = ({ navigation, route }: any) => {
                         />
                       );
                     })}
-                  </View>
+                  </>
                 )}
                 {marinetrafficships && marinetrafficships.length >= 1 ? (
                   marinetrafficships.map((item: any, index: number) => {
@@ -320,7 +325,7 @@ const BookingListShipping = ({ navigation, route }: any) => {
                     );
                   })
                 ) : (
-                  <View style={styles.viewlocation}></View>
+                  <View style={styles.viewlocation} />
                 )}
                 {marinetrafficships &&
                   marinetrafficships.length < 1 &&

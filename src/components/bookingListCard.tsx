@@ -8,7 +8,7 @@ import {
   Platform,
   ImageSourcePropType,
 } from 'react-native';
-import { SvgXml } from 'react-native-svg';
+import {SvgXml} from 'react-native-svg';
 
 import {
   widthPercentageToDP as wp,
@@ -16,9 +16,9 @@ import {
 } from 'react-native-responsive-screen';
 import moment from 'moment';
 
-import { location } from '../theme/assets/svg';
+import {location} from '../theme/assets/svg';
 
-import { colors } from '../theme';
+import {colors} from '../theme';
 
 interface card {
   firstname?: string;
@@ -64,7 +64,7 @@ export const BookingListCard = (props: card) => {
   return (
     <View style={styles.detailsboxinner}>
       <View style={styles.flexrow}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
           {img ? (
             <Image source={img} style={styles.img} />
           ) : (
@@ -84,7 +84,7 @@ export const BookingListCard = (props: card) => {
                 {firstname} {lastname}
               </Text>
             )}
-            <Text style={{ fontSize: 15 }}>
+            <Text style={{fontSize: 15, color: colors.black}}>
               {mmsi}: {mmsiNumber}
             </Text>
           </View>
@@ -114,18 +114,13 @@ export const BookingListCard = (props: card) => {
             width: '90%',
             paddingHorizontal: wp(1),
           }}>
-          <View style={[styles.viewdetail, { alignItems: 'flex-start', }]}>
+          <View style={[styles.viewdetail, {alignItems: 'flex-start'}]}>
             <Text style={styles.txtdetail}>{pickupCity}</Text>
-
-
-
           </View>
-          <View style={[styles.viewdetail, { alignItems: 'flex-end' }]}>
+          <View style={[styles.viewdetail, {alignItems: 'flex-end'}]}>
             <Text style={styles.txtdetail}>{dropoffCity}</Text>
-
           </View>
         </View>
-
       </View>
       <View
         style={{
@@ -136,38 +131,53 @@ export const BookingListCard = (props: card) => {
           paddingHorizontal: wp(1),
         }}>
         {/* bottom start */}
-        {handleNavigation ? <TouchableOpacity style={{
-          borderRadius: wp(2),
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: colors.red,
-        }} onPress={() => handleNavigation()}>
-          <Text style={{
-            marginVertical: wp(1.5),
-            marginHorizontal: wp(2),
-            color: colors.white,
-          }}>{requestText}</Text>
-        </TouchableOpacity>
-          : requestText && <Text style={{ color: 'green' }}>{requestText}</Text>}
+        {handleNavigation ? (
+          <TouchableOpacity
+            style={{
+              borderRadius: wp(2),
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: colors.red,
+            }}
+            onPress={() => handleNavigation()}>
+            <Text
+              style={{
+                marginVertical: wp(1.5),
+                marginHorizontal: wp(2),
+                color: colors.white,
+              }}>
+              {requestText}
+            </Text>
+          </TouchableOpacity>
+        ) : (
+          requestText && <Text style={{color: 'green'}}>{requestText}</Text>
+        )}
 
         {/* bottom center */}
-        {handleCancellation && btn1 && <TouchableOpacity style={{
-          borderRadius: wp(2),
-          marginRight: wp(2),
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: colors.red,
-        }} onPress={() => handleCancellation()}>
-          <Text style={{
-            marginVertical: wp(1.5),
-            marginHorizontal: wp(2),
-            color: colors.white,
-          }}>Cancel</Text>
-        </TouchableOpacity>}
+        {handleCancellation && btn1 && (
+          <TouchableOpacity
+            style={{
+              borderRadius: wp(2),
+              marginRight: wp(2),
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: colors.red,
+            }}
+            onPress={() => handleCancellation()}>
+            <Text
+              style={{
+                marginVertical: wp(1.5),
+                marginHorizontal: wp(2),
+                color: colors.white,
+              }}>
+              Cancel
+            </Text>
+          </TouchableOpacity>
+        )}
 
         {/* bottom end */}
         {shipDate ? (
-          <Text style={{ fontSize: 14 }}>
+          <Text style={{fontSize: 14, color: colors.black}}>
             {moment(shipDate).format('YYYY-MM-DD hh:mm:ss')}
           </Text>
         ) : btn && handleTracking ? (
@@ -292,7 +302,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   txtdetail: {
-    fontSize: 18,
+    fontSize: wp(4),
     color: colors.black,
     // maxWidth: '70%'
   },

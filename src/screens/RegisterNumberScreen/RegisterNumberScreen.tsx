@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Alert, SafeAreaView, View } from 'react-native';
-import { styles } from './style';
+import React, {useState, useEffect} from 'react';
+import {Alert, SafeAreaView, View} from 'react-native';
+import {styles} from './style';
 
-import { Button, PhoneNumberPicker, Header } from '../../components';
+import {Button, PhoneNumberPicker, Header} from '../../components';
 
-import { SvgXml } from 'react-native-svg';
-import { welcome } from '../../theme/assets/svg';
+import {SvgXml} from 'react-native-svg';
+import {welcome} from '../../theme/assets/svg';
 
-import { verifyNumber } from '../../API/verifyPhone';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { NUM_REGEX } from '../../appConstants';
-import { colors } from '../../theme';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {verifyNumber, LogoutApi} from '../../API';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {NUM_REGEX} from '../../appConstants';
+import {colors} from '../../theme';
+import {CommonActions} from '@react-navigation/native';
 
-const RegisterNumberScreen = ({ navigation }: any) => {
+const RegisterNumberScreen = ({navigation, route}: any) => {
   // useEffect(() => {
   //   setphone(''),
   //     setcountryCode({
@@ -37,7 +37,7 @@ const RegisterNumberScreen = ({ navigation }: any) => {
 
   async function handleSubmit() {
     let validate = true;
-    if (!NUM_REGEX.test(phone)) {
+    if (!NUM_REGEX.test(phone.trim())) {
       setphoneValue(false);
       validate = false;
     }
@@ -47,45 +47,60 @@ const RegisterNumberScreen = ({ navigation }: any) => {
     }
     if (validate) {
       setloading(true);
-      verifyNumber(phone, countryCode.dial_code)
+      verifyNumber(phone.trim(), countryCode.dial_code)
         .then((rest: any) => {
           {
             setloading(false);
             rest.success &&
-              navigation.navigate('VerifyOtp', { countryCode, phone });
+              navigation.navigate('VerifyOtp', {countryCode, phone});
           }
         })
         .catch(async error => {
           if (error.response.status === 401) {
-            await AsyncStorage.clear();
-            navigation.navigate('Welcome')
+            Alert.alert('Session Expired', 'Please login again');
+            LogoutApi();
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{name: 'Welcome'}],
+              }),
+            );
           } else {
-            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
-          } setloading(false);
+            Alert.alert(
+              error?.response?.data?.message
+                ? error?.response?.data?.message
+                : 'something went wrong',
+            );
+          }
+          setloading(false);
         });
     }
   }
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
+    <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <KeyboardAwareScrollView>
-
         <Header
           title={'Register'}
           pressMethod={() => {
-            navigation.goBack();
+            route?.params?.from && route.params.from === 'signin'
+              ? navigation.dispatch(
+                  CommonActions.reset({
+                    index: 1,
+                    routes: [{name: 'Signin'}],
+                  }),
+                )
+              : navigation.goBack();
           }}
         />
 
         <SvgXml
           xml={welcome}
-          style={{ alignSelf: 'center' }}
-        // width={wp(90)}
-        // height={hp(50)}
+          style={{alignSelf: 'center'}}
+          // width={wp(90)}
+          // height={hp(50)}
         />
 
         <View style={styles.inputContainer}>
-          {/* <Text style={{flex: 1, textAlign: 'center'}}>MOBILE</Text> */}
-          {/* <View style={{flexWrap: 'wrap'}}> */}
           <PhoneNumberPicker
             onChange={(selectedCountry: any, text: string) => {
               setphoneValue(true);
@@ -104,7 +119,6 @@ const RegisterNumberScreen = ({ navigation }: any) => {
           {/* </View> */}
         </View>
 
-
         <Button
           title="Next"
           onPress={() => {
@@ -113,7 +127,6 @@ const RegisterNumberScreen = ({ navigation }: any) => {
           }}
           loading={loading}
         />
-
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );

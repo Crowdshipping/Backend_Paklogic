@@ -22,7 +22,7 @@ const QuerySingleCard = ({ title, subtitle, state, onPress }: any) => {
                     <Text style={{ color: 'black', fontWeight: 'bold' }}>
                         {title}
                     </Text>
-                    <Text numberOfLines={1}>
+                    <Text numberOfLines={1} style={{color: colors.black}}>
                         {subtitle}
                     </Text>
                     <Text style={{ color: state === "Resolved" ? 'green' : colors.red }}>

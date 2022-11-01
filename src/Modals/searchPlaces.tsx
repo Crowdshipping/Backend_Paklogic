@@ -1,36 +1,26 @@
 import React from 'react';
-import { SafeAreaView, Modal, StyleSheet, TouchableOpacity, Text, View } from 'react-native';
+import {SafeAreaView, Modal, StyleSheet, View} from 'react-native';
 // import Modal from 'react-native-modal';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import { widthPercentageToDP } from 'react-native-responsive-screen';
-import { GOOGLE_MAPS_APIKEY } from '../appConstants';
-import { Header } from '../components';
-import { colors } from '../theme';
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import {widthPercentageToDP} from 'react-native-responsive-screen';
+import {GOOGLE_MAPS_APIKEY} from '../appConstants';
+import {Button, Header} from '../components';
+import {colors} from '../theme';
 
 interface IModal {
   setModalVisible: Function;
   setLocation: Function;
   isModalVisible?: boolean;
 }
-interface cityArray {
-  name: string;
-  code: string;
-  coordinates: { lat: string; lon: string };
-  country_code: string;
-  time_zone: string;
-}
-interface cityArray1 extends Array<cityArray> { }
 
 export const SearchPlaces = (props: IModal) => {
-
-  const { isModalVisible, setModalVisible, setLocation } = props;
+  const {isModalVisible, setModalVisible, setLocation} = props;
   return (
     <Modal visible={isModalVisible}>
       <SafeAreaView style={styles.container}>
-        <View style={{ marginBottom: widthPercentageToDP(5) }}>
+        <View style={{marginBottom: widthPercentageToDP(5)}}>
           <Header title={''} pressMethod={() => setModalVisible(false)} />
         </View>
-        {/* <View style={{ marginHorizontal: widthPercentageToDP(5) }}> */}
         <GooglePlacesAutocomplete
           placeholder="Search"
           fetchDetails={true}
@@ -48,18 +38,44 @@ export const SearchPlaces = (props: IModal) => {
             key: GOOGLE_MAPS_APIKEY,
             language: 'en',
           }}
-          onFail={error => console.error(error)}
+          // onFail={error => console.error(error)}
           styles={{
             container: {
-              marginHorizontal: widthPercentageToDP(3)
+              marginHorizontal: widthPercentageToDP(3),
             },
             textInput: {
-              fontSize: 18
+              fontSize: 18,
+              color: colors.black,
             },
-
+            description: {
+              color: colors.black,
+            },
           }}
         />
-        {/* </View> */}
+
+        <Button
+          title="Rawalpindi"
+          onPress={() => {
+            setLocation({
+              name: 'Rawalpindi',
+              lat: 33.5651107,
+              lon: 73.0169135,
+            }),
+              setModalVisible(false);
+          }}
+        />
+
+        <Button
+          title="Islamabad"
+          onPress={() => {
+            setLocation({
+              name: 'Islamabad Capital Territory',
+              lat: 33.6844202,
+              lon: 73.047885,
+            }),
+              setModalVisible(false);
+          }}
+        />
       </SafeAreaView>
     </Modal>
   );

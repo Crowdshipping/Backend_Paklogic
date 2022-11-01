@@ -43,6 +43,13 @@ import {getProductTypes} from './getProductTypes';
 import {getProductCategories} from './getProductCategories';
 import {readChat} from './onChatRead';
 import {calculateBookingFare} from './calculateBookingFare';
+import {getMessageStatus} from './getMessageStatus';
+import {getSupportChat} from './getSupportChat';
+import {getPaymentLogs} from './getPaymentLogs';
+import {AvailDiscount} from './AvailDiscount';
+import {calculateShipBookingFare} from './calculateShipBookingFare';
+import {getUserAverageRating} from './getUserAverageRating';
+import {calculateAirBookingFare} from './calculateAirBookingFare';
 
 export {
   forgotPassword,
@@ -90,4 +97,11 @@ export {
   getProductCategories,
   readChat,
   calculateBookingFare,
+  getMessageStatus,
+  getSupportChat,
+  getPaymentLogs,
+  AvailDiscount,
+  calculateShipBookingFare,
+  calculateAirBookingFare,
+  getUserAverageRating,
 };

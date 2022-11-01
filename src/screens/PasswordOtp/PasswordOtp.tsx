@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, {useState, useRef} from 'react';
 import {
   SafeAreaView,
   Text,
@@ -11,22 +11,21 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import { SvgXml } from 'react-native-svg';
-import { Button, Header } from '../../components';
+import {SvgXml} from 'react-native-svg';
+import {Button, Header} from '../../components';
 // import {register5} from '../../theme/assets/svg';
-import { styles } from './style';
-import { otp } from '../../theme/assets/svg';
-import { passwordOtp } from '../../API/passwordOtp';
-import { forgotPassword } from '../../API/forgotPassword';
-import { colors } from '../../theme/colors';
-import { SuccessModal } from '../../Modals';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {styles} from './style';
+import {otp} from '../../theme/assets/svg';
+import {passwordOtp, forgotPassword, LogoutApi} from '../../API';
+import {colors} from '../../theme/colors';
+import {SuccessModal} from '../../Modals';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {CommonActions} from '@react-navigation/native';
 
-const PasswordOtp = ({ route, navigation }: any) => {
+const PasswordOtp = ({route, navigation}: any) => {
   const [loading, setloading] = useState(false);
   const [success, setsuccess] = useState(false);
-  const { email } = route.params;
+  const {email} = route.params;
   const refNum1: any = useRef();
   const refNum2: any = useRef();
   const refNum3: any = useRef();
@@ -66,14 +65,24 @@ const PasswordOtp = ({ route, navigation }: any) => {
           setloading(false);
 
           let id = rest.user._id;
-          rest.success && navigation.navigate('ResetPassword', { id });
+          rest.success && navigation.navigate('ResetPassword', {id});
         })
         .catch(async error => {
           if (error.response.status === 401) {
-            await AsyncStorage.clear();
-            navigation.navigate('Welcome')
+            Alert.alert('Session Expired', 'Please login again');
+            LogoutApi();
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{name: 'Welcome'}],
+              }),
+            );
           } else {
-            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+            Alert.alert(
+              error?.response?.data?.message
+                ? error?.response?.data?.message
+                : 'something went wrong',
+            );
             refNum6.current.clear(),
               setNum6('-'),
               refNum5.current.clear(),
@@ -86,7 +95,7 @@ const PasswordOtp = ({ route, navigation }: any) => {
               setNum2('-'),
               refNum1.current.clear(),
               setNum1('-'),
-              refNum1.current.focus()
+              refNum1.current.focus();
           }
           setloading(false);
         });
@@ -116,30 +125,38 @@ const PasswordOtp = ({ route, navigation }: any) => {
 
         rest.success &&
           (setText(rest.message),
-            refNum6.current.clear(),
-            setNum6('-'),
-            refNum5.current.clear(),
-            setNum5('-'),
-            refNum4.current.clear(),
-            setNum4('-'),
-            refNum3.current.clear(),
-            setNum3('-'),
-            refNum2.current.clear(),
-            setNum2('-'),
-            refNum1.current.clear(),
-            setNum1('-'),
-            refNum1.current.focus(),
-            setsuccess(true));
+          refNum6.current.clear(),
+          setNum6('-'),
+          refNum5.current.clear(),
+          setNum5('-'),
+          refNum4.current.clear(),
+          setNum4('-'),
+          refNum3.current.clear(),
+          setNum3('-'),
+          refNum2.current.clear(),
+          setNum2('-'),
+          refNum1.current.clear(),
+          setNum1('-'),
+          refNum1.current.focus(),
+          setsuccess(true));
       })
       .catch(async error => {
         setloading(false);
         if (error.response.status === 401) {
-          await AsyncStorage.clear();
-          navigation.navigate('Welcome')
+          Alert.alert('Session Expired', 'Please login again');
+          LogoutApi();
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [{name: 'Welcome'}],
+            }),
+          );
         } else {
-
-          Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
-
+          Alert.alert(
+            error?.response?.data?.message
+              ? error?.response?.data?.message
+              : 'something went wrong',
+          );
         }
       });
   };
@@ -150,7 +167,6 @@ const PasswordOtp = ({ route, navigation }: any) => {
         backgroundColor: colors.white,
       }}>
       <KeyboardAwareScrollView>
-
         <Header
           title="verify Email"
           pressMethod={() => {
@@ -171,10 +187,10 @@ const PasswordOtp = ({ route, navigation }: any) => {
           style={{
             textAlign: 'center',
             fontSize: hp(2.5),
+            color: colors.black,
           }}>
           Enter the OTP code send to you at {email}
         </Text>
-
 
         <View
           style={{
@@ -199,8 +215,9 @@ const PasswordOtp = ({ route, navigation }: any) => {
                 height: '100%',
                 textAlign: 'center',
                 textTransform: 'lowercase',
+                color: colors.black,
               }}
-              onKeyPress={({ nativeEvent: { key: keyValue } }) => {
+              onKeyPress={({nativeEvent: {key: keyValue}}) => {
                 if (keyValue === 'Backspace') {
                   setNum1('-');
                 } else if (keyValue === ' ') {
@@ -229,9 +246,10 @@ const PasswordOtp = ({ route, navigation }: any) => {
                 height: '100%',
                 textAlign: 'center',
                 textTransform: 'lowercase',
+                color: colors.black,
                 // borderWidth: 1,
               }}
-              onKeyPress={({ nativeEvent: { key: keyValue } }) => {
+              onKeyPress={({nativeEvent: {key: keyValue}}) => {
                 if (keyValue === 'Backspace' && num2 === '-') {
                   refNum1.current.focus();
                 } else if (keyValue === 'Backspace' && num2.length === 1) {
@@ -264,8 +282,9 @@ const PasswordOtp = ({ route, navigation }: any) => {
                 height: '100%',
                 textAlign: 'center',
                 textTransform: 'lowercase',
+                color: colors.black,
               }}
-              onKeyPress={({ nativeEvent: { key: keyValue } }) => {
+              onKeyPress={({nativeEvent: {key: keyValue}}) => {
                 if (keyValue === 'Backspace' && num3 === '-') {
                   refNum2.current.focus();
                 } else if (keyValue === 'Backspace' && num3.length === 1) {
@@ -296,8 +315,9 @@ const PasswordOtp = ({ route, navigation }: any) => {
                 height: '100%',
                 textAlign: 'center',
                 textTransform: 'lowercase',
+                color: colors.black,
               }}
-              onKeyPress={({ nativeEvent: { key: keyValue } }) => {
+              onKeyPress={({nativeEvent: {key: keyValue}}) => {
                 if (keyValue === 'Backspace' && num4 === '-') {
                   refNum3.current.focus();
                 } else if (keyValue === 'Backspace' && num4.length === 1) {
@@ -329,8 +349,9 @@ const PasswordOtp = ({ route, navigation }: any) => {
                 height: '100%',
                 textAlign: 'center',
                 textTransform: 'lowercase',
+                color: colors.black,
               }}
-              onKeyPress={({ nativeEvent: { key: keyValue } }) => {
+              onKeyPress={({nativeEvent: {key: keyValue}}) => {
                 if (keyValue === 'Backspace' && num5 === '-') {
                   refNum4.current.focus();
                 } else if (keyValue === 'Backspace' && num5.length === 1) {
@@ -362,8 +383,9 @@ const PasswordOtp = ({ route, navigation }: any) => {
                 height: '100%',
                 textAlign: 'center',
                 textTransform: 'lowercase',
+                color: colors.black,
               }}
-              onKeyPress={({ nativeEvent: { key: keyValue } }) => {
+              onKeyPress={({nativeEvent: {key: keyValue}}) => {
                 if (keyValue === 'Backspace' && num6 === '-') {
                   refNum5.current.focus();
                 } else if (keyValue === 'Backspace' && num6.length === 1) {
@@ -397,9 +419,8 @@ const PasswordOtp = ({ route, navigation }: any) => {
           title="NEXT"
           onPress={() => Validate()}
           loading={loading}
-        // containerStyle={{width: wp(100)}}
+          // containerStyle={{width: wp(100)}}
         />
-
       </KeyboardAwareScrollView>
       <SuccessModal
         isSuccess={success}

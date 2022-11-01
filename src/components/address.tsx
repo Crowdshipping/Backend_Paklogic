@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   ScrollView,
   Text,
@@ -6,16 +6,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { styles } from './style';
+import {styles} from './style';
 import Modal from 'react-native-modal';
-import { Countries } from '../appConstants';
-import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import {Countries} from '../appConstants';
+import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import Icon from 'react-native-vector-icons/Entypo';
-import { IAddressPicker } from './interface';
-import { colors } from '../theme';
+import {IAddressPicker} from './interface';
+import {colors} from '../theme';
 
 export const Address = (props: IAddressPicker) => {
-  const { onChange, errormsg } = props;
+  const {onChange, errormsg} = props;
   const [isModal, setIsModal] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState({
     name: 'United States',
@@ -46,11 +46,7 @@ export const Address = (props: IAddressPicker) => {
         />
       </View>
 
-      {errormsg ? (
-        <Text style={styles.errorMsg}>{errormsg}</Text>
-      ) : (
-        <View></View>
-      )}
+      {errormsg ? <Text style={styles.errorMsg}>{errormsg}</Text> : null}
 
       <Modal
         isVisible={isModal}
@@ -60,14 +56,16 @@ export const Address = (props: IAddressPicker) => {
           <ScrollView>
             {Countries.map((d: any, i: any) => {
               return (
-                <View key={d.dial_code} style={{ backgroundColor: colors.white }}>
+                <View key={d.dial_code} style={{backgroundColor: colors.white}}>
                   <TouchableOpacity
                     style={styles.modalViewBtn}
                     onPress={() => {
                       setSelectedCountry(d);
                       setIsModal(false);
                     }}>
-                    <Text>{d.flag + ' ' + d.name}</Text>
+                    <Text style={{color: colors.black}}>
+                      {d.flag + ' ' + d.name}
+                    </Text>
                   </TouchableOpacity>
                   <View style={styles.bottomLine} />
                 </View>

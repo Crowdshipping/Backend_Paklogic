@@ -15,6 +15,7 @@ export const styles = StyleSheet.create({
     textTransform: 'capitalize',
     paddingBottom: hp(1),
     fontSize: hp(2.5),
+    color: colors.black,
   },
   svg: {
     alignSelf: 'center',

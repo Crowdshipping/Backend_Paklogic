@@ -8,17 +8,16 @@ interface datePicker {
 }
 
 import moment from 'moment';
-import React, { useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import React, {useState} from 'react';
+import {Text, TouchableOpacity, View} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { SvgXml } from 'react-native-svg';
-import { calendar } from '../theme/assets/svg';
-import { styles } from './style';
-import {
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
+import {SvgXml} from 'react-native-svg';
+import {calendar} from '../theme/assets/svg';
+import {styles} from './style';
+import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import {colors} from '../theme';
 export const Datepicker = (props: datePicker) => {
-  const { text, onChange, errormsg, datePrev, disable, initialDate } = props;
+  const {text, onChange, errormsg, datePrev, disable, initialDate} = props;
   const [date, setDate] = useState(datePrev);
   const [show, setshow] = useState(false);
 
@@ -35,7 +34,7 @@ export const Datepicker = (props: datePicker) => {
   };
 
   return (
-    <View>
+    <>
       <View
         style={{
           // flex: 1,
@@ -43,7 +42,7 @@ export const Datepicker = (props: datePicker) => {
           alignItems: 'center',
           justifyContent: 'space-between',
         }}>
-        {text ? <Text style={styles.txt1}>{text}</Text> : <View></View>}
+        {text ? <Text style={styles.txt1}>{text}</Text> : null}
 
         <TouchableOpacity
           style={styles.Touch}
@@ -51,9 +50,9 @@ export const Datepicker = (props: datePicker) => {
             !disable && setshow(true);
           }}>
           {date ? (
-            <Text>{date}</Text>
+            <Text style={{color: colors.black}}>{date}</Text>
           ) : (
-            <SvgXml style={{ marginLeft: wp(1.5) }} xml={calendar} />
+            <SvgXml style={{marginLeft: wp(1.5)}} xml={calendar} />
           )}
           <DateTimePickerModal
             isVisible={show}
@@ -65,11 +64,7 @@ export const Datepicker = (props: datePicker) => {
           />
         </TouchableOpacity>
       </View>
-      {errormsg ? (
-        <Text style={styles.errorMsg}>{errormsg}</Text>
-      ) : (
-        <View></View>
-      )}
-    </View>
+      {errormsg ? <Text style={styles.errorMsg}>{errormsg}</Text> : null}
+    </>
   );
 };

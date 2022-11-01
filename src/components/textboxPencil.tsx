@@ -18,7 +18,7 @@ export const TextInputPencil = (props: ITextBox) => {
   const secureText = password === undefined ? false : password;
   return (
     <View style={[styles.sectionContainer, containerStyle]}>
-      {title ? <Text style={styles.titleText}>{title}</Text> : <View></View>}
+      {title ? <Text style={styles.titleText}>{title}</Text> : null}
       <TextInput
         placeholder={placeholder}
         placeholderTextColor="gray"
@@ -34,11 +34,7 @@ export const TextInputPencil = (props: ITextBox) => {
           }
         }}
       />
-      {errormsg ? (
-        <Text style={styles.errorMsg}>{errormsg}</Text>
-      ) : (
-        <Text></Text>
-      )}
+      {errormsg ? <Text style={styles.errorMsg}>{errormsg}</Text> : null}
     </View>
   );
 };

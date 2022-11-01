@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -8,44 +8,45 @@ import {
   ImageBackground,
   Image,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 
-import { Textbox, Button, MapHeader } from '../../components';
-import { packagedetails, cross } from '../../theme/assets/svg';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { mapp } from '../../theme/assets/images';
+import {Textbox, Button, MapHeader} from '../../components';
+import {packagedetails, cross} from '../../theme/assets/svg';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {mapp} from '../../theme/assets/images';
 
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Entypo from 'react-native-vector-icons/Entypo';
-import { styles } from './style';
+import {styles} from './style';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { colors } from '../../theme/colors';
-import { ModalTypes } from '../../Modals';
+import {colors} from '../../theme/colors';
+import {ModalTypes} from '../../Modals';
 
-import { SvgXml } from 'react-native-svg';
+import {SvgXml} from 'react-native-svg';
 import Modal from 'react-native-modal/dist/modal';
 
 import OpenCamera from '../Cam_Gal/OpenCamera';
 import OpenGallery from '../Cam_Gal/OpenGallery';
-import { getProductCategories, getProductTypes, LogoutApi } from '../../API';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getProductCategories, getProductTypes, LogoutApi} from '../../API';
+import {CommonActions} from '@react-navigation/native';
 
 interface IimageShow {
   name: string;
   uri: string;
   type: string;
 }
-interface IimageShow1 extends Array<IimageShow> { }
+interface IimageShow1 extends Array<IimageShow> {}
 
 interface ITypes {
-  id: string,
-  name: string
+  id: string;
+  name: string;
 }
-const ProductScreen = ({ navigation, route }: any) => {
+const ProductScreen = ({navigation, route}: any) => {
   const pickcoords = route.params?.item?.pickcoords;
   const dropcoords = route.params?.item?.dropcoords;
   const providerId = route.params.item?.providerId;
@@ -67,16 +68,19 @@ const ProductScreen = ({ navigation, route }: any) => {
   const [unitValue, setunitValue] = useState(true);
   const [ImagesValue, setImagesValue] = useState(true);
 
-  const [SelectedCategory, setSelectedCategory] = useState<ITypes>({ id: '', name: '' });
-  const [SelectedType, setSelectedType] = useState<ITypes>({ id: '', name: '' });
+  const [SelectedCategory, setSelectedCategory] = useState<ITypes>({
+    id: '',
+    name: '',
+  });
+  const [SelectedType, setSelectedType] = useState<ITypes>({id: '', name: ''});
   const [SelectedUnit, setSelectedUnit] = useState('');
   const [description, setdescription] = useState('');
   const [weight, setweight] = useState('');
 
   const [Images, setImages] = useState<IimageShow1>([]);
 
-  const [Type, setType] = useState<ITypes[]>([])
-  const [category, setcategory] = useState<ITypes[]>([])
+  const [Type, setType] = useState<ITypes[]>([]);
+  const [category, setcategory] = useState<ITypes[]>([]);
 
   // const category = [
   //   { id: 1, name: 'Wood' },
@@ -90,9 +94,9 @@ const ProductScreen = ({ navigation, route }: any) => {
   //   { id: 3, name: 'soft' },
   // ];
   const Unit = [
-    { id: 1, name: 'Kilogram' },
-    { id: 2, name: 'Gram' },
-    { id: 3, name: 'Pound' },
+    {id: 1, name: 'Kilogram'},
+    {id: 2, name: 'Gram'},
+    {id: 3, name: 'Pound'},
   ];
   function handleSubmit() {
     let validate = true;
@@ -126,9 +130,7 @@ const ProductScreen = ({ navigation, route }: any) => {
   }
 
   function handleNavigation() {
-
     if (flightId) {
-
       settoCaptureImage(false),
         navigation.navigate('ReceiverDetails', {
           data: {
@@ -175,77 +177,106 @@ const ProductScreen = ({ navigation, route }: any) => {
   }
   const getSelectedImage = (result: any) => {
     settoCaptureImage(false);
-    setImagesValue(true)
+    setImagesValue(true);
     setImages([...Images, result]);
   };
 
-
   useEffect(() => {
-    getProductTypes().then((result: any) => {
-      setloading(false)
-      result.success && result.productTypes.map((products: any) => {
-        setType((Type) => [...Type, { id: products._id, name: products.productName }])
+    getProductTypes()
+      .then((result: any) => {
+        setloading(false);
+        result.success &&
+          result.productTypes.map((products: any) => {
+            setType(Type => [
+              ...Type,
+              {id: products._id, name: products.productName},
+            ]);
+          });
       })
-    })
       .catch(async error => {
         setloading(false);
         if (error.response.status === 401) {
+          Alert.alert('Session Expired', 'Please login again');
           LogoutApi();
-          await AsyncStorage.clear();
-          navigation.navigate('Welcome')
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [{name: 'Welcome'}],
+            }),
+          );
         } else {
-          Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+          Alert.alert(
+            error?.response?.data?.message
+              ? error?.response?.data?.message
+              : 'something went wrong',
+          );
         }
       });
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (SelectedType.id.length > 0) {
-      getProductCategories(SelectedType.id).then((result: any) => {
-        result.success && result.productCategories.map((products: any) => {
-          setcategory((category) => [...category, { id: products._id, name: products.productCategoryName }])
+      getProductCategories(SelectedType.id)
+        .then((result: any) => {
+          result.success &&
+            result.productCategories.map((products: any) => {
+              setcategory(category => [
+                ...category,
+                {id: products._id, name: products.productCategoryName},
+              ]);
+            });
         })
-      })
         .catch(async error => {
           setloading(false);
           if (error.response.status === 401) {
+            Alert.alert('Session Expired', 'Please login again');
             LogoutApi();
-            await AsyncStorage.clear();
-            navigation.navigate('Welcome')
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{name: 'Welcome'}],
+              }),
+            );
           } else {
-            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+            Alert.alert(
+              error?.response?.data?.message
+                ? error?.response?.data?.message
+                : 'something went wrong',
+            );
           }
         });
     }
-  }, [SelectedType.id])
+  }, [SelectedType.id]);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
+    <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <KeyboardAwareScrollView>
-        <ImageBackground resizeMode="stretch" style={{ flex: 1 }} source={mapp}>
+        <ImageBackground resizeMode="stretch" style={{flex: 1}} source={mapp}>
           <ScrollView
             style={{}}
             showsVerticalScrollIndicator={false}
             scrollToOverflowEnabled={false}>
-            <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={styles.menu}>
-              <Entypo name="menu" size={25} />
+            <TouchableOpacity
+              onPress={() => navigation.toggleDrawer()}
+              style={styles.menu}>
+              <Entypo name="menu" size={25} color={colors.black} />
             </TouchableOpacity>
             <View style={styles.location}>
               <Textbox
                 title={'Pickup Location'}
                 placeholder={pickupCity}
-                onChangeValue={() => { }}
+                onChangeValue={() => {}}
                 editable={false}
               />
               <Textbox
                 title={'Drop Location'}
                 placeholder={dropoffCity}
-                onChangeValue={() => { }}
+                onChangeValue={() => {}}
                 editable={false}
               />
             </View>
             <View style={styles.bckimg}>
-              <View style={{ bottom: hp(7) }}>
+              <View style={{bottom: hp(7)}}>
                 <MapHeader
                   title="Package Details"
                   picture={packagedetails}
@@ -270,35 +301,48 @@ const ProductScreen = ({ navigation, route }: any) => {
                       }}
                     />
                   </View>
-                  <Text>{SelectedType.name.length > 0 ? SelectedType.name : 'Select Type '}</Text>
-                </TouchableOpacity>
-                {!typeValue ? (
-                  <Text style={styles.errorMsg}>Product Type is Required</Text>
-                ) : (
-                  <View></View>
-                )}
-                <TouchableOpacity
-                  disabled={SelectedType?.id?.length > 0 ? false : true}
-                  style={styles.Touch}
-                  onPress={() => setModalVisible(!isModalVisible)}>
-                  <View style={styles.txtview}>
-                    <Text style={styles.txt1}>Product Category</Text>
-
-                    <AntDesign
-                      name="caretdown"
-                      color={'grey'}
-                      size={wp(3)}
-                      style={{
-                        alignSelf: 'center',
-                        marginLeft: hp(1),
-                      }}
-                    />
-                  </View>
-
-                  <Text style={{ borderColor: 'grey' }}>
-                    {SelectedCategory.name.length > 0 ? SelectedCategory.name : 'Select Category'}
+                  <Text style={{color: colors.black}}>
+                    {SelectedType.name.length > 0
+                      ? SelectedType.name
+                      : 'Select Type '}
                   </Text>
                 </TouchableOpacity>
+                {!typeValue && (
+                  <Text style={styles.errorMsg}>Product Type is Required</Text>
+                )}
+                {SelectedType?.id?.length > 0 &&
+                  (category.length < 1 ? (
+                    <ActivityIndicator
+                      size={'small'}
+                      color={colors.red}
+                      style={{justifyContent: 'center', alignSelf: 'center'}}
+                    />
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.Touch}
+                      onPress={() => setModalVisible(true)}>
+                      <View style={styles.txtview}>
+                        <Text style={styles.txt1}>Product Category</Text>
+
+                        <AntDesign
+                          name="caretdown"
+                          color={'grey'}
+                          size={wp(3)}
+                          style={{
+                            alignSelf: 'center',
+                            // borderWidth: 2,
+                            marginLeft: hp(1),
+                          }}
+                        />
+                      </View>
+
+                      <Text style={{borderColor: 'grey', color: colors.black}}>
+                        {SelectedCategory.name.length > 0
+                          ? SelectedCategory.name
+                          : 'Select Category'}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
                 {!categoryValue ? (
                   <Text style={styles.errorMsg}>
                     Product Category is Required
@@ -306,9 +350,6 @@ const ProductScreen = ({ navigation, route }: any) => {
                 ) : (
                   <></>
                 )}
-
-
-
 
                 <View
                   style={{
@@ -325,7 +366,7 @@ const ProductScreen = ({ navigation, route }: any) => {
                       placeholder={
                         route.params?.data?.weight
                           ? route.params?.data?.weight
-                          : "Enter product's weight"
+                          : 'Enter weight'
                       }
                       onChangeValue={(text: string) => {
                         setweightValue(true), setweight(text);
@@ -335,10 +376,10 @@ const ProductScreen = ({ navigation, route }: any) => {
                         !weightValue && !unitValue
                           ? 'Weight and Unit are Required'
                           : !unitValue
-                            ? 'Unit is Required'
-                            : !weightValue
-                              ? 'Weight is Required'
-                              : ''
+                          ? 'Unit is Required'
+                          : !weightValue
+                          ? 'Weight is Required'
+                          : ''
                       }
                     />
                   </View>
@@ -347,13 +388,13 @@ const ProductScreen = ({ navigation, route }: any) => {
                       width: '47%',
                       borderBottomWidth: 1,
                       marginTop: hp(2),
-                      marginBottom: hp(3),
+                      marginBottom: hp(2),
                       borderColor: 'grey',
-                      height: '55%',
+                      // height: '55%',
                     }}
                     onPress={() => setModalVisible3(!isModalVisible3)}>
                     <View style={styles.txtview}>
-                      <Text style={styles.txt1}>Product Unit</Text>
+                      <Text style={styles.txt1}>PRODUCT UNIT</Text>
 
                       <AntDesign
                         name="caretdown"
@@ -366,7 +407,12 @@ const ProductScreen = ({ navigation, route }: any) => {
                       />
                     </View>
 
-                    <Text style={{ borderColor: 'grey', marginTop: 2 }}>
+                    <Text
+                      style={{
+                        borderColor: 'grey',
+                        paddingVertical: wp(1),
+                        color: colors.black,
+                      }}>
                       {SelectedUnit ? SelectedUnit : 'Select Unit'}
                     </Text>
                   </TouchableOpacity>
@@ -377,7 +423,6 @@ const ProductScreen = ({ navigation, route }: any) => {
                   <TouchableOpacity
                     style={styles.arrorwStyle}
                     onPress={() => {
-
                       settoCaptureImage(true);
                     }}
                     disabled={Images.length >= 2 ? true : false}>
@@ -385,15 +430,15 @@ const ProductScreen = ({ navigation, route }: any) => {
                       name="attachment"
                       color={colors.black}
                       size={wp(5)}
-                      style={{ alignSelf: 'flex-end' }}
+                      style={{alignSelf: 'flex-end'}}
                     />
                   </TouchableOpacity>
                 </View>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
                   {Images.length >= 1 ? (
                     Images.map((item, index1: number) => {
                       return (
-                        <View key={index1} style={{ marginLeft: wp(8) }}>
+                        <View key={index1} style={{marginLeft: wp(8)}}>
                           <TouchableOpacity
                             onPress={() => {
                               setImages([
@@ -414,7 +459,7 @@ const ProductScreen = ({ navigation, route }: any) => {
                           </TouchableOpacity>
 
                           <Image
-                            source={{ uri: item.uri }}
+                            source={{uri: item.uri}}
                             style={{
                               height: wp(37),
                               width: wp(37),
@@ -441,12 +486,12 @@ const ProductScreen = ({ navigation, route }: any) => {
                           height: '55%',
                           borderWidth: wp(3),
                           borderColor: '#C0904E',
-                        }}></View>
+                        }}
+                      />
                     </View>
                   )}
                 </View>
                 {!ImagesValue && (
-
                   <Text
                     style={{
                       paddingHorizontal: wp(5),
@@ -455,9 +500,8 @@ const ProductScreen = ({ navigation, route }: any) => {
                     }}>
                     Images are Required
                   </Text>
-
                 )}
-                <View style={{ paddingHorizontal: wp(8) }}>
+                <View style={{paddingHorizontal: wp(8)}}>
                   <Text style={styles.txt}>Instructions</Text>
                   <View
                     style={{
@@ -475,11 +519,12 @@ const ProductScreen = ({ navigation, route }: any) => {
                         paddingHorizontal: wp(3),
                         paddingVertical: hp(1),
                         flexWrap: 'wrap',
+                        color: colors.black,
                       }}
                     />
                   </View>
                 </View>
-                <View style={{ paddingHorizontal: wp(8) }}>
+                <View style={{paddingHorizontal: wp(8)}}>
                   <Text style={styles.txt}>Product Description</Text>
                   <View
                     style={{
@@ -499,6 +544,7 @@ const ProductScreen = ({ navigation, route }: any) => {
                         paddingHorizontal: wp(3),
                         marginTop: hp(1),
                         paddingVertical: hp(1),
+                        color: colors.black,
                       }}
                       onChangeText={(text: string) => {
                         setdescription(text);
@@ -506,11 +552,7 @@ const ProductScreen = ({ navigation, route }: any) => {
                     />
                   </View>
                 </View>
-                <Button
-                  title="next"
-                  onPress={handleSubmit}
-                  loading={loading}
-                />
+                <Button title="next" onPress={handleSubmit} loading={loading} />
               </View>
             </View>
           </ScrollView>
@@ -525,7 +567,7 @@ const ProductScreen = ({ navigation, route }: any) => {
           setcategoryValue(true);
           setSelectedCategory({
             id: id,
-            name: text
+            name: text,
           });
         }}
         other={true}
@@ -538,10 +580,10 @@ const ProductScreen = ({ navigation, route }: any) => {
           settypeValue(true);
           setSelectedType({
             id: id,
-            name: text
+            name: text,
           });
-          setSelectedCategory({ id: '', name: '' });
-          setcategory([])
+          setSelectedCategory({id: '', name: ''});
+          setcategory([]);
         }}
         other={true}
       />
@@ -576,11 +618,7 @@ const ProductScreen = ({ navigation, route }: any) => {
               top: -10,
             }}>
             <TouchableOpacity onPress={() => settoCaptureImage(false)}>
-              <SvgXml
-                width="16"
-                height="15"
-                xml={cross}
-              />
+              <SvgXml width="16" height="15" xml={cross} />
             </TouchableOpacity>
           </View>
           <View
@@ -590,7 +628,8 @@ const ProductScreen = ({ navigation, route }: any) => {
               justifyContent: 'center',
               paddingBottom: 30,
             }}>
-            <Text style={[styles.txt1, { color: colors.red, textAlign: 'center' }]}>
+            <Text
+              style={[styles.txt1, {color: colors.red, textAlign: 'center'}]}>
               Choose a picture
             </Text>
           </View>
@@ -601,7 +640,7 @@ const ProductScreen = ({ navigation, route }: any) => {
               flexDirection: 'row',
               alignItems: 'center',
             }}>
-            <View style={{ width: '45%', height: hp(5) }}>
+            <View style={{width: '45%', height: hp(5)}}>
               <OpenCamera callbackImage={getSelectedImage.bind(this)} />
             </View>
             <View
@@ -610,7 +649,7 @@ const ProductScreen = ({ navigation, route }: any) => {
                 height: '100%',
               }}
             />
-            <View style={{ width: '45%', height: hp(5) }}>
+            <View style={{width: '45%', height: hp(5)}}>
               <OpenGallery callbackImage={getSelectedImage.bind(this)} />
             </View>
           </View>

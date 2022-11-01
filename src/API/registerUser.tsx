@@ -1,7 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios, { AxiosRequestConfig } from 'axios';
-import { prodUrl } from '../appConstants';
-import { register } from '../theme/assets/svg/register';
+import axios, {AxiosRequestConfig} from 'axios';
+import {prodUrl} from '../appConstants';
 
 export const registerUser = async (
   fname: string,
@@ -10,16 +8,12 @@ export const registerUser = async (
   Phone: string,
   address: string,
   password: string,
+  countryCode: string,
 ) => {
-  const userToken = await AsyncStorage.getItem('@userToken');
-
   return new Promise((resolve, reject) => {
     const config: AxiosRequestConfig = {
       method: 'post',
       url: `${prodUrl}/user/`,
-      headers: {
-        Authorization: `Bearer ${userToken}`
-      },
       data: {
         firstname: fname,
         lastname: lname,
@@ -27,7 +21,7 @@ export const registerUser = async (
         phoneno: Phone,
         address: address,
         password: password,
-        countrycode: '+92',
+        countrycode: countryCode,
       },
     };
     axios(config)

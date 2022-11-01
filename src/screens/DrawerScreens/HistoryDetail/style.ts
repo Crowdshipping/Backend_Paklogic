@@ -38,6 +38,7 @@ export const styles = StyleSheet.create({
     width: wp(12),
     borderRadius: 50,
     marginRight: hp(2),
+    // borderWidth: 1,
   },
   Touch: {
     // backgroundColor: 'lightgrey',

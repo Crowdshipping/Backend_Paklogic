@@ -1,5 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useContext } from 'react';
+import React, {useContext} from 'react';
 import {
   Alert,
   Image,
@@ -9,30 +8,31 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { SvgXml } from 'react-native-svg';
+import {SvgXml} from 'react-native-svg';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import { homeicon, historyicon, logouticon, claimicon, notificationicon, supporticon } from '../theme/assets/svg';
-import { colors } from '../theme';
-import { profile } from '../theme/assets/images';
-import { prodUrl } from '../appConstants';
-import { LogoutApi } from '../API';
-import { useIsFocused } from '@react-navigation/native';
-import { AppContext } from '../../App';
-
-
+import {
+  homeicon,
+  historyicon,
+  logouticon,
+  claimicon,
+  notificationicon,
+  supporticon,
+  complaint,
+} from '../theme/assets/svg';
+import {colors} from '../theme';
+import {prodUrl} from '../appConstants';
+import {LogoutApi} from '../API';
+import {AppContext} from '../../App';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {Avatar} from 'react-native-elements';
+import {CommonActions} from '@react-navigation/native';
 
 const CustomDrawerContent = (props: any) => {
-  const { userData } = useContext(AppContext)
+  const {userData} = useContext(AppContext);
 
-  const isfocus = useIsFocused();
-
-
-  const removeId = async () => {
-    await AsyncStorage.clear()
-  };
   const logout = () => {
     Alert.alert(
       '',
@@ -41,55 +41,70 @@ const CustomDrawerContent = (props: any) => {
         {
           text: 'Yes',
           onPress: () => {
-
             LogoutApi()
               .then((rest: any) => {
-                rest.success && (removeId(),
-                  props.navigation.replace('Signin'))
+                rest.success &&
+                  props.navigation.dispatch(
+                    CommonActions.reset({
+                      index: 1,
+                      routes: [{name: 'Welcome'}],
+                    }),
+                  );
               })
               .catch(async error => {
-                if (error.response.status === 401) {
-                  await AsyncStorage.clear();
-                  props.navigation.navigate('Welcome')
-                } else {
-                  Alert.alert(
-                    error?.response?.data?.message ? error?.response?.data?.message : 'Something went wrong',
-                  )
-                }
-              }
-              );
+                Alert.alert(
+                  error?.response?.data?.message
+                    ? error?.response?.data?.message
+                    : 'Something went wrong',
+                );
+              });
           },
           style: 'default',
         },
-        { text: 'No' },
+        {text: 'No'},
       ],
-      { cancelable: false },
+      {cancelable: false},
     );
   };
 
-
   return (
     <SafeAreaView>
-
-
       <View style={styles.ViewTop}>
         {userData.profilepic ? (
-          <Image source={{ uri: prodUrl + userData.profilepic }} style={styles.img} />
+          <Image
+            source={{uri: prodUrl + userData.profilepic}}
+            style={styles.img}
+          />
         ) : (
-          <Image source={profile} style={styles.img} />
+          <Avatar
+            size={100}
+            rounded
+            icon={{name: 'person', color: 'grey', size: 90}}
+            containerStyle={styles.img}
+          />
         )}
 
-        <View style={{ paddingTop: 10, alignItems: 'center' }}>
+        <View style={{paddingTop: 10, alignItems: 'center'}}>
           <Text
-            style={{ fontSize: 18, color: colors.white, fontWeight: 'bold' }}>
+            style={{fontSize: wp(5), color: colors.white, fontWeight: 'bold'}}>
             {userData.firstname} {userData.lastname}
           </Text>
-          <Text style={{ fontSize: 18, color: colors.white }}>{userData.email}</Text>
+          <Text
+            adjustsFontSizeToFit
+            style={{
+              fontSize: wp(4),
+              // width: wp(60),
+              maxWidth: wp(60),
+              // borderWidth: 1,
+              color: colors.white,
+            }}>
+            {userData.email}
+          </Text>
           <TouchableOpacity
             onPress={() => {
               props.navigation.navigate('ViewProfile');
             }}>
-            <Text style={{ fontSize: 18, color: 'yellow' }}>View Profile</Text>
+            <Text style={{fontSize: 18, color: 'yellow'}}>View Profile</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -102,6 +117,7 @@ const CustomDrawerContent = (props: any) => {
           <SvgXml xml={homeicon} width={25} />
           <Text style={styles.txtdetail}>Home</Text>
         </TouchableOpacity>
+
         <TouchableOpacity
           onPress={() => {
             props.navigation.navigate('BookingHistory');
@@ -110,18 +126,15 @@ const CustomDrawerContent = (props: any) => {
           <SvgXml style={styles.svg} xml={historyicon} width={25} />
           <Text style={styles.txtdetail}>Booking History</Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity
-              onPress={() => {
-                props.navigation.navigate('ALLSHIPS');
-              }}
-              style={styles.viewunderline}>
-              <SvgXml style={styles.svg} xml={ship2Svg} width={25} />
-              <Text style={styles.txtdetail}>Manage Ships</Text>
-            </TouchableOpacity> */}
-        {/* <TouchableOpacity style={styles.viewunderline}>
-              <SvgXml style={styles.svg} xml={yourpkgSvg} width={25} />
-              <Text style={styles.txtdetail}>Your Package</Text>
-            </TouchableOpacity> */}
+
+        <TouchableOpacity
+          onPress={() => {
+            props.navigation.navigate('ViewPaymentLogs');
+          }}
+          style={styles.viewunderline}>
+          <Icon size={25} color={colors.black} name="wallet-outline" />
+          <Text style={styles.txtdetail}>Payment Logs</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity
           onPress={() => {
@@ -131,53 +144,38 @@ const CustomDrawerContent = (props: any) => {
           <SvgXml style={styles.svg} xml={claimicon} width={25} />
           <Text style={styles.txtdetail}>Claim</Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity
-          onPress={() => {
-            props.navigation.navigate('LoggedUserResetPassword');
-          }}
-          style={styles.viewunderline}>
 
-          <Icon
-            name="shield"
-            color={colors.black}
-            size={25}
-            style={{ alignSelf: 'center', }}
-          />
-          <Text style={styles.txtdetail}>Reset Password</Text>
-        </TouchableOpacity> */}
         <TouchableOpacity
           onPress={() => {
             props.navigation.navigate('Complain');
           }}
           style={styles.viewunderline}>
-          <SvgXml style={styles.svg} xml={claimicon} width={25} />
+          <SvgXml style={styles.svg} xml={complaint} width={25} />
           <Text style={styles.txtdetail}>Complain</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {
-          props.navigation.navigate('ViewQuery');
-        }} style={styles.viewunderline}>
+        <TouchableOpacity
+          onPress={() => {
+            props.navigation.navigate('ViewQuery');
+          }}
+          style={styles.viewunderline}>
           <SvgXml style={styles.svg} xml={supporticon} width={25} />
           <Text style={styles.txtdetail}>Support</Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity style={styles.viewunderline}>
-              <SvgXml style={styles.svg} xml={setting} width={25} />
-              <Text style={styles.txtdetail}>Setting</Text>
-            </TouchableOpacity> */}
-        <TouchableOpacity onPress={() => {
-          props.navigation.navigate('NotifictionHistory');
-        }} style={styles.viewunderline}>
+
+        <TouchableOpacity
+          onPress={() => {
+            props.navigation.navigate('NotifictionHistory');
+          }}
+          style={styles.viewunderline}>
           <SvgXml style={styles.svg} xml={notificationicon} width={25} />
           <Text style={styles.txtdetail}>Notification</Text>
         </TouchableOpacity>
 
-        {/* <View style={{borderBottomWidth: 1}}></View> */}
         <TouchableOpacity onPress={logout} style={styles.viewunderline}>
           <SvgXml style={styles.svg} xml={logouticon} width={25} />
           <Text style={styles.txtdetail}>Logout</Text>
         </TouchableOpacity>
       </View>
-
-      {/* )} */}
     </SafeAreaView>
   );
 };
@@ -194,8 +192,6 @@ const styles = StyleSheet.create({
     // borderColor: colors.black,
     backgroundColor: colors.white,
   },
-
-
 
   ViewTop: {
     alignItems: 'center',

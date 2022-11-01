@@ -29,6 +29,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
     textAlign: 'center',
     fontSize: hp(2),
+    color: colors.black,
   },
   button: {
     marginTop: hp(3),

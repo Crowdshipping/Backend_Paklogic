@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -8,13 +8,13 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import { SvgXml } from 'react-native-svg';
+import {SvgXml} from 'react-native-svg';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { location } from '../../theme/assets/svg';
-import { mapp } from '../../theme/assets/images';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {location} from '../../theme/assets/svg';
+import {mapp} from '../../theme/assets/images';
 
-import { getFlights } from '../../API';
+import {getFlights, LogoutApi} from '../../API';
 
 import moment from 'moment';
 import {
@@ -22,15 +22,15 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-import { Header, Datepicker } from '../../components';
-import { SearchCity } from '../../Modals';
-import { styles } from './style';
-import { colors } from '../../theme/colors';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Header, Datepicker} from '../../components';
+import {SearchCity} from '../../Modals';
+import {styles} from './style';
+import {colors} from '../../theme/colors';
+import {CommonActions} from '@react-navigation/native';
 interface cityArray {
   name: string;
   code: string;
-  coordinates: { lat: string; lon: string };
+  coordinates: {lat: string; lon: string};
   // country_code: string;
   // time_zone: string;
 }
@@ -42,7 +42,7 @@ interface country {
 }
 
 // import { Button } from '../../components/button';
-const BookingListScreen = ({ navigation, route }: any) => {
+const BookingListScreen = ({navigation, route}: any) => {
   const [isVisible, setisVisible] = useState(false);
   const [isVisible2, setisVisible2] = useState(false);
   const [detailsArray, setdetailsArray] = useState([]);
@@ -54,10 +54,10 @@ const BookingListScreen = ({ navigation, route }: any) => {
   const [dobTo2, setdobTo2] = useState<Date>(route?.params?.finalDate);
   const [isLoading, setLoading] = useState(true);
   // const [placeholder , set]
-  const [prevReq, setprevReq] = useState(0)
-  const [prevPost, setprevPost] = useState(0)
-  const [nextReq, setnextReq] = useState(10)
-  const [nextPost, setnextPost] = useState(10)
+  const [prevReq, setprevReq] = useState(0);
+  const [prevPost, setprevPost] = useState(0);
+  const [nextReq, setnextReq] = useState(10);
+  const [nextPost, setnextPost] = useState(10);
   const scrollRef = useRef<ScrollView>(null);
 
   const [pickupLocation, setpickupLocation] = useState<cityArray>({
@@ -80,7 +80,6 @@ const BookingListScreen = ({ navigation, route }: any) => {
     // country_code: '',
     // time_zone: '',
   });
-
 
   useEffect(() => {
     let mounted = true;
@@ -134,24 +133,33 @@ const BookingListScreen = ({ navigation, route }: any) => {
         {
           rest.success &&
             (setdetailsArray(rest?.flightawareflights?.scheduled),
-              setdetailsArrayProvider(rest?.flights),
-              setLoading(false));
+            setdetailsArrayProvider(rest?.flights),
+            setLoading(false));
         }
       })
       .catch(async error => {
         setLoading(false);
         if (error.response.status === 401) {
-          await AsyncStorage.clear();
-          navigation.navigate('Welcome')
+          LogoutApi();
+          Alert.alert('Session Expired', 'Please login again');
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [{name: 'Welcome'}],
+            }),
+          );
         } else {
-
-          Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'Something went wrong');
+          Alert.alert(
+            error?.response?.data?.message
+              ? error?.response?.data?.message
+              : 'Something went wrong',
+          );
         }
       });
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
+    <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <Header
         title="list of bookings"
         pressMethod={() => navigation.goBack()}
@@ -159,11 +167,8 @@ const BookingListScreen = ({ navigation, route }: any) => {
 
       <View style={styles.row}>
         <TouchableOpacity
-          style={[styles.Touch, { flexDirection: 'row', alignItems: 'center' }]}
-          onPress={() => setisVisible(true)}
-
-        >
-          {/* <Text style={styles.txt1}>{SelectedCountry.name}</Text> */}
+          style={[styles.Touch, {flexDirection: 'row', alignItems: 'center'}]}
+          onPress={() => setisVisible(true)}>
           <Text style={styles.txt1}>
             {pickupLocation?.name !== ''
               ? pickupLocation.name
@@ -182,10 +187,9 @@ const BookingListScreen = ({ navigation, route }: any) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.Touch, { flexDirection: 'row', alignItems: 'center' }]}
+          style={[styles.Touch, {flexDirection: 'row', alignItems: 'center'}]}
           // onPress={() => setModalVisible2(!isModalVisible2)}>
           onPress={() => setisVisible2(true)}>
-          {/* <Text style={styles.txt1}>{SelectedCountry2.name}</Text> */}
           <Text style={styles.txt1}>
             {dropoffLocation?.name !== ''
               ? dropoffLocation.name
@@ -227,10 +231,10 @@ const BookingListScreen = ({ navigation, route }: any) => {
           />
         </View>
       </View>
-      <Text style={[styles.errorMsg, { marginLeft: wp(10) }]}>{dateShow}</Text>
+      <Text style={[styles.errorMsg, {marginLeft: wp(10)}]}>{dateShow}</Text>
 
       {/* available booking view */}
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         {
           isLoading ? (
             <View
@@ -246,215 +250,244 @@ const BookingListScreen = ({ navigation, route }: any) => {
               <ActivityIndicator size={'small'} color={colors.red} />
             </View>
           ) : (
-            <View style={{ flex: 1 }}>
+            <View style={{flex: 1}}>
               <ScrollView ref={scrollRef} style={styles.detailsbox}>
                 {detailsArrayProvider.length > 0 && (
-                  <View>
+                  <>
                     <Text style={styles.bookingtxt}>Available Booking</Text>
-                    {detailsArrayProvider.slice(prevReq, nextReq).map((item: any, index: number) => {
-                      return (
-                        <View key={index} style={styles.detailsboxinner}>
-                          <View style={styles.flexrow}>
-                            <Image source={mapp} style={styles.img} />
-                            <View style={styles.test}>
-                              <Text style={styles.txtdetail}>
-                                {item.provider.firstname}{' '}
-                                {item.provider.lastname}
-                              </Text>
-                              <Text style={{ fontSize: 15 }}>
-                                Flight No: {item.flightNumber}
-                              </Text>
+                    {detailsArrayProvider
+                      .slice(prevReq, nextReq)
+                      .map((item: any, index: number) => {
+                        return (
+                          <View key={index} style={styles.detailsboxinner}>
+                            <View style={styles.flexrow}>
+                              <Image source={mapp} style={styles.img} />
+                              <View style={styles.test}>
+                                <Text style={styles.txtdetail}>
+                                  {item.provider.firstname}{' '}
+                                  {item.provider.lastname}
+                                </Text>
+                                <Text
+                                  style={{fontSize: 15, color: colors.black}}>
+                                  Flight No: {item.flightNumber}
+                                </Text>
 
-                              <Text>
-                                Departure Time:{' '}
-                                {moment(item.flightDate).format('hh:mm')}
-                              </Text>
-                            </View>
-                          </View>
-                          <View style={styles.viewlocation}>
-                            <View
-                              style={{
-                                width: '10%',
-                                alignItems: 'center',
-                              }}>
-                              <SvgXml style={{}} xml={location} />
-                            </View>
-                            <View
-                              style={{
-                                justifyContent: 'space-between',
-                                width: '90%',
-                                paddingHorizontal: wp(1),
-                              }}>
-                              <View style={styles.viewdetail}>
-                                <Text style={styles.txtdetail}>
-                                  {item.pickupCity}
-                                </Text>
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    navigation.navigate('ProviderDetail', {
-                                      data: {
-                                        firstname: item.provider.firstname,
-                                        lastname: item.provider.lastname,
-                                        phoneno: item.provider.phoneno,
-                                        flightDate: item.flightDate,
-                                        arrivalDate: item.flightarrivalDate,
-                                        flightAirline: item.flightAirline,
-                                        pickcoords: pickupLocation.coordinates,
-                                        dropcoords: dropoffLocation.coordinates,
-                                        flightId: item._id,
-                                        providerId: item.provider._id,
-                                        pickupCity: pickupLocation.name,
-                                        dropoffCity: dropoffLocation.name,
-                                        initialDate: dobTo,
-                                        finalDate: dobTo2,
-                                        type: 'Flight',
-                                      },
-                                    });
-                                  }}>
-                                  <Text style={{ color: 'green' }}>Request</Text>
-                                </TouchableOpacity>
-                              </View>
-                              <View style={styles.viewdetail}>
-                                <Text style={styles.txtdetail}>
-                                  {item.dropoffCity}
-                                </Text>
-                                <Text style={{ fontSize: 14 }}>
-                                  {moment(item.flightDate).format('YYYY-MM-DD')}
+                                <Text style={{color: colors.black}}>
+                                  Departure Time:{' '}
+                                  {moment(item.flightDate).format('hh:mm')}
                                 </Text>
                               </View>
                             </View>
+                            <View style={styles.viewlocation}>
+                              <View
+                                style={{
+                                  width: '10%',
+                                  alignItems: 'center',
+                                }}>
+                                <SvgXml style={{}} xml={location} />
+                              </View>
+                              <View
+                                style={{
+                                  justifyContent: 'space-between',
+                                  width: '90%',
+                                  paddingHorizontal: wp(1),
+                                }}>
+                                <View style={styles.viewdetail}>
+                                  <Text style={styles.txtdetail}>
+                                    {item.pickupCity}
+                                  </Text>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      navigation.navigate('ProviderDetail', {
+                                        data: {
+                                          firstname: item.provider.firstname,
+                                          lastname: item.provider.lastname,
+                                          phoneno: item.provider.phoneno,
+                                          flightDate: item.flightDate,
+                                          arrivalDate: item.flightarrivalDate,
+                                          flightAirline: item.flightAirline,
+                                          pickcoords:
+                                            pickupLocation.coordinates,
+                                          dropcoords:
+                                            dropoffLocation.coordinates,
+                                          flightId: item._id,
+                                          providerId: item.provider._id,
+                                          pickupCity: pickupLocation.name,
+                                          dropoffCity: dropoffLocation.name,
+                                          initialDate: dobTo,
+                                          finalDate: dobTo2,
+                                          type: 'Flight',
+                                        },
+                                      });
+                                    }}>
+                                    <Text style={{color: 'green'}}>
+                                      Request
+                                    </Text>
+                                  </TouchableOpacity>
+                                </View>
+                                <View style={styles.viewdetail}>
+                                  <Text style={styles.txtdetail}>
+                                    {item.dropoffCity}
+                                  </Text>
+                                  <Text
+                                    style={{fontSize: 14, color: colors.black}}>
+                                    {moment(item.flightDate).format(
+                                      'YYYY-MM-DD',
+                                    )}
+                                  </Text>
+                                </View>
+                              </View>
+                            </View>
                           </View>
-                        </View>
+                        );
+                      })}
+                  </>
+                )}
+                {detailsArrayProvider.length !== 0 &&
+                  detailsArrayProvider.length > 10 && (
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        paddingHorizontal: wp(5),
+                      }}>
+                      <TouchableOpacity
+                        disabled={prevReq === 0 ? true : false}
+                        style={{
+                          borderRadius: wp(2),
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: colors.red,
+                        }}
+                        onPress={() => {
+                          setprevReq(prevReq - 10);
+                          setnextReq(nextReq - 10);
+                          scrollRef.current?.scrollTo({
+                            y: 0,
+                            animated: true,
+                          });
+                        }}>
+                        <Text
+                          style={{
+                            marginVertical: wp(1.5),
+                            marginHorizontal: wp(2),
+                            color: colors.white,
+                          }}>
+                          Prev
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        disabled={
+                          nextPost >= detailsArrayProvider.length ? true : false
+                        }
+                        style={{
+                          borderRadius: wp(2),
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: colors.red,
+                        }}
+                        onPress={() => {
+                          setprevReq(prevReq + 10);
+                          setnextReq(nextReq + 10);
+                          scrollRef.current?.scrollTo({
+                            y: 0,
+                            animated: true,
+                          });
+                        }}>
+                        <Text
+                          style={{
+                            marginVertical: wp(1.5),
+                            marginHorizontal: wp(2),
+                            color: colors.white,
+                          }}>
+                          Next
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                {detailsArray.length >= 1 &&
+                  detailsArray
+                    .slice(prevPost, nextPost)
+                    .map((item: any, index: number) => {
+                      return (
+                        item.fa_flight_id && (
+                          <View key={index} style={styles.detailsboxinner}>
+                            <View style={styles.flexrow}>
+                              <Image source={mapp} style={styles.img} />
+                              <View style={styles.test}>
+                                <Text
+                                  style={{fontSize: 15, color: colors.black}}>
+                                  Flight No: {item.ident_iata}
+                                </Text>
+                              </View>
+                            </View>
+                            <View style={styles.viewlocation}>
+                              <View
+                                style={{
+                                  width: '10%',
+                                  alignItems: 'center',
+                                }}>
+                                <SvgXml style={{}} xml={location} />
+                              </View>
+                              <View
+                                style={{
+                                  justifyContent: 'space-between',
+                                  width: '90%',
+                                  paddingHorizontal: wp(1),
+                                }}>
+                                <View style={[styles.viewdetail]}>
+                                  <Text style={styles.txtdetail}>
+                                    {item.origin_iata}
+                                  </Text>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      navigation.navigate('ProductScreen', {
+                                        item: {
+                                          fa_flight_id: item.fa_flight_id,
+                                          type: 'Flight',
+                                          pickupIATACityCode: item.origin_iata,
+                                          dropoffIATACityCode:
+                                            item.destination_iata,
+                                          pickupCity: pickupLocation.name,
+                                          dropoffCity: dropoffLocation.name,
+                                          pickcoords:
+                                            pickupLocation.coordinates,
+                                          dropcoords:
+                                            dropoffLocation.coordinates,
+                                          initialDate: dobTo,
+                                          finalDate: dobTo2,
+                                        },
+                                      });
+                                    }}>
+                                    <Text style={{color: 'green'}}>
+                                      Post Request
+                                    </Text>
+                                  </TouchableOpacity>
+                                </View>
+                                <View style={styles.viewdetail}>
+                                  <Text style={styles.txtdetail}>
+                                    {item.destination_iata}
+                                  </Text>
+                                  <Text
+                                    style={{fontSize: 14, color: colors.black}}>
+                                    {moment(item.scheduled_in).format(
+                                      'YYYY-MM-DD',
+                                    )}
+                                  </Text>
+                                </View>
+                              </View>
+                            </View>
+                          </View>
+                        )
                       );
                     })}
-                  </View>
-                )}
-                {detailsArrayProvider.length !== 0 && detailsArrayProvider.length > 10 && (
-                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: wp(5) }}>
-                    <TouchableOpacity
-                      disabled={prevReq === 0 ? true : false}
-                      style={{
-                        borderRadius: wp(2),
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: colors.red,
-                      }}
-                      onPress={() => {
-                        setprevReq(prevReq - 10)
-                        setnextReq(nextReq - 10)
-                        scrollRef.current?.scrollTo({
-                          y: 0,
-                          animated: true
-                        });
-                      }}>
-                      <Text
-                        style={{
-                          marginVertical: wp(1.5),
-                          marginHorizontal: wp(2),
-                          color: colors.white,
-                        }}>
-                        Prev
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      disabled={nextPost >= detailsArrayProvider.length ? true : false}
-                      style={{
-                        borderRadius: wp(2),
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: colors.red,
-                      }}
-                      onPress={() => {
-                        setprevReq(prevReq + 10)
-                        setnextReq(nextReq + 10)
-                        scrollRef.current?.scrollTo({
-                          y: 0,
-                          animated: true
-                        });
-                      }}>
-                      <Text
-                        style={{
-                          marginVertical: wp(1.5),
-                          marginHorizontal: wp(2),
-                          color: colors.white,
-                        }}>
-                        Next
-                      </Text>
-                    </TouchableOpacity>
-                  </View>)}
-                {detailsArray.length >= 1 && (
-                  detailsArray.slice(prevPost, nextPost).map((item: any, index: number) => {
-                    return (
-                      item.fa_flight_id && <View key={index} style={styles.detailsboxinner}>
-                        <View style={styles.flexrow}>
-                          <Image source={mapp} style={styles.img} />
-                          <View style={styles.test}>
-                            <Text style={{ fontSize: 15 }}>
-                              Flight No: {item.ident_iata}
-                            </Text>
-                          </View>
-                        </View>
-                        <View style={styles.viewlocation}>
-                          <View
-                            style={{
-                              width: '10%',
-                              alignItems: 'center',
-                            }}>
-                            <SvgXml style={{}} xml={location} />
-                          </View>
-                          <View
-                            style={{
-                              justifyContent: 'space-between',
-                              width: '90%',
-                              paddingHorizontal: wp(1),
-                            }}>
-                            <View style={[styles.viewdetail]}>
-                              <Text style={styles.txtdetail}>
-                                {item.origin_iata}
-                              </Text>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  navigation.navigate('ProductScreen', {
-                                    item: {
-                                      fa_flight_id: item.fa_flight_id,
-                                      type: 'Flight',
-                                      pickupIATACityCode: item.origin_iata,
-                                      dropoffIATACityCode:
-                                        item.destination_iata,
-                                      pickupCity: pickupLocation.name,
-                                      dropoffCity: dropoffLocation.name,
-                                      pickcoords: pickupLocation.coordinates,
-                                      dropcoords: dropoffLocation.coordinates,
-                                      initialDate: dobTo,
-                                      finalDate: dobTo2,
-                                    },
-                                  });
-                                }}>
-                                <Text style={{ color: 'green' }}>
-                                  Post Request
-                                </Text>
-                              </TouchableOpacity>
-                            </View>
-                            <View style={styles.viewdetail}>
-                              <Text style={styles.txtdetail}>
-                                {item.destination_iata}
-                              </Text>
-                              <Text style={{ fontSize: 14 }}>
-                                {moment(item.scheduled_in).format('YYYY-MM-DD')}
-                              </Text>
-                            </View>
-                          </View>
-                        </View>
-                      </View>
-
-
-                    );
-                  })
-
-
-                )}
                 {detailsArray.length !== 0 && detailsArray.length > 10 && (
-                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: wp(5) }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      paddingHorizontal: wp(5),
+                    }}>
                     <TouchableOpacity
                       disabled={prevPost === 0 ? true : false}
                       style={{
@@ -464,11 +497,11 @@ const BookingListScreen = ({ navigation, route }: any) => {
                         backgroundColor: colors.red,
                       }}
                       onPress={() => {
-                        setprevPost(prevPost - 10)
-                        setnextPost(nextPost - 10)
+                        setprevPost(prevPost - 10);
+                        setnextPost(nextPost - 10);
                         scrollRef.current?.scrollTo({
                           y: 0,
-                          animated: true
+                          animated: true,
                         });
                       }}>
                       <Text
@@ -489,11 +522,11 @@ const BookingListScreen = ({ navigation, route }: any) => {
                         backgroundColor: colors.red,
                       }}
                       onPress={() => {
-                        setprevPost(prevPost + 10)
-                        setnextPost(nextPost + 10)
+                        setprevPost(prevPost + 10);
+                        setnextPost(nextPost + 10);
                         scrollRef.current?.scrollTo({
                           y: 0,
-                          animated: true
+                          animated: true,
                         });
                       }}>
                       <Text
@@ -505,30 +538,30 @@ const BookingListScreen = ({ navigation, route }: any) => {
                         Next
                       </Text>
                     </TouchableOpacity>
-                  </View>)}
-              </ScrollView>
-              {detailsArray.length === 0 &&
-                detailsArrayProvider.length === 0 && (
-                  <View
-                    style={{
-                      backgroundColor: colors.boxBackground,
-                      // backgroundColor: 'aqua',
-                      alignSelf: 'center',
-                      paddingVertical: hp(10),
-                      marginVertical: '40%',
-                      paddingHorizontal: wp(10),
-                      borderRadius: hp(2),
-                    }}>
-                    <Text
-                      style={{
-                        textAlign: 'center',
-                        color: colors.red,
-                        fontSize: 16,
-                      }}>
-                      Sorry no bookings available
-                    </Text>
                   </View>
                 )}
+              </ScrollView>
+              {detailsArray.length === 0 && detailsArrayProvider.length === 0 && (
+                <View
+                  style={{
+                    backgroundColor: colors.boxBackground,
+                    // backgroundColor: 'aqua',
+                    alignSelf: 'center',
+                    paddingVertical: hp(10),
+                    marginVertical: '40%',
+                    paddingHorizontal: wp(10),
+                    borderRadius: hp(2),
+                  }}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      color: colors.red,
+                      fontSize: 16,
+                    }}>
+                    Sorry no bookings available
+                  </Text>
+                </View>
+              )}
             </View>
           )
           //  : (

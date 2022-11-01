@@ -1,39 +1,36 @@
-import React, { useState } from 'react';
-import {
-  Alert,
-  SafeAreaView,
-} from 'react-native';
+import React, {useState} from 'react';
+import {Alert, SafeAreaView} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 
-import { Button, Header, Textbox } from '../../components';
-import { loggedResetPassword } from '../../API';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { SvgXml } from 'react-native-svg';
-import { forgot_password } from '../../theme/assets/svg';
-import { PASS_REGEX } from '../../appConstants';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Button, Header, Textbox} from '../../components';
+import {loggedResetPassword, LogoutApi} from '../../API';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {SvgXml} from 'react-native-svg';
+import {forgot_password} from '../../theme/assets/svg';
+import {PASS_REGEX} from '../../appConstants';
+import {CommonActions} from '@react-navigation/native';
 // import {validatePassword} from '../validation';
 
-
-const LoggedUserResetPassword = ({ navigation }: any) => {
+const LoggedUserResetPassword = ({navigation}: any) => {
   const [password, setPassword] = useState('');
   const [previousPassword, setPreviousPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [isvalidpPreviousPassword, setisvalidpPreviousPassword] = useState(true);
+  const [isvalidpPreviousPassword, setisvalidpPreviousPassword] =
+    useState(true);
   const [isvalidPassword, setIsvalidPassword] = useState(true);
   const [isvalidConfirmPassword, setIsvalidConfirmPassword] = useState(true);
   const validate = () => {
     // setIsvalidPassword(!validatePassword(password));
     // setIsvalidConfirmPassword(!validatePassword(rePassword));
-    let validate = true
+    let validate = true;
 
     if (!previousPassword) {
-      setisvalidpPreviousPassword(false)
-      validate = false
+      setisvalidpPreviousPassword(false);
+      validate = false;
     }
     if (!password) {
       setIsvalidPassword(false);
@@ -57,7 +54,7 @@ const LoggedUserResetPassword = ({ navigation }: any) => {
         currentpassword: previousPassword,
         password: password,
         confirmpassword: rePassword,
-      }
+      };
       loggedResetPassword(data)
         .then((result: any) => {
           setLoading(false);
@@ -67,7 +64,6 @@ const LoggedUserResetPassword = ({ navigation }: any) => {
                 text: 'Ok',
                 onPress: () => {
                   navigation.goBack();
-                  // props.navigation.navigate('SignIn')
                 },
                 style: 'cancel',
               },
@@ -75,19 +71,28 @@ const LoggedUserResetPassword = ({ navigation }: any) => {
           }
         })
         .catch(async error => {
-          setLoading(false); if (error.response.status === 401) {
-            await AsyncStorage.clear();
-            navigation.navigate('Welcome')
+          setLoading(false);
+          if (error.response.status === 401) {
+            Alert.alert('Session Expired', 'Please login again');
+            LogoutApi();
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{name: 'Welcome'}],
+              }),
+            );
           }
         });
     }
-
   };
   // alert('lsjdc')
   return (
     <SafeAreaView>
       <KeyboardAwareScrollView>
-        <Header title={'Reset Password'} pressMethod={() => navigation.goBack()} />
+        <Header
+          title={'Reset Password'}
+          pressMethod={() => navigation.goBack()}
+        />
 
         <SvgXml xml={forgot_password} width={wp(100)} />
 
@@ -101,13 +106,15 @@ const LoggedUserResetPassword = ({ navigation }: any) => {
 
         <Textbox
           placeholder="Previous Password"
-          title='Previous Password'
+          title="Previous Password"
           onChangeValue={(text: any) => {
             setisvalidpPreviousPassword(true);
-            setPreviousPassword(text)
+            setPreviousPassword(text);
           }}
           // containerStyle={{ paddingHorizontal: wp(8) }}
-          errormsg={!isvalidpPreviousPassword ? 'Previous password is Required' : ''}
+          errormsg={
+            !isvalidpPreviousPassword ? 'Previous password is Required' : ''
+          }
           password={true}
         />
         <Textbox
@@ -162,13 +169,14 @@ const LoggedUserResetPassword = ({ navigation }: any) => {
         <Button
           loading={loading}
           title="NEXT"
-          onPress={() => { validate() }}
-          containerStyle={{ marginTop: hp(7) }}
+          onPress={() => {
+            validate();
+          }}
+          containerStyle={{marginTop: hp(7)}}
         />
-
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );
-}
+};
 
-export default LoggedUserResetPassword
+export default LoggedUserResetPassword;

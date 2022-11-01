@@ -1,5 +1,5 @@
-import axios, { AxiosRequestConfig } from 'axios';
-import { prodUrl } from '../appConstants';
+import axios, {AxiosRequestConfig} from 'axios';
+import {prodUrl} from '../appConstants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const createBooking = async (
@@ -8,29 +8,28 @@ export const createBooking = async (
   description: string,
   weight: string,
   SelectedUnit: string,
-  pickcoords:
-    {
-      lat: string;
-      lon: string;
-      name?: string
-    } | null,
-  dropcoords:
-    {
-      lon: string;
-      lat: string;
-      name?: string
-    } | null,
+  pickcoords: {
+    lat: string;
+    lon: string;
+    name?: string;
+  } | null,
+  dropcoords: {
+    lon: string;
+    lat: string;
+    name?: string;
+  } | null,
   departCountry: string | null,
   destinationCountry: string | null,
-  receiverName: string,
-  countryCode: string,
-  receiverNum: string,
-  productImage: string,
-  productImage2?: string,
-  SelectedBookingType?: string,
-  vehicleType?: string,
-  initialDate?: string,
-  finalDate?: string,
+  receiverName: string | null,
+  countryCode: string | null,
+  receiverNum: string | null,
+  productImage: string | null,
+  productImage2: string | null,
+  SelectedBookingType: string | null,
+  vehicleType: string | null,
+  initialDate: string | null,
+  finalDate: string | null,
+  totalFare: number,
 ) => {
   const value = await AsyncStorage.getItem('@userId');
   const userToken = await AsyncStorage.getItem('@userToken');
@@ -40,23 +39,23 @@ export const createBooking = async (
       method: 'post',
       url: `${prodUrl}/booking/`,
       headers: {
-        Authorization: `Bearer ${userToken}`
+        Authorization: `Bearer ${userToken}`,
       },
       data: {
         pickupAddress:
           pickcoords !== null
             ? {
-              lat: pickcoords.lat,
-              lng: pickcoords.lon,
-            }
-            : '',
+                lat: pickcoords.lat,
+                lng: pickcoords.lon,
+              }
+            : null,
         dropAddress:
           dropcoords !== null
             ? {
-              lat: dropcoords.lat,
-              lng: dropcoords.lon,
-            }
-            : '',
+                lat: dropcoords.lat,
+                lng: dropcoords.lon,
+              }
+            : null,
         pickupAddressText: pickcoords?.name ? pickcoords.name : '',
         dropAddressText: dropcoords?.name ? dropcoords.name : '',
         vehicleType: vehicleType ? vehicleType : '',
@@ -76,8 +75,8 @@ export const createBooking = async (
         recieverCountryCode: countryCode,
         recieverPhoneno: receiverNum,
         bookedBy: value,
+        totalFare: totalFare ? totalFare : null,
       },
-
     };
 
     axios(config)

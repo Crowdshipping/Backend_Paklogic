@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, {useState, useRef} from 'react';
 import {
   SafeAreaView,
   Text,
@@ -11,20 +11,19 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import { SvgXml } from 'react-native-svg';
-import { Button, Header } from '../../components';
+import {SvgXml} from 'react-native-svg';
+import {Button, Header} from '../../components';
 // import {register5} from '../../theme/assets/svg';
-import { styles } from './style';
-import { otp } from '../../theme/assets/svg';
-import { verifyOtp } from '../../API/verifyOtp';
-import { verifyNumber } from '../../API/verifyPhone';
-import { SuccessModal } from '../../Modals';
-import { colors } from '../../theme';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {styles} from './style';
+import {otp} from '../../theme/assets/svg';
+import {verifyOtp, verifyNumber, LogoutApi} from '../../API';
+import {SuccessModal} from '../../Modals';
+import {colors} from '../../theme';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {CommonActions} from '@react-navigation/native';
 
-const VerifyOtp = ({ route, navigation }: any) => {
-  const { countryCode, phone } = route.params;
+const VerifyOtp = ({route, navigation}: any) => {
+  const {countryCode, phone} = route.params;
   const refNum1: any = useRef();
   const refNum2: any = useRef();
   const refNum3: any = useRef();
@@ -64,14 +63,24 @@ const VerifyOtp = ({ route, navigation }: any) => {
       verifyOtp(str.toLowerCase())
         .then((rest: any) => {
           setloading(false);
-          rest.success && navigation.navigate('Register', { countryCode, phone });
+          rest.success && navigation.navigate('Register', {countryCode, phone});
         })
         .catch(async error => {
           if (error.response.status === 401) {
-            await AsyncStorage.clear();
-            navigation.navigate('Welcome')
+            Alert.alert('Session Expired', 'Please login again');
+            LogoutApi();
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{name: 'Welcome'}],
+              }),
+            );
           } else {
-            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+            Alert.alert(
+              error?.response?.data?.message
+                ? error?.response?.data?.message
+                : 'something went wrong',
+            );
             refNum6.current.clear(),
               setNum6('-'),
               refNum5.current.clear(),
@@ -84,7 +93,7 @@ const VerifyOtp = ({ route, navigation }: any) => {
               setNum2('-'),
               refNum1.current.clear(),
               setNum1('-'),
-              refNum1.current.focus()
+              refNum1.current.focus();
           }
           setloading(false);
         });
@@ -115,29 +124,40 @@ const VerifyOtp = ({ route, navigation }: any) => {
           setloading(false);
           rest.success &&
             (setText(rest.message),
-              refNum6.current.clear(),
-              setNum6('-'),
-              refNum5.current.clear(),
-              setNum5('-'),
-              refNum4.current.clear(),
-              setNum4('-'),
-              refNum3.current.clear(),
-              setNum3('-'),
-              refNum2.current.clear(),
-              setNum2('-'),
-              refNum1.current.clear(),
-              setNum1('-'),
-              refNum1.current.focus(),
-              setsuccess(true));
+            refNum6.current.clear(),
+            setNum6('-'),
+            refNum5.current.clear(),
+            setNum5('-'),
+            refNum4.current.clear(),
+            setNum4('-'),
+            refNum3.current.clear(),
+            setNum3('-'),
+            refNum2.current.clear(),
+            setNum2('-'),
+            refNum1.current.clear(),
+            setNum1('-'),
+            refNum1.current.focus(),
+            setsuccess(true));
         }
       })
       .catch(async error => {
         if (error.response.status === 401) {
-          await AsyncStorage.clear();
-          navigation.navigate('Welcome')
+          Alert.alert('Session Expired', 'Please login again');
+          LogoutApi();
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [{name: 'Welcome'}],
+            }),
+          );
         } else {
-          Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
-        } setloading(false);
+          Alert.alert(
+            error?.response?.data?.message
+              ? error?.response?.data?.message
+              : 'something went wrong',
+          );
+        }
+        setloading(false);
       });
   };
   return (
@@ -147,7 +167,6 @@ const VerifyOtp = ({ route, navigation }: any) => {
         backgroundColor: colors.white,
       }}>
       <KeyboardAwareScrollView>
-
         <Header
           title="verify otp"
           pressMethod={() => {
@@ -168,6 +187,7 @@ const VerifyOtp = ({ route, navigation }: any) => {
           style={{
             textAlign: 'center',
             fontSize: hp(2.5),
+            color: colors.black,
           }}>
           Enter the OTP code sent to you at {countryCode.dial_code + phone}
         </Text>
@@ -195,8 +215,9 @@ const VerifyOtp = ({ route, navigation }: any) => {
                 width: '100%',
                 height: '100%',
                 textAlign: 'center',
+                color: colors.black,
               }}
-              onKeyPress={({ nativeEvent: { key: keyValue } }) => {
+              onKeyPress={({nativeEvent: {key: keyValue}}) => {
                 if (keyValue === 'Backspace') {
                   setNum1('-');
                 } else if (keyValue === ' ') {
@@ -218,16 +239,17 @@ const VerifyOtp = ({ route, navigation }: any) => {
               placeholder={num2}
               editable={loading ? false : true}
               autoCapitalize="none"
-              placeholderTextColor={colors.black}
+              placeholderTextColor={'grey'}
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
                 width: '100%',
                 height: '100%',
                 textAlign: 'center',
+                color: colors.black,
                 // borderWidth: 1,
               }}
-              onKeyPress={({ nativeEvent: { key: keyValue } }) => {
+              onKeyPress={({nativeEvent: {key: keyValue}}) => {
                 if (keyValue === 'Backspace' && num2 === '-') {
                   refNum1.current.focus();
                 } else if (keyValue === 'Backspace' && num2.length === 1) {
@@ -260,8 +282,9 @@ const VerifyOtp = ({ route, navigation }: any) => {
                 width: '100%',
                 height: '100%',
                 textAlign: 'center',
+                color: colors.black,
               }}
-              onKeyPress={({ nativeEvent: { key: keyValue } }) => {
+              onKeyPress={({nativeEvent: {key: keyValue}}) => {
                 if (keyValue === 'Backspace' && num3 === '-') {
                   refNum2.current.focus();
                 } else if (keyValue === 'Backspace' && num3.length === 1) {
@@ -293,8 +316,9 @@ const VerifyOtp = ({ route, navigation }: any) => {
                 width: '100%',
                 height: '100%',
                 textAlign: 'center',
+                color: colors.black,
               }}
-              onKeyPress={({ nativeEvent: { key: keyValue } }) => {
+              onKeyPress={({nativeEvent: {key: keyValue}}) => {
                 if (keyValue === 'Backspace' && num4 === '-') {
                   refNum3.current.focus();
                 } else if (keyValue === 'Backspace' && num4.length === 1) {
@@ -326,8 +350,9 @@ const VerifyOtp = ({ route, navigation }: any) => {
                 width: '100%',
                 height: '100%',
                 textAlign: 'center',
+                color: colors.black,
               }}
-              onKeyPress={({ nativeEvent: { key: keyValue } }) => {
+              onKeyPress={({nativeEvent: {key: keyValue}}) => {
                 if (keyValue === 'Backspace' && num5 === '-') {
                   refNum4.current.focus();
                 } else if (keyValue === 'Backspace' && num5.length === 1) {
@@ -359,8 +384,9 @@ const VerifyOtp = ({ route, navigation }: any) => {
                 width: '100%',
                 height: '100%',
                 textAlign: 'center',
+                color: colors.black,
               }}
-              onKeyPress={({ nativeEvent: { key: keyValue } }) => {
+              onKeyPress={({nativeEvent: {key: keyValue}}) => {
                 if (keyValue === 'Backspace' && num6 === '-') {
                   refNum5.current.focus();
                 } else if (keyValue === 'Backspace' && num6.length === 1) {
@@ -396,7 +422,6 @@ const VerifyOtp = ({ route, navigation }: any) => {
           // containerStyle={{width: wp(100)}}
           loading={loading}
         />
-
       </KeyboardAwareScrollView>
       <SuccessModal
         isSuccess={success}

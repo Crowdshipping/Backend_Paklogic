@@ -1,14 +1,16 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {
   View,
   SafeAreaView,
   Text,
   TouchableOpacity,
   Platform,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
-import { styles } from './style';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { Button, Header, MapHeader } from '../../../components';
+import {styles} from './style';
+import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import {Button, Header, MapHeader} from '../../../components';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -25,28 +27,49 @@ import {
   scooterbgRed,
 } from '../../../theme/assets/svg';
 import MapViewDirections from 'react-native-maps-directions';
+
 import getDistance from 'geolib/es/getDistance';
-import { colors } from '../../../theme';
-import { SearchPlaces } from '../../../Modals/searchPlaces';
-import { useEffect } from 'react';
-import { SvgXml } from 'react-native-svg';
-import { GOOGLE_MAPS_APIKEY } from '../../../appConstants';
+import {colors} from '../../../theme';
+import {SearchPlaces} from '../../../Modals/searchPlaces';
+import {useEffect} from 'react';
+import {SvgXml} from 'react-native-svg';
+import {GOOGLE_MAPS_APIKEY} from '../../../appConstants';
+import {MapWithUserLocation} from '../../../features';
 interface cityArray {
   name: string;
   lat: any;
   lon: any;
 }
-const StartBookingScreen = ({ navigation }: any) => {
-  const [pickupLocation, setpickupLocation] = useState<cityArray>({
-    name: 'Islamabad',
-    lat: 33.738045,
-    lon: 73.084488,
-  })
-  const [dropoffLocation, setdropoffLocation] = useState<cityArray>({
-    name: 'Rawalpindi',
-    lat: 33.626057,
-    lon: 73.071442,
-  });
+const StartBookingScreen = ({navigation}: any) => {
+  const [pickupLocation, setpickupLocation] = useState<cityArray>(
+    // __DEV__
+    //   ? {
+    //       name: 'Islamabad Capital Territory',
+    //       lat: 33.6844202,
+    //       lon: 73.047885,
+    //     }
+    //   :
+    {
+      name: '',
+      lat: '',
+      lon: '',
+    },
+  );
+  const [dropoffLocation, setdropoffLocation] = useState<cityArray>(
+    // __DEV__
+    //   ? {
+    //       name: 'Rawalpindi',
+    //       lat: 33.5651107,
+    //       lon: 73.0169135,
+    //     }
+    //   :
+    {
+      name: '',
+      lat: '',
+      lon: '',
+    },
+  );
+
   const [distance, setDistance] = useState(0);
   const [isSelected, setSelected] = useState('none');
 
@@ -57,47 +80,57 @@ const StartBookingScreen = ({ navigation }: any) => {
   const ref = useRef<MapView>(null);
 
   const onMapReadyHandler = useCallback(() => {
-    if (Platform.OS === 'ios') {
-      ref?.current?.fitToElements({
-        animated: true,
-        edgePadding: {
-          top: 100,
-          right: 0,
-          bottom: 100,
-          left: 0,
-        },
-      });
-    } else if (pickupLocation && dropoffLocation) {
-      ref?.current?.fitToCoordinates(
-        [
-          { latitude: pickupLocation.lat, longitude: pickupLocation.lon },
-          { latitude: dropoffLocation.lat, longitude: dropoffLocation.lon },
-        ],
-        {
-          animated: true,
-          edgePadding: {
-            top: 50,
-            right: 50,
-            bottom: 50,
-            left: 50,
-          },
-        },
-      );
-    }
+    // if (Platform.OS === 'ios') {
+    ref?.current?.fitToElements({
+      animated: true,
+      edgePadding: {
+        top: 100,
+        right: 0,
+        bottom: 100,
+        left: 0,
+      },
+    });
+    // } else if (
+    //   pickupLocation.lat &&
+    //   pickupLocation.lon &&
+    //   dropoffLocation.lat &&
+    //   dropoffLocation.lon
+    // ) {
+    //   // ref.current?.fitToSuppliedMarkers(['1', '2'], {
+    //   //   animated: true,
+    //   //   edgePadding: {
+    //   //     top: 50,
+    //   //     right: 50,
+    //   //     bottom: 50,
+    //   //     left: 50,
+    //   //   },
+    //   // });
+    //   ref?.current?.fitToCoordinates(
+    //     [
+    //       {latitude: pickupLocation.lat, longitude: pickupLocation.lon},
+    //       {latitude: dropoffLocation.lat, longitude: dropoffLocation.lon},
+    //     ],
+    //     {
+    //       animated: true,
+    //       edgePadding: {
+    //         top: 50,
+    //         right: 50,
+    //         bottom: 50,
+    //         left: 50,
+    //       },
+    //     },
+    //   );
+    // }
   }, [ref]);
 
   function handleNext() {
     let validate = true;
-    if (!pickupLocation) {
-      setpickValue(false)
+    if (pickupLocation.name === '') {
+      setpickValue(false);
       validate = false;
     }
-    if (!dropoffLocation) {
-      setdropValue(false)
-      validate = false;
-    }
-    if (!isSelected) {
-      // setunitValue(false);
+    if (dropoffLocation.name === '') {
+      setdropValue(false);
       validate = false;
     }
     if (validate) {
@@ -106,7 +139,7 @@ const StartBookingScreen = ({ navigation }: any) => {
           pickupLocation,
           dropoffLocation,
           vehicleType: isSelected,
-          distance
+          distance,
         },
       });
     }
@@ -114,73 +147,87 @@ const StartBookingScreen = ({ navigation }: any) => {
 
   useEffect(() => {
     onMapReadyHandler();
-    if (pickupLocation && dropoffLocation) {
+    if (
+      pickupLocation.lat &&
+      pickupLocation.lon &&
+      dropoffLocation.lat &&
+      dropoffLocation.lon
+    ) {
       setDistance(
-        (getDistance(
-          { latitude: pickupLocation.lat, longitude: pickupLocation.lon },
-          { latitude: dropoffLocation.lat, longitude: dropoffLocation.lon },
-        ) * 0.000621),
+        getDistance(
+          {latitude: pickupLocation.lat, longitude: pickupLocation.lon},
+          {latitude: dropoffLocation.lat, longitude: dropoffLocation.lon},
+        ) * 0.000621,
       );
     }
-  }, [pickupLocation, dropoffLocation]);
+  }, [pickupLocation.lat, dropoffLocation.lat]);
   return (
-    <SafeAreaView style={{ display: 'flex', flex: 1, backgroundColor: colors.white }}>
-      <View style={styles.container}>
+    <SafeAreaView
+      style={{display: 'flex', flex: 1, backgroundColor: colors.white}}>
+      {pickupLocation.lat !== '' &&
+      pickupLocation.lon !== '' &&
+      dropoffLocation.lat !== '' &&
+      dropoffLocation.lon !== '' ? (
         <MapView
           ref={ref}
           provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-          showsUserLocation={true}
+          onMapReady={onMapReadyHandler}
           zoomEnabled
           paddingAdjustmentBehavior={'always'}
-          // mapPadding={{top: 50, right: 50, left: 50, bottom: 50}}
+          showsMyLocationButton={false}
+          mapPadding={{top: 0, right: 0, left: 0, bottom: 0}}
           // showsCompass={true}
           zoomControlEnabled={false}
           style={styles.map}>
-          {pickupLocation && (
-            <Marker
-              coordinate={{
-                latitude: pickupLocation.lat,
-                longitude: pickupLocation.lon,
-              }}
-              title={'pickup'}
-            />
-          )}
-          {dropoffLocation && (
-            <Marker
-              coordinate={{
-                latitude: dropoffLocation.lat,
-                longitude: dropoffLocation.lon,
-              }}
-              title={'dropoff'}
-            />
-          )}
-          {/* {pickupLocation && dropoffLocation && (
-            <MapViewDirections
-              apikey={GOOGLE_MAPS_APIKEY}
-              origin={{
-                latitude: pickupLocation.lat,
-                longitude: pickupLocation.lon,
-              }}
-              destination={{
-                latitude: dropoffLocation.lat,
-                longitude: dropoffLocation.lon,
-              }}
-              strokeWidth={wp(1)}
-              strokeColor={colors.red}
-            />
-          )} */}
+          <Marker
+            identifier="1"
+            coordinate={{
+              latitude: pickupLocation.lat,
+              longitude: pickupLocation.lon,
+            }}
+            title={'pickup'}
+          />
+
+          <Marker
+            identifier="2"
+            coordinate={{
+              latitude: dropoffLocation.lat,
+              longitude: dropoffLocation.lon,
+            }}
+            title={'dropoff'}
+          />
+
+          <MapViewDirections
+            apikey={GOOGLE_MAPS_APIKEY}
+            onReady={onMapReadyHandler}
+            origin={{
+              latitude: pickupLocation.lat,
+              longitude: pickupLocation.lon,
+            }}
+            destination={{
+              latitude: dropoffLocation.lat,
+              longitude: dropoffLocation.lon,
+            }}
+            strokeWidth={wp(1)}
+            strokeColor={colors.red}
+          />
         </MapView>
-      </View>
+      ) : (
+        <MapWithUserLocation />
+      )}
+
       <View
         style={{
           flex: 1,
           justifyContent: 'space-between',
-          // alignSelf: 'flex-end',
-          // backgroundColor: colors.white
         }}>
         <View>
-          <TouchableOpacity onPress={() => { navigation.toggleDrawer() }} style={styles.menu}>
-            <Entypo name="menu" size={25} />
+          <TouchableOpacity
+            onPress={() => {
+              navigation.toggleDrawer();
+            }}
+            style={styles.menu}>
+            <Entypo name="menu" size={25} color={colors.black} />
           </TouchableOpacity>
           <View style={styles.location}>
             <TouchableOpacity
@@ -189,9 +236,6 @@ const StartBookingScreen = ({ navigation }: any) => {
               }}
               style={{
                 borderBottomWidth: 1,
-                // marginTop: hp(2),
-                // marginBottom: hp(1),
-                // paddingHorizontal: wp(5),
                 marginHorizontal: wp(5),
               }}>
               <Text
@@ -199,17 +243,18 @@ const StartBookingScreen = ({ navigation }: any) => {
                   paddingVertical: Platform.OS === 'ios' ? wp(2) : 0,
                   borderBottomWidth: 1,
                   borderColor: 'grey',
+                  color: colors.black,
                 }}>
-                {pickupLocation && pickupLocation?.name !== ''
+                {pickupLocation && pickupLocation.name !== ''
                   ? pickupLocation.name
                   : 'Pickup Location'}
               </Text>
             </TouchableOpacity>
-            {!pickValue &&
-              <Text style={[styles.errorMsg, { paddingHorizontal: wp(5) }]}>
+            {!pickValue && (
+              <Text style={[styles.errorMsg, {paddingHorizontal: wp(5)}]}>
                 Pickup Location is required
               </Text>
-            }
+            )}
             <TouchableOpacity
               onPress={() => {
                 setisVisible2(true);
@@ -226,17 +271,18 @@ const StartBookingScreen = ({ navigation }: any) => {
                   paddingVertical: Platform.OS === 'ios' ? wp(2) : 0,
                   borderBottomWidth: 1,
                   borderColor: 'grey',
+                  color: colors.black,
                 }}>
                 {dropoffLocation && dropoffLocation?.name !== ''
                   ? dropoffLocation.name
                   : 'Dropoff Location'}
               </Text>
             </TouchableOpacity>
-            {!dropValue &&
-              <Text style={[styles.errorMsg, { paddingHorizontal: wp(5) }]}>
+            {!dropValue && (
+              <Text style={[styles.errorMsg, {paddingHorizontal: wp(5)}]}>
                 Dropoff Location is required
               </Text>
-            }
+            )}
           </View>
         </View>
         {isSelected === 'none' ? (
@@ -254,7 +300,7 @@ const StartBookingScreen = ({ navigation }: any) => {
                   alignItems: 'center',
                   width: wp(30),
                 }}>
-                <Text style={{ fontSize: 18 }}>Cycle</Text>
+                <Text style={{fontSize: 18, color: colors.black}}>Cycle</Text>
                 <TouchableOpacity
                   onPress={() => {
                     setSelected('Cycle');
@@ -274,7 +320,7 @@ const StartBookingScreen = ({ navigation }: any) => {
                   alignItems: 'center',
                   width: wp(30),
                 }}>
-                <Text style={{ fontSize: 18 }}>Scooter</Text>
+                <Text style={{fontSize: 18, color: colors.black}}>Scooter</Text>
                 <TouchableOpacity
                   onPress={() => {
                     setSelected('Scooter');
@@ -294,7 +340,7 @@ const StartBookingScreen = ({ navigation }: any) => {
                   alignItems: 'center',
                   width: wp(30),
                 }}>
-                <Text style={{ fontSize: 18 }}>Car</Text>
+                <Text style={{fontSize: 18, color: colors.black}}>Car</Text>
                 <TouchableOpacity
                   onPress={() => {
                     setSelected('Car');
@@ -312,17 +358,17 @@ const StartBookingScreen = ({ navigation }: any) => {
           </View>
         ) : (
           <View style={styles.bckimg}>
-            <View style={{ bottom: hp(5) }}>
+            <View style={{bottom: hp(5)}}>
               <MapHeader
                 title={`Vehicle ${isSelected}`}
                 picture={
                   isSelected === 'Car'
                     ? carbgRed
                     : isSelected === 'Scooter'
-                      ? scooterbgRed
-                      : isSelected === 'Cycle'
-                        ? cyclebgRed
-                        : ''
+                    ? scooterbgRed
+                    : isSelected === 'Cycle'
+                    ? cyclebgRed
+                    : ''
                 }
                 pressMethod={() => {
                   // navigation.goBack();
@@ -330,9 +376,12 @@ const StartBookingScreen = ({ navigation }: any) => {
                 }}
               />
             </View>
-            <Text style={{ textAlign: 'center', fontSize: 18 }}>
+            <Text
+              style={{textAlign: 'center', fontSize: 18, color: colors.black}}>
               Total Distance:{' '}
-              <Text style={{ fontWeight: 'bold' }}>{distance} Miles</Text>
+              <Text style={{fontWeight: 'bold', color: colors.black}}>
+                {distance} Miles
+              </Text>
             </Text>
             <Button title="next" onPress={handleNext} />
           </View>

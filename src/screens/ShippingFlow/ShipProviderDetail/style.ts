@@ -16,6 +16,7 @@ export const styles = StyleSheet.create({
   },
   details: {
     fontSize: wp(4),
+    color: colors.black,
     // fontWeight: 'bold',
   },
   txt: {

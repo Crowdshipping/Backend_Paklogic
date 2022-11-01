@@ -6,12 +6,17 @@ import {
 import {colors} from '../../theme';
 
 export const styles = StyleSheet.create({
-  label: {fontSize: hp(2), marginLeft: wp(3), marginTop: hp(2.5)},
+  label: {
+    fontSize: hp(2),
+    marginLeft: wp(3),
+    marginTop: hp(2.5),
+    color: colors.black,
+  },
   imgview: {
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
-    top: hp(7),
+    top: hp(5),
   },
   img: {
     width: hp(18),
@@ -49,6 +54,7 @@ export const styles = StyleSheet.create({
   },
   txtdetail: {
     fontSize: hp(2),
+    color: colors.black,
   },
   editContainer: {
     alignItems: 'flex-end',

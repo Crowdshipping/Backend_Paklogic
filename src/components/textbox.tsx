@@ -1,7 +1,7 @@
 import React from 'react';
-import { Text, View, TextInput } from 'react-native';
-import { ITextBox } from './interface';
-import { styles } from './style';
+import {Text, View, TextInput} from 'react-native';
+import {ITextBox} from './interface';
+import {styles} from './style';
 
 export const Textbox = (props: ITextBox) => {
   const {
@@ -18,7 +18,7 @@ export const Textbox = (props: ITextBox) => {
   const secureText = password ? password : false;
   return (
     <View style={[styles.sectionContainer, containerStyle]}>
-      {title ? <Text style={styles.titleText}>{title}</Text> : <View></View>}
+      {title ? <Text style={styles.titleText}>{title}</Text> : null}
       <TextInput
         placeholder={placeholder}
         placeholderTextColor="gray"
@@ -36,11 +36,7 @@ export const Textbox = (props: ITextBox) => {
           }
         }}
       />
-      {errormsg ? (
-        <Text style={styles.errorMsg}>{errormsg}</Text>
-      ) : (
-        <Text></Text>
-      )}
+      {errormsg ? <Text style={styles.errorMsg}>{errormsg}</Text> : null}
     </View>
   );
 };

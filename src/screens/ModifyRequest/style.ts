@@ -11,7 +11,16 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: hp(1.5),
   },
-
+  paymentView: {
+    backgroundColor: '#F3F2F2',
+    paddingVertical: hp(1),
+    paddingHorizontal: wp(10),
+    borderRadius: wp(1),
+    marginVertical: hp(2),
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   arrorwStyle: {
     alignSelf: 'flex-end',
   },

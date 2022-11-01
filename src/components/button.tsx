@@ -3,9 +3,16 @@ import { Text, View, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { IButton } from './interface';
 import { styles } from './style';
 import { colors } from '../theme/colors';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import { Avatar, Badge, Icon, withBadge } from 'react-native-elements'
+
 
 export const Button = (props: IButton) => {
-  const { containerStyle, title, onPress, bg, loading } = props;
+  const { containerStyle, title, onPress, bg, loading, chat } = props;
   const isLoading = loading == undefined ? false : loading;
   return (
     <View style={[styles.sectionContainer, containerStyle]}>
@@ -19,11 +26,19 @@ export const Button = (props: IButton) => {
         {isLoading ? (
           <ActivityIndicator size={'small'} color={colors.white} />
         ) : (
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={[styles.btnText, { color: bg ? colors.red : colors.white }]}>
+              {title}
+            </Text>
+            {chat && <><Ionicons name='chatbubble-ellipses-outline' size={wp(5)} color={colors.white} />
+              <Badge
+                status="success"
+                containerStyle={{ position: 'absolute', top: -2, right: -2 }}
+              /></>}
 
-          <Text style={[styles.btnText, { color: bg ? colors.red : colors.white }]}>
-            {title}
-          </Text>
+          </View>
         )}
+
       </TouchableOpacity>
     </View>
   );

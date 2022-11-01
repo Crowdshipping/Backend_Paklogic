@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
-import { SafeAreaView, Text, View, Alert } from 'react-native';
+import React, {useState} from 'react';
+import {SafeAreaView, Text, View, Alert} from 'react-native';
 
-import { styles } from './style';
-import { Textbox, Button, Header } from '../../components';
-import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
-import { SvgXml } from 'react-native-svg';
-import { forgot_password } from '../../theme/assets/svg';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { forgotPassword } from '../../API/forgotPassword';
-import { EMAIL_REGEX } from '../../appConstants';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {styles} from './style';
+import {Textbox, Button, Header} from '../../components';
+import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import {SvgXml} from 'react-native-svg';
+import {forgot_password} from '../../theme/assets/svg';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {forgotPassword} from '../../API/forgotPassword';
+import {EMAIL_REGEX} from '../../appConstants';
+import {CommonActions} from '@react-navigation/native';
+import {LogoutApi} from '../../API';
 
-const ForgotPassword = ({ navigation }: any) => {
+const ForgotPassword = ({navigation}: any) => {
   const [emailValue, setemailValue] = useState(true);
   const [email, setemail] = useState('');
   const [loading, setloading] = useState(false);
@@ -22,24 +23,34 @@ const ForgotPassword = ({ navigation }: any) => {
     //   setemailValue(false);
     //   validate = false;
     // }
-    if (!EMAIL_REGEX.test(email)) {
+    if (!EMAIL_REGEX.test(email.trim())) {
       setemailValue(false);
       // validate = false;
     } else {
       setloading(true);
-      forgotPassword(email)
+      forgotPassword(email.trim())
         .then((rest: any) => {
           setloading(false);
 
-          rest.success && navigation.navigate('PasswordOtp', { email });
+          rest.success && navigation.navigate('PasswordOtp', {email});
         })
         .catch(async error => {
           setloading(false);
           if (error.response.status === 401) {
-            await AsyncStorage.clear();
-            navigation.navigate('Welcome')
+            LogoutApi();
+            Alert.alert('Session Expired', 'Please login again');
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{name: 'Welcome'}],
+              }),
+            );
           } else {
-            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+            Alert.alert(
+              error?.response?.data?.message
+                ? error?.response?.data?.message
+                : 'something went wrong',
+            );
           }
         });
     }
@@ -47,11 +58,10 @@ const ForgotPassword = ({ navigation }: any) => {
   return (
     <SafeAreaView style={styles.sectionContainer}>
       <KeyboardAwareScrollView>
-        {/* <Text>Signin Screen</Text> */}
         <Header
           title={'Forgot Password'}
           pressMethod={() => {
-            navigation.goBack();
+            navigation.replace('Signin');
           }}
         />
 
@@ -87,7 +97,6 @@ const ForgotPassword = ({ navigation }: any) => {
           }}
           loading={loading}
         />
-
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );

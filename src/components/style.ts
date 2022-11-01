@@ -13,6 +13,7 @@ export const styles = StyleSheet.create({
   titleText: {
     fontSize: wp(4),
     textTransform: 'uppercase',
+    color: colors.black,
   },
   txt1: {
     fontSize: wp(4),
@@ -40,6 +41,7 @@ export const styles = StyleSheet.create({
   },
   countryText: {
     fontSize: wp(5),
+    color: colors.black,
   },
   header: {
     width: wp(100),
@@ -54,6 +56,7 @@ export const styles = StyleSheet.create({
     textTransform: 'uppercase',
     fontWeight: 'bold',
     textAlign: 'center',
+    color: colors.black,
   },
   arrowStyle: {
     width: wp(10),
@@ -66,6 +69,9 @@ export const styles = StyleSheet.create({
     paddingVertical: Platform.OS === 'ios' ? wp(2) : 0,
     borderBottomWidth: 1,
     borderColor: 'grey',
+    color: colors.black,
+    flexWrap: 'wrap',
+    // borderWidth: 1,
   },
   textInput: {
     // width: '50%',
@@ -75,6 +81,7 @@ export const styles = StyleSheet.create({
     borderColor: 'grey',
     // padding: wp(1),
     paddingVertical: Platform.OS === 'ios' ? wp(2) : 0,
+    color: colors.black,
   },
   errorMsg: {
     textAlign: 'left',

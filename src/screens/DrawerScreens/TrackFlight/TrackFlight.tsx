@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, {useState, useEffect, useCallback, useRef} from 'react';
 import {
   Alert,
   ActivityIndicator,
@@ -13,21 +13,19 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 
-import { Button, Header } from '../../../components';
+import {Button, Header} from '../../../components';
 
-import { flightTracking, searchAirport } from '../../../API';
-import { colors } from '../../../theme';
-import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
-import { styles } from './style';
+import {flightTracking, LogoutApi, searchAirport} from '../../../API';
+import {colors} from '../../../theme';
+import MapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
+import {styles} from './style';
 
-import MapViewDirections from 'react-native-maps-directions';
-import { useFocusEffect } from '@react-navigation/native';
+import {CommonActions, useFocusEffect} from '@react-navigation/native';
 import moment from 'moment';
-import { SvgXml } from 'react-native-svg';
-import { plane, planesvgMap } from '../../../theme/assets/svg';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {SvgXml} from 'react-native-svg';
+import {planesvgMap} from '../../../theme/assets/svg';
 
-const TrackFlight = ({ route, navigation }: any) => {
+const TrackFlight = ({route, navigation}: any) => {
   const {
     fa_flight_id,
     departureAirport,
@@ -44,16 +42,26 @@ const TrackFlight = ({ route, navigation }: any) => {
     flightTracking(fa_flight_id)
       .then((rest: any) => {
         {
-          setLoading(false)
-          rest.success && setData(rest.flightlatestPosition)
+          setLoading(false);
+          rest.success && setData(rest.flightlatestPosition);
         }
       })
-      .catch(async error => {
+      .catch(error => {
         if (error.response.status === 401) {
-          await AsyncStorage.clear();
-          navigation.navigate('Welcome')
+          LogoutApi();
+          Alert.alert('Session Expired', 'Please login again');
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [{name: 'Welcome'}],
+            }),
+          );
         } else {
-          Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'Something went wrong');
+          Alert.alert(
+            error?.response?.data?.message
+              ? error?.response?.data?.message
+              : 'Something went wrong',
+          );
         }
         setLoading(false);
       });
@@ -68,27 +76,27 @@ const TrackFlight = ({ route, navigation }: any) => {
   });
 
   const onMapReadyHandler = useCallback(() => {
-    if (Platform.OS === 'ios') {
-      ref?.current?.fitToElements({
-        animated: true,
-        edgePadding: {
-          top: 50,
-          right: 50,
-          bottom: 50,
-          left: 50,
-        },
-      });
-    } else if (response && response.length > 0) {
-      ref?.current?.fitToCoordinates([response[0], response[1]], {
-        animated: true,
-        edgePadding: {
-          top: 50,
-          right: 50,
-          bottom: 50,
-          left: 50,
-        },
-      });
-    }
+    // if (Platform.OS === 'ios') {
+    ref?.current?.fitToElements({
+      animated: true,
+      edgePadding: {
+        top: 50,
+        right: 50,
+        bottom: 50,
+        left: 50,
+      },
+    });
+    // } else if (response && response.length > 0) {
+    //   ref?.current?.fitToCoordinates([response[0], response[1]], {
+    //     animated: true,
+    //     edgePadding: {
+    //       top: 50,
+    //       right: 50,
+    //       bottom: 50,
+    //       left: 50,
+    //     },
+    //   });
+    // }
   }, [ref]);
 
   useEffect(() => {
@@ -103,13 +111,22 @@ const TrackFlight = ({ route, navigation }: any) => {
         ]);
         setLoading(false);
       })
-      .catch(async error => {
+      .catch(error => {
         if (error.response.status === 401) {
-          await AsyncStorage.clear();
-          navigation.navigate('Welcome')
+          LogoutApi();
+          Alert.alert('Session Expired', 'Please login again');
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [{name: 'Welcome'}],
+            }),
+          );
         } else {
-          Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'Something went wrong');
-
+          Alert.alert(
+            error?.response?.data?.message
+              ? error?.response?.data?.message
+              : 'Something went wrong',
+          );
         }
         setLoading(false);
       });
@@ -118,8 +135,8 @@ const TrackFlight = ({ route, navigation }: any) => {
   }, []);
 
   return (
-    <SafeAreaView style={{ backgroundColor: colors.white, flex: 1 }}>
-      <View style={{ height: hp(8), }}>
+    <SafeAreaView style={{backgroundColor: colors.white, flex: 1}}>
+      <View style={{height: hp(8)}}>
         <Header
           title="Booking History"
           pressMethod={() => navigation.navigate('BookingHistory')}
@@ -130,7 +147,7 @@ const TrackFlight = ({ route, navigation }: any) => {
         <ActivityIndicator
           size={'small'}
           color={colors.red}
-          style={{ justifyContent: 'center', alignSelf: 'center' }}
+          style={{justifyContent: 'center', alignSelf: 'center'}}
         />
       ) : (
         <View style={styles.container}>
@@ -144,7 +161,7 @@ const TrackFlight = ({ route, navigation }: any) => {
                 latitude: response[0].lat,
                 longitude: response[0].lon,
                 latitudeDelta: 20,
-                longitudeDelta: 20
+                longitudeDelta: 20,
               }}
               zoomControlEnabled={false}
               style={styles.map}>
@@ -181,9 +198,13 @@ const TrackFlight = ({ route, navigation }: any) => {
                   latitude: data.latitude,
                   longitude: data.longitude,
                 }}
-                title={'middle'}
-              >
-                <SvgXml xml={planesvgMap} width={50} height={50} style={{ padding: 0, margin: 0 }} />
+                title={'middle'}>
+                <SvgXml
+                  xml={planesvgMap}
+                  width={50}
+                  height={50}
+                  style={{padding: 0, margin: 0}}
+                />
               </Marker>
               <Marker
                 key={'final'}
@@ -194,53 +215,58 @@ const TrackFlight = ({ route, navigation }: any) => {
                 title={'final'}
               />
             </MapView>
-          ) : response && response.length > 0 && <MapView
-            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-            showsUserLocation={false}
-            region={{
-              latitude: response[0].lat,
-              longitude: response[0].lon,
-              latitudeDelta: 20,
-              longitudeDelta: 20
-            }}
-            ref={ref}
-            onMapReady={onMapReadyHandler}
-            zoomControlEnabled={false}
-            style={styles.map}>
-            <Polyline
-              coordinates={[
-                {
+          ) : (
+            response &&
+            response.length > 0 && (
+              <MapView
+                provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+                showsUserLocation={false}
+                region={{
                   latitude: response[0].lat,
                   longitude: response[0].lon,
-                },
-                {
-                  latitude: response[1].lat,
-                  longitude: response[1].lon,
-                },
-              ]}
-              geodesic={true}
-              strokeWidth={2}
-              lineDashPhase={3}
-            />
-            <Marker
-              key={'initial'}
-              coordinate={{
-                latitude: response[0].lat,
-                longitude: response[0].lon,
-              }}
-              title={'initial'}
-            />
-            <Marker
-              key={'final'}
-              coordinate={{
-                latitude: response[1].lat,
-                longitude: response[1].lon,
-              }}
-              title={'final'}
-            />
-          </MapView>}
+                  latitudeDelta: 20,
+                  longitudeDelta: 20,
+                }}
+                ref={ref}
+                onMapReady={onMapReadyHandler}
+                zoomControlEnabled={false}
+                style={styles.map}>
+                <Polyline
+                  coordinates={[
+                    {
+                      latitude: response[0].lat,
+                      longitude: response[0].lon,
+                    },
+                    {
+                      latitude: response[1].lat,
+                      longitude: response[1].lon,
+                    },
+                  ]}
+                  geodesic={true}
+                  strokeWidth={2}
+                  lineDashPhase={3}
+                />
+                <Marker
+                  key={'initial'}
+                  coordinate={{
+                    latitude: response[0].lat,
+                    longitude: response[0].lon,
+                  }}
+                  title={'initial'}
+                />
+                <Marker
+                  key={'final'}
+                  coordinate={{
+                    latitude: response[1].lat,
+                    longitude: response[1].lon,
+                  }}
+                  title={'final'}
+                />
+              </MapView>
+            )
+          )}
 
-          <View style={{ width: wp(90), marginBottom: hp(3) }}>
+          <View style={{width: wp(90), marginBottom: hp(3)}}>
             <View
               style={{
                 backgroundColor: colors.white,
@@ -256,13 +282,14 @@ const TrackFlight = ({ route, navigation }: any) => {
                 style={{
                   textAlign: 'center',
                   fontWeight: '600',
+                  color: colors.black,
                 }}>
                 Flight Arrival Date{' '}
                 {moment(flightarrivalDate).format('YYYY-MM-DD hh:mm:ss')}
               </Text>
             </View>
 
-            <Button title={'Chat'} onPress={() => { }} />
+            <Button title={'Chat'} onPress={() => {}} />
           </View>
         </View>
       )}

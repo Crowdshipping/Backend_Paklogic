@@ -43,6 +43,7 @@ import ViewQuery from './Support/ViewQuery';
 import AddQuery from './Support/AddQuery';
 import QueryDetail from './Support/QueryDetail';
 import RateDriver from './Rate/RateDriver';
+import ViewPaymentLogs from './PaymentLogs/PaymentLogs';
 
 export {
   RegisterScreen,
@@ -90,4 +91,5 @@ export {
   AddQuery,
   QueryDetail,
   RateDriver,
+  ViewPaymentLogs,
 };

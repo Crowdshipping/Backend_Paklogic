@@ -39,6 +39,10 @@ import {shipsvgMap} from './shipsvgMap';
 import {planesvgMap} from './planesvgMap';
 import {camera} from './camera';
 import {imagePlaceholderSvg} from './imagePlaceholderSvg';
+import {flightSvg} from './flightSvg';
+import {ship2Svg} from './ship2Svg';
+import {vehicleSvg} from './vehicleSvg';
+import {complaint} from './complaint';
 
 export {
   register,
@@ -82,4 +86,8 @@ export {
   shipsvgMap,
   camera,
   imagePlaceholderSvg,
+  flightSvg,
+  ship2Svg,
+  vehicleSvg,
+  complaint,
 };

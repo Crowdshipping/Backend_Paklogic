@@ -1,8 +1,8 @@
 // /provider/searchairport/Dubai
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios, { AxiosRequestConfig } from 'axios';
-import { prodUrl } from '../appConstants';
+import axios, {AxiosRequestConfig} from 'axios';
+import {prodUrl} from '../appConstants';
 
 export const searchAirport = async (airport: string) => {
   const userToken = await AsyncStorage.getItem('@userToken');
@@ -11,10 +11,11 @@ export const searchAirport = async (airport: string) => {
     const config: AxiosRequestConfig = {
       method: 'get',
       headers: {
-        Authorization: `Bearer ${userToken}`
+        Authorization: `Bearer ${userToken}`,
       },
       url: `${prodUrl}/provider/searchairport/${airport}`,
     };
+
     axios(config)
       .then(response => {
         resolve(response.data);

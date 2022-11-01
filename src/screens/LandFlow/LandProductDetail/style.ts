@@ -64,7 +64,7 @@ export const styles = StyleSheet.create({
 
   txtview: {
     justifyContent: 'space-between',
-    paddingBottom: hp(1),
+    // paddingBottom: hp(1),
     // width: '100%',
     flexDirection: 'row',
   },

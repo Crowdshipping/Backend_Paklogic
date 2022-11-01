@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
-import { SafeAreaView, View, Alert } from 'react-native';
-import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
-import { Textbox, Button, Header } from '../../components';
+import React, {useState} from 'react';
+import {SafeAreaView, View, Alert} from 'react-native';
+import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import {Textbox, Button, Header} from '../../components';
 
-import { SvgXml } from 'react-native-svg';
-import { forgot_password } from '../../theme/assets/svg';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { setnewPassword } from '../../API/setnewPassword';
-import { SuccessModal } from '../../Modals';
-import { PASS_REGEX } from '../../appConstants';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {SvgXml} from 'react-native-svg';
+import {forgot_password} from '../../theme/assets/svg';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {setnewPassword} from '../../API/setnewPassword';
+import {SuccessModal} from '../../Modals';
+import {PASS_REGEX} from '../../appConstants';
+import {CommonActions} from '@react-navigation/native';
+import {LogoutApi} from '../../API';
 
-const ResetPasswordScreen = ({ route, navigation }: any) => {
-  const { id } = route.params;
+const ResetPasswordScreen = ({route, navigation}: any) => {
+  const {id} = route.params;
   const [loading, setloading] = useState(false);
   const [success, setsuccess] = useState(false);
   const [passwordValue, setpasswordValue] = useState('');
@@ -27,7 +28,9 @@ const ResetPasswordScreen = ({ route, navigation }: any) => {
       setpasswordValue('Password is Required');
       validate = false;
     } else if (!PASS_REGEX.test(password)) {
-      setpasswordValue('Password must have atleast 8 characters, a uppercase and a lowercase letter, a number, and a symbol(e.g. #, ?, !, @, $, %, ^, &, *, -, _) ');
+      setpasswordValue(
+        'Password must have atleast 8 characters, a uppercase and a lowercase letter, a number, and a symbol(e.g. #, ?, !, @, $, %, ^, &, *, -, _) ',
+      );
       validate = false;
     }
     if (password !== confirmPassword) {
@@ -46,11 +49,22 @@ const ResetPasswordScreen = ({ route, navigation }: any) => {
         })
         .catch(async error => {
           if (error.response.status === 401) {
-            await AsyncStorage.clear();
-            navigation.navigate('Welcome')
+            Alert.alert('Session Expired', 'Please login again');
+            LogoutApi();
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{name: 'Welcome'}],
+              }),
+            );
           } else {
-            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
-          } setloading(false);
+            Alert.alert(
+              error?.response?.data?.message
+                ? error?.response?.data?.message
+                : 'something went wrong',
+            );
+          }
+          setloading(false);
         });
     }
   }
@@ -64,12 +78,7 @@ const ResetPasswordScreen = ({ route, navigation }: any) => {
           }}
         />
         <SvgXml xml={forgot_password} width={wp(100)} />
-        {/* <View style={{width: wp(90), alignSelf: 'center', marginTop: hp(2)}}>
-          <Text style={{textAlign: 'left', fontSize: hp(2.5)}}>
-            Don't worry! Just enter your password ID below and we'll send you the
-            password reset instructions.
-          </Text>
-        </View> */}
+
         <Textbox
           title={'New Password'}
           placeholder={'New Password'}
@@ -80,11 +89,7 @@ const ResetPasswordScreen = ({ route, navigation }: any) => {
           }}
           password={true}
         />
-        {/* !passwordValue
-                ? 'Password must have atleast 8 characters, a uppercase and a lowercase letter, a number, and a symbol(e.g. #, ?, !, @, $, %, ^, &, *, -, _) '
-                : !confirmPasswordValue
-                ? 'password does not match'
-                : '' */}
+
         <Textbox
           title={'Confirm Password'}
           placeholder={'Confirm Password'}
@@ -110,7 +115,13 @@ const ResetPasswordScreen = ({ route, navigation }: any) => {
         text={text}
         pressMethod={() => {
           setsuccess(false);
-          navigation.navigate('Signin');
+          // navigation.navigate('Signin');
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [{name: 'Signin'}],
+            }),
+          );
         }}
       />
     </SafeAreaView>

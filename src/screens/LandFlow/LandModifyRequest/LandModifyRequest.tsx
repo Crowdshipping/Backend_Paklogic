@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -8,6 +8,7 @@ import {
   Alert,
   Image,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 
 import {
@@ -17,18 +18,23 @@ import {
   Datepicker,
   PhoneNumberPicker,
 } from '../../../components';
-import { carlocation } from '../../../theme/assets/svg';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { SvgXml } from 'react-native-svg';
+import {carlocation} from '../../../theme/assets/svg';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {SvgXml} from 'react-native-svg';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import { styles } from './style';
+import {styles} from './style';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { colors } from '../../../theme/colors';
-import { ModalTypes, SearchCity, SearchPlaces, SuccessModal } from '../../../Modals';
+import {colors} from '../../../theme/colors';
+import {
+  ModalTypes,
+  SearchCity,
+  SearchPlaces,
+  SuccessModal,
+} from '../../../Modals';
 import Modal from 'react-native-modal/dist/modal';
 
 import OpenCamera from '../../Cam_Gal/OpenCamera';
@@ -41,14 +47,16 @@ import {
   getProductCategories,
   getProductTypes,
   LogoutApi,
+  calculateBookingFare,
 } from '../../../API';
 
-import { NAME_REGEX, NUM_REGEX } from '../../../appConstants'
+import {NUM_REGEX} from '../../../appConstants';
 
-import { cross } from '../../../theme/assets/svg';
+import {cross} from '../../../theme/assets/svg';
 import Entypo from 'react-native-vector-icons/Entypo';
 import moment from 'moment';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import getDistance from 'geolib/es/getDistance';
+import {CommonActions} from '@react-navigation/native';
 
 export interface ICountryCode {
   name: string;
@@ -56,124 +64,137 @@ export interface ICountryCode {
   code: string;
   flag: string;
 }
-
 interface IimageShow {
   name: string;
   uri: string;
   type: string;
 }
 interface ITypes {
-  id: string,
-  name: string
+  id: string;
+  name: string;
 }
-interface IimageShow1 extends Array<IimageShow> { }
-const LandModifyRequest = ({ navigation, route }: any) => {
-  const {
-    // SelectedBookingType,
-    vehicleType,
-  } = route.params?.data;
+interface IimageShow1 extends Array<IimageShow> {}
 
-  const [pickupLocation, setpickupLocation] = useState<any>(route.params?.data.pickupLocation);
-  const [dropoffLocation, setdropoffLocation] = useState<any>(route.params?.data.dropoffLocation);
+interface ILocation {
+  lat: string;
+  lon: string;
+  name: string;
+}
+
+const LandModifyRequest = ({navigation, route}: any) => {
+  const {vehicleType} = route.params?.data;
 
   const [toCaptureImage, settoCaptureImage] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isModalVisible1, setModalVisible1] = useState(false);
   const [isModalVisible2, setModalVisible2] = useState(false);
   const [isModalVisible3, setModalVisible3] = useState(false);
+  const [isSuccess, setsuccess] = useState(false);
+  const [isVisible, setisVisible] = useState(false);
+  const [isVisible2, setisVisible2] = useState(false);
 
   const [loading, setloading] = useState(false);
-  const [isSuccess, setsuccess] = useState(false);
 
+  const [ImagesValue, setImagesValue] = useState(true);
+  const [typeValue, settypeValue] = useState(true);
+  const [unitValue, setunitValue] = useState(true);
+  const [pickValue, setpickValue] = useState(true);
+  const [dropValue, setdropValue] = useState(true);
+  const [valueNum, setvalueNum] = useState(true);
+  const [valueName, setvalueName] = useState(true);
+  const [weightValue, setweightValue] = useState(true);
+  const [categoryValue, setcategoryValue] = useState(true);
+
+  const [pickupLocation, setpickupLocation] = useState<ILocation>(
+    route.params?.data.pickupLocation,
+  );
+  const [dropoffLocation, setdropoffLocation] = useState<ILocation>(
+    route.params?.data.dropoffLocation,
+  );
   const [initialDate, setinitialDate] = useState<Date>(
     route.params?.data?.initialDate,
+  );
+  const [finalDate, setfinalDate] = useState<Date>(
+    route.params?.data?.finalDate,
   );
   const [countrySelect, setcountrySelect] = useState<ICountryCode>(
     route.params.countrySelect,
   );
   const [phone, setphone] = useState(route.params.phone);
-  const [finalDate, setfinalDate] = useState<Date>(
-    route.params?.data?.finalDate,
-  );
-
   const [dateShow, setdateShow] = useState('');
-
-  const [ImagesValue, setImagesValue] = useState(true);
   const [Images, setImages] = useState<IimageShow1>(
     route?.params?.data?.Images,
   );
-
   const [SelectedBookingType, setSelectedBookingType] = useState(
     route.params?.data?.SelectedBookingType,
   );
-
-  const [categoryValue, setcategoryValue] = useState(true);
-
-  const [SelectedCategory, setSelectedCategory] = useState<ITypes>({ id: '', name: route.params?.data?.SelectedCategory });
-  const [SelectedType, setSelectedType] = useState<ITypes>({ id: '', name: route.params?.data?.SelectedType });
-
-  const [typeValue, settypeValue] = useState(true);
+  const [SelectedCategory, setSelectedCategory] = useState<ITypes>({
+    id: '',
+    name: route.params?.data?.SelectedCategory,
+  });
+  const [SelectedType, setSelectedType] = useState<ITypes>({
+    id: '',
+    name: route.params?.data?.SelectedType,
+  });
   const [SelectedUnit, setSelectedUnit] = useState(
     route.params?.data?.SelectedUnit,
   );
-  const [unitValue, setunitValue] = useState(true);
-
   const [description, setdescription] = useState(
     route.params?.data?.description,
   );
   const [receiverName, setreceiverName] = useState(route.params?.receiverName);
-
-  const [valueNum, setvalueNum] = useState(true);
-  const [valueName, setvalueName] = useState(true);
   const [weight, setweight] = useState(route.params?.data?.weight);
-  const [weightValue, setweightValue] = useState(true);
+  const [totalFare, settotalFare] = useState<number>(route.params?.totalFare);
+  const [distance, setDistance] = useState(0);
 
-  const [pickValue, setpickValue] = useState(true);
-  const [dropValue, setdropValue] = useState(true);
-  const [isVisible, setisVisible] = useState(false);
-  const [isVisible2, setisVisible2] = useState(false);
-  const [Type, setType] = useState<ITypes[]>([])
-  const [category, setcategory] = useState<ITypes[]>([])
+  const [Type, setType] = useState<ITypes[]>([]);
+  const [category, setcategory] = useState<ITypes[]>([]);
 
   let productImage: string;
   let productImage2: string;
-  let bookingId: string = route.params.data?.bookingId ? route.params.data?.bookingId : ''
+  let bookingId: string = route.params.data?.bookingId
+    ? route.params.data?.bookingId
+    : '';
 
   const Unit = [
-    { id: 1, name: 'Kilogram' },
-    { id: 2, name: 'Gram' },
-    { id: 3, name: 'Pound' },
+    {id: 1, name: 'Kilogram'},
+    {id: 2, name: 'Gram'},
+    {id: 3, name: 'Pound'},
   ];
   const BookingType = [
-    { id: 1, name: 'Instant' },
-    { id: 2, name: 'Schedule' },
+    {id: 1, name: 'Instant'},
+    {id: 2, name: 'Schedule'},
   ];
   async function handleSubmit() {
     let validate = true;
 
-    if (!NAME_REGEX.test(receiverName)) {
+    if (!SelectedType.name) {
+      settypeValue(false);
+      validate = false;
+    } else if (!SelectedCategory.name) {
+      setcategoryValue(false);
+      validate = false;
+    }
+
+    if (!receiverName.trim()) {
       validate = false;
       setvalueName(false);
     }
-    if (!NUM_REGEX.test(phone)) {
+    if (!NUM_REGEX.test(phone.trim())) {
       validate = false;
       setvalueNum(false);
     }
-    if (!weight) {
-      validate = false;
-      setweightValue(false);
-    }
     if (!pickupLocation) {
-      setpickValue(false)
+      setpickValue(false);
       validate = false;
     }
     if (!dropoffLocation) {
-      setdropValue(false)
+      setdropValue(false);
       validate = false;
     }
     if (Images.length === 0) {
       validate = false;
-      setImagesValue(false)
+      setImagesValue(false);
     }
     if (SelectedBookingType === 'Schedule') {
       if (!initialDate && !finalDate) {
@@ -205,18 +226,26 @@ const LandModifyRequest = ({ navigation, route }: any) => {
               if (rest[0].success && rest[1].success) {
                 productImage = rest[0].imageUrl;
                 productImage2 = rest[1].imageUrl;
-              } else { validate = false; setloading(false); Alert.alert('Something went wrong') }
+              } else {
+                validate = false;
+                setloading(false);
+                Alert.alert('Something went wrong');
+              }
             } else if (rest.length === 1) {
               if (rest[0].success) {
                 productImage = rest[0].imageUrl;
-              } else { validate = false; setloading(false); Alert.alert('Something went wrong') }
+              } else {
+                validate = false;
+                setloading(false);
+                Alert.alert('Something went wrong');
+              }
             }
             if (validate) {
               createBooking(
                 SelectedCategory.name,
                 SelectedType.name,
                 description,
-                weight,
+                weight ? weight : route.params.data?.weight,
                 SelectedUnit,
                 pickupLocation,
                 dropoffLocation,
@@ -224,40 +253,65 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                 null,
                 receiverName,
                 countrySelect.dial_code,
-                phone,
+                phone.trim(),
                 productImage,
                 productImage2,
                 SelectedBookingType,
                 vehicleType,
                 moment(initialDate).format('YYYY-MM-DD'),
                 moment(finalDate).format('YYYY-MM-DD'),
+                totalFare,
               )
                 .then((rest: any) => {
                   let bookingId = rest.booking._id;
                   {
-                    rest.success && createDriverRequest(bookingId)
-                      .then((rest: any) => {
-                        rest.success && setsuccess(true);
-                      })
-                      .catch(async error => {
-                        setloading(false);
-                        if (error.response.status === 401) {
-                          await AsyncStorage.clear();
-                          navigation.navigate('Welcome')
-                        } else {
-                          Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
-                        }
-                      })
+                    rest.success &&
+                      createDriverRequest(bookingId)
+                        .then((rest: any) => {
+                          rest.success && setsuccess(true);
+                        })
+                        .catch(async error => {
+                          setloading(false);
+                          if (error.response.status === 401) {
+                            Alert.alert(
+                              'Session Expired',
+                              'Please login again',
+                            );
+                            LogoutApi();
+                            navigation.dispatch(
+                              CommonActions.reset({
+                                index: 1,
+                                routes: [{name: 'Welcome'}],
+                              }),
+                            );
+                          } else {
+                            Alert.alert(
+                              error?.response?.data?.message
+                                ? error?.response?.data?.message
+                                : 'something went wrong',
+                            );
+                          }
+                        });
                   }
                   setloading(false);
                 })
                 .catch(async error => {
                   setloading(false);
                   if (error.response.status === 401) {
-                    await AsyncStorage.clear();
-                    navigation.navigate('Welcome')
+                    Alert.alert('Session Expired', 'Please login again');
+                    LogoutApi();
+                    navigation.dispatch(
+                      CommonActions.reset({
+                        index: 1,
+                        routes: [{name: 'Welcome'}],
+                      }),
+                    );
                   } else {
-                    Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+                    Alert.alert(
+                      error?.response?.data?.message
+                        ? error?.response?.data?.message
+                        : 'something went wrong',
+                    );
                   }
                 });
             }
@@ -265,36 +319,60 @@ const LandModifyRequest = ({ navigation, route }: any) => {
           .catch(async error => {
             setloading(false);
             if (error.response.status === 401) {
-              await AsyncStorage.clear();
-              navigation.navigate('Welcome')
+              Alert.alert('Session Expired', 'Please login again');
+              LogoutApi();
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 1,
+                  routes: [{name: 'Welcome'}],
+                }),
+              );
             } else {
-              Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+              Alert.alert(
+                error?.response?.data?.message
+                  ? error?.response?.data?.message
+                  : 'something went wrong',
+              );
             }
           });
       } else {
-        if (!(Images[0]?.uri?.includes("https://"))) {
+        if (!Images[0]?.uri?.includes('https://')) {
           await postImage([Images[0]]).then((rest: any) => {
             if (rest[0].success) {
               productImage = rest[0].imageUrl;
-            } else { validate = false; setloading(false); Alert.alert('Something went wrong') }
-
-          })
-        } else productImage = Images[0].uri
-        if (Images.length > 1 && Images[1]?.uri !== null && !(Images[1]?.uri?.includes("https://"))) {
+            } else {
+              validate = false;
+              setloading(false);
+              Alert.alert('Something went wrong');
+            }
+          });
+        } else {
+          productImage = Images[0].uri;
+        }
+        if (
+          Images.length > 1 &&
+          Images[1]?.uri !== null &&
+          !Images[1]?.uri?.includes('https://')
+        ) {
           await postImage([Images[1]]).then((rest: any) => {
             if (rest[0].success) {
               productImage2 = rest[0].imageUrl;
-            } else { validate = false; setloading(false); Alert.alert('Something went wrong') }
-
-          })
-        } else productImage2 = Images[1]?.uri
+            } else {
+              validate = false;
+              setloading(false);
+              Alert.alert('Something went wrong');
+            }
+          });
+        } else {
+          productImage2 = Images[1]?.uri;
+        }
         if (validate) {
           editBooking(
             bookingId,
             SelectedCategory.name,
             SelectedType.name,
             description,
-            weight,
+            weight ? weight : route.params.data?.weight,
             SelectedUnit,
             pickupLocation,
             dropoffLocation,
@@ -302,7 +380,7 @@ const LandModifyRequest = ({ navigation, route }: any) => {
             null,
             receiverName,
             countrySelect.dial_code,
-            phone,
+            phone.trim(),
             productImage,
             productImage2,
             SelectedBookingType,
@@ -311,72 +389,146 @@ const LandModifyRequest = ({ navigation, route }: any) => {
             moment(finalDate).format('YYYY-MM-DD'),
           )
             .then((rest: any) => {
-              Alert.alert(rest.message)
-              navigation.navigate('BookingHistory')
+              Alert.alert(rest.message);
+              navigation.navigate('BookingHistory');
               setloading(false);
             })
             .catch(async error => {
               setloading(false);
               if (error.response.status === 401) {
-                await AsyncStorage.clear();
-                navigation.navigate('Welcome')
+                Alert.alert('Session Expired', 'Please login again');
+                LogoutApi();
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 1,
+                    routes: [{name: 'Welcome'}],
+                  }),
+                );
               } else {
-                Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+                Alert.alert(
+                  error?.response?.data?.message
+                    ? error?.response?.data?.message
+                    : 'something went wrong',
+                );
               }
             });
         }
       }
-
-
     }
   }
 
   const getSelectedImage = (result: any) => {
     settoCaptureImage(false);
-    setImagesValue(true)
+    setImagesValue(true);
     setImages([...Images, result]);
   };
+
   useEffect(() => {
-    getProductTypes().then((result: any) => {
-      setloading(false)
-      result.success && result.productTypes.map((products: any) => {
-        setType((Type) => [...Type, { id: products._id, name: products.productName }])
+    getProductTypes()
+      .then((result: any) => {
+        setloading(false);
+        result.success &&
+          result.productTypes.map((products: any) => {
+            setType(Type => [
+              ...Type,
+              {id: products._id, name: products.productName},
+            ]);
+          });
       })
-    })
       .catch(async error => {
         setloading(false);
         if (error.response.status === 401) {
+          Alert.alert('Session Expired', 'Please login again');
           LogoutApi();
-          await AsyncStorage.clear();
-          navigation.navigate('Welcome')
+          LogoutApi();
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [{name: 'Welcome'}],
+            }),
+          );
         } else {
-          Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+          Alert.alert(
+            error?.response?.data?.message
+              ? error?.response?.data?.message
+              : 'something went wrong',
+          );
         }
       });
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (SelectedType.id.length > 0) {
-      getProductCategories(SelectedType.id).then((result: any) => {
-        result.success && result.productCategories.map((products: any) => {
-          setcategory((category) => [...category, { id: products._id, name: products.productCategoryName }])
+      getProductCategories(SelectedType.id)
+        .then((result: any) => {
+          result.success &&
+            result.productCategories.map((products: any) => {
+              setcategory(category => [
+                ...category,
+                {id: products._id, name: products.productCategoryName},
+              ]);
+            });
         })
-      })
         .catch(async error => {
           setloading(false);
           if (error.response.status === 401) {
+            Alert.alert('Session Expired', 'Please login again');
             LogoutApi();
-            await AsyncStorage.clear();
-            navigation.navigate('Welcome')
+            LogoutApi();
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{name: 'Welcome'}],
+              }),
+            );
           } else {
-            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+            Alert.alert(
+              error?.response?.data?.message
+                ? error?.response?.data?.message
+                : 'something went wrong',
+            );
           }
         });
     }
-  }, [SelectedType.id])
+  }, [SelectedType.id]);
+
+  useEffect(() => {
+    if (distance) {
+      let data = {
+        bookingFee: 20,
+        costPerMile: 1.99,
+        totalMiles: distance,
+        lat: pickupLocation.lat,
+        lng: pickupLocation.lon,
+      };
+      calculateBookingFare(data)
+        .then((result: any) => {
+          result.success && settotalFare(result.amount);
+        })
+        .catch(async error => {
+          setloading(false);
+          if (error.response.status === 401) {
+            Alert.alert('Session Expired', 'Please login again');
+            LogoutApi();
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{name: 'Welcome'}],
+              }),
+            );
+          } else {
+            Alert.alert(
+              error?.response?.data?.message
+                ? error?.response?.data?.message
+                : 'something went wrong',
+            );
+          }
+        });
+    }
+  }, [distance]);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
+    <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <KeyboardAwareScrollView>
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -403,70 +555,72 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                   }}
                 />
               </View>
-              <Text>{SelectedType.name.length > 0 ? SelectedType.name : 'Select Type '}</Text>
+              <Text style={{color: colors.black}}>
+                {SelectedType.name.length > 0
+                  ? SelectedType.name
+                  : 'Select Type '}
+              </Text>
             </TouchableOpacity>
-            {!typeValue ? (
+            {!typeValue && (
               <Text style={styles.errorMsg}>Product Type is Required</Text>
-            ) : (
-              <View></View>
             )}
-            <TouchableOpacity
-              style={styles.Touch}
-              onPress={() => setModalVisible(!isModalVisible)}>
-              <View style={styles.txtview}>
-                <Text style={styles.txt1}>Product Category</Text>
-
-                <AntDesign
-                  name="caretdown"
-                  color={'grey'}
-                  size={wp(3)}
-                  style={{
-                    alignSelf: 'center',
-                    // borderWidth: 2,
-                    marginLeft: hp(1),
-                  }}
+            {SelectedType?.id?.length > 0 || SelectedCategory.name ? (
+              category.length < 1 && !SelectedCategory.name ? (
+                <ActivityIndicator
+                  size={'small'}
+                  color={colors.red}
+                  style={{justifyContent: 'center', alignSelf: 'center'}}
                 />
-              </View>
+              ) : (
+                <TouchableOpacity
+                  style={styles.Touch}
+                  onPress={() => setModalVisible(true)}>
+                  <View style={styles.txtview}>
+                    <Text style={styles.txt1}>Product Category</Text>
 
-              <Text style={{ borderColor: 'grey' }}>
-                {SelectedCategory.name.length > 0 ? SelectedCategory.name : 'Select Category'}
-              </Text>
-            </TouchableOpacity>
-            {/* {errormsg ? ( */}
+                    <AntDesign
+                      name="caretdown"
+                      color={'grey'}
+                      size={wp(3)}
+                      style={{
+                        alignSelf: 'center',
+                        // borderWidth: 2,
+                        marginLeft: hp(1),
+                      }}
+                    />
+                  </View>
 
-            {!categoryValue ? (
-              <Text style={styles.errorMsg}>
-                Product Category is Required
-              </Text>
+                  <Text style={{borderColor: 'grey', color: colors.black}}>
+                    {SelectedCategory.name.length > 0
+                      ? SelectedCategory.name
+                      : 'Select Category'}
+                  </Text>
+                </TouchableOpacity>
+              )
             ) : (
-              <View></View>
+              <></>
             )}
 
-            {/* ) : (
-                  <Text></Text>
-                )} */}
-
+            {!categoryValue && (
+              <Text style={styles.errorMsg}>Product Category is Required</Text>
+            )}
 
             <View
               style={{
                 flexDirection: 'row',
                 marginLeft: wp(3),
                 marginRight: wp(5),
-                // borderWidth: 1,
-                // alignItems: 'center',
-                // justifyContent: 'space-between',
               }}>
               <View
                 style={{
                   width: '50%',
-                  // borderWidth: 1
                 }}>
                 <Textbox
                   title="Product Weight"
                   placeholder={
                     route.params?.data?.weight
                       ? route.params?.data?.weight
-                      : "Enter product's weight"
+                      : 'Enter weight'
                   }
                   onChangeValue={(text: string) => {
                     setweightValue(true), setweight(text);
@@ -476,32 +630,25 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                     !weightValue && !unitValue
                       ? 'Weight and Unit are Required'
                       : !unitValue
-                        ? 'Unit is Required'
-                        : !weightValue
-                          ? 'Weight is Required'
-                          : ''
+                      ? 'Unit is Required'
+                      : !weightValue
+                      ? 'Weight is Required'
+                      : ''
                   }
                 />
               </View>
               <TouchableOpacity
                 style={{
-                  // marginTop: 0,
                   width: '47%',
-                  // borderWidth: 1,
                   borderBottomWidth: 1,
                   marginTop: hp(2),
-                  // marginHorizontal: wp(1),
-                  // paddingHorizontal: wp(5),
-                  marginBottom: hp(3),
+                  marginBottom: hp(2),
                   borderColor: 'grey',
-                  height: '55%',
-                  // alignSelf: 'center',
-
-                  // justifyContent: 'center',
+                  // height: '55%',
                 }}
                 onPress={() => setModalVisible3(!isModalVisible3)}>
                 <View style={styles.txtview}>
-                  <Text style={styles.txt1}>Product Unit</Text>
+                  <Text style={styles.txt1}>PRODUCT UNIT</Text>
 
                   <AntDesign
                     name="caretdown"
@@ -509,19 +656,23 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                     size={wp(3)}
                     style={{
                       alignSelf: 'center',
-                      // borderWidth: 2,
                       marginLeft: hp(1),
                     }}
                   />
                 </View>
 
-                <Text style={{ borderColor: 'grey', marginTop: 2 }}>
+                <Text
+                  style={{
+                    borderColor: 'grey',
+                    paddingVertical: wp(1),
+                    color: colors.black,
+                  }}>
                   {SelectedUnit ? SelectedUnit : 'Select Unit'}
                 </Text>
               </TouchableOpacity>
             </View>
             <TouchableOpacity
-              style={[styles.Touch, { marginTop: 0 }]}
+              style={[styles.Touch, {marginTop: 0}]}
               onPress={() => setModalVisible1(!isModalVisible1)}>
               <View style={styles.txtview}>
                 <Text style={styles.txt1}>Booking Type</Text>
@@ -538,20 +689,13 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                 />
               </View>
 
-              <Text style={{ borderColor: 'grey' }}>
+              <Text style={{borderColor: 'grey', color: colors.black}}>
                 {SelectedBookingType
                   ? SelectedBookingType
                   : 'Select Booking Type'}
               </Text>
             </TouchableOpacity>
-            {/* {errormsg ? ( */}
-            {/* {!BookingTypeValue ? (
-                  <Text style={styles.errorMsg}>
-                    Product Category is Required
-                  </Text>
-                ) : (
-                  <View />
-                )} */}
+
             {SelectedBookingType === 'Schedule' ? (
               <View
                 style={{
@@ -563,19 +707,18 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                   justifyContent: 'space-between',
                   paddingHorizontal: wp(8),
                 }}>
-                <View style={{ width: '50%', paddingRight: wp(5) }}>
+                <View style={{width: '50%', paddingRight: wp(5)}}>
                   <Text style={styles.txt1}>From Date</Text>
                   <Datepicker
                     onChange={(selectedDate: Date) => {
                       setinitialDate(selectedDate);
                       setdateShow('');
                     }}
-
                     datePrev={moment(initialDate).format('YYYY-MM-DD')}
                   />
                 </View>
 
-                <View style={{ width: '50%' }}>
+                <View style={{width: '50%'}}>
                   <Text style={styles.txt1}>To Date</Text>
                   <Datepicker
                     onChange={(selectedDate: Date) => {
@@ -586,12 +729,11 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                   />
                 </View>
 
-                <Text style={[styles.errorMsg, { marginLeft: wp(0) }]}>
+                <Text style={[styles.errorMsg, {marginLeft: wp(0)}]}>
                   {dateShow}
                 </Text>
               </View>
             ) : null}
-
 
             <View style={styles.attachment}>
               <Text style={styles.txt}>Attached Photo</Text>
@@ -606,15 +748,15 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                   name="attachment"
                   color={colors.black}
                   size={wp(5)}
-                  style={{ alignSelf: 'flex-end' }}
+                  style={{alignSelf: 'flex-end'}}
                 />
               </TouchableOpacity>
             </View>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+            <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
               {Images.length >= 1 ? (
                 Images.map((item, index) => {
                   return (
-                    <View key={index} style={{ marginLeft: wp(8) }}>
+                    <View key={index} style={{marginLeft: wp(8)}}>
                       <TouchableOpacity
                         onPress={() => {
                           setImages([
@@ -635,7 +777,7 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                       </TouchableOpacity>
 
                       <Image
-                        source={{ uri: item?.uri }}
+                        source={{uri: item?.uri}}
                         style={{
                           height: wp(37),
                           width: wp(37),
@@ -664,12 +806,12 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                       height: '55%',
                       borderWidth: wp(3),
                       borderColor: '#C0904E',
-                    }}></View>
+                    }}
+                  />
                 </View>
               )}
             </View>
             {!ImagesValue && (
-
               <Text
                 style={{
                   paddingHorizontal: wp(5),
@@ -678,9 +820,8 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                 }}>
                 Images are Required
               </Text>
-
             )}
-            <View style={{ paddingHorizontal: wp(8) }}>
+            <View style={{paddingHorizontal: wp(8)}}>
               <Text style={styles.txt}>Instructions</Text>
               <View
                 style={{
@@ -698,11 +839,12 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                     paddingHorizontal: wp(3),
                     paddingVertical: hp(1),
                     flexWrap: 'wrap',
+                    color: colors.black,
                   }}
                 />
               </View>
             </View>
-            <View style={{ paddingHorizontal: wp(8) }}>
+            <View style={{paddingHorizontal: wp(8)}}>
               <Text style={styles.txt}>Product Description</Text>
               <View
                 style={{
@@ -714,7 +856,11 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                   // width: wp(80),
                 }}>
                 <TextInput
-                  placeholder={route.params.data.description ? route.params.data.description : 'Enter product description'}
+                  placeholder={
+                    route.params.data.description
+                      ? route.params.data.description
+                      : 'Enter product description'
+                  }
                   placeholderTextColor={'#969696'}
                   multiline={true}
                   autoCorrect={false}
@@ -724,6 +870,7 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                     paddingHorizontal: wp(3),
                     marginTop: hp(1),
                     paddingVertical: hp(1),
+                    color: colors.black,
                   }}
                   onChangeText={(text: string) => {
                     setdescription(text);
@@ -731,7 +878,15 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                 />
               </View>
             </View>
-            <View style={[styles.viewlocation, { paddingHorizontal: wp(3), justifyContent: 'center', alignItems: 'center' }]}>
+            <View
+              style={[
+                styles.viewlocation,
+                {
+                  paddingHorizontal: wp(3),
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                },
+              ]}>
               <View
                 style={{
                   width: '20%',
@@ -740,11 +895,7 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                   alignItems: 'center',
                   // borderWidth: 1
                 }}>
-                <SvgXml
-                  xml={carlocation}
-                  width={wp(8)}
-                  height="100%"
-                />
+                <SvgXml xml={carlocation} width={wp(8)} height="100%" />
               </View>
               {/* <View
                 style={{
@@ -783,18 +934,17 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                       paddingVertical: Platform.OS === 'ios' ? wp(2) : 0,
                       borderBottomWidth: 1,
                       borderColor: 'grey',
+                      color: colors.black,
                     }}>
                     {pickupLocation?.name !== ''
                       ? pickupLocation.name
                       : 'Pickup Location'}
                   </Text>
                 </TouchableOpacity>
-                {!pickValue ? (
-                  <Text style={[styles.errorMsg, { paddingHorizontal: wp(5) }]}>
+                {!pickValue && (
+                  <Text style={[styles.errorMsg, {paddingHorizontal: wp(5)}]}>
                     Pickup Location is required
                   </Text>
-                ) : (
-                  <View></View>
                 )}
                 <TouchableOpacity
                   onPress={() => {
@@ -812,23 +962,22 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                       paddingVertical: Platform.OS === 'ios' ? wp(2) : 0,
                       borderBottomWidth: 1,
                       borderColor: 'grey',
+                      color: colors.black,
                     }}>
                     {dropoffLocation?.name !== ''
                       ? dropoffLocation.name
                       : 'Dropoff Location'}
                   </Text>
                 </TouchableOpacity>
-                {!dropValue ? (
-                  <Text style={[styles.errorMsg, { paddingHorizontal: wp(5) }]}>
+                {!dropValue && (
+                  <Text style={[styles.errorMsg, {paddingHorizontal: wp(5)}]}>
                     Dropoff Location is required
                   </Text>
-                ) : (
-                  <View></View>
                 )}
               </View>
             </View>
-            <View style={{ paddingHorizontal: wp(3) }}>
-              <Text style={[styles.txt, { paddingHorizontal: wp(5) }]}>
+            <View style={{paddingHorizontal: wp(3)}}>
+              <Text style={[styles.txt, {paddingHorizontal: wp(5)}]}>
                 Receiver Details
               </Text>
               <Textbox
@@ -849,7 +998,7 @@ const LandModifyRequest = ({ navigation, route }: any) => {
               <PhoneNumberPicker
                 onChange={(selectedCountry: ICountryCode, text: string) => {
                   setphone(text);
-                  setcountrySelect(selectedCountry)
+                  setcountrySelect(selectedCountry);
                   setvalueNum(true);
                 }}
                 errormsg={
@@ -865,12 +1014,25 @@ const LandModifyRequest = ({ navigation, route }: any) => {
               />
             </View>
 
-            {/* <View style={styles.paymentView}>
-              <Text style={{ fontSize: 16, padding: 1 }}>Total Amount</Text>
-              <Text style={{ color: colors.red, fontSize: 20, padding: 1 }}>
-                {totalFare}
-              </Text>
-            </View> */}
+            <View style={styles.paymentView}>
+              {totalFare > 0 ? (
+                <>
+                  <Text style={{fontSize: 16, padding: 1, color: colors.black}}>
+                    Total Amount
+                  </Text>
+                  <Text style={{color: colors.red, fontSize: 20, padding: 1}}>
+                    ${totalFare}
+                  </Text>
+                </>
+              ) : (
+                <ActivityIndicator
+                  size={'small'}
+                  color={colors.red}
+                  style={{justifyContent: 'center', alignSelf: 'center'}}
+                />
+              )}
+            </View>
+
             <Button title="next" onPress={handleSubmit} loading={loading} />
           </View>
         </ScrollView>
@@ -883,6 +1045,14 @@ const LandModifyRequest = ({ navigation, route }: any) => {
         setLocation={(d: any) => {
           setpickupLocation(d);
           setpickValue(true);
+          if (d && dropoffLocation) {
+            setDistance(
+              getDistance(
+                {latitude: d.lat, longitude: d.lon},
+                {latitude: dropoffLocation.lat, longitude: dropoffLocation.lon},
+              ) * 0.000621,
+            );
+          }
         }}
       />
       <SearchPlaces
@@ -893,6 +1063,14 @@ const LandModifyRequest = ({ navigation, route }: any) => {
         setLocation={(d: any) => {
           setdropoffLocation(d);
           setdropValue(true);
+          if (pickupLocation && d) {
+            setDistance(
+              getDistance(
+                {latitude: pickupLocation.lat, longitude: pickupLocation.lon},
+                {latitude: d.lat, longitude: d.lon},
+              ) * 0.000621,
+            );
+          }
         }}
       />
       <ModalTypes
@@ -903,7 +1081,7 @@ const LandModifyRequest = ({ navigation, route }: any) => {
           setcategoryValue(true);
           setSelectedCategory({
             id: id,
-            name: text
+            name: text,
           });
         }}
         other={true}
@@ -914,12 +1092,14 @@ const LandModifyRequest = ({ navigation, route }: any) => {
         Type={Type}
         setSelectedType={(text: string, id: string) => {
           settypeValue(true);
+          setcategoryValue(true);
+
           setSelectedType({
             id: id,
-            name: text
+            name: text,
           });
-          setSelectedCategory({ id: '', name: '' });
-          setcategory([])
+          setSelectedCategory({id: '', name: ''});
+          setcategory([]);
         }}
         other={true}
       />
@@ -992,7 +1172,8 @@ const LandModifyRequest = ({ navigation, route }: any) => {
               // paddingVertical: 30,
               paddingBottom: 30,
             }}>
-            <Text style={[styles.txt1, { color: colors.red, textAlign: 'center' }]}>
+            <Text
+              style={[styles.txt1, {color: colors.red, textAlign: 'center'}]}>
               Choose a picture
             </Text>
           </View>
@@ -1004,7 +1185,7 @@ const LandModifyRequest = ({ navigation, route }: any) => {
               alignItems: 'center',
               // paddin,
             }}>
-            <View style={{ width: '45%', height: hp(5) }}>
+            <View style={{width: '45%', height: hp(5)}}>
               <OpenCamera callbackImage={getSelectedImage.bind(this)} />
             </View>
             <View
@@ -1013,7 +1194,7 @@ const LandModifyRequest = ({ navigation, route }: any) => {
                 height: '100%',
               }}
             />
-            <View style={{ width: '45%', height: hp(5) }}>
+            <View style={{width: '45%', height: hp(5)}}>
               <OpenGallery callbackImage={getSelectedImage.bind(this)} />
             </View>
           </View>
@@ -1023,20 +1204,3 @@ const LandModifyRequest = ({ navigation, route }: any) => {
   );
 };
 export default LandModifyRequest;
-
-// settoCaptureImage(false),
-// navigation.navigate('ReceiverDetails', {
-//   data: {
-//     SelectedCategory,
-//     SelectedType,
-//     instructions,
-//     description,
-//     weight,
-//     pickcoords,
-//     dropcoords,
-//     dropoffCity,
-//     pickupCity,
-//     providerId,
-//     flightId,
-//   },
-// });

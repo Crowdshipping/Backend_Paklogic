@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -6,23 +6,27 @@ import {
   Alert,
   SafeAreaView,
   Text,
+  ActivityIndicator,
 } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Entypo from 'react-native-vector-icons/Entypo';
-import { styles } from './style';
-import { Textbox, Button, MapHeader, PhoneNumberPicker } from '../../components';
-import { receiver_derails } from '../../theme/assets/svg';
-import { mapp } from '../../theme/assets/images';
+import {styles} from './style';
+import {Textbox, Button, MapHeader, PhoneNumberPicker} from '../../components';
+import {receiver_derails} from '../../theme/assets/svg';
+import {mapp} from '../../theme/assets/images';
 import {
   createBooking,
   requestProvider,
   postRequest,
   postImage,
+  LogoutApi,
 } from '../../API';
-import { SuccessModal } from '../../Modals';
-import { colors } from '../../theme';
-import { NAME_REGEX, NUM_REGEX } from '../../appConstants';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {SuccessModal} from '../../Modals';
+import {colors} from '../../theme';
+import {NUM_REGEX} from '../../appConstants';
+import {CommonActions} from '@react-navigation/native';
+import {calculateAirBookingFare} from '../../API/calculateAirBookingFare';
+import getDistance from 'geolib/es/getDistance';
 
 export interface ICountryCode {
   name: string;
@@ -30,14 +34,8 @@ export interface ICountryCode {
   code: string;
   flag: string;
 }
-interface IimageShow {
-  name: string;
-  uri: string;
-  type: string;
-}
-interface IimageShow1 extends Array<IimageShow> { }
 
-const ReceiverDetailsScreen = ({ navigation, route }: any) => {
+const ReceiverDetailsScreen = ({navigation, route}: any) => {
   const {
     SelectedCategory,
     SelectedType,
@@ -71,14 +69,16 @@ const ReceiverDetailsScreen = ({ navigation, route }: any) => {
   let productImage: string;
   let productImage2: string;
   const [phone, setphone] = useState('');
+  const [totalFare, settotalFare] = useState(0);
   function handleSubmit() {
     let validate = true;
 
-    if (!NAME_REGEX.test(receiverName)) {
+    if (!receiverName.trim()) {
       validate = false;
       setvalueName(false);
     }
-    if (!NUM_REGEX.test(phone) && !countrySelect) {
+
+    if (!NUM_REGEX.test(phone.trim())) {
       validate = false;
       setvalueNum(false);
     }
@@ -91,11 +91,15 @@ const ReceiverDetailsScreen = ({ navigation, route }: any) => {
             if (rest[0].success && rest[1].success) {
               productImage = rest[0].imageUrl;
               productImage2 = rest[1].imageUrl;
-            } else validate = false;
+            } else {
+              validate = false;
+            }
           } else if (rest.length === 1) {
             if (rest[0].success) {
               productImage = rest[0].imageUrl;
-            } else validate = false;
+            } else {
+              validate = false;
+            }
           }
           if (validate) {
             createBooking(
@@ -110,92 +114,158 @@ const ReceiverDetailsScreen = ({ navigation, route }: any) => {
               null,
               receiverName,
               countrySelect.dial_code,
-              phone,
+              phone.trim(),
               productImage,
               productImage2,
+              null,
+              null,
+              null,
+              null,
+              totalFare,
             )
               .then((rest: any) => {
                 bookingId = rest.booking._id;
                 setloading(false);
-                // navigation.navigate('StripePayment', {
-                //   item: {
-                //     dropoffCity,
-                //     pickupCity,
-                //     providerId,
-                //     flightId,
-                //     fa_flight_id,
-                //     type,
-                //     pickupIATACityCode,
-                //     dropoffIATACityCode,
-                //     bookingId,
-                //     amount: 30,
-                //   },
-                // });
                 rest.success && providerId
                   ? requestProvider(providerId, bookingId, type, null, flightId)
-                    .then((rest: any) => {
-                      rest.success && setsuccess(true);
-                    })
-                    .catch(async error => {
-                      setloading(false);
-                      if (error.response.status === 401) {
-                        await AsyncStorage.clear();
-                        navigation.navigate('Welcome')
-                      } else {
-                        Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
-                      }
-                    })
+                      .then((rest: any) => {
+                        rest.success && setsuccess(true);
+                      })
+                      .catch(async error => {
+                        setloading(false);
+                        if (error.response.status === 401) {
+                          Alert.alert('Session Expired', 'Please login again');
+                          LogoutApi();
+                          navigation.dispatch(
+                            CommonActions.reset({
+                              index: 1,
+                              routes: [{name: 'Welcome'}],
+                            }),
+                          );
+                        } else {
+                          Alert.alert(
+                            error?.response?.data?.message
+                              ? error?.response?.data?.message
+                              : 'something went wrong',
+                          );
+                        }
+                      })
                   : postRequest(
-                    bookingId,
-                    type,
-                    pickupCity,
-                    dropoffCity,
-                    fa_flight_id,
-                    pickupIATACityCode,
-                    dropoffIATACityCode,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                  )
-                    .then((rest: any) => {
-                      rest.success && setsuccess(true);
-                    })
-                    .catch(async error => {
-                      setloading(false);
-                      if (error.response.status === 401) {
-                        await AsyncStorage.clear();
-                        navigation.navigate('Welcome')
-                      } else {
-                        Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
-                      }
-                    });
+                      bookingId,
+                      type,
+                      pickupCity,
+                      dropoffCity,
+                      fa_flight_id,
+                      pickupIATACityCode,
+                      dropoffIATACityCode,
+                      null,
+                      null,
+                      null,
+                      null,
+                      null,
+                      null,
+                    )
+                      .then((rest: any) => {
+                        rest.success && setsuccess(true);
+                      })
+                      .catch(async error => {
+                        setloading(false);
+                        if (error.response.status === 401) {
+                          Alert.alert('Session Expired', 'Please login again');
+                          LogoutApi();
+                          navigation.dispatch(
+                            CommonActions.reset({
+                              index: 1,
+                              routes: [{name: 'Welcome'}],
+                            }),
+                          );
+                        } else {
+                          Alert.alert(
+                            error?.response?.data?.message
+                              ? error?.response?.data?.message
+                              : 'something went wrong',
+                          );
+                        }
+                      });
               })
               .catch(async error => {
                 setloading(false);
                 if (error.response.status === 401) {
-                  await AsyncStorage.clear();
-                  navigation.navigate('Welcome')
+                  Alert.alert('Session Expired', 'Please login again');
+                  LogoutApi();
+                  navigation.dispatch(
+                    CommonActions.reset({
+                      index: 1,
+                      routes: [{name: 'Welcome'}],
+                    }),
+                  );
                 } else {
-                  Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+                  Alert.alert(
+                    error?.response?.data?.message
+                      ? error?.response?.data?.message
+                      : 'something went wrong',
+                  );
                 }
               });
           }
         })
         .catch(async error => {
           setloading(false);
-          if (error.response.status === 401) {
-            await AsyncStorage.clear();
-            navigation.navigate('Welcome')
+          if (error?.response?.status === 401) {
+            Alert.alert('Session Expired', 'Please login again');
+            LogoutApi();
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{name: 'Welcome'}],
+              }),
+            );
           } else {
-            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+            Alert.alert(
+              error?.response?.data?.message
+                ? error?.response?.data?.message
+                : 'something went wrong',
+            );
           }
         });
     }
   }
+  useEffect(() => {
+    let distance =
+      getDistance(
+        {latitude: pickcoords.lat, longitude: pickcoords.lon},
+        {latitude: dropcoords.lat, longitude: dropcoords.lon},
+      ) * 0.000621;
 
+    let data = {
+      bookingFee: 20,
+      costPerMile: 0.5,
+      totalMiles: distance,
+    };
+    calculateAirBookingFare(data)
+      .then((result: any) => {
+        result.success && settotalFare(result.amount);
+      })
+      .catch(async error => {
+        setloading(false);
+        if (error.response.status === 401) {
+          Alert.alert('Session Expired', 'Please login again');
+          LogoutApi();
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [{name: 'Welcome'}],
+            }),
+          );
+        } else {
+          Alert.alert(
+            error?.response?.data?.message
+              ? error?.response?.data?.message
+              : 'something went wrong',
+          );
+        }
+      });
+  }, []);
   // const {} = route.params?.data?.item?.provider;
   return (
     <SafeAreaView>
@@ -204,20 +274,22 @@ const ReceiverDetailsScreen = ({ navigation, route }: any) => {
           // style={styles.bgImage}
           resizeMode={'cover'}
           source={mapp}>
-          <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={styles.menu}>
-            <Entypo name="menu" size={25} />
+          <TouchableOpacity
+            onPress={() => navigation.toggleDrawer()}
+            style={styles.menu}>
+            <Entypo name="menu" size={25} color={colors.black} />
           </TouchableOpacity>
           <View style={styles.location}>
             <Textbox
               title={'Pickup Location'}
               placeholder={pickupCity}
-              onChangeValue={() => { }}
+              onChangeValue={() => {}}
               editable={false}
             />
             <Textbox
               title={'Drop Location'}
               placeholder={dropoffCity}
-              onChangeValue={() => { }}
+              onChangeValue={() => {}}
               editable={false}
             />
           </View>
@@ -265,25 +337,37 @@ const ReceiverDetailsScreen = ({ navigation, route }: any) => {
               />
 
               <View style={styles.paymentView}>
-                <Text style={{ fontSize: 16, padding: 1 }}>Total Amount</Text>
-                <Text style={{ color: colors.red, fontSize: 20, padding: 1 }}>
-                  $30
-                </Text>
+                {totalFare > 0 ? (
+                  <>
+                    <Text
+                      style={{fontSize: 16, padding: 1, color: colors.black}}>
+                      Total Amount
+                    </Text>
+                    <Text style={{color: colors.red, fontSize: 20, padding: 1}}>
+                      ${totalFare}
+                    </Text>
+                  </>
+                ) : (
+                  <ActivityIndicator
+                    size={'small'}
+                    color={colors.red}
+                    style={{justifyContent: 'center', alignSelf: 'center'}}
+                  />
+                )}
               </View>
 
               <TouchableOpacity
                 disabled={loading}
-                style={{ alignSelf: 'center' }}
+                style={{alignSelf: 'center'}}
                 onPress={() => {
                   navigation.navigate('ModifyRequest', {
                     data: route.params.data,
                     receiverName,
                     countrySelect,
                     phone,
-
                   });
                 }}>
-                <Text style={{ color: colors.red }}>Modify request</Text>
+                <Text style={{color: colors.red}}>Modify request</Text>
               </TouchableOpacity>
               <Button
                 title="Create booking"

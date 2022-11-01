@@ -1,13 +1,21 @@
-import React, { useEffect } from 'react';
-import { SafeAreaView, Text, View, Alert, BackHandler } from 'react-native';
-import { styles } from './style';
+import React, {useEffect} from 'react';
+import {
+  SafeAreaView,
+  Text,
+  View,
+  Alert,
+  BackHandler,
+  Platform,
+} from 'react-native';
+import {styles} from './style';
 
-import { SvgXml } from 'react-native-svg';
-import { Button, Header } from '../../components';
-import { welcome } from '../../theme/assets/svg';
+import {SvgXml} from 'react-native-svg';
+import {Button, Header} from '../../components';
+import {welcome} from '../../theme/assets/svg';
+import {useFocusEffect} from '@react-navigation/native';
 // import {useFocusEffect} from '@react-navigation/native';
 
-const WelcomeScreen = ({ navigation }: any) => {
+const WelcomeScreen = ({navigation}: any) => {
   // useFocusEffect(
   //   React.useCallback(() => {
   //     const onBackPress = () => {
@@ -32,44 +40,60 @@ const WelcomeScreen = ({ navigation }: any) => {
   //   }, []),
   // );
 
-  useEffect(
-    () =>
-      navigation.addListener('beforeRemove', (e: any) => {
-        // Prevent default behavior of leaving the screen
-        e.preventDefault();
+  // useEffect(
+  //   () =>
+  //     // if(Platform.OS === 'android') {}
+  //     navigation.addListener('beforeRemove', (e: any) => {
+  //       // Prevent default behavior of leaving the screen
+  //       e.preventDefault();
+  //       Alert.alert('Hold on!', 'Are you sure you want to Exit?', [
+  //         {
+  //           text: 'Cancel',
+  //           onPress: () => null,
+  //           style: 'cancel',
+  //         },
+  //         {
+  //           text: 'YES',
+  //           onPress: () => {
+  //             BackHandler.exitApp();
+  //           },
+  //         },
+  //       ]);
+  //       return true;
+  //     }),
+  //   [BackHandler],
+  // );
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
         Alert.alert('Hold on!', 'Are you sure you want to Exit?', [
           {
             text: 'Cancel',
             onPress: () => null,
             style: 'cancel',
           },
-          {
-            text: 'YES',
-            onPress: () => {
-              BackHandler.exitApp();
-            },
-          },
+          {text: 'YES', onPress: () => BackHandler.exitApp()},
         ]);
         return true;
-      }),
-    [navigation],
-  );
+      };
 
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, []),
+  );
   return (
     <SafeAreaView style={{}}>
-
       <Header title={'WELCOME'} />
 
-
-      <SvgXml xml={welcome} style={{ alignSelf: 'center' }} />
-
+      <SvgXml xml={welcome} style={{alignSelf: 'center'}} />
 
       <Button
         title="sign in"
         bg={true}
         onPress={() => navigation.navigate('Signin')}
       />
-
 
       <Button
         title="Register"

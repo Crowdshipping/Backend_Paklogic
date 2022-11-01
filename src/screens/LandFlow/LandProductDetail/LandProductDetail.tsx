@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -8,32 +8,33 @@ import {
   ImageBackground,
   Image,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 
-import { Textbox, Button, MapHeader, Datepicker } from '../../../components';
-import { packagedetails, cross } from '../../../theme/assets/svg';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { mapp } from '../../../theme/assets/images';
+import {Textbox, Button, MapHeader, Datepicker} from '../../../components';
+import {packagedetails, cross} from '../../../theme/assets/svg';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {mapp} from '../../../theme/assets/images';
 
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Entypo from 'react-native-vector-icons/Entypo';
-import { styles } from './style';
+import {styles} from './style';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { colors } from '../../../theme/colors';
-import { ModalTypes } from '../../../Modals';
+import {colors} from '../../../theme/colors';
+import {ModalTypes} from '../../../Modals';
 
-import { SvgXml } from 'react-native-svg';
+import {SvgXml} from 'react-native-svg';
 import Modal from 'react-native-modal/dist/modal';
 
 import OpenCamera from '../../Cam_Gal/OpenCamera';
 import OpenGallery from '../../Cam_Gal/OpenGallery';
 import moment from 'moment';
-import { getProductTypes, LogoutApi, getProductCategories } from '../../../API';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getProductTypes, LogoutApi, getProductCategories} from '../../../API';
+import {CommonActions} from '@react-navigation/native';
 
 interface IimageShow {
   name: string;
@@ -41,12 +42,13 @@ interface IimageShow {
   type: string;
 }
 interface ITypes {
-  id: string,
-  name: string
+  id: string;
+  name: string;
 }
-interface IimageShow1 extends Array<IimageShow> { }
-const LandProductScreen = ({ navigation, route }: any) => {
-  const { pickupLocation, dropoffLocation, vehicleType, distance } = route.params.data;
+interface IimageShow1 extends Array<IimageShow> {}
+const LandProductScreen = ({navigation, route}: any) => {
+  const {pickupLocation, dropoffLocation, vehicleType, distance} =
+    route.params.data;
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [isModalVisible1, setModalVisible1] = useState(false);
@@ -62,8 +64,11 @@ const LandProductScreen = ({ navigation, route }: any) => {
   const [ImagesValue, setImagesValue] = useState(true);
   const [BookingTypeValue, setBookingTypeValue] = useState(true);
 
-  const [SelectedCategory, setSelectedCategory] = useState<ITypes>({ id: '', name: '' });
-  const [SelectedType, setSelectedType] = useState<ITypes>({ id: '', name: '' });
+  const [SelectedCategory, setSelectedCategory] = useState<ITypes>({
+    id: '',
+    name: '',
+  });
+  const [SelectedType, setSelectedType] = useState<ITypes>({id: '', name: ''});
   const [SelectedUnit, setSelectedUnit] = useState('');
   const [description, setdescription] = useState('');
   const [weight, setweight] = useState('');
@@ -72,8 +77,8 @@ const LandProductScreen = ({ navigation, route }: any) => {
   const [finalDate, setfinalDate] = useState<Date>();
   const [dateShow, setdateShow] = useState('');
   const [Images, setImages] = useState<IimageShow1>([]);
-  const [Type, setType] = useState<ITypes[]>([])
-  const [category, setcategory] = useState<ITypes[]>([])
+  const [Type, setType] = useState<ITypes[]>([]);
+  const [category, setcategory] = useState<ITypes[]>([]);
 
   // const category = [
   //   { id: 1, name: 'Wood' },
@@ -87,13 +92,13 @@ const LandProductScreen = ({ navigation, route }: any) => {
   //   { id: 3, name: 'soft' },
   // ];
   const Unit = [
-    { id: 1, name: 'Kilogram' },
-    { id: 2, name: 'Gram' },
-    { id: 3, name: 'Pound' },
+    {id: 1, name: 'Kilogram'},
+    {id: 2, name: 'Gram'},
+    {id: 3, name: 'Pound'},
   ];
   const BookingType = [
-    { id: 1, name: 'Instant' },
-    { id: 2, name: 'Schedule' },
+    {id: 1, name: 'Instant'},
+    {id: 2, name: 'Schedule'},
   ];
   function handleSubmit() {
     let validate = true;
@@ -162,7 +167,7 @@ const LandProductScreen = ({ navigation, route }: any) => {
           vehicleType,
           initialDate,
           finalDate,
-          distance
+          distance,
         },
       });
   }
@@ -176,73 +181,102 @@ const LandProductScreen = ({ navigation, route }: any) => {
 
   useEffect(() => {
     if (Type.length === 0) {
-      getProductTypes().then((result: any) => {
-        setloading(false)
-        result.success && result.productTypes.map((products: any) => {
-          setType((Type) => [...Type, { id: products._id, name: products.productName }])
+      getProductTypes()
+        .then((result: any) => {
+          setloading(false);
+          result.success &&
+            result.productTypes.map((products: any) => {
+              setType(Type => [
+                ...Type,
+                {id: products._id, name: products.productName},
+              ]);
+            });
         })
-      })
-        .catch(async error => {
+        .catch(error => {
           setloading(false);
           if (error.response.status === 401) {
+            Alert.alert('Session Expired', 'Please login again');
             LogoutApi();
-            await AsyncStorage.clear();
-            navigation.navigate('Welcome')
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{name: 'Welcome'}],
+              }),
+            );
           } else {
-            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+            Alert.alert(
+              error?.response?.data?.message
+                ? error?.response?.data?.message
+                : 'something went wrong',
+            );
           }
         });
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-
     if (SelectedType.id.length > 0) {
-      getProductCategories(SelectedType.id).then((result: any) => {
-        result.success && result.productCategories.map((products: any) => {
-          setcategory((category) => [...category, { id: products._id, name: products.productCategoryName }])
+      getProductCategories(SelectedType.id)
+        .then((result: any) => {
+          result.success &&
+            result.productCategories.map((products: any) => {
+              setcategory(category => [
+                ...category,
+                {id: products._id, name: products.productCategoryName},
+              ]);
+            });
         })
-      })
         .catch(async error => {
           setloading(false);
           if (error.response.status === 401) {
+            Alert.alert('Session Expired', 'Please login again');
             LogoutApi();
-            await AsyncStorage.clear();
-            navigation.navigate('Welcome')
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{name: 'Welcome'}],
+              }),
+            );
           } else {
-            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'something went wrong')
+            Alert.alert(
+              error?.response?.data?.message
+                ? error?.response?.data?.message
+                : 'something went wrong',
+            );
           }
         });
     }
-  }, [SelectedType.id])
+  }, [SelectedType.id]);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.white }}>
+    <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <KeyboardAwareScrollView>
-        <ImageBackground resizeMode="stretch" style={{ flex: 1 }} source={mapp}>
+        <ImageBackground resizeMode="stretch" style={{flex: 1}} source={mapp}>
           <ScrollView
             style={{}}
             showsVerticalScrollIndicator={false}
             scrollToOverflowEnabled={false}>
-            <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={styles.menu}>
-              <Entypo name="menu" size={25} />
+            <TouchableOpacity
+              onPress={() => navigation.toggleDrawer()}
+              style={styles.menu}>
+              <Entypo name="menu" size={25} color={colors.black} />
             </TouchableOpacity>
             <View style={styles.location}>
               <Textbox
                 title={'Pickup Location'}
                 placeholder={pickupLocation.name}
-                onChangeValue={() => { }}
+                onChangeValue={() => {}}
                 editable={false}
               />
               <Textbox
                 title={'Drop Location'}
                 placeholder={dropoffLocation.name}
-                onChangeValue={() => { }}
+                onChangeValue={() => {}}
                 editable={false}
               />
             </View>
             <View style={styles.bckimg}>
-              <View style={{ bottom: hp(7) }}>
+              <View style={{bottom: hp(7)}}>
                 <MapHeader
                   title="Package Details"
                   picture={packagedetails}
@@ -253,10 +287,11 @@ const LandProductScreen = ({ navigation, route }: any) => {
               <View style={styles.main}>
                 <TouchableOpacity
                   style={styles.Touch}
-                  onPress={() => { setModalVisible2(true) }}>
+                  onPress={() => {
+                    setModalVisible2(true);
+                  }}>
                   <View style={styles.txtview}>
                     <Text style={styles.txt1}>Product Type</Text>
-
                     <AntDesign
                       name="caretdown"
                       color={'grey'}
@@ -268,65 +303,74 @@ const LandProductScreen = ({ navigation, route }: any) => {
                       }}
                     />
                   </View>
-                  <Text>{SelectedType.name.length > 0 ? SelectedType.name : 'Select Type '}</Text>
-                </TouchableOpacity>
-                {!typeValue ? (
-                  <Text style={styles.errorMsg}>Product Type is Required</Text>
-                ) : (
-                  <View></View>
-                )}
-                <TouchableOpacity
-                  disabled={SelectedType?.id?.length > 0 ? false : true}
-                  style={styles.Touch}
-                  onPress={() => setModalVisible(true)}>
-                  <View style={styles.txtview}>
-                    <Text style={styles.txt1}>Product Category</Text>
-
-                    <AntDesign
-                      name="caretdown"
-                      color={'grey'}
-                      size={wp(3)}
-                      style={{
-                        alignSelf: 'center',
-                        // borderWidth: 2,
-                        marginLeft: hp(1),
-                      }}
-                    />
-                  </View>
-
-                  <Text style={{ borderColor: 'grey' }}>
-                    {SelectedCategory.name.length > 0 ? SelectedCategory.name : 'Select Category'}
+                  <Text style={{color: colors.black}}>
+                    {SelectedType.name.length > 0
+                      ? SelectedType.name
+                      : 'Select Type '}
                   </Text>
                 </TouchableOpacity>
-                {!categoryValue ? (
+                {!typeValue && (
+                  <Text style={styles.errorMsg}>Product Type is Required</Text>
+                )}
+                {SelectedType?.id?.length > 0 || SelectedCategory.name ? (
+                  category.length < 1 ? (
+                    <ActivityIndicator
+                      size={'small'}
+                      color={colors.red}
+                      style={{justifyContent: 'center', alignSelf: 'center'}}
+                    />
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.Touch}
+                      onPress={() => setModalVisible(true)}>
+                      <View style={styles.txtview}>
+                        <Text style={styles.txt1}>Product Category</Text>
+
+                        <AntDesign
+                          name="caretdown"
+                          color={'grey'}
+                          size={wp(3)}
+                          style={{
+                            alignSelf: 'center',
+                            // borderWidth: 2,
+                            marginLeft: hp(1),
+                          }}
+                        />
+                      </View>
+
+                      <Text style={{borderColor: 'grey', color: colors.black}}>
+                        {SelectedCategory.name.length > 0
+                          ? SelectedCategory.name
+                          : 'Select Category'}
+                      </Text>
+                    </TouchableOpacity>
+                  )
+                ) : (
+                  <></>
+                )}
+
+                {!categoryValue && (
                   <Text style={styles.errorMsg}>
                     Product Category is Required
                   </Text>
-                ) : (
-                  <View></View>
                 )}
-
 
                 <View
                   style={{
                     flexDirection: 'row',
                     marginLeft: wp(3),
                     marginRight: wp(5),
-                    // borderWidth: 1,
-                    // alignItems: 'center',
-                    // justifyContent: 'space-between',
                   }}>
                   <View
                     style={{
                       width: '50%',
-                      // borderWidth: 1
                     }}>
                     <Textbox
                       title="Product Weight"
                       placeholder={
                         route.params?.data?.weight
                           ? route.params?.data?.weight
-                          : "Enter product's weight"
+                          : 'Enter weight'
                       }
                       onChangeValue={(text: string) => {
                         setweightValue(true), setweight(text);
@@ -336,32 +380,25 @@ const LandProductScreen = ({ navigation, route }: any) => {
                         !weightValue && !unitValue
                           ? 'Weight and Unit are Required'
                           : !unitValue
-                            ? 'Unit is Required'
-                            : !weightValue
-                              ? 'Weight is Required'
-                              : ''
+                          ? 'Unit is Required'
+                          : !weightValue
+                          ? 'Weight is Required'
+                          : ''
                       }
                     />
                   </View>
                   <TouchableOpacity
                     style={{
-                      // marginTop: 0,
                       width: '47%',
-                      // borderWidth: 1,
                       borderBottomWidth: 1,
                       marginTop: hp(2),
-                      // marginHorizontal: wp(1),
-                      // paddingHorizontal: wp(5),
-                      // marginBottom: hp(3),
+                      marginBottom: hp(2),
                       borderColor: 'grey',
-                      height: '55%',
-                      // alignSelf: 'center',
-
-                      // justifyContent: 'center',
+                      // height: '55%',
                     }}
                     onPress={() => setModalVisible3(!isModalVisible3)}>
                     <View style={styles.txtview}>
-                      <Text style={styles.txt1}>Product Unit</Text>
+                      <Text style={styles.txt1}>PRODUCT UNIT</Text>
 
                       <AntDesign
                         name="caretdown"
@@ -369,19 +406,23 @@ const LandProductScreen = ({ navigation, route }: any) => {
                         size={wp(3)}
                         style={{
                           alignSelf: 'center',
-                          // borderWidth: 2,
                           marginLeft: hp(1),
                         }}
                       />
                     </View>
 
-                    <Text style={{ borderColor: 'grey', marginTop: 2 }}>
+                    <Text
+                      style={{
+                        borderColor: 'grey',
+                        paddingVertical: wp(1),
+                        color: colors.black,
+                      }}>
                       {SelectedUnit ? SelectedUnit : 'Select Unit'}
                     </Text>
                   </TouchableOpacity>
                 </View>
                 <TouchableOpacity
-                  style={[styles.Touch, { marginTop: 0 }]}
+                  style={[styles.Touch, {marginTop: 0}]}
                   onPress={() => setModalVisible1(!isModalVisible1)}>
                   <View style={styles.txtview}>
                     <Text style={styles.txt1}>Booking Type</Text>
@@ -398,20 +439,13 @@ const LandProductScreen = ({ navigation, route }: any) => {
                     />
                   </View>
 
-                  <Text style={{ borderColor: 'grey' }}>
+                  <Text style={{borderColor: 'grey', color: colors.black}}>
                     {SelectedBookingType
                       ? SelectedBookingType
                       : 'Select Booking Type'}
                   </Text>
                 </TouchableOpacity>
-                {/* {errormsg ? ( */}
-                {/* {!BookingTypeValue ? (
-                  <Text style={styles.errorMsg}>
-                    Product Category is Required
-                  </Text>
-                ) : (
-                  <View />
-                )} */}
+
                 {SelectedBookingType === 'Schedule' ? (
                   <View
                     style={{
@@ -423,29 +457,29 @@ const LandProductScreen = ({ navigation, route }: any) => {
                       justifyContent: 'space-between',
                       paddingHorizontal: wp(8),
                     }}>
-                    <View style={{ width: '50%', paddingRight: wp(5) }}>
+                    <View style={{width: '50%', paddingRight: wp(5)}}>
                       <Text style={styles.txt1}>From Date</Text>
                       <Datepicker
                         onChange={(selectedDate: Date) => {
                           setinitialDate(selectedDate);
                           setdateShow('');
                         }}
-                      // datePrev={moment(initialDate).format('YYYY-MM-DD')}
+                        // datePrev={moment(initialDate).format('YYYY-MM-DD')}
                       />
                     </View>
 
-                    <View style={{ width: '50%' }}>
+                    <View style={{width: '50%'}}>
                       <Text style={styles.txt1}>To Date</Text>
                       <Datepicker
                         onChange={(selectedDate: Date) => {
                           setfinalDate(selectedDate);
                           setdateShow('');
                         }}
-                      // datePrev={moment(finalDate).format('YYYY-MM-DD')}
+                        // datePrev={moment(finalDate).format('YYYY-MM-DD')}
                       />
                     </View>
 
-                    <Text style={[styles.errorMsg, { marginLeft: wp(0) }]}>
+                    <Text style={[styles.errorMsg, {marginLeft: wp(0)}]}>
                       {dateShow}
                     </Text>
                   </View>
@@ -464,7 +498,7 @@ const LandProductScreen = ({ navigation, route }: any) => {
                       name="attachment"
                       color={colors.black}
                       size={wp(5)}
-                      style={{ alignSelf: 'flex-end' }}
+                      style={{alignSelf: 'flex-end'}}
                     />
                   </TouchableOpacity>
                 </View>
@@ -476,7 +510,7 @@ const LandProductScreen = ({ navigation, route }: any) => {
                   {Images.length >= 1 ? (
                     Images.map((item, index1: number) => {
                       return (
-                        <View key={index1} style={{ marginLeft: wp(8) }}>
+                        <View key={index1} style={{marginLeft: wp(8)}}>
                           <TouchableOpacity
                             onPress={() => {
                               setImages([
@@ -497,7 +531,7 @@ const LandProductScreen = ({ navigation, route }: any) => {
                           </TouchableOpacity>
 
                           <Image
-                            source={{ uri: item.uri }}
+                            source={{uri: item.uri}}
                             style={{
                               height: wp(37),
                               width: wp(37),
@@ -526,12 +560,12 @@ const LandProductScreen = ({ navigation, route }: any) => {
                           height: '55%',
                           borderWidth: wp(3),
                           borderColor: '#C0904E',
-                        }}></View>
+                        }}
+                      />
                     </View>
                   )}
                 </View>
                 {!ImagesValue && (
-
                   <Text
                     style={{
                       paddingHorizontal: wp(5),
@@ -540,9 +574,8 @@ const LandProductScreen = ({ navigation, route }: any) => {
                     }}>
                     Images are Required
                   </Text>
-
                 )}
-                <View style={{ paddingHorizontal: wp(8) }}>
+                <View style={{paddingHorizontal: wp(8)}}>
                   <Text style={styles.txt}>Instructions</Text>
                   <View
                     style={{
@@ -566,14 +599,15 @@ const LandProductScreen = ({ navigation, route }: any) => {
                         // marginTop: hp(1),
                         paddingVertical: hp(1),
                         flexWrap: 'wrap',
+                        color: colors.black,
                       }}
-                    // onChangeText={(text: string) => {
-                    //   setinstructions(text);
-                    // }}
+                      // onChangeText={(text: string) => {
+                      //   setinstructions(text);
+                      // }}
                     />
                   </View>
                 </View>
-                <View style={{ paddingHorizontal: wp(8) }}>
+                <View style={{paddingHorizontal: wp(8)}}>
                   <Text style={styles.txt}>Product Description</Text>
                   <View
                     style={{
@@ -595,6 +629,7 @@ const LandProductScreen = ({ navigation, route }: any) => {
                         paddingHorizontal: wp(3),
                         marginTop: hp(1),
                         paddingVertical: hp(1),
+                        color: colors.black,
                       }}
                       onChangeText={(text: string) => {
                         setdescription(text);
@@ -621,7 +656,7 @@ const LandProductScreen = ({ navigation, route }: any) => {
           setcategoryValue(true);
           setSelectedCategory({
             id: id,
-            name: text
+            name: text,
           });
         }}
         other={true}
@@ -634,10 +669,10 @@ const LandProductScreen = ({ navigation, route }: any) => {
           settypeValue(true);
           setSelectedType({
             id: id,
-            name: text
+            name: text,
           });
-          setSelectedCategory({ id: '', name: '' });
-          setcategory([])
+          setSelectedCategory({id: '', name: ''});
+          setcategory([]);
         }}
         other={true}
       />
@@ -702,7 +737,8 @@ const LandProductScreen = ({ navigation, route }: any) => {
               // paddingVertical: 30,
               paddingBottom: 30,
             }}>
-            <Text style={[styles.txt1, { color: colors.red, textAlign: 'center' }]}>
+            <Text
+              style={[styles.txt1, {color: colors.red, textAlign: 'center'}]}>
               Choose a picture
             </Text>
           </View>
@@ -714,7 +750,7 @@ const LandProductScreen = ({ navigation, route }: any) => {
               alignItems: 'center',
               // paddin,
             }}>
-            <View style={{ width: '45%', height: hp(5) }}>
+            <View style={{width: '45%', height: hp(5)}}>
               <OpenCamera callbackImage={getSelectedImage.bind(this)} />
             </View>
             <View
@@ -723,7 +759,7 @@ const LandProductScreen = ({ navigation, route }: any) => {
                 height: '100%',
               }}
             />
-            <View style={{ width: '45%', height: hp(5) }}>
+            <View style={{width: '45%', height: hp(5)}}>
               <OpenGallery callbackImage={getSelectedImage.bind(this)} />
             </View>
           </View>

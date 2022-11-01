@@ -32,7 +32,7 @@ export const editBooking = async (
     vehicleType?: string,
     initialDate?: string,
     finalDate?: string,
-
+    totalFare?: number
 ) => {
     const value = await AsyncStorage.getItem('@userId');
     const userToken = await AsyncStorage.getItem('@userToken');
@@ -77,6 +77,7 @@ export const editBooking = async (
                 recieverCountryCode: countryCode,
                 recieverPhoneno: receiverNum,
                 bookedBy: value,
+                totalFare: totalFare ? totalFare : null
             },
         };
         axios(config)

@@ -24,6 +24,8 @@ export const styles = StyleSheet.create({
   txt1: {
     textAlign: 'center',
     fontSize: 18,
+    color: colors.black,
+
     // paddingHorizontal: 15,
     paddingTop: 15,
     // paddingBottom: 10,

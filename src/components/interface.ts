@@ -20,6 +20,7 @@ export interface IButton {
   bg?: boolean;
   onPress: Function;
   loading?: boolean;
+  chat?: boolean;
 }
 export interface IPhonePicker {
   containerStyle?: ViewStyle;

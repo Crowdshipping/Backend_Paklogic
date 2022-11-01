@@ -1,26 +1,18 @@
-import React, { useState } from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  TextInput,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, {useState} from 'react';
+import {Text, View} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 // import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import { Button, Header } from '../../components';
-import { styles } from './style';
-import { SvgXml } from 'react-native-svg';
-import { avatar } from '../../theme/assets/svg';
+import {Button, Header} from '../../components';
+import {styles} from './style';
+import {SvgXml} from 'react-native-svg';
+import {avatar} from '../../theme/assets/svg';
 import moment from 'moment';
 
-const ProviderDetailScreen = ({ route, navigation }: any) => {
+const ProviderDetailScreen = ({route, navigation}: any) => {
   // const {phoneno, lastname, firstname} = route.params.provider;
   const {
     dropoffCity,
@@ -44,7 +36,7 @@ const ProviderDetailScreen = ({ route, navigation }: any) => {
     airline: flightAirline,
   });
   return (
-    <SafeAreaView style={{ display: 'flex', flex: 1 }}>
+    <SafeAreaView style={{display: 'flex', flex: 1}}>
       <Header
         title="provider details"
         pressMethod={() => {

@@ -1,6 +1,6 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import {createStackNavigator} from '@react-navigation/stack';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 
 import {
   RegisterScreen,
@@ -47,22 +47,23 @@ import {
   AddQuery,
   QueryDetail,
   RateDriver,
-  AddClaim
+  AddClaim,
+  ViewPaymentLogs,
 } from '../screens';
 import CustomDrawerContent from './DrawerNavigation';
-import { StripePayment, ChatScreen } from '../features';
+import {StripePayment, ChatScreen} from '../features';
 
 export type rootStack = {
   Welcome: undefined;
-  Register: { countryCode: string; phone: string };
+  Register: {countryCode: string; phone: string};
   Signin: undefined;
   ForgotPassword: undefined;
   Splash: undefined;
   Landing: undefined;
   RegisterNumber: undefined;
   ResetPassword: undefined;
-  VerifyOtp: { countryCode: string; phone: string };
-  PasswordOtp: { email: string };
+  VerifyOtp: {countryCode: string; phone: string};
+  PasswordOtp: {email: string};
   StartBooking: undefined;
   ProviderDetail: undefined;
   ReceiverDetails: undefined;
@@ -106,6 +107,7 @@ export type rootStack = {
   AddQuery: undefined;
   QueryDetail: undefined;
   RateDriver: undefined;
+  ViewPaymentLogs: undefined;
 };
 const Stack = createStackNavigator<rootStack>();
 const Drawer = createDrawerNavigator();
@@ -113,7 +115,7 @@ const Drawer = createDrawerNavigator();
 const MyDrawer = () => {
   return (
     <Drawer.Navigator
-      screenOptions={{ headerShown: false }}
+      screenOptions={{headerShown: false}}
       initialRouteName="DrawerScreens"
       drawerContent={props => <CustomDrawerContent {...props} />}>
       <Drawer.Screen name="DrawerScreens" component={DrawerScreens} />
@@ -126,7 +128,9 @@ const MyDrawer = () => {
 
 const DrawerScreens = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Landing">
+    <Stack.Navigator
+      screenOptions={{headerShown: false}}
+      initialRouteName="Landing">
       <Stack.Screen name="Landing" component={LandingScreen} />
       <Stack.Screen name="SearchShip" component={ShipDelivery} />
       <Stack.Screen name="BookingHistory" component={BookingHistory} />
@@ -147,7 +151,10 @@ const DrawerScreens = () => {
       <Stack.Screen name="ShipFlowNavigation" component={ShipFlowNavigation} />
       <Stack.Screen name="LandFlowNavigation" component={LandFlowNavigation} />
       <Stack.Screen name="AirFlowNavigation" component={AirFlowNavigation} />
-      <Stack.Screen name="LoggedUserResetPassword" component={LoggedUserResetPassword} />
+      <Stack.Screen
+        name="LoggedUserResetPassword"
+        component={LoggedUserResetPassword}
+      />
       <Stack.Screen name="NotifictionHistory" component={NotifictionHistory} />
       <Stack.Screen name="ViewQuery" component={ViewQuery} />
       <Stack.Screen name="AddQuery" component={AddQuery} />
@@ -155,14 +162,15 @@ const DrawerScreens = () => {
       <Stack.Screen name="StripePayment" component={StripePayment} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="RateDriver" component={RateDriver} />
+      <Stack.Screen name="ViewPaymentLogs" component={ViewPaymentLogs} />
     </Stack.Navigator>
-  )
-}
+  );
+};
 
 const LandFlowNavigation = () => {
   return (
     <Stack.Navigator
-      screenOptions={{ headerShown: false, gestureEnabled: false }}
+      screenOptions={{headerShown: false, gestureEnabled: false}}
       initialRouteName={'StartBooking'}>
       <Stack.Screen name="StartBooking" component={StartBookingScreen} />
       <Stack.Screen name="LandProductDetail" component={LandProductDetail} />
@@ -176,7 +184,7 @@ const LandFlowNavigation = () => {
 const ShipFlowNavigation = () => {
   return (
     <Stack.Navigator
-      screenOptions={{ headerShown: false, gestureEnabled: false }}
+      screenOptions={{headerShown: false, gestureEnabled: false}}
       initialRouteName={'ShipDelivery'}>
       <Stack.Screen name="ShipDelivery" component={ShipDelivery} />
       <Stack.Screen
@@ -195,7 +203,7 @@ const ShipFlowNavigation = () => {
 const AirFlowNavigation = () => {
   return (
     <Stack.Navigator
-      screenOptions={{ headerShown: false, gestureEnabled: false }}
+      screenOptions={{headerShown: false, gestureEnabled: false}}
       initialRouteName={'AirDelivery'}>
       <Stack.Screen name="ProviderDetail" component={ProviderDetailScreen} />
       <Stack.Screen name="ReceiverDetails" component={ReceiverDetailsScreen} />
@@ -210,7 +218,7 @@ const AirFlowNavigation = () => {
 const StackNavigation = () => {
   return (
     <Stack.Navigator
-      screenOptions={{ headerShown: false, gestureEnabled: false }}
+      screenOptions={{headerShown: false, gestureEnabled: false}}
       initialRouteName={'Splash'}>
       <Stack.Screen name="MyDrawer" component={MyDrawer} />
       {/* <Stack.Screen name="ShipFlowNavigation" component={ShipFlowNavigation} />
@@ -227,7 +235,5 @@ const StackNavigation = () => {
     </Stack.Navigator>
   );
 };
-
-
 
 export default StackNavigation;
