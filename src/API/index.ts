@@ -50,6 +50,7 @@ import {AvailDiscount} from './AvailDiscount';
 import {calculateShipBookingFare} from './calculateShipBookingFare';
 import {getUserAverageRating} from './getUserAverageRating';
 import {calculateAirBookingFare} from './calculateAirBookingFare';
+import {getPromoCodes} from './getPromoCodes';
 
 export {
   forgotPassword,
@@ -104,4 +105,5 @@ export {
   calculateShipBookingFare,
   calculateAirBookingFare,
   getUserAverageRating,
+  getPromoCodes,
 };

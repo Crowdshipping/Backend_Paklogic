@@ -85,7 +85,7 @@ export default function RateDriver({navigation, route}: any) {
               <Avatar
                 size={110}
                 rounded
-                icon={{name: 'person', color: 'grey', size: 90}}
+                icon={{name: 'person', color: colors.gray, size: 90}}
                 containerStyle={styles.img}
               />
             ) : (
@@ -123,7 +123,7 @@ export default function RateDriver({navigation, route}: any) {
             <View style={styles.description}>
               <TextInput
                 placeholder={'Write your review'}
-                placeholderTextColor={'gray'}
+                placeholderTextColor={colors.gray}
                 multiline
                 autoCorrect={false}
                 autoComplete={'off'}

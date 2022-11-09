@@ -50,7 +50,7 @@ export const PhoneNumberPicker = (props: IPhonePicker) => {
         <TextInput
           placeholder={phone ? `${phone}` : 'phone number'}
           editable={!editable ? editable : true}
-          placeholderTextColor={'gray'}
+          placeholderTextColor={colors.gray}
           autoCapitalize="none"
           keyboardType={'numeric'}
           style={styles.textInput}
@@ -113,7 +113,7 @@ export const PhoneNumberPickerUI = (props: IPhonePicker) => {
             flexDirection: 'row',
             alignItems: 'center',
             width: '30%',
-            borderColor: 'grey',
+            borderColor: colors.gray,
             justifyContent: 'space-between',
           }}
           onPress={() => setIsModal(true)}>
@@ -125,14 +125,14 @@ export const PhoneNumberPickerUI = (props: IPhonePicker) => {
 
         <TextInput
           placeholder="phone number"
-          placeholderTextColor={'gray'}
+          placeholderTextColor={colors.gray}
           autoCapitalize="none"
           keyboardType="numeric"
           style={{
             width: '65%',
             fontSize: wp(4),
             borderBottomWidth: 1,
-            borderColor: 'grey',
+            borderColor: colors.gray,
             color: colors.black,
           }}
           onChangeText={text => {

@@ -31,11 +31,22 @@ interface IimageShow {
 interface IimageShow1 extends Array<IimageShow> {}
 
 const HistoryDetail = ({navigation, route}: any) => {
-  const {status, bookingId, provider, type, state, flight, ship, _id} =
-    route.params.item.request;
+  const {
+    status,
+    bookingId,
+    provider,
+    requestedBy,
+    type,
+    state,
+    flight,
+    ship,
+    _id,
+  } = route.params.item?.request;
+
   const [isCustomerRead, setCustomerRead] = useState<boolean>(true);
   const [Images, setImages] = useState<IimageShow1>([]);
   const [rateData, setrateData] = useState<any>({});
+  const [rateDataCustomer, setrateDataCustomer] = useState<boolean>(false);
   const isfocus = useIsFocused();
 
   function getRatingAndMessageStatus() {
@@ -43,6 +54,22 @@ const HistoryDetail = ({navigation, route}: any) => {
       getRatings(_id, provider._id)
         .then((result: any) => {
           result.success && setrateData(result.rating);
+        })
+        .catch(error => {
+          if (error.response.status === 401) {
+            LogoutApi();
+            Alert.alert('Session Expired', 'Please login again');
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{name: 'Welcome'}],
+              }),
+            );
+          }
+        });
+      getRatings(_id, requestedBy._id)
+        .then((result: any) => {
+          result.success && setrateDataCustomer(true);
         })
         .catch(error => {
           if (error.response.status === 401) {
@@ -77,10 +104,11 @@ const HistoryDetail = ({navigation, route}: any) => {
 
   useEffect(() => {
     if (bookingId?.productImage) {
-      setImages(Images => [
-        ...Images,
-        {uri: prodUrl + bookingId?.productImage},
-      ]);
+      // setImages(Images => [
+      //   ...Images,
+      //   {uri: prodUrl + bookingId?.productImage},
+      // ]);
+      setImages([{uri: prodUrl + bookingId?.productImage}]);
     }
     if (bookingId?.productImage2) {
       setImages(Images => [
@@ -427,7 +455,7 @@ const HistoryDetail = ({navigation, route}: any) => {
                   </TouchableOpacity>
                 </View>
               )}
-              {state === 'Completed' && provider && (
+              {state === 'Completed' && !rateDataCustomer && (
                 <View style={{width: '50%', paddingHorizontal: '5%'}}>
                   <TouchableOpacity
                     style={{
@@ -540,7 +568,7 @@ const HistoryDetail = ({navigation, route}: any) => {
                   <Avatar
                     size={wp(10)}
                     rounded
-                    icon={{name: 'person', color: 'grey', size: 40}}
+                    icon={{name: 'person', color: colors.gray, size: 40}}
                     containerStyle={styles.img}
                   />
                 )}

@@ -74,7 +74,7 @@ export const ModalTypes = (props: any) => {
                 ]}
                 autoFocus
                 placeholder="Enter Product Type..."
-                placeholderTextColor={'gray'}
+                placeholderTextColor={colors.gray}
                 autoCorrect={false}
                 autoComplete={'off'}
                 numberOfLines={1}

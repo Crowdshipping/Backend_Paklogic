@@ -39,7 +39,7 @@ export const Address = (props: IAddressPicker) => {
 
         <TextInput
           placeholder="Address"
-          placeholderTextColor={'gray'}
+          placeholderTextColor={colors.gray}
           autoCapitalize={'none'}
           style={styles.textInput}
           onChangeText={text => onChange && onChange(selectedCountry, text)}

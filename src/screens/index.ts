@@ -1,13 +1,13 @@
-import RegisterScreen from './Register/RegisterScreen';
-import SigninScreen from './Signin/SigninScreen';
+import RegisterScreen from './AuthFlow/Register/RegisterScreen';
+import SigninScreen from './AuthFlow/Signin/SigninScreen';
 import ForgotPassword from './ForgotPassword/ForgotPassword';
 import WelcomeScreen from './WelcomeScreen/WelcomeScreen';
 import SplashScreen from './SplashScreen/SplashScreen';
 import LandingScreen from './LandingScreen/LandingScreen';
-import RegisterNumberScreen from './RegisterNumberScreen/RegisterNumberScreen';
-import ResetPasswordScreen from './ResetPasswordScreen/ResetPasswordScreen';
-import VerifyOtp from './VerifyOtp/VerifyOtp';
-import PasswordOtp from './PasswordOtp/PasswordOtp';
+import RegisterNumberScreen from './AuthFlow/RegisterNumberScreen/RegisterNumberScreen';
+import ResetPasswordScreen from './AuthFlow/ResetPasswordScreen/ResetPasswordScreen';
+import VerifyOtp from './AuthFlow/VerifyOtp/VerifyOtp';
+import PasswordOtp from './AuthFlow/PasswordOtp/PasswordOtp';
 import StartBookingScreen from './LandFlow/StartBookingScreen/StartBookingScreen';
 import ProviderDetailScreen from './ProviderDetail/ProviderDetailScreen';
 import ReceiverDetailsScreen from './ReceiverDetailsScreen/ReceiverDetailsScreen';
@@ -29,21 +29,22 @@ import LandReceiverDetail from './LandFlow/LandReceiverDetail/LandReceiverDetail
 import TrackLand from './DrawerScreens/TrackLand/TrackLand';
 import LandModifyRequest from './LandFlow/LandModifyRequest/LandModifyRequest';
 import HistoryDetail from './DrawerScreens/HistoryDetail/HistoryDetail';
-import ViewProfile from './Profile/ViewProfile';
-import EditProfile from './EditProfile/EditProfile';
-import AddClaim from './Claim/AddClaim';
-import Claims from './Claim/Claims';
-import ClaimDetail from './Claim/ClaimDetail';
-import LoggedUserResetPassword from './LoggedUserResetPassword/LoggedUserResetPassword';
-import Complain from './Complain/Complain';
-import AddComplain from './Complain/AddComplain';
-import ComplainDetail from './Complain/ComplainDetail';
-import NotifictionHistory from './Notification/Notification';
-import ViewQuery from './Support/ViewQuery';
-import AddQuery from './Support/AddQuery';
-import QueryDetail from './Support/QueryDetail';
+import ViewProfile from './DrawerScreens/Profile/ViewProfile';
+import EditProfile from './DrawerScreens/EditProfile/EditProfile';
+import AddClaim from './DrawerScreens/Claim/AddClaim';
+import Claims from './DrawerScreens/Claim/Claims';
+import ClaimDetail from './DrawerScreens/Claim/ClaimDetail';
+import LoggedUserResetPassword from './AuthFlow/LoggedUserResetPassword/LoggedUserResetPassword';
+import Complain from './DrawerScreens/Complain/Complain';
+import AddComplain from './DrawerScreens/Complain/AddComplain';
+import ComplainDetail from './DrawerScreens/Complain/ComplainDetail';
+import NotifictionHistory from './DrawerScreens/Notification/Notification';
+import ViewQuery from './DrawerScreens/Support/ViewQuery';
+import AddQuery from './DrawerScreens/Support/AddQuery';
+import QueryDetail from './DrawerScreens/Support/QueryDetail';
 import RateDriver from './Rate/RateDriver';
-import ViewPaymentLogs from './PaymentLogs/PaymentLogs';
+import ViewPaymentLogs from './DrawerScreens/PaymentLogs/PaymentLogs';
+import PromoCodes from './DrawerScreens/Promo/PromoCodes';
 
 export {
   RegisterScreen,
@@ -92,4 +93,5 @@ export {
   QueryDetail,
   RateDriver,
   ViewPaymentLogs,
+  PromoCodes,
 };

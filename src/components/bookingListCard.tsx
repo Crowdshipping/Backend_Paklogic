@@ -253,7 +253,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: wp(5),
     paddingVertical: hp(2),
     elevation: 8,
-    shadowColor: Platform.OS === 'android' ? colors.black : 'grey',
+    shadowColor: Platform.OS === 'android' ? colors.black : colors.gray,
     borderRadius: hp(2),
     backgroundColor: colors.white,
     marginVertical: hp(1),

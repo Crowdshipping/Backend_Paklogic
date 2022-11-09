@@ -43,6 +43,7 @@ import {flightSvg} from './flightSvg';
 import {ship2Svg} from './ship2Svg';
 import {vehicleSvg} from './vehicleSvg';
 import {complaint} from './complaint';
+import {promoSvg} from './promoSvg';
 
 export {
   register,
@@ -90,4 +91,5 @@ export {
   ship2Svg,
   vehicleSvg,
   complaint,
+  promoSvg,
 };

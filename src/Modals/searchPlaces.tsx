@@ -53,7 +53,7 @@ export const SearchPlaces = (props: IModal) => {
           }}
         />
 
-        <Button
+        {/* <Button
           title="Rawalpindi"
           onPress={() => {
             setLocation({
@@ -75,7 +75,7 @@ export const SearchPlaces = (props: IModal) => {
             }),
               setModalVisible(false);
           }}
-        />
+        /> */}
       </SafeAreaView>
     </Modal>
   );

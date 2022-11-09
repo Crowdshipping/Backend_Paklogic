@@ -34,7 +34,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#E0E0E0',
     borderRadius: 10,
     elevation: 5,
-    shadowColor: Platform.OS === 'android' ? colors.black : 'grey',
+    shadowColor: Platform.OS === 'android' ? colors.black : colors.gray,
     shadowOffset: {
       width: 1,
       height: 1,

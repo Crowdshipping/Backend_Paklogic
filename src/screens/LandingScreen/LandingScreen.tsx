@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useEffect} from 'react';
 import {
   Alert,
   BackHandler,
@@ -16,8 +16,10 @@ import {Header} from '../../components';
 import {SvgXml} from 'react-native-svg';
 import {truck, plane, shipsvg} from '../../theme/assets/svg';
 import {useFocusEffect} from '@react-navigation/native';
+import {AppContext} from '../../../App';
 
 const LandingScreen = ({navigation}: any) => {
+  const {userData, notificationData} = useContext(AppContext);
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
@@ -38,6 +40,19 @@ const LandingScreen = ({navigation}: any) => {
         BackHandler.removeEventListener('hardwareBackPress', onBackPress);
     }, []),
   );
+
+  useEffect(() => {
+    notificationData &&
+      (notificationData.isFor === 'Request'
+        ? navigation.navigate('BookingHistory')
+        : notificationData.isFor === 'Promocode'
+        ? navigation.navigate('PromoCodes')
+        : notificationData.isFor === 'Chat' &&
+          navigation.navigate('ChatScreen', {
+            receiverId: notificationData.id,
+            requestId: notificationData.requestId,
+          }));
+  }, [notificationData]);
   return (
     <SafeAreaView style={styles.container}>
       <Header
@@ -48,7 +63,20 @@ const LandingScreen = ({navigation}: any) => {
       <View style={styles.deliveryComponent}>
         <Text style={styles.text}>LOCAL DELIVERY</Text>
         <TouchableOpacity
-          onPress={() => navigation.navigate('LandFlowNavigation')}
+          onPress={() => {
+            userData.isSuspended
+              ? Alert.alert(
+                  'Account suspended by admin!',
+                  'In order to contact support',
+                  [
+                    {
+                      text: 'click here',
+                      onPress: () => navigation.navigate('ViewQuery'),
+                    },
+                  ],
+                )
+              : navigation.navigate('LandFlowNavigation');
+          }}
           style={styles.svgView}>
           <SvgXml
             style={styles.svg}
@@ -62,7 +90,20 @@ const LandingScreen = ({navigation}: any) => {
       <View style={styles.deliveryComponent}>
         <Text style={styles.text}>INTERNATIONAL Air DELIVERY</Text>
         <TouchableOpacity
-          onPress={() => navigation.navigate('AirFlowNavigation')}
+          onPress={() => {
+            userData.isSuspended
+              ? Alert.alert(
+                  'Account suspended by admin!',
+                  'In order to contact support',
+                  [
+                    {
+                      text: 'click here',
+                      onPress: () => navigation.navigate('ViewQuery'),
+                    },
+                  ],
+                )
+              : navigation.navigate('AirFlowNavigation');
+          }}
           style={styles.svgView}>
           <SvgXml
             style={styles.svg}
@@ -76,7 +117,20 @@ const LandingScreen = ({navigation}: any) => {
       <View style={styles.deliveryComponent}>
         <Text style={styles.text}>INTERNATIONAL Ship DELIVERY</Text>
         <TouchableOpacity
-          onPress={() => navigation.navigate('ShipFlowNavigation')}
+          onPress={() => {
+            userData.isSuspended
+              ? Alert.alert(
+                  'Account suspended by admin!',
+                  'In order to contact support',
+                  [
+                    {
+                      text: 'click here',
+                      onPress: () => navigation.navigate('ViewQuery'),
+                    },
+                  ],
+                )
+              : navigation.navigate('ShipFlowNavigation');
+          }}
           style={styles.svgView}>
           <SvgXml
             style={styles.svg}

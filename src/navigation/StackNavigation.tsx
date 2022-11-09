@@ -49,6 +49,7 @@ import {
   RateDriver,
   AddClaim,
   ViewPaymentLogs,
+  PromoCodes,
 } from '../screens';
 import CustomDrawerContent from './DrawerNavigation';
 import {StripePayment, ChatScreen} from '../features';
@@ -108,6 +109,7 @@ export type rootStack = {
   QueryDetail: undefined;
   RateDriver: undefined;
   ViewPaymentLogs: undefined;
+  PromoCodes: undefined;
 };
 const Stack = createStackNavigator<rootStack>();
 const Drawer = createDrawerNavigator();
@@ -163,6 +165,7 @@ const DrawerScreens = () => {
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="RateDriver" component={RateDriver} />
       <Stack.Screen name="ViewPaymentLogs" component={ViewPaymentLogs} />
+      <Stack.Screen name="PromoCodes" component={PromoCodes} />
     </Stack.Navigator>
   );
 };

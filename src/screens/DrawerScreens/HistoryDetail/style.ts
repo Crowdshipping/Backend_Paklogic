@@ -70,7 +70,7 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.white,
     elevation: 8,
 
-    shadowColor: Platform.OS === 'android' ? colors.black : 'grey',
+    shadowColor: Platform.OS === 'android' ? colors.black : colors.gray,
     shadowOffset: {
       width: 1,
       height: 1,

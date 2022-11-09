@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import {
   Alert,
   ActivityIndicator,
@@ -26,8 +26,11 @@ import {
   orderHistory,
 } from '../../../API';
 import {colors} from '../../../theme';
+import {AppContext} from '../../../../App';
 
 const BookingHistory = ({navigation}: any) => {
+  const {setNotificationData} = useContext(AppContext);
+
   const [isLoading, setLoading] = useState(true);
 
   const [data, setData] = useState([]);
@@ -43,6 +46,7 @@ const BookingHistory = ({navigation}: any) => {
   const [tabpostRequest, settabpostRequest] = useState(false);
 
   const onRefresh = React.useCallback(() => {
+    setNotificationData({});
     setRefreshing(true);
     fetchData();
   }, []);
@@ -491,7 +495,7 @@ const BookingHistory = ({navigation}: any) => {
                             item.bookingId?.dropAddressText
                       }
                       price={
-                        item.request.bookingId?.totalFare
+                        item.request?.bookingId?.totalFare
                           ? item.request.bookingId.totalFare
                           : '30$'
                       }

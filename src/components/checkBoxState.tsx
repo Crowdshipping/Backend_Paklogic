@@ -1,23 +1,24 @@
 import React from 'react';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import { StyleSheet, View } from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import {colors} from '../theme';
 
-const CheckBoxState = ({ text, onPress, isDisabled, checked }: any) => {
+const CheckBoxState = ({text, onPress, isDisabled, checked}: any) => {
   const [toggleCheckBox, setToggleCheckBox] = React.useState(false);
   return (
     <View style={styles.container}>
       <BouncyCheckbox
-
         disabled={isDisabled}
         isChecked={checked}
         textStyle={{
           textDecorationLine: 'none',
-          color: toggleCheckBox ? 'black' : 'black',
+          // color: toggleCheckBox ? 'black' : 'black',
+          color: colors.black,
         }}
         text={text}
         size={20}
         fillColor="green"
-        iconStyle={{ borderColor: toggleCheckBox ? 'grey' : 'black' }}
+        iconStyle={{borderColor: toggleCheckBox ? colors.gray : colors.black}}
         onPress={onPress}
       />
     </View>
@@ -29,7 +30,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 6
+    marginRight: 6,
   },
   textCheckBox: {
     fontSize: 12,

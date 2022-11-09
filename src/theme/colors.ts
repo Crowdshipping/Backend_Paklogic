@@ -3,4 +3,5 @@ export const colors = {
   boxBackground: '#EFEBEB',
   white: '#ffffff',
   black: '#000000',
+  gray: '#808080',
 };

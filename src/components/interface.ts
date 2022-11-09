@@ -12,6 +12,7 @@ export interface ITextBox {
   editable?: boolean;
   focus?: boolean;
   errormsg?: string;
+  eye?: boolean;
   //((value: string) => void)
 }
 export interface IButton {

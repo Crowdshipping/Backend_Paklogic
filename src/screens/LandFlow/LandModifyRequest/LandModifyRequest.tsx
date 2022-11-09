@@ -156,10 +156,45 @@ const LandModifyRequest = ({navigation, route}: any) => {
     ? route.params.data?.bookingId
     : '';
 
+  // const Unit = [
+  //   {id: 1, name: 'Kilogram'},
+  //   {id: 2, name: 'Gram'},
+  //   {id: 3, name: 'Pound'},
+  // ];
+
   const Unit = [
-    {id: 1, name: 'Kilogram'},
-    {id: 2, name: 'Gram'},
-    {id: 3, name: 'Pound'},
+    {
+      id: 'mcg',
+      name: 'Microgram',
+    },
+    {
+      id: 'mg',
+      name: 'Milligram',
+    },
+    {
+      id: 'g',
+      name: 'Gram',
+    },
+    {
+      id: 'kg',
+      name: 'Kilogram',
+    },
+    {
+      id: 'mt',
+      name: 'Metric Tonne',
+    },
+    {
+      id: 'oz',
+      name: 'Ounce',
+    },
+    {
+      id: 'lb',
+      name: 'Pound',
+    },
+    {
+      id: 't',
+      name: 'Ton',
+    },
   ];
   const BookingType = [
     {id: 1, name: 'Instant'},
@@ -500,6 +535,8 @@ const LandModifyRequest = ({navigation, route}: any) => {
         totalMiles: distance,
         lat: pickupLocation.lat,
         lng: pickupLocation.lon,
+        value: weight,
+        unit: SelectedUnit,
       };
       calculateBookingFare(data)
         .then((result: any) => {
@@ -547,7 +584,7 @@ const LandModifyRequest = ({navigation, route}: any) => {
 
                 <AntDesign
                   name="caretdown"
-                  color={'grey'}
+                  color={colors.gray}
                   size={wp(3)}
                   style={{
                     alignSelf: 'center',
@@ -580,7 +617,7 @@ const LandModifyRequest = ({navigation, route}: any) => {
 
                     <AntDesign
                       name="caretdown"
-                      color={'grey'}
+                      color={colors.gray}
                       size={wp(3)}
                       style={{
                         alignSelf: 'center',
@@ -590,7 +627,7 @@ const LandModifyRequest = ({navigation, route}: any) => {
                     />
                   </View>
 
-                  <Text style={{borderColor: 'grey', color: colors.black}}>
+                  <Text style={{borderColor: colors.gray, color: colors.black}}>
                     {SelectedCategory.name.length > 0
                       ? SelectedCategory.name
                       : 'Select Category'}
@@ -643,7 +680,7 @@ const LandModifyRequest = ({navigation, route}: any) => {
                   borderBottomWidth: 1,
                   marginTop: hp(2),
                   marginBottom: hp(2),
-                  borderColor: 'grey',
+                  borderColor: colors.gray,
                   // height: '55%',
                 }}
                 onPress={() => setModalVisible3(!isModalVisible3)}>
@@ -652,7 +689,7 @@ const LandModifyRequest = ({navigation, route}: any) => {
 
                   <AntDesign
                     name="caretdown"
-                    color={'grey'}
+                    color={colors.gray}
                     size={wp(3)}
                     style={{
                       alignSelf: 'center',
@@ -663,7 +700,7 @@ const LandModifyRequest = ({navigation, route}: any) => {
 
                 <Text
                   style={{
-                    borderColor: 'grey',
+                    borderColor: colors.gray,
                     paddingVertical: wp(1),
                     color: colors.black,
                   }}>
@@ -679,7 +716,7 @@ const LandModifyRequest = ({navigation, route}: any) => {
 
                 <AntDesign
                   name="caretdown"
-                  color={'grey'}
+                  color={colors.gray}
                   size={wp(3)}
                   style={{
                     alignSelf: 'center',
@@ -689,7 +726,7 @@ const LandModifyRequest = ({navigation, route}: any) => {
                 />
               </View>
 
-              <Text style={{borderColor: 'grey', color: colors.black}}>
+              <Text style={{borderColor: colors.gray, color: colors.black}}>
                 {SelectedBookingType
                   ? SelectedBookingType
                   : 'Select Booking Type'}
@@ -832,7 +869,7 @@ const LandModifyRequest = ({navigation, route}: any) => {
                 <TextInput
                   placeholder="Only jpg and png are acceptable, file size should not be more than 5mb."
                   editable={false}
-                  placeholderTextColor={'#969696'}
+                  placeholderTextColor={colors.gray}
                   multiline={true}
                   style={{
                     width: wp(80),
@@ -861,7 +898,7 @@ const LandModifyRequest = ({navigation, route}: any) => {
                       ? route.params.data.description
                       : 'Enter product description'
                   }
-                  placeholderTextColor={'#969696'}
+                  placeholderTextColor={colors.gray}
                   multiline={true}
                   autoCorrect={false}
                   autoCapitalize={'none'}
@@ -897,26 +934,7 @@ const LandModifyRequest = ({navigation, route}: any) => {
                 }}>
                 <SvgXml xml={carlocation} width={wp(8)} height="100%" />
               </View>
-              {/* <View
-                style={{
-                  justifyContent: 'space-between',
-                  width: '80%',
-                  // height: hp(30),
-                  paddingRight: wp(5),
-                  // borderWidth: 1
-                }}>
-                <Textbox
-                  title={'Pickup Location'}
-                  placeholder={pickupLocation.name}
-                  editable={false}
-                />
-                <View style={styles.line}></View>
-                <Textbox
-                  title={'Pickup Location'}
-                  placeholder={dropoffLocation.name}
-                  editable={false}
-                />
-              </View> */}
+
               <View style={styles.location}>
                 <TouchableOpacity
                   onPress={() => {
@@ -933,7 +951,7 @@ const LandModifyRequest = ({navigation, route}: any) => {
                     style={{
                       paddingVertical: Platform.OS === 'ios' ? wp(2) : 0,
                       borderBottomWidth: 1,
-                      borderColor: 'grey',
+                      borderColor: colors.gray,
                       color: colors.black,
                     }}>
                     {pickupLocation?.name !== ''
@@ -961,7 +979,7 @@ const LandModifyRequest = ({navigation, route}: any) => {
                     style={{
                       paddingVertical: Platform.OS === 'ios' ? wp(2) : 0,
                       borderBottomWidth: 1,
-                      borderColor: 'grey',
+                      borderColor: colors.gray,
                       color: colors.black,
                     }}>
                     {dropoffLocation?.name !== ''
@@ -1107,7 +1125,6 @@ const LandModifyRequest = ({navigation, route}: any) => {
         isModalVisible={isModalVisible3}
         setModalVisible={setModalVisible3}
         Type={Unit}
-        // setSelectedType={setSelectedUnit}
         setSelectedType={(text: string) => {
           setSelectedUnit(text);
           setunitValue(true);
@@ -1117,7 +1134,6 @@ const LandModifyRequest = ({navigation, route}: any) => {
         isModalVisible={isModalVisible1}
         setModalVisible={setModalVisible1}
         Type={BookingType}
-        // setSelectedType={setSelectedUnit}
         setSelectedType={(text: string) => {
           // setunitValue(true);
           setSelectedBookingType(text);

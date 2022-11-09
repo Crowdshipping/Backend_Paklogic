@@ -161,9 +161,38 @@ const ModifyRequest = ({navigation, route}: any) => {
   //   { id: 3, name: 'soft' },
   // ];
   const Unit = [
-    {id: 1, name: 'Kilogram'},
-    {id: 2, name: 'Gram'},
-    {id: 3, name: 'Pound'},
+    {
+      id: 'mcg',
+      name: 'Microgram',
+    },
+    {
+      id: 'mg',
+      name: 'Milligram',
+    },
+    {
+      id: 'g',
+      name: 'Gram',
+    },
+    {
+      id: 'kg',
+      name: 'Kilogram',
+    },
+    {
+      id: 'mt',
+      name: 'Metric Tonne',
+    },
+    {
+      id: 'oz',
+      name: 'Ounce',
+    },
+    {
+      id: 'lb',
+      name: 'Pound',
+    },
+    {
+      id: 't',
+      name: 'Ton',
+    },
   ];
 
   async function handleSubmit() {
@@ -556,7 +585,7 @@ const ModifyRequest = ({navigation, route}: any) => {
 
                 <AntDesign
                   name="caretdown"
-                  color={'grey'}
+                  color={colors.gray}
                   size={wp(3)}
                   style={{
                     alignSelf: 'center',
@@ -590,7 +619,7 @@ const ModifyRequest = ({navigation, route}: any) => {
 
                     <AntDesign
                       name="caretdown"
-                      color={'grey'}
+                      color={colors.gray}
                       size={wp(3)}
                       style={{
                         alignSelf: 'center',
@@ -600,7 +629,7 @@ const ModifyRequest = ({navigation, route}: any) => {
                     />
                   </View>
 
-                  <Text style={{borderColor: 'grey', color: colors.black}}>
+                  <Text style={{borderColor: colors.gray, color: colors.black}}>
                     {SelectedCategory.name.length > 0
                       ? SelectedCategory.name
                       : 'Select Category'}
@@ -652,7 +681,7 @@ const ModifyRequest = ({navigation, route}: any) => {
                   borderBottomWidth: 1,
                   marginTop: hp(2),
                   marginBottom: hp(2),
-                  borderColor: 'grey',
+                  borderColor: colors.gray,
                   // height: '55%',
                 }}
                 onPress={() => setModalVisible3(!isModalVisible3)}>
@@ -661,7 +690,7 @@ const ModifyRequest = ({navigation, route}: any) => {
 
                   <AntDesign
                     name="caretdown"
-                    color={'grey'}
+                    color={colors.gray}
                     size={wp(3)}
                     style={{
                       alignSelf: 'center',
@@ -672,7 +701,7 @@ const ModifyRequest = ({navigation, route}: any) => {
 
                 <Text
                   style={{
-                    borderColor: 'grey',
+                    borderColor: colors.gray,
                     paddingVertical: wp(1),
                     color: colors.black,
                   }}>
@@ -828,7 +857,7 @@ const ModifyRequest = ({navigation, route}: any) => {
                 <TextInput
                   placeholder="Only jpg and png are acceptable, file size should not be more than 5mb."
                   editable={false}
-                  placeholderTextColor={'#969696'}
+                  placeholderTextColor={colors.gray}
                   multiline={true}
                   // autoCorrect={false}
                   // autoCapitalize={'none'}
@@ -863,7 +892,7 @@ const ModifyRequest = ({navigation, route}: any) => {
                       ? route.params.data.description
                       : 'Enter product description'
                   }
-                  placeholderTextColor={'#969696'}
+                  placeholderTextColor={colors.gray}
                   multiline={true}
                   autoCorrect={false}
                   autoCapitalize={'none'}
@@ -1028,7 +1057,6 @@ const ModifyRequest = ({navigation, route}: any) => {
         isModalVisible={isModalVisible3}
         setModalVisible={setModalVisible3}
         Type={Unit}
-        // setSelectedType={setSelectedUnit}
         setSelectedType={(text: string) => {
           setSelectedUnit(text);
           setunitValue(true);

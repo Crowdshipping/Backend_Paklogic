@@ -21,15 +21,17 @@ import {
   notificationicon,
   supporticon,
   complaint,
+  promoSvg,
 } from '../theme/assets/svg';
 import {colors} from '../theme';
 import {prodUrl} from '../appConstants';
 import {LogoutApi} from '../API';
 import {AppContext} from '../../App';
 import Icon from 'react-native-vector-icons/Ionicons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Avatar} from 'react-native-elements';
 import {CommonActions} from '@react-navigation/native';
-
+import {promotions} from '../theme/assets/images';
 const CustomDrawerContent = (props: any) => {
   const {userData} = useContext(AppContext);
 
@@ -79,7 +81,7 @@ const CustomDrawerContent = (props: any) => {
           <Avatar
             size={100}
             rounded
-            icon={{name: 'person', color: 'grey', size: 90}}
+            icon={{name: 'person', color: colors.gray, size: 90}}
             containerStyle={styles.img}
           />
         )}
@@ -169,6 +171,16 @@ const CustomDrawerContent = (props: any) => {
           style={styles.viewunderline}>
           <SvgXml style={styles.svg} xml={notificationicon} width={25} />
           <Text style={styles.txtdetail}>Notification</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            props.navigation.navigate('PromoCodes');
+          }}
+          style={styles.viewunderline}>
+          {/* <SvgXml style={styles.svg} xml={promoSvg} width={25} /> */}
+          {/* <FontAwesome5 size={25} color={colors.black} name="search-dollar" /> */}
+          <Image source={promotions} style={{width: 25, height: 25}} />
+          <Text style={styles.txtdetail}>My Promos</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={logout} style={styles.viewunderline}>

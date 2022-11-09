@@ -1,5 +1,5 @@
 import React, {useContext, useEffect} from 'react';
-import {SafeAreaView} from 'react-native';
+import {Alert, SafeAreaView} from 'react-native';
 import {styles} from './style';
 import {splash} from '../../theme/assets/svg';
 import {SvgXml} from 'react-native-svg';
@@ -19,29 +19,24 @@ const SplashScreen = ({navigation}: any) => {
       getUser()
         .then(async (rest: any) => {
           setUserData(rest.user);
-          try {
-            await AsyncStorage.setItem('@userFName', rest.user.firstname);
-            await AsyncStorage.setItem('@userLName', rest.user.lastname);
-            await AsyncStorage.setItem('@userEmail', rest.user.email);
-            await AsyncStorage.setItem('@userId', rest.user._id);
-            if (rest.user?.profilepic) {
-              await AsyncStorage.setItem('@userPic', rest.user.profilepic);
-            }
-          } catch (e) {
-            console.log('error', e);
-          }
           navigation.navigate('MyDrawer');
         })
         .catch(async error => {
           if (error.response.status === 401) {
             LogoutApi();
+            Alert.alert('Session Expired', 'Please login again');
             navigation.dispatch(
               CommonActions.reset({
                 index: 1,
                 routes: [{name: 'Welcome'}],
               }),
             );
-          }
+          } else
+            Alert.alert(
+              error?.response?.data?.message
+                ? error?.response?.data?.message
+                : 'Something went wrong',
+            );
         });
     } else
       setTimeout(() => {

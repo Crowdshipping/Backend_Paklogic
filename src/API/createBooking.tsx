@@ -31,7 +31,7 @@ export const createBooking = async (
   finalDate: string | null,
   totalFare: number,
 ) => {
-  const value = await AsyncStorage.getItem('@userId');
+  const userId = await AsyncStorage.getItem('@userId');
   const userToken = await AsyncStorage.getItem('@userToken');
 
   return new Promise((resolve, reject) => {
@@ -74,7 +74,7 @@ export const createBooking = async (
         todate: SelectedBookingType === 'Instant' ? null : finalDate,
         recieverCountryCode: countryCode,
         recieverPhoneno: receiverNum,
-        bookedBy: value,
+        bookedBy: userId,
         totalFare: totalFare ? totalFare : null,
       },
     };

@@ -164,9 +164,38 @@ const ShipModifyRequest = ({navigation, route}: any) => {
   //   { id: 3, name: 'soft' },
   // ];
   const Unit = [
-    {id: 1, name: 'Kilogram'},
-    {id: 2, name: 'Gram'},
-    {id: 3, name: 'Pound'},
+    {
+      id: 'mcg',
+      name: 'Microgram',
+    },
+    {
+      id: 'mg',
+      name: 'Milligram',
+    },
+    {
+      id: 'g',
+      name: 'Gram',
+    },
+    {
+      id: 'kg',
+      name: 'Kilogram',
+    },
+    {
+      id: 'mt',
+      name: 'Metric Tonne',
+    },
+    {
+      id: 'oz',
+      name: 'Ounce',
+    },
+    {
+      id: 'lb',
+      name: 'Pound',
+    },
+    {
+      id: 't',
+      name: 'Ton',
+    },
   ];
 
   async function handleSubmit() {
@@ -242,7 +271,6 @@ const ShipModifyRequest = ({navigation, route}: any) => {
                           rest.success && setsuccess(true);
                         })
                         .catch(async error => {
-                          console.log('one', error);
                           setloading(false);
                           if (error.response.status === 401) {
                             Alert.alert(
@@ -283,7 +311,6 @@ const ShipModifyRequest = ({navigation, route}: any) => {
                           rest.success && setsuccess(true);
                         })
                         .catch(async error => {
-                          console.log('two', error);
                           setloading(false);
                           if (error.response.status === 401) {
                             Alert.alert(
@@ -307,7 +334,6 @@ const ShipModifyRequest = ({navigation, route}: any) => {
                         });
                 })
                 .catch(async error => {
-                  console.log('three', error);
                   setloading(false);
                   if (error.response.status === 401) {
                     Alert.alert('Session Expired', 'Please login again');
@@ -329,7 +355,6 @@ const ShipModifyRequest = ({navigation, route}: any) => {
             }
           })
           .catch(async error => {
-            console.log('four', error);
             setloading(false);
             if (error.response.status === 401) {
               Alert.alert('Session Expired', 'Please login again');
@@ -403,7 +428,6 @@ const ShipModifyRequest = ({navigation, route}: any) => {
               setloading(false);
             })
             .catch(async error => {
-              console.log('five', error);
               setloading(false);
               if (error.response.status === 401) {
                 Alert.alert('Session Expired', 'Please login again');
@@ -450,7 +474,6 @@ const ShipModifyRequest = ({navigation, route}: any) => {
           });
       })
       .catch(async error => {
-        console.log('six', error);
         setloading(false);
         if (error.response.status === 401) {
           Alert.alert('Session Expired', 'Please login again');
@@ -484,7 +507,6 @@ const ShipModifyRequest = ({navigation, route}: any) => {
             });
         })
         .catch(async error => {
-          console.log('seven', error);
           setloading(false);
           if (error.response.status === 401) {
             Alert.alert('Session Expired', 'Please login again');
@@ -519,7 +541,6 @@ const ShipModifyRequest = ({navigation, route}: any) => {
         result.success && settotalFare(result.amount);
       })
       .catch(async error => {
-        console.log('eight', error);
         setloading(false);
         if (error.response.status === 401) {
           Alert.alert('Session Expired', 'Please login again');
@@ -561,7 +582,7 @@ const ShipModifyRequest = ({navigation, route}: any) => {
 
                 <AntDesign
                   name="caretdown"
-                  color={'grey'}
+                  color={colors.gray}
                   size={wp(3)}
                   style={{
                     alignSelf: 'center',
@@ -596,7 +617,7 @@ const ShipModifyRequest = ({navigation, route}: any) => {
 
                     <AntDesign
                       name="caretdown"
-                      color={'grey'}
+                      color={colors.gray}
                       size={wp(3)}
                       style={{
                         alignSelf: 'center',
@@ -606,7 +627,7 @@ const ShipModifyRequest = ({navigation, route}: any) => {
                     />
                   </View>
 
-                  <Text style={{borderColor: 'grey', color: colors.black}}>
+                  <Text style={{borderColor: colors.gray, color: colors.black}}>
                     {SelectedCategory.name.length > 0
                       ? SelectedCategory.name
                       : 'Select Category'}
@@ -659,7 +680,7 @@ const ShipModifyRequest = ({navigation, route}: any) => {
                   // marginHorizontal: wp(1),
                   // paddingHorizontal: wp(5),
                   marginBottom: hp(2),
-                  borderColor: 'grey',
+                  borderColor: colors.gray,
                   height: '55%',
                   // alignSelf: 'center',
 
@@ -671,7 +692,7 @@ const ShipModifyRequest = ({navigation, route}: any) => {
 
                   <AntDesign
                     name="caretdown"
-                    color={'grey'}
+                    color={colors.gray}
                     size={wp(3)}
                     style={{
                       alignSelf: 'center',
@@ -683,7 +704,7 @@ const ShipModifyRequest = ({navigation, route}: any) => {
 
                 <Text
                   style={{
-                    borderColor: 'grey',
+                    borderColor: colors.gray,
                     marginTop: 2,
                     color: colors.black,
                   }}>
@@ -839,7 +860,7 @@ const ShipModifyRequest = ({navigation, route}: any) => {
                 <TextInput
                   placeholder="Only jpg and png are acceptable, file size should not be more than 5mb."
                   editable={false}
-                  placeholderTextColor={'#969696'}
+                  placeholderTextColor={colors.gray}
                   multiline={true}
                   // autoCorrect={false}
                   // autoCapitalize={'none'}
@@ -874,7 +895,7 @@ const ShipModifyRequest = ({navigation, route}: any) => {
                       ? route.params.data.description
                       : 'Enter product description'
                   }
-                  placeholderTextColor={'#969696'}
+                  placeholderTextColor={colors.gray}
                   multiline={true}
                   autoCorrect={false}
                   autoCapitalize={'none'}
@@ -1038,7 +1059,6 @@ const ShipModifyRequest = ({navigation, route}: any) => {
         isModalVisible={isModalVisible3}
         setModalVisible={setModalVisible3}
         Type={Unit}
-        // setSelectedType={setSelectedUnit}
         setSelectedType={(text: string) => {
           setSelectedUnit(text);
           setunitValue(true);

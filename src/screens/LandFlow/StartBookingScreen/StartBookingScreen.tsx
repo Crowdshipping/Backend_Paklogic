@@ -242,7 +242,7 @@ const StartBookingScreen = ({navigation}: any) => {
                 style={{
                   paddingVertical: Platform.OS === 'ios' ? wp(2) : 0,
                   borderBottomWidth: 1,
-                  borderColor: 'grey',
+                  borderColor: colors.gray,
                   color: colors.black,
                 }}>
                 {pickupLocation && pickupLocation.name !== ''
@@ -270,7 +270,7 @@ const StartBookingScreen = ({navigation}: any) => {
                 style={{
                   paddingVertical: Platform.OS === 'ios' ? wp(2) : 0,
                   borderBottomWidth: 1,
-                  borderColor: 'grey',
+                  borderColor: colors.gray,
                   color: colors.black,
                 }}>
                 {dropoffLocation && dropoffLocation?.name !== ''

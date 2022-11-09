@@ -59,7 +59,7 @@ export const styles = StyleSheet.create({
     marginTop: hp(2),
     marginHorizontal: wp(8),
     paddingBottom: hp(1),
-    borderColor: 'grey',
+    borderColor: colors.gray,
   },
   menu: {marginHorizontal: wp(10), marginVertical: hp(3)},
   location: {
@@ -92,13 +92,13 @@ export const styles = StyleSheet.create({
 
   Touchsmall: {
     borderBottomWidth: 1,
-    borderColor: 'grey',
+    borderColor: colors.gray,
     paddingBottom: 1,
     marginVertical: hp(1),
     width: '30%',
   },
   Touchsmallprops: {
-    borderColor: 'grey',
+    borderColor: colors.gray,
     paddingBottom: 1,
     marginVertical: hp(1),
     width: '30%',

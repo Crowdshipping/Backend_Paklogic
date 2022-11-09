@@ -92,9 +92,38 @@ const LandProductScreen = ({navigation, route}: any) => {
   //   { id: 3, name: 'soft' },
   // ];
   const Unit = [
-    {id: 1, name: 'Kilogram'},
-    {id: 2, name: 'Gram'},
-    {id: 3, name: 'Pound'},
+    {
+      id: 'mcg',
+      name: 'Microgram',
+    },
+    {
+      id: 'mg',
+      name: 'Milligram',
+    },
+    {
+      id: 'g',
+      name: 'Gram',
+    },
+    {
+      id: 'kg',
+      name: 'Kilogram',
+    },
+    {
+      id: 'mt',
+      name: 'Metric Tonne',
+    },
+    {
+      id: 'oz',
+      name: 'Ounce',
+    },
+    {
+      id: 'lb',
+      name: 'Pound',
+    },
+    {
+      id: 't',
+      name: 'Ton',
+    },
   ];
   const BookingType = [
     {id: 1, name: 'Instant'},
@@ -294,7 +323,7 @@ const LandProductScreen = ({navigation, route}: any) => {
                     <Text style={styles.txt1}>Product Type</Text>
                     <AntDesign
                       name="caretdown"
-                      color={'grey'}
+                      color={colors.gray}
                       size={wp(3)}
                       style={{
                         alignSelf: 'center',
@@ -328,7 +357,7 @@ const LandProductScreen = ({navigation, route}: any) => {
 
                         <AntDesign
                           name="caretdown"
-                          color={'grey'}
+                          color={colors.gray}
                           size={wp(3)}
                           style={{
                             alignSelf: 'center',
@@ -338,7 +367,8 @@ const LandProductScreen = ({navigation, route}: any) => {
                         />
                       </View>
 
-                      <Text style={{borderColor: 'grey', color: colors.black}}>
+                      <Text
+                        style={{borderColor: colors.gray, color: colors.black}}>
                         {SelectedCategory.name.length > 0
                           ? SelectedCategory.name
                           : 'Select Category'}
@@ -393,7 +423,7 @@ const LandProductScreen = ({navigation, route}: any) => {
                       borderBottomWidth: 1,
                       marginTop: hp(2),
                       marginBottom: hp(2),
-                      borderColor: 'grey',
+                      borderColor: colors.gray,
                       // height: '55%',
                     }}
                     onPress={() => setModalVisible3(!isModalVisible3)}>
@@ -402,7 +432,7 @@ const LandProductScreen = ({navigation, route}: any) => {
 
                       <AntDesign
                         name="caretdown"
-                        color={'grey'}
+                        color={colors.gray}
                         size={wp(3)}
                         style={{
                           alignSelf: 'center',
@@ -413,7 +443,7 @@ const LandProductScreen = ({navigation, route}: any) => {
 
                     <Text
                       style={{
-                        borderColor: 'grey',
+                        borderColor: colors.gray,
                         paddingVertical: wp(1),
                         color: colors.black,
                       }}>
@@ -429,7 +459,7 @@ const LandProductScreen = ({navigation, route}: any) => {
 
                     <AntDesign
                       name="caretdown"
-                      color={'grey'}
+                      color={colors.gray}
                       size={wp(3)}
                       style={{
                         alignSelf: 'center',
@@ -439,7 +469,7 @@ const LandProductScreen = ({navigation, route}: any) => {
                     />
                   </View>
 
-                  <Text style={{borderColor: 'grey', color: colors.black}}>
+                  <Text style={{borderColor: colors.gray, color: colors.black}}>
                     {SelectedBookingType
                       ? SelectedBookingType
                       : 'Select Booking Type'}
@@ -589,7 +619,7 @@ const LandProductScreen = ({navigation, route}: any) => {
                     <TextInput
                       placeholder="Upload one or two Images of the Product."
                       editable={false}
-                      placeholderTextColor={'#969696'}
+                      placeholderTextColor={colors.gray}
                       multiline={true}
                       // autoCorrect={false}
                       // autoCapitalize={'none'}
@@ -620,7 +650,7 @@ const LandProductScreen = ({navigation, route}: any) => {
                     }}>
                     <TextInput
                       placeholder="Enter product description"
-                      placeholderTextColor={'#969696'}
+                      placeholderTextColor={colors.gray}
                       multiline={true}
                       autoCorrect={false}
                       autoCapitalize={'none'}
@@ -680,7 +710,6 @@ const LandProductScreen = ({navigation, route}: any) => {
         isModalVisible={isModalVisible3}
         setModalVisible={setModalVisible3}
         Type={Unit}
-        // setSelectedType={setSelectedUnit}
         setSelectedType={(text: string) => {
           setunitValue(true);
           setSelectedUnit(text);
@@ -690,7 +719,6 @@ const LandProductScreen = ({navigation, route}: any) => {
         isModalVisible={isModalVisible1}
         setModalVisible={setModalVisible1}
         Type={BookingType}
-        // setSelectedType={setSelectedUnit}
         setSelectedType={(text: string) => {
           // setunitValue(true);
           setSelectedBookingType(text);
@@ -769,20 +797,3 @@ const LandProductScreen = ({navigation, route}: any) => {
   );
 };
 export default LandProductScreen;
-
-// settoCaptureImage(false),
-// navigation.navigate('ReceiverDetails', {
-//   data: {
-//     SelectedCategory,
-//     SelectedType,
-//     instructions,
-//     description,
-//     weight,
-//     pickcoords,
-//     dropcoords,
-//     dropoffCity,
-//     pickupCity,
-//     providerId,
-//     flightId,
-//   },
-// });

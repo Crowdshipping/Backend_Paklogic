@@ -30,15 +30,14 @@ import {colors} from '../../theme';
 import {Header} from '../../components';
 import {Avatar} from 'react-native-elements';
 import {CommonActions} from '@react-navigation/native';
-
-interface ImyData {
-  _id: string;
-  profilepic: string;
-}
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 const ChatScreen = ({navigation, route}: any) => {
   const {receiverId, requestId, supportId} = route.params;
-  const {userData} = useContext(AppContext);
+  const {userData, setNotificationData} = useContext(AppContext);
   const [messages, setMessages] = useState<any>([]);
   const [messagesSender, setMessagesSender] = useState<any>([]);
   const [connected, setConnected] = React.useState(false);
@@ -131,6 +130,7 @@ const ChatScreen = ({navigation, route}: any) => {
       });
   };
   useEffect(() => {
+    setNotificationData({});
     getChatData();
     setWebSocket();
     if (!supportId) {
@@ -198,10 +198,16 @@ const ChatScreen = ({navigation, route}: any) => {
               style={styles.avatarStyle}
             />
             <View style={{alignSelf: 'center', justifyContent: 'center'}}>
-              <Text style={styles.requestedUserMessageTextStyle}>
+              <Text style={[styles.messageTextStyle, {color: colors.white}]}>
                 {currentMessage.message}
               </Text>
-              <Text style={styles.requestedUserTimeTextStyle}>
+              <Text
+                style={[
+                  styles.UserTimeTextStyle,
+                  {
+                    color: colors.white,
+                  },
+                ]}>
                 {typeof currentMessage.createdAt === 'string'
                   ? currentMessage.createdAt.toString().slice(11, -8)
                   : currentMessage.createdAt.getHours() +
@@ -213,7 +219,7 @@ const ChatScreen = ({navigation, route}: any) => {
         );
       } else {
         return (
-          <View style={styles.userMessage}>
+          <View style={[styles.userMessage, {alignSelf: 'flex-start'}]}>
             <Image
               source={{
                 uri: prodUrl + currentMessage.user.profilepic,
@@ -244,31 +250,32 @@ const ChatScreen = ({navigation, route}: any) => {
     } else {
       if (currentMessage.user._id === userData._id) {
         return (
-          <View style={styles.userMessage}>
+          // <View style={styles.userMessage}>
+          <View
+            style={[
+              styles.userMessage,
+              {backgroundColor: colors.black, alignSelf: 'flex-start'},
+            ]}>
             <Image
               source={{
                 uri: prodUrl + currentMessage.user.profilepic,
               }}
               style={styles.avatarStyle}
             />
-            <View style={{alignSelf: 'center', justifyContent: 'center'}}>
-              {currentMessage.message ? (
-                <Text style={styles.messageTextStyle}>
-                  {currentMessage.message}
-                </Text>
-              ) : (
-                <Text style={styles.messageTextStyle}>
-                  {currentMessage.text}
-                </Text>
-              )}
-              <Text style={styles.UserTimeTextStyle}>
-                {typeof currentMessage.createdAt === 'string'
-                  ? currentMessage.createdAt.toString().slice(11, -8)
-                  : currentMessage.createdAt.getHours() +
-                    ':' +
-                    currentMessage.createdAt.getMinutes()}
+            {currentMessage.message ? (
+              <Text style={styles.messageTextStyle}>
+                {currentMessage.message}
               </Text>
-            </View>
+            ) : (
+              <Text style={styles.messageTextStyle}>{currentMessage.text}</Text>
+            )}
+            <Text style={styles.UserTimeTextStyle}>
+              {typeof currentMessage.createdAt === 'string'
+                ? currentMessage.createdAt.toString().slice(11, -8)
+                : currentMessage.createdAt.getHours() +
+                  ':' +
+                  currentMessage.createdAt.getMinutes()}
+            </Text>
           </View>
         );
       } else {
@@ -285,23 +292,34 @@ const ChatScreen = ({navigation, route}: any) => {
               <Avatar
                 size={40}
                 rounded
-                icon={{name: 'person', color: 'grey', size: 40}}
+                icon={{name: 'person', color: colors.gray, size: 40}}
                 containerStyle={styles.avatarStyle}
               />
             )}
 
-            <View style={{alignSelf: 'center', justifyContent: 'center'}}>
-              <Text style={styles.requestedUserMessageTextStyle}>
-                {currentMessage.message}
-              </Text>
-              <Text style={styles.requestedUserTimeTextStyle}>
-                {typeof currentMessage.createdAt === 'string'
-                  ? currentMessage.createdAt.toString().slice(11, -8)
-                  : currentMessage.createdAt.getHours() +
-                    ':' +
-                    currentMessage.createdAt.getMinutes()}
-              </Text>
-            </View>
+            {/* <View
+              style={{
+                paddingHorizontal: wp(2),
+                alignSelf: 'center',
+                justifyContent: 'center',
+              }}> */}
+            <Text style={[styles.messageTextStyle, {color: colors.white}]}>
+              {currentMessage.message}
+            </Text>
+            <Text
+              style={[
+                styles.UserTimeTextStyle,
+                {
+                  color: colors.white,
+                },
+              ]}>
+              {typeof currentMessage.createdAt === 'string'
+                ? currentMessage.createdAt.toString().slice(11, -8)
+                : currentMessage.createdAt.getHours() +
+                  ':' +
+                  currentMessage.createdAt.getMinutes()}
+            </Text>
+            {/* </View> */}
           </View>
         );
       }
@@ -311,36 +329,24 @@ const ChatScreen = ({navigation, route}: any) => {
     return (
       <Send
         {...props}
-        containerStyle={{
-          borderWidth: 0,
-          marginRight: '5%',
-          marginBottom: '3%',
-          color: colors.black,
-        }}>
+        containerStyle={[styles.inputContainer, {borderWidth: 0}]}>
         <Icon size={25} color={colors.red} name="send" />
       </Send>
     );
   };
 
   const renderInputToolbar = (props: any) => {
-    return (
-      <InputToolbar
-        {...props}
-        containerStyle={{
-          borderRadius: 15,
-          marginLeft: '2%',
-          marginRight: '2%',
-          // marginTop: '5%',
-          backgroundColor: 'transparent',
-          borderWidth: 0.7,
-          color: colors.black,
-        }}
-      />
-    );
+    return <InputToolbar {...props} containerStyle={styles.inputContainer} />;
   };
 
   return (
-    <SafeAreaView style={{height: '100%', backgroundColor: colors.white}}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        paddingHorizontal: wp(4),
+        backgroundColor: colors.white,
+        alignSelf: 'center',
+      }}>
       <Header title={'Chat'} pressMethod={() => navigation.goBack()} />
       {isloading ? (
         <ActivityIndicator
@@ -353,6 +359,7 @@ const ChatScreen = ({navigation, route}: any) => {
           showAvatarForEveryMessage
           showUserAvatar
           isLoadingEarlier
+          inverted
           messages={messages}
           onSend={(messagesSender: any) => onSend(messagesSender)}
           user={myData}
@@ -364,8 +371,10 @@ const ChatScreen = ({navigation, route}: any) => {
           renderInputToolbar={renderInputToolbar}
           messagesContainerStyle={{
             backgroundColor: 'transparent',
-            // borderRadius: 10,
-            // borderWidth: 1,
+            width: wp(100),
+            alignSelf: 'center',
+            // flexWrap: 'wrap',
+            paddingHorizontal: wp(2),
           }}
           placeholder={'Type message'}
           renderSend={renderSend}
@@ -381,38 +390,40 @@ const styles = StyleSheet.create({
   userMessage: {
     backgroundColor: colors.boxBackground,
     flexDirection: 'row',
-    padding: '2%',
-    maxWidth: '90%',
-    marginVertical: '0.5%',
+    paddingHorizontal: wp(2),
+    maxWidth: wp(96),
+    marginVertical: hp(0.3),
+    paddingVertical: hp(1),
     borderRadius: 10,
   },
-  // requestedUserMessage: {
-  //   backgroundColor: colors.red,
-  //   flexDirection: 'row',
-  //   padding: '2%',
-  //   maxWidth: '90%',
-  //   marginVertical: '0.5%',
-  //   borderRadius: 10,
-  // },
+
+  inputContainer: {
+    borderRadius: 15,
+    marginLeft: '5%',
+    marginRight: '2%',
+    textAlignVertical: 'center',
+    // marginTop: '5%',
+    justifyContent: 'center',
+
+    // alignItems: 'center',
+    backgroundColor: 'transparent',
+    borderWidth: 0.7,
+    color: colors.black,
+  },
+
   avatarStyle: {
-    height: 40,
-    width: 40,
-    marginRight: 10,
-    borderRadius: 25,
+    height: wp(10),
+    width: wp(10),
+    marginRight: wp(2),
+    borderRadius: wp(10),
     backgroundColor: colors.white,
   },
   messageTextStyle: {
     color: colors.black,
+    maxWidth: wp(75),
+    flexWrap: 'wrap',
     fontWeight: 'bold',
-  },
-  requestedUserMessageTextStyle: {
-    color: colors.white,
-    fontWeight: 'bold',
-  },
-  requestedUserTimeTextStyle: {
-    color: colors.white,
-    alignSelf: 'flex-end',
-    fontSize: 10,
+    textAlignVertical: 'center',
   },
   UserTimeTextStyle: {
     color: colors.black,

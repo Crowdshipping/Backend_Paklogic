@@ -205,6 +205,8 @@ const LandReceiverDetail = ({navigation, route}: any) => {
       totalMiles: distance,
       lat: pickupLocation.lat,
       lng: pickupLocation.lon,
+      value: weight,
+      unit: SelectedUnit,
     };
     calculateBookingFare(data)
       .then((result: any) => {

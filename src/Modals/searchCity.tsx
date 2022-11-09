@@ -52,7 +52,6 @@ export const SearchCity = (props: IModal) => {
         setcities(rest.cities);
       })
       .catch(error => {
-        // console.log(error);
         if (error.response.status === 401) {
           LogoutApi();
           Alert.alert('Session Expired', 'Please login again');
@@ -87,14 +86,14 @@ export const SearchCity = (props: IModal) => {
             <TextInput
               autoFocus
               placeholder={'Enter city name'}
-              placeholderTextColor={'gray'}
+              placeholderTextColor={colors.gray}
               onChangeText={(text: string) => {
                 handleSearch(text);
               }}
               style={{
                 paddingVertical: Platform.OS === 'ios' ? wp(2) : 0,
                 borderBottomWidth: 1,
-                borderColor: 'grey',
+                borderColor: colors.gray,
                 fontSize: 18,
                 color: colors.black,
               }}

@@ -1,16 +1,16 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios, { AxiosRequestConfig } from 'axios';
-import { prodUrl } from '../appConstants';
+import axios, {AxiosRequestConfig} from 'axios';
+import {prodUrl} from '../appConstants';
 
 export const orderHistory = async () => {
-  const value = await AsyncStorage.getItem('@userId');
+  const userId = await AsyncStorage.getItem('@userId');
   const userToken = await AsyncStorage.getItem('@userToken');
   return new Promise((resolve, reject) => {
     const config: AxiosRequestConfig = {
       method: 'get',
-      url: `${prodUrl}/customer/customerorderhistory/${value}`,
+      url: `${prodUrl}/customer/customerorderhistory/${userId}`,
       headers: {
-        Authorization: `Bearer ${userToken}`
+        Authorization: `Bearer ${userToken}`,
       },
     };
 

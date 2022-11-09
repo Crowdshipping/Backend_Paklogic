@@ -58,8 +58,7 @@ export const MapWithUserLocation = () => {
         setinitialMarker(pos.coords);
       },
       error => {
-        Alert.alert('GetCurrentPosition Error', JSON.stringify(error)),
-          console.log(error);
+        Alert.alert('GetCurrentPosition Error', JSON.stringify(error));
       },
       {enableHighAccuracy: true},
     );

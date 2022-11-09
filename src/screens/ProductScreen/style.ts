@@ -79,7 +79,7 @@ export const styles = StyleSheet.create({
     marginTop: hp(2),
     marginHorizontal: wp(8),
     paddingBottom: hp(1),
-    borderColor: 'grey',
+    borderColor: colors.gray,
     // borderWidth: 1,
   },
   menu: {marginHorizontal: wp(10), marginVertical: hp(3)},
@@ -126,14 +126,14 @@ export const styles = StyleSheet.create({
 
   Touchsmall: {
     borderBottomWidth: 1,
-    borderColor: 'grey',
+    borderColor: colors.gray,
     paddingBottom: 1,
     marginVertical: hp(1),
     width: '30%',
   },
   Touchsmallprops: {
     // borderBottomWidth: 1,
-    borderColor: 'grey',
+    borderColor: colors.gray,
     paddingBottom: 1,
     marginVertical: hp(1),
     // borderWidth: 1,

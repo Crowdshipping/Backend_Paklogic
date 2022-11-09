@@ -66,24 +66,17 @@ export const SearchPort = (props: IModal) => {
             marginHorizontal: wp(5),
           }}>
           <View style={{width: '75%'}}>
-            {/* <Textbox
-              placeholder={'Search Port'}
-              onChangeValue={(text: string) => {
-                handleSearch(text);
-              }}
-              focus={true}
-            /> */}
             <TextInput
               autoFocus
               placeholder={'Enter port name'}
-              placeholderTextColor={'gray'}
+              placeholderTextColor={colors.gray}
               onChangeText={(text: string) => {
                 handleSearch(text);
               }}
               style={{
                 paddingVertical: Platform.OS === 'ios' ? wp(2) : 0,
                 borderBottomWidth: 1,
-                borderColor: 'grey',
+                borderColor: colors.gray,
                 fontSize: 18,
                 color: colors.black,
               }}

@@ -240,7 +240,7 @@ const StripePayment = ({navigation, route}: any) => {
           }}>
           <TextInput
             placeholder={'Enter Token '}
-            placeholderTextColor={'gray'}
+            placeholderTextColor={colors.gray}
             maxLength={4}
             onChangeText={(value: any) => {
               // setClaimTitle(value), setIsClaimTitle(true);
@@ -259,13 +259,16 @@ const StripePayment = ({navigation, route}: any) => {
           style={{
             borderWidth: 0.5,
             paddingVertical: hp(1),
+            borderRadius: wp(2),
             justifyContent: 'center',
             flexDirection: 'row',
             alignSelf: 'center',
             paddingHorizontal: wp(5),
             marginTop: hp(3),
           }}>
-          <Text style={{color: 'gray'}}>Apply</Text>
+          <Text style={{color: colors.gray, textAlignVertical: 'center'}}>
+            Apply
+          </Text>
           {loadingDiscount ? (
             <ActivityIndicator
               size={'small'}
@@ -276,7 +279,7 @@ const StripePayment = ({navigation, route}: any) => {
             <Feather
               name="send"
               size={25}
-              color={'gray'}
+              color={colors.gray}
               style={{
                 alignSelf: 'center',
                 justifyContent: 'flex-end',

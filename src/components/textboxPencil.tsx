@@ -1,5 +1,6 @@
 import React from 'react';
 import {Text, View, TextInput} from 'react-native';
+import {colors} from '../theme';
 import {ITextBox} from './interface';
 import {styles} from './style';
 
@@ -21,7 +22,7 @@ export const TextInputPencil = (props: ITextBox) => {
       {title ? <Text style={styles.titleText}>{title}</Text> : null}
       <TextInput
         placeholder={placeholder}
-        placeholderTextColor="gray"
+        placeholderTextColor={colors.gray}
         autoCapitalize="none"
         style={styles.inputText}
         secureTextEntry={secureText}
