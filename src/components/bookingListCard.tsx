@@ -36,8 +36,10 @@ interface card {
   svg?: string;
   mmsi: string;
   price?: string;
-  btn?: Boolean;
-  btn1?: Boolean;
+  btn?: boolean;
+  btn1?: boolean;
+  handleUpdation?: Function;
+  btn2?: boolean;
 }
 
 export const BookingListCard = (props: card) => {
@@ -59,6 +61,8 @@ export const BookingListCard = (props: card) => {
     price,
     btn,
     btn1,
+    btn2,
+    handleUpdation,
   } = props;
 
   return (
@@ -89,7 +93,7 @@ export const BookingListCard = (props: card) => {
             </Text>
           </View>
         </View>
-        {price && (
+        {price ? (
           <Text
             style={{
               fontSize: 20,
@@ -98,7 +102,7 @@ export const BookingListCard = (props: card) => {
             }}>
             {price}
           </Text>
-        )}
+        ) : null}
       </View>
       <View style={styles.viewlocation}>
         <View
@@ -128,7 +132,7 @@ export const BookingListCard = (props: card) => {
           alignItems: 'center',
           width: '100%',
           flexDirection: 'row',
-          paddingHorizontal: wp(1),
+          // paddingHorizontal: wp(1),
         }}>
         {/* bottom start */}
         {handleNavigation ? (
@@ -158,7 +162,7 @@ export const BookingListCard = (props: card) => {
           <TouchableOpacity
             style={{
               borderRadius: wp(2),
-              marginRight: wp(2),
+              // marginRight: wp(2),
               alignItems: 'center',
               justifyContent: 'center',
               backgroundColor: colors.red,
@@ -171,6 +175,26 @@ export const BookingListCard = (props: card) => {
                 color: colors.white,
               }}>
               Cancel
+            </Text>
+          </TouchableOpacity>
+        )}
+        {handleUpdation && btn2 && (
+          <TouchableOpacity
+            style={{
+              borderRadius: wp(2),
+              // marginRight: wp(2),
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: colors.red,
+            }}
+            onPress={() => handleUpdation()}>
+            <Text
+              style={{
+                marginVertical: wp(1.5),
+                marginHorizontal: wp(2),
+                color: colors.white,
+              }}>
+              Update price
             </Text>
           </TouchableOpacity>
         )}

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -6,7 +6,7 @@ import {
   Alert,
   SafeAreaView,
   Text,
-  ActivityIndicator,
+  TextInput,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -24,7 +24,6 @@ import {
   requestProvider,
   postRequest,
   postImage,
-  calculateShipBookingFare,
   LogoutApi,
 } from '../../../API';
 import {SuccessModal} from '../../../Modals';
@@ -46,23 +45,14 @@ const ShipReceiverDetail = ({navigation, route}: any) => {
     type,
     departurePort,
     destinationPort,
-    pickcoords,
-    dropcoords,
-    initialDate,
-    finalDate,
     pickupPortUnlocode,
     dropoffPortUnlocode,
     ETA,
     departCountry,
     destinationCountry,
 
-    firstname,
-    lastname,
-    phoneno,
     providerId,
     shipId,
-    pickupCity,
-    dropoffCity,
 
     SelectedCategory,
     SelectedType,
@@ -73,11 +63,15 @@ const ShipReceiverDetail = ({navigation, route}: any) => {
   } = route.params?.data;
   let bookingId: string;
   const [receiverName, setreceiverName] = useState('');
+  const [suggestedPrice, setsuggestedPrice] = useState<number>(0);
+
   const [valueNum, setvalueNum] = useState(true);
   const [valueName, setvalueName] = useState(true);
   const [loading, setloading] = useState(false);
   const [isSuccess, setsuccess] = useState(false);
   const [totalFare, settotalFare] = useState(0);
+  const [errormsg, seterrorMsg] = useState('');
+
   const [countrySelect, setcountrySelect] = useState<ICountryCode>({
     name: 'United States',
     dial_code: '+1',
@@ -87,7 +81,26 @@ const ShipReceiverDetail = ({navigation, route}: any) => {
   let productImage: string;
   let productImage2: string;
   const [phone, setphone] = useState('');
-  function handleSubmit() {
+
+  function onError(error: any) {
+    if (error.response.status === 401) {
+      LogoutApi();
+      Alert.alert('Session Expired', 'Please login again');
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{name: 'Welcome'}],
+        }),
+      );
+    } else {
+      Alert.alert(
+        error?.response?.data?.message
+          ? error?.response?.data?.message
+          : 'Something went wrong',
+      );
+    }
+  }
+  async function handleSubmit() {
     let validate = true;
 
     if (!receiverName.trim()) {
@@ -98,188 +111,106 @@ const ShipReceiverDetail = ({navigation, route}: any) => {
       validate = false;
       setvalueNum(false);
     }
+    if (isNaN(suggestedPrice)) {
+      seterrorMsg('only numbers are allowed');
+      validate = false;
+    } else if (suggestedPrice < 20) {
+      validate = false;
+      seterrorMsg('price must be greater than 20');
+    }
+    if (suggestedPrice < 20) {
+      validate = false;
+    }
     if (validate) {
       setloading(true);
-      postImage(Images)
-        .then((rest: any) => {
-          let validate = true;
-          // setloading(false);
-          if (rest.length === 2) {
-            if (rest[0].success && rest[1].success) {
-              productImage = rest[0].imageUrl;
-              productImage2 = rest[1].imageUrl;
-            } else {
-              validate = false;
-            }
-          } else if (rest.length === 1) {
-            if (rest[0].success) {
-              productImage = rest[0].imageUrl;
-            } else {
-              validate = false;
-            }
+
+      try {
+        const imgUrl = await postImage(Images);
+        if (imgUrl.length === 2 && imgUrl[0].success && imgUrl[1].success) {
+          productImage = imgUrl[0].imageUrl;
+          productImage2 = imgUrl[1].imageUrl;
+        } else if (imgUrl.length === 1 && imgUrl[0].success) {
+          productImage = imgUrl[0].imageUrl;
+        }
+        const bookingApi: any = await createBooking(
+          SelectedCategory,
+          SelectedType,
+          description,
+          weight,
+          SelectedUnit,
+          null,
+          null,
+          departCountry,
+          destinationCountry,
+          receiverName,
+          countrySelect.dial_code,
+          phone.trim(),
+          productImage,
+          productImage2,
+          null,
+          null,
+          null,
+          null,
+          totalFare,
+        );
+        bookingId = bookingApi.booking._id;
+        if (bookingApi.success && providerId) {
+          const requestProviderApi: any = await requestProvider(
+            providerId,
+            bookingId,
+            type,
+            shipId,
+            null,
+            suggestedPrice,
+          );
+
+          if (requestProviderApi.success) {
+            setsuccess(true);
           }
-          if (validate) {
-            createBooking(
-              SelectedCategory,
-              SelectedType,
-              description,
-              weight,
-              SelectedUnit,
-              null,
-              null,
-              departCountry,
-              destinationCountry,
-              receiverName,
-              countrySelect.dial_code,
-              phone.trim(),
-              productImage,
-              productImage2,
-              null,
-              null,
-              null,
-              null,
-              totalFare,
-            )
-              .then((rest: any) => {
-                bookingId = rest.booking._id;
-                setloading(false);
-                rest.success && providerId
-                  ? requestProvider(providerId, bookingId, type, shipId, null)
-                      .then((rest: any) => {
-                        rest.success && setsuccess(true);
-                      })
-                      .catch(async error => {
-                        setloading(false);
-                        if (error.response.status === 401) {
-                          Alert.alert('Session Expired', 'Please login again');
-                          LogoutApi();
-                          navigation.dispatch(
-                            CommonActions.reset({
-                              index: 1,
-                              routes: [{name: 'Welcome'}],
-                            }),
-                          );
-                        } else {
-                          Alert.alert(
-                            error?.response?.data?.message
-                              ? error?.response?.data?.message
-                              : 'something went wrong',
-                          );
-                        }
-                      })
-                  : postRequest(
-                      bookingId,
-                      type,
-                      null,
-                      null,
-                      null,
-                      null,
-                      null,
-                      MMSI,
-                      pickupPortUnlocode,
-                      dropoffPortUnlocode,
-                      departurePort,
-                      destinationPort,
-                      moment(ETA).format('YYYY-MM-DD'),
-                    )
-                      .then((rest: any) => {
-                        rest.success && setsuccess(true);
-                      })
-                      .catch(async error => {
-                        setloading(false);
-                        if (error.response.status === 401) {
-                          Alert.alert('Session Expired', 'Please login again');
-                          LogoutApi();
-                          navigation.dispatch(
-                            CommonActions.reset({
-                              index: 1,
-                              routes: [{name: 'Welcome'}],
-                            }),
-                          );
-                        } else {
-                          Alert.alert(
-                            error?.response?.data?.message
-                              ? error?.response?.data?.message
-                              : 'something went wrong',
-                          );
-                        }
-                      });
-              })
-              .catch(async error => {
-                setloading(false);
-                if (error.response.status === 401) {
-                  Alert.alert('Session Expired', 'Please login again');
-                  LogoutApi();
-                  navigation.dispatch(
-                    CommonActions.reset({
-                      index: 1,
-                      routes: [{name: 'Welcome'}],
-                    }),
-                  );
-                } else {
-                  Alert.alert(
-                    error?.response?.data?.message
-                      ? error?.response?.data?.message
-                      : 'something went wrong',
-                  );
-                }
-              });
+        } else {
+          const postRequestApi: any = await postRequest(
+            bookingId,
+            type,
+            null,
+            null,
+            null,
+            null,
+            null,
+            MMSI,
+            pickupPortUnlocode,
+            dropoffPortUnlocode,
+            departurePort,
+            destinationPort,
+            moment(ETA).format('YYYY-MM-DD'),
+            suggestedPrice,
+          );
+          if (postRequestApi.success) {
+            setsuccess(true);
           }
-        })
-        .catch(async error => {
-          setloading(false);
-          if (error.response.status === 401) {
-            Alert.alert('Session Expired', 'Please login again');
-            LogoutApi();
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 1,
-                routes: [{name: 'Welcome'}],
-              }),
-            );
-          } else {
-            Alert.alert(
-              error?.response?.data?.message
-                ? error?.response?.data?.message
-                : 'something went wrong',
-            );
-          }
-        });
+        }
+      } catch (error) {
+        setloading(false);
+        onError(error);
+      }
     }
   }
-  useEffect(() => {
-    let data = {
-      bookingFee: 23,
-      costPerMile: 30,
-      totalMiles: 34,
-      departCountry: departCountry,
-      destinationCountry: destinationCountry,
-    };
-    calculateShipBookingFare(data)
-      .then((result: any) => {
-        result.success && settotalFare(result.amount);
-      })
-      .catch(async error => {
-        setloading(false);
-        if (error.response.status === 401) {
-          Alert.alert('Session Expired', 'Please login again');
-          LogoutApi();
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 1,
-              routes: [{name: 'Welcome'}],
-            }),
-          );
-        } else {
-          Alert.alert(
-            error?.response?.data?.message
-              ? error?.response?.data?.message
-              : 'something went wrong',
-          );
-        }
-      });
-  }, []);
-  // const {} = route.params?.data?.item?.provider;
+  // useEffect(() => {
+  //   let data = {
+  //     bookingFee: 23,
+  //     costPerMile: 30,
+  //     totalMiles: 34,
+  //     departCountry: departCountry,
+  //     destinationCountry: destinationCountry,
+  //   };
+  //   calculateShipBookingFare(data)
+  //     .then((result: any) => {
+  //       result.success && settotalFare(result.amount);
+  //     })
+  //     .catch(error => {
+  //       setloading(false);
+  //       onError(error);
+  //     });
+  // }, []);
   return (
     <SafeAreaView>
       <KeyboardAwareScrollView>
@@ -350,24 +281,31 @@ const ShipReceiverDetail = ({navigation, route}: any) => {
               />
 
               <View style={styles.paymentView}>
-                {totalFare > 0 ? (
-                  <>
-                    <Text
-                      style={{fontSize: 16, padding: 1, color: colors.black}}>
-                      Total Amount
-                    </Text>
-                    <Text style={{color: colors.red, fontSize: 20, padding: 1}}>
-                      ${totalFare}
-                    </Text>
-                  </>
-                ) : (
-                  <ActivityIndicator
-                    size={'small'}
-                    color={colors.red}
-                    style={{justifyContent: 'center', alignSelf: 'center'}}
-                  />
-                )}
+                <Text
+                  style={{
+                    fontSize: 16,
+                    padding: 1,
+                    color: colors.black,
+                    textAlign: 'center',
+                  }}>
+                  Total Amount $
+                </Text>
+
+                <TextInput
+                  placeholder="Enter amount"
+                  placeholderTextColor={colors.gray}
+                  keyboardType={'numeric'}
+                  style={styles.paymentInput}
+                  onChangeText={text => {
+                    seterrorMsg('');
+                    setsuggestedPrice(parseInt(text));
+                  }}
+                />
+                {errormsg ? (
+                  <Text style={styles.errorMsg}>{errormsg}</Text>
+                ) : null}
               </View>
+
               <TouchableOpacity
                 style={{alignSelf: 'center'}}
                 disabled={loading}

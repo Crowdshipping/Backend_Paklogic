@@ -46,8 +46,25 @@ const StripePayment = ({navigation, route}: any) => {
     'pk_test_51L97WUIw8THc1BYAKpDnvdc00Hoo8ofkQZUWrMRLyL5IUU3cfp5F5fxQgdKYgd5B0J3NqifAdFzZ1rNZuIjHJ8IL00KENpcO2i';
 
   const {confirmPayment} = useConfirmPayment();
-  // const {confirmPayment} = useStripe();
 
+  function onError(error: any) {
+    if (error.response.status === 401) {
+      LogoutApi();
+      Alert.alert('Session Expired', 'Please login again');
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{name: 'Welcome'}],
+        }),
+      );
+    } else {
+      Alert.alert(
+        error?.response?.data?.message
+          ? error?.response?.data?.message
+          : 'Something went wrong',
+      );
+    }
+  }
   const handlePayment = async () => {
     if (paymentIntent) {
       setLoading(true);
@@ -65,30 +82,12 @@ const StripePayment = ({navigation, route}: any) => {
             result.paymentIntent.status === 'Succeeded' &&
               createPaymentsHistory(data)
                 .then((rest: any) => {
-                  setLoading(false);
-                  {
-                    rest.success && setsuccess(true);
-                  }
+                  rest.success && setsuccess(true);
                 })
-                .catch(async (error: any) => {
-                  setLoading(false);
-                  if (error.response.status === 401) {
-                    LogoutApi();
-                    Alert.alert('Session Expired', 'Please login again');
-                    navigation.dispatch(
-                      CommonActions.reset({
-                        index: 1,
-                        routes: [{name: 'Welcome'}],
-                      }),
-                    );
-                  } else {
-                    Alert.alert(
-                      error?.response?.data?.message
-                        ? error?.response?.data?.message
-                        : 'Something went wrong',
-                    );
-                  }
-                });
+                .catch((error: any) => {
+                  onError(error);
+                })
+                .finally(() => setLoading(false));
           } else if (result.error) {
             setLoading(false);
             Alert.alert(
@@ -98,24 +97,9 @@ const StripePayment = ({navigation, route}: any) => {
             );
           }
         })
-        .catch(async error => {
+        .catch(error => {
           setLoading(false);
-          if (error.response.status === 401) {
-            LogoutApi();
-            Alert.alert('Session Expired', 'Please login again');
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 1,
-                routes: [{name: 'Welcome'}],
-              }),
-            );
-          } else {
-            Alert.alert(
-              error?.response?.data?.message
-                ? error?.response?.data?.message
-                : 'Something went wrong',
-            );
-          }
+          onError(error);
         });
     }
   };
@@ -139,31 +123,15 @@ const StripePayment = ({navigation, route}: any) => {
     axios(config)
       .then(response => {
         setPaymentIntent(response.data.paymentIntent);
-        setLoading(false);
       })
-      .catch(async error => {
-        setLoading(false);
-        if (error.response.status === 401) {
-          LogoutApi();
-          Alert.alert('Session Expired', 'Please login again');
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 1,
-              routes: [{name: 'Welcome'}],
-            }),
-          );
-        } else {
-          Alert.alert(
-            error?.response?.data?.message
-              ? error?.response?.data?.message
-              : 'Something went wrong',
-          );
-        }
-      });
+      .catch(error => {
+        onError(error);
+      })
+      .finally(() => setLoading(false));
     // });
   };
 
-  const getDiscount = async () => {
+  const getDiscount = () => {
     let data = {
       amount,
       promoCodePin,
@@ -172,27 +140,11 @@ const StripePayment = ({navigation, route}: any) => {
     AvailDiscount(data)
       .then((result: any) => {
         setnewAmount(result.discountedAmount);
-        setLoadingDiscount(false);
       })
-      .catch(async error => {
-        setLoadingDiscount(false);
-        if (error.response.status === 401) {
-          LogoutApi();
-          Alert.alert('Session Expired', 'Please login again');
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 1,
-              routes: [{name: 'Welcome'}],
-            }),
-          );
-        } else {
-          Alert.alert(
-            error?.response?.data?.message
-              ? error?.response?.data?.message
-              : 'something went wrong',
-          );
-        }
-      });
+      .catch(error => {
+        onError(error);
+      })
+      .finally(() => setLoadingDiscount(false));
   };
 
   useEffect(() => {

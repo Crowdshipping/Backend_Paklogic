@@ -44,6 +44,7 @@ import {ship2Svg} from './ship2Svg';
 import {vehicleSvg} from './vehicleSvg';
 import {complaint} from './complaint';
 import {promoSvg} from './promoSvg';
+import {InboxAeroplane} from './InboxAeroplane';
 
 export {
   register,
@@ -92,4 +93,5 @@ export {
   vehicleSvg,
   complaint,
   promoSvg,
+  InboxAeroplane,
 };

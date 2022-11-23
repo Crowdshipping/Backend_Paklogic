@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {Alert, SafeAreaView, View} from 'react-native';
 import {styles} from './style';
 
@@ -14,16 +14,6 @@ import {colors} from '../../../theme';
 import {CommonActions} from '@react-navigation/native';
 
 const RegisterNumberScreen = ({navigation, route}: any) => {
-  // useEffect(() => {
-  //   setphone(''),
-  //     setcountryCode({
-  //       name: 'United States',
-  //       dial_code: '+1',
-  //       code: 'US',
-  //       preferred: true,
-  //       flag: '🇺🇸',
-  //     });
-  // }, []);
   const [phoneValue, setphoneValue] = useState(true);
   const [loading, setloading] = useState(false);
   const [phone, setphone] = useState('');
@@ -82,7 +72,7 @@ const RegisterNumberScreen = ({navigation, route}: any) => {
         <Header
           title={'Register'}
           pressMethod={() => {
-            route?.params?.from && route.params.from === 'signin'
+            route.params?.from && route.params.from === 'signin'
               ? navigation.dispatch(
                   CommonActions.reset({
                     index: 1,

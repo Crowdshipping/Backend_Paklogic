@@ -17,11 +17,26 @@ const SplashScreen = ({navigation}: any) => {
 
     if (playerId) {
       getUser()
-        .then(async (rest: any) => {
+        .then((rest: any) => {
+          if (!rest?.user) {
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{name: 'Welcome'}],
+              }),
+            );
+            return;
+          }
           setUserData(rest.user);
-          navigation.navigate('MyDrawer');
+          navigation.dispatch(
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{name: 'MyDrawer'}],
+              }),
+            ))
         })
-        .catch(async error => {
+        .catch(error => {
           if (error.response.status === 401) {
             LogoutApi();
             Alert.alert('Session Expired', 'Please login again');

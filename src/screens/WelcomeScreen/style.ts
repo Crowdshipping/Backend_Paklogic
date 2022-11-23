@@ -30,6 +30,7 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: hp(2),
     color: colors.black,
+    paddingHorizontal: wp(5)
   },
   button: {
     marginTop: hp(3),

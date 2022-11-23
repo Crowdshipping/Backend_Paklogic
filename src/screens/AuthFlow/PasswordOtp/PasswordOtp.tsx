@@ -40,6 +40,40 @@ const PasswordOtp = ({route, navigation}: any) => {
   const [num6, setNum6] = useState('-');
   const [text, setText] = useState('');
 
+  function onError(error: any) {
+    if (error.response.status === 401) {
+      LogoutApi();
+      Alert.alert('Session Expired', 'Please login again');
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{name: 'Welcome'}],
+        }),
+      );
+    } else {
+      Alert.alert(
+        error?.response?.data?.message
+          ? error?.response?.data?.message
+          : 'Something went wrong',
+      );
+    }
+  }
+  function clearRef() {
+    refNum6.current.clear();
+    setNum6('-');
+    refNum5.current.clear();
+    setNum5('-');
+    refNum4.current.clear();
+    setNum4('-');
+    refNum3.current.clear();
+    setNum3('-');
+    refNum2.current.clear();
+    setNum2('-');
+    refNum1.current.clear();
+    setNum1('-');
+    refNum1.current.focus();
+  }
+
   const Validate = () => {
     if (
       num1 === '-' ||
@@ -62,103 +96,30 @@ const PasswordOtp = ({route, navigation}: any) => {
       let str = num1 + num2 + num3 + num4 + num5 + num6;
       passwordOtp(str.toLowerCase())
         .then((rest: any) => {
-          setloading(false);
-
-          let id = rest.user._id;
-          rest.success && navigation.navigate('ResetPassword', {id});
+          rest.success &&
+            navigation.navigate('ResetPassword', {id: rest.user._id});
         })
         .catch(async error => {
-          if (error.response.status === 401) {
-            Alert.alert('Session Expired', 'Please login again');
-            LogoutApi();
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 1,
-                routes: [{name: 'Welcome'}],
-              }),
-            );
-          } else {
-            Alert.alert(
-              error?.response?.data?.message
-                ? error?.response?.data?.message
-                : 'something went wrong',
-            );
-            refNum6.current.clear(),
-              setNum6('-'),
-              refNum5.current.clear(),
-              setNum5('-'),
-              refNum4.current.clear(),
-              setNum4('-'),
-              refNum3.current.clear(),
-              setNum3('-'),
-              refNum2.current.clear(),
-              setNum2('-'),
-              refNum1.current.clear(),
-              setNum1('-'),
-              refNum1.current.focus();
-          }
-          setloading(false);
-        });
+          onError(error);
+          clearRef();
+        })
+        .finally(() => setloading(false));
     } else {
-      setText('Please enter valid OTP code'),
-        refNum6.current.clear(),
-        setNum6('-'),
-        refNum5.current.clear(),
-        setNum5('-'),
-        refNum4.current.clear(),
-        setNum4('-'),
-        refNum3.current.clear(),
-        setNum3('-'),
-        refNum2.current.clear(),
-        setNum2('-'),
-        refNum1.current.clear(),
-        setNum1('-'),
-        refNum1.current.focus(),
-        setsuccess(true);
+      setText('Please enter valid OTP code'), clearRef();
+      setsuccess(true);
     }
   };
+
   const Resend = () => {
     setloading(true);
     forgotPassword(email)
       .then((rest: any) => {
-        setloading(false);
-
-        rest.success &&
-          (setText(rest.message),
-          refNum6.current.clear(),
-          setNum6('-'),
-          refNum5.current.clear(),
-          setNum5('-'),
-          refNum4.current.clear(),
-          setNum4('-'),
-          refNum3.current.clear(),
-          setNum3('-'),
-          refNum2.current.clear(),
-          setNum2('-'),
-          refNum1.current.clear(),
-          setNum1('-'),
-          refNum1.current.focus(),
-          setsuccess(true));
+        rest.success && (setText(rest.message), clearRef(), setsuccess(true));
       })
-      .catch(async error => {
-        setloading(false);
-        if (error.response.status === 401) {
-          Alert.alert('Session Expired', 'Please login again');
-          LogoutApi();
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 1,
-              routes: [{name: 'Welcome'}],
-            }),
-          );
-        } else {
-          Alert.alert(
-            error?.response?.data?.message
-              ? error?.response?.data?.message
-              : 'something went wrong',
-          );
-        }
-      });
+      .catch(error => {
+        onError(error);
+      })
+      .finally(() => setloading(false));
   };
   return (
     <SafeAreaView

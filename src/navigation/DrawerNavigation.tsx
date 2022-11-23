@@ -28,10 +28,10 @@ import {prodUrl} from '../appConstants';
 import {LogoutApi} from '../API';
 import {AppContext} from '../../App';
 import Icon from 'react-native-vector-icons/Ionicons';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Avatar} from 'react-native-elements';
 import {CommonActions} from '@react-navigation/native';
 import {promotions} from '../theme/assets/images';
+import {InboxScreen} from '../theme/assets/svg/InboxScreen';
 const CustomDrawerContent = (props: any) => {
   const {userData} = useContext(AppContext);
 
@@ -72,7 +72,7 @@ const CustomDrawerContent = (props: any) => {
   return (
     <SafeAreaView>
       <View style={styles.ViewTop}>
-        {userData.profilepic ? (
+        {userData?.profilepic ? (
           <Image
             source={{uri: prodUrl + userData.profilepic}}
             style={styles.img}
@@ -89,7 +89,7 @@ const CustomDrawerContent = (props: any) => {
         <View style={{paddingTop: 10, alignItems: 'center'}}>
           <Text
             style={{fontSize: wp(5), color: colors.white, fontWeight: 'bold'}}>
-            {userData.firstname} {userData.lastname}
+            {userData?.firstname} {userData?.lastname}
           </Text>
           <Text
             adjustsFontSizeToFit
@@ -100,7 +100,7 @@ const CustomDrawerContent = (props: any) => {
               // borderWidth: 1,
               color: colors.white,
             }}>
-            {userData.email}
+            {userData?.email}
           </Text>
           <TouchableOpacity
             onPress={() => {
@@ -131,13 +131,22 @@ const CustomDrawerContent = (props: any) => {
 
         <TouchableOpacity
           onPress={() => {
+            props.navigation.navigate('Inbox');
+          }}
+          style={styles.viewunderline}>
+          {/* <Icon size={25} color={colors.black} name="wallet-outline" /> */}
+          <SvgXml style={styles.svg} xml={InboxScreen} width={25} />
+
+          <Text style={styles.txtdetail}>Inbox</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
             props.navigation.navigate('ViewPaymentLogs');
           }}
           style={styles.viewunderline}>
           <Icon size={25} color={colors.black} name="wallet-outline" />
           <Text style={styles.txtdetail}>Payment Logs</Text>
         </TouchableOpacity>
-
         <TouchableOpacity
           onPress={() => {
             props.navigation.navigate('Claims');

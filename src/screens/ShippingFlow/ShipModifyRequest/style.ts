@@ -122,4 +122,11 @@ export const styles = StyleSheet.create({
   line: {
     borderWidth: 0.5,
   },
+  paymentInput: {
+    backgroundColor: colors.white,
+    color: colors.black,
+    borderRadius: 10,
+    marginVertical: hp(1),
+    paddingHorizontal: wp(3),
+  },
 });

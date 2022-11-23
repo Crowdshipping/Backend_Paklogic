@@ -13,6 +13,10 @@ export const styles = StyleSheet.create({
   arrorwStyle: {
     alignSelf: 'flex-end',
   },
+  errorMsg: {
+    textAlign: 'left',
+    color: colors.red,
+  },
   bckimg: {
     marginTop: hp(35),
     marginHorizontal: hp(3),
@@ -101,5 +105,12 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  paymentInput: {
+    backgroundColor: colors.white,
+    color: colors.black,
+    borderRadius: 10,
+    marginVertical: hp(1),
+    paddingHorizontal: wp(3),
   },
 });

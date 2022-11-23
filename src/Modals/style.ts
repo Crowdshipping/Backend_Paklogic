@@ -39,4 +39,10 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 10,
   },
+  errorMsg: {
+    textAlign: 'left',
+    color: colors.red,
+    alignSelf: 'center',
+    // marginBottom: hp(2),
+  },
 });

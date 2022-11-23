@@ -30,11 +30,9 @@ const ViewPaymentLogs = ({navigation}: any) => {
   const getPaymentsLogByUserId = async () => {
     getPaymentLogs()
       .then((result: any) => {
-        setIsLoading(false);
         setPaymentsLogs(result.customerTransactions.reverse());
       })
       .catch(async error => {
-        setIsLoading(false);
         if (error.response.status === 401) {
           Alert.alert('Session Expired', 'Please login again');
           LogoutApi();
@@ -45,28 +43,32 @@ const ViewPaymentLogs = ({navigation}: any) => {
             }),
           );
         }
-      });
+      })
+      .finally(() => setIsLoading(false));
   };
   const noPaymentAvailable = () => {
     return (
       <View
-        style={{
-          backgroundColor: colors.boxBackground,
-          alignSelf: 'center',
-          paddingVertical: hp(10),
-          marginVertical: '50%',
-          paddingHorizontal: wp(10),
-          borderRadius: hp(2),
-        }}>
-        <Text
-          style={{
-            textAlign: 'center',
-            color: colors.red,
-            fontSize: hp(2),
-          }}>
-          Sorry no payment logs available
-        </Text>
-      </View>
+                  style={{
+                    backgroundColor: colors.boxBackground,
+                    // backgroundColor: 'aqua',
+                    alignSelf: 'center',
+                    // paddingVertical: hp(10),
+                    marginVertical: '40%',
+                    
+                    paddingHorizontal: wp(10),
+                    borderRadius: hp(2),
+                  }}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      color: colors.red,
+                      fontSize: hp(2),
+                      paddingVertical: hp(10)
+                    }}>
+                    Sorry no payment logs available
+                  </Text>
+                </View>
     );
   };
   useEffect(() => {
@@ -124,21 +126,23 @@ const ViewPaymentLogs = ({navigation}: any) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('HistoryDetail', {
-            item: {
-              request: {
-                status: item.requestId.status,
-                bookingId: item.requestId.bookingId,
-                provider: item.paidTo,
-                requestedBy: item.requestId.requestedBy,
-                type: item.requestId.type,
-                state: item.requestId.state,
-                // flight: item.requestId.bookingId,
-                // ship: item.requestId.bookingId,
-                _id: item.requestId._id,
-              },
-            },
-          });
+          {
+            item.requestId
+              ? navigation.navigate('HistoryDetail', {
+                  item: {
+                    status: item.requestId.status,
+                    bookingId: item.requestId.bookingId,
+                    provider: item.paidTo,
+                    requestedBy: item.requestId.requestedBy,
+                    type: item.requestId.type,
+                    state: item.requestId.state,
+                    flight: item.requestId.flight,
+                    ship: item.requestId.ship,
+                    _id: item.requestId._id,
+                  },
+                })
+              : Alert.alert('sorry no data is available against this booking');
+          }
         }}
         key={index}>
         <MineCard>
@@ -171,24 +175,22 @@ const ViewPaymentLogs = ({navigation}: any) => {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <Header
         title={'Payment Logs'}
         pressMethod={() => {
           navigation.goBack();
         }}
       />
-      <ScrollView>
-        {isLoading ? (
-          <ActivityIndicator
-            size={'small'}
-            color={colors.red}
-            style={{justifyContent: 'center', alignSelf: 'center'}}
-          />
-        ) : (
-          renderPaymentLog()
-        )}
-      </ScrollView>
+      {isLoading ? (
+        <ActivityIndicator
+          size={'small'}
+          color={colors.red}
+          style={{flex: 1, justifyContent: 'center', alignSelf: 'center'}}
+        />
+      ) : (
+        <ScrollView>{renderPaymentLog()}</ScrollView>
+      )}
     </SafeAreaView>
   );
 };

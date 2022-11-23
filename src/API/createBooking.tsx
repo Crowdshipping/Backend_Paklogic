@@ -29,7 +29,7 @@ export const createBooking = async (
   vehicleType: string | null,
   initialDate: string | null,
   finalDate: string | null,
-  totalFare: number,
+  totalFare?: number | string,
 ) => {
   const userId = await AsyncStorage.getItem('@userId');
   const userToken = await AsyncStorage.getItem('@userToken');

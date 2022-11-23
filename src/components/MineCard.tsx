@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
     // shadowRadius: 4.65,
 
     // elevation: 6,
+    flex: 1,
     marginHorizontal: wp(5),
     paddingHorizontal: wp(5),
     paddingVertical: hp(2),
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
     shadowColor: Platform.OS === 'android' ? colors.black : colors.gray,
     borderRadius: hp(2),
     backgroundColor: colors.white,
-    marginVertical: hp(1),
+    marginVertical: hp(0.5),
     shadowOffset: {
       width: 1,
       height: 1,

@@ -26,11 +26,11 @@ export const Datepicker = (props: datePicker) => {
   };
 
   const handleConfirm = (date: Date) => {
-    // let finaldate = moment(date).format('YYYY-MM-DD')
+    let finaldate = moment(date).format('YYYY-MM-DD');
 
     showDatePicker();
-    setDate(moment(date).format('YYYY-MM-DD'));
-    onChange(date);
+    setDate(finaldate);
+    onChange(finaldate);
   };
 
   return (

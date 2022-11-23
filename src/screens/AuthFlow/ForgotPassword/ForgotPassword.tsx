@@ -2,15 +2,15 @@ import React, {useState} from 'react';
 import {SafeAreaView, Text, View, Alert} from 'react-native';
 
 import {styles} from './style';
-import {Textbox, Button, Header} from '../../components';
+import {Textbox, Button, Header} from '../../../components';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {SvgXml} from 'react-native-svg';
-import {forgot_password} from '../../theme/assets/svg';
+import {forgot_password} from '../../../theme/assets/svg';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {forgotPassword} from '../../API/forgotPassword';
-import {EMAIL_REGEX} from '../../appConstants';
+import {forgotPassword} from '../../../API/forgotPassword';
+import {EMAIL_REGEX} from '../../../appConstants';
 import {CommonActions} from '@react-navigation/native';
-import {LogoutApi} from '../../API';
+import {LogoutApi} from '../../../API';
 
 const ForgotPassword = ({navigation}: any) => {
   const [emailValue, setemailValue] = useState(true);
@@ -18,7 +18,6 @@ const ForgotPassword = ({navigation}: any) => {
   const [loading, setloading] = useState(false);
 
   function handleSubmit() {
-    let validate = true;
     // if (!email) {
     //   setemailValue(false);
     //   validate = false;
@@ -34,7 +33,7 @@ const ForgotPassword = ({navigation}: any) => {
 
           rest.success && navigation.navigate('PasswordOtp', {email});
         })
-        .catch(async error => {
+        .catch(error => {
           setloading(false);
           if (error.response.status === 401) {
             LogoutApi();
@@ -79,7 +78,7 @@ const ForgotPassword = ({navigation}: any) => {
           placeholder={'Email'}
           errormsg={
             !emailValue
-              ? email.length == 0
+              ? email.length === 0
                 ? 'Email is Required'
                 : 'Invalid Email'
               : ''

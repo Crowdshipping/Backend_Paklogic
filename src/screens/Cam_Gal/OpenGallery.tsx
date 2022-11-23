@@ -1,12 +1,12 @@
 import React from 'react';
-import { Text, TouchableOpacity, Alert } from 'react-native';
+import {Text, TouchableOpacity, Alert} from 'react-native';
 import {
   ImageLibraryOptions,
   launchImageLibrary,
 } from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
 
-import { styles } from './style';
+import {styles} from './style';
 
 interface IimageShow {
   name: string;
@@ -16,6 +16,7 @@ interface IimageShow {
 
 const OpenGallery = (props: any) => {
   const callbackImageLibrary = (arrayImage: any) => {
+    props.modalExit()
     props.callbackImage(arrayImage);
   };
 
@@ -30,9 +31,10 @@ const OpenGallery = (props: any) => {
     presentationStyle: 'pageSheet',
   };
   const launchLibrary = async () => {
-    await launchImageLibrary({ ...DEFAULT_OPTIONS }, (response: any) => {
+    await launchImageLibrary({...DEFAULT_OPTIONS}, (response: any) => {
       if (response.didCancel) {
         // Alert.alert('User cancelled camera picker');
+        props.modalExit()
         return;
       } else if (response.errorCode == 'camera_unavailable') {
         Alert.alert('Camera not available on device');
@@ -64,16 +66,16 @@ const OpenGallery = (props: any) => {
             callbackImageLibrary(ImageObject);
           })
           .catch((error: any) => {
-            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'Something went wrong');
+            Alert.alert(
+              error?.response?.data?.message || 'Something went wrong',
+            );
           });
       }
     });
   };
   return (
     <TouchableOpacity
-      onPress={() => {
-        launchLibrary();
-      }}
+      onPress={launchLibrary}
       style={{
         // borderWidth: 1,
         // width: '100%',

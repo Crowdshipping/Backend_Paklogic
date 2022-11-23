@@ -18,6 +18,8 @@ import {prodUrl} from '../../appConstants';
 import {
   createChat,
   getChat,
+  getPrivateChat,
+  createPrivateChat,
   getSupportChat,
   LogoutApi,
   readChat,
@@ -36,7 +38,7 @@ import {
 } from 'react-native-responsive-screen';
 
 const ChatScreen = ({navigation, route}: any) => {
-  const {receiverId, requestId, supportId} = route.params;
+  const {receiverId, supportId, receiverName} = route.params;
   const {userData, setNotificationData} = useContext(AppContext);
   const [messages, setMessages] = useState<any>([]);
   const [messagesSender, setMessagesSender] = useState<any>([]);
@@ -44,58 +46,51 @@ const ChatScreen = ({navigation, route}: any) => {
   const [socket, setSocket] = React.useState<Socket>();
   const [isloading, setIsloading] = useState(true);
   const [myData, setMyData] = useState<any>({});
+  const [receiverData, setreceiverData] = useState<any>({});
 
+  function onError(error: any) {
+
+    if (error.response.status === 401) {
+      LogoutApi();
+      Alert.alert('Session Expired', 'Please login again');
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{name: 'Welcome'}],
+        }),
+      );
+    } else {
+      Alert.alert(
+        error?.response?.data?.message
+          ? error?.response?.data?.message
+          : 'Something went wrong',
+      );
+    }
+  }
   const getChatData = async () => {
     if (supportId) {
       getSupportChat(supportId)
         .then((result: any) => {
-          setIsloading(false);
           setMyData(result.user);
           setMessages(result.chat.reverse());
         })
         .catch(error => {
-          setIsloading(false);
-        });
-    } else {
-      getChat(receiverId, requestId)
-        .then((result: any) => {
-          setMyData(result.userA);
-          if (result.initiated === false) {
-            createChat(receiverId, requestId)
-              .then((result: any) => {
-                result.success && setIsloading(false);
-              })
-              .catch(error => {
-                setIsloading(false);
-                if (error.response.status === 401) {
-                  LogoutApi();
-                  Alert.alert('Session Expired', 'Please login again');
-                  navigation.dispatch(
-                    CommonActions.reset({
-                      index: 1,
-                      routes: [{name: 'Welcome'}],
-                    }),
-                  );
-                }
-              });
-          } else {
-            setIsloading(false);
-            setMessages(result.chat.reverse());
-          }
+          onError(error);
         })
-        .catch(error => {
-          setIsloading(false);
-          if (error.response.status === 401) {
-            LogoutApi();
-            Alert.alert('Session Expired', 'Please login again');
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 1,
-                routes: [{name: 'Welcome'}],
-              }),
-            );
-          }
-        });
+        .finally(() => setIsloading(false));
+    } else {
+      try {
+        const result: any = await getPrivateChat(receiverId);
+        console.log(JSON.stringify(result.userA))
+        setreceiverData(result.userA)
+        setMyData(result.userB);
+        if (result.initiated === false) await createPrivateChat(receiverId);
+        else setMessages(result.chat.reverse());
+        setIsloading(false);
+      } catch (error) {
+        setIsloading(false);
+        onError(error);
+      }
     }
   };
 
@@ -113,29 +108,10 @@ const ChatScreen = ({navigation, route}: any) => {
     setSocket(newSocket);
   };
 
-  const onReadChat = async () => {
-    readChat(requestId)
-      .then((result: any) => {})
-      .catch(error => {
-        if (error.response.status === 401) {
-          LogoutApi();
-          Alert.alert('Session Expired', 'Please login again');
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 1,
-              routes: [{name: 'Welcome'}],
-            }),
-          );
-        }
-      });
-  };
   useEffect(() => {
     setNotificationData({});
     getChatData();
     setWebSocket();
-    if (!supportId) {
-      onReadChat();
-    }
   }, []);
 
   useEffect(() => {
@@ -151,9 +127,7 @@ const ChatScreen = ({navigation, route}: any) => {
         });
       } else {
         socket?.on(`newMessage/${receiverId}`, r => {
-          if (r.requestId === requestId) {
-            setMessages((msg: any) => [r.message, ...msg]);
-          }
+          setMessages((msg: any) => [r.message, ...msg]);
         });
       }
     }
@@ -174,7 +148,7 @@ const ChatScreen = ({navigation, route}: any) => {
           receiver: receiverId,
           message: messagesSender[0].text,
           createdAt: new Date(),
-          requestId: requestId,
+          requestId: null,
         });
       }
       setMessages((msg: any) => [messagesSender[0], ...msg]);
@@ -347,7 +321,7 @@ const ChatScreen = ({navigation, route}: any) => {
         backgroundColor: colors.white,
         alignSelf: 'center',
       }}>
-      <Header title={'Chat'} pressMethod={() => navigation.goBack()} />
+      <Header title={receiverData?.firstname ? `${receiverData?.firstname} ${receiverData?.lastname}` : ""} pressMethod={() => navigation.goBack()} />
       {isloading ? (
         <ActivityIndicator
           size={'small'}

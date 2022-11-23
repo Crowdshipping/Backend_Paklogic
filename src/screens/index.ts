@@ -1,6 +1,6 @@
 import RegisterScreen from './AuthFlow/Register/RegisterScreen';
 import SigninScreen from './AuthFlow/Signin/SigninScreen';
-import ForgotPassword from './ForgotPassword/ForgotPassword';
+import ForgotPassword from './AuthFlow/ForgotPassword/ForgotPassword';
 import WelcomeScreen from './WelcomeScreen/WelcomeScreen';
 import SplashScreen from './SplashScreen/SplashScreen';
 import LandingScreen from './LandingScreen/LandingScreen';
@@ -9,12 +9,12 @@ import ResetPasswordScreen from './AuthFlow/ResetPasswordScreen/ResetPasswordScr
 import VerifyOtp from './AuthFlow/VerifyOtp/VerifyOtp';
 import PasswordOtp from './AuthFlow/PasswordOtp/PasswordOtp';
 import StartBookingScreen from './LandFlow/StartBookingScreen/StartBookingScreen';
-import ProviderDetailScreen from './ProviderDetail/ProviderDetailScreen';
-import ReceiverDetailsScreen from './ReceiverDetailsScreen/ReceiverDetailsScreen';
-import BookingListScreen from './BookingListScreen/BookingListScreen';
-import ProductScreen from './ProductScreen/ProductScreen';
-import AirDelivery from './AirDelivery/AirDelivery';
-import ModifyRequest from './ModifyRequest/ModifyRequest';
+import ProviderDetailScreen from './AirFlow/ProviderDetail/ProviderDetailScreen';
+import ReceiverDetailsScreen from './AirFlow/ReceiverDetailsScreen/ReceiverDetailsScreen';
+import BookingListScreen from './AirFlow/BookingListScreen/BookingListScreen';
+import ProductScreen from './AirFlow/ProductScreen/ProductScreen';
+import AirDelivery from './AirFlow/AirDelivery/AirDelivery';
+import ModifyRequest from './AirFlow/ModifyRequest/ModifyRequest';
 import ShipDelivery from './ShippingFlow/ShipDelivery/ShipDelivery';
 import BookingListShipping from './ShippingFlow/BookingListShipping/BookingListShipping';
 import ShipProviderDetail from './ShippingFlow/ShipProviderDetail/ShipProviderDetail';
@@ -42,9 +42,10 @@ import NotifictionHistory from './DrawerScreens/Notification/Notification';
 import ViewQuery from './DrawerScreens/Support/ViewQuery';
 import AddQuery from './DrawerScreens/Support/AddQuery';
 import QueryDetail from './DrawerScreens/Support/QueryDetail';
-import RateDriver from './Rate/RateDriver';
+import RateDriver from './DrawerScreens/Rate/RateDriver';
 import ViewPaymentLogs from './DrawerScreens/PaymentLogs/PaymentLogs';
 import PromoCodes from './DrawerScreens/Promo/PromoCodes';
+import Inbox from './DrawerScreens/Inbox/Inbox';
 
 export {
   RegisterScreen,
@@ -94,4 +95,5 @@ export {
   RateDriver,
   ViewPaymentLogs,
   PromoCodes,
+  Inbox,
 };

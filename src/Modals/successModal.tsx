@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {View, TouchableOpacity, Text} from 'react-native';
 import Modal from 'react-native-modal';
 
@@ -10,6 +10,7 @@ import {styles} from './style';
 import {SvgXml} from 'react-native-svg';
 import {cross, success} from '../theme/assets/svg';
 import {colors} from '../theme/colors';
+import {useFocusEffect} from '@react-navigation/native';
 
 interface ISuccessModal {
   isSuccess: boolean;
@@ -20,6 +21,22 @@ interface ISuccessModal {
 
 export const SuccessModal = (props: ISuccessModal) => {
   const {isSuccess, setsuccess, text, pressMethod} = props;
+
+  useFocusEffect(
+    useCallback(() => {
+      const timeoutID = isSuccess
+        ? setTimeout(() => {
+            setsuccess();
+            if (pressMethod) pressMethod();
+          }, 4000)
+        : undefined;
+
+      // timeoutID
+
+      return () => clearTimeout(timeoutID);
+    }, [isSuccess]),
+  );
+
   return (
     <Modal isVisible={isSuccess} onBackdropPress={() => setsuccess()}>
       <View style={styles.modal}>

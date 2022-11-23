@@ -54,7 +54,7 @@ export const Address = (props: IAddressPicker) => {
         onBackdropPress={() => setIsModal(false)}>
         <View style={styles.modalView}>
           <ScrollView>
-            {Countries.map((d: any, i: any) => {
+            {Countries.map((d: any) => {
               return (
                 <View key={d.dial_code} style={{backgroundColor: colors.white}}>
                   <TouchableOpacity

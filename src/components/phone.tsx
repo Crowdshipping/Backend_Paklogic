@@ -32,7 +32,7 @@ export const PhoneNumberPicker = (props: IPhonePicker) => {
         },
   );
   return (
-    <View style={[styles.sectionContainer, {width: '100%'}]}>
+    <View style={[styles.sectionContainer, {flex: 1}]}>
       <Text style={styles.titleText}>Mobile</Text>
       <View style={styles.addressView}>
         <TouchableOpacity

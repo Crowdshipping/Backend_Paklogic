@@ -78,19 +78,7 @@ export const styles = StyleSheet.create({
     shadowOpacity: 10,
     shadowRadius: 5,
   },
-  detailsboxinner: {
-    marginHorizontal: wp(5),
-    // paddingHorizontal: wp(3),
-    paddingVertical: hp(2),
-    borderColor: colors.red,
 
-    // borderWidth: 2,
-  },
-  // flexrow: {
-  //   flexDirection: 'row',
-  //   // justifyContent: 'space-between',
-  //   borderBottomWidth: 2,
-  // },
   flexrow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -101,7 +89,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: hp(1.5),
     width: '100%',
-
+    alignItems: 'center',
     paddingVertical: hp(1),
   },
 
@@ -127,6 +115,8 @@ export const styles = StyleSheet.create({
   txtdetail: {
     fontSize: 18,
     color: colors.black,
+    textAlignVertical: 'center',
+    textAlign: 'left',
   },
   txtdetailbox: {
     fontSize: 15,

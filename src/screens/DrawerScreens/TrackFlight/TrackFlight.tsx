@@ -1,12 +1,5 @@
 import React, {useState, useEffect, useCallback, useRef} from 'react';
-import {
-  Alert,
-  ActivityIndicator,
-  View,
-  Platform,
-  Text,
-  SafeAreaView,
-} from 'react-native';
+import {Alert, ActivityIndicator, View, Text, SafeAreaView} from 'react-native';
 
 import {
   heightPercentageToDP as hp,
@@ -15,7 +8,7 @@ import {
 
 import {Button, Header} from '../../../components';
 
-import {flightTracking, LogoutApi, searchAirport} from '../../../API';
+import {flightTracking, getMessageStatus, LogoutApi} from '../../../API';
 import {colors} from '../../../theme';
 import MapView, {Marker, Polyline, PROVIDER_GOOGLE} from 'react-native-maps';
 import {styles} from './style';
@@ -28,16 +21,40 @@ import {planesvgMap} from '../../../theme/assets/svg';
 const TrackFlight = ({route, navigation}: any) => {
   const {
     fa_flight_id,
-    departureAirport,
-    destinationAirport,
+
     flightarrivalDate,
+    requestId,
+    receiverId,
+    departureAirportLocation,
+    destinationAirportLocation,
   } = route.params;
+
+  console.log(departureAirportLocation, destinationAirportLocation)
   const ref = useRef<MapView>(null);
 
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState<any>();
-  const [response, setResponse] = useState<any[]>();
 
+  const [isCustomerRead, setCustomerRead] = useState<boolean>(true);
+
+  function onError(error: any) {
+    if (error.response.status === 401) {
+      LogoutApi();
+      Alert.alert('Session Expired', 'Please login again');
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{name: 'Welcome'}],
+        }),
+      );
+    } else {
+      Alert.alert(
+        error?.response?.data?.message
+          ? error?.response?.data?.message
+          : 'Something went wrong',
+      );
+    }
+  }
   function handleTracking() {
     flightTracking(fa_flight_id)
       .then((rest: any) => {
@@ -47,22 +64,7 @@ const TrackFlight = ({route, navigation}: any) => {
         }
       })
       .catch(error => {
-        if (error.response.status === 401) {
-          LogoutApi();
-          Alert.alert('Session Expired', 'Please login again');
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 1,
-              routes: [{name: 'Welcome'}],
-            }),
-          );
-        } else {
-          Alert.alert(
-            error?.response?.data?.message
-              ? error?.response?.data?.message
-              : 'Something went wrong',
-          );
-        }
+        onError(error);
         setLoading(false);
       });
   }
@@ -86,51 +88,33 @@ const TrackFlight = ({route, navigation}: any) => {
         left: 50,
       },
     });
-    // } else if (response && response.length > 0) {
-    //   ref?.current?.fitToCoordinates([response[0], response[1]], {
-    //     animated: true,
-    //     edgePadding: {
-    //       top: 50,
-    //       right: 50,
-    //       bottom: 50,
-    //       left: 50,
-    //     },
-    //   });
-    // }
   }, [ref]);
 
   useEffect(() => {
-    Promise.all([
-      searchAirport(departureAirport),
-      searchAirport(destinationAirport),
-    ])
-      .then((res: any) => {
-        setResponse([
-          res[0].airports[0].coordinates,
-          res[1].airports[0].coordinates,
-        ]);
-        setLoading(false);
+    // Promise.all([
+    //   searchAirport(departureAirport),
+    //   searchAirport(destinationAirport),
+    // ])
+    //   .then((res: any) => {
+    //     setResponse([
+    //       res[0].airports[0].coordinates,
+    //       res[1].airports[0].coordinates,
+    //     ]);
+    //     setLoading(false);
+    //   })
+    //   .catch(error => {
+    //     onError(error);
+    //     setLoading(false);
+    //   });
+    getMessageStatus(requestId)
+      .then((result: any) => {
+        result.success && setCustomerRead(result.request.isCustomerRead);
       })
       .catch(error => {
         if (error.response.status === 401) {
-          LogoutApi();
-          Alert.alert('Session Expired', 'Please login again');
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 1,
-              routes: [{name: 'Welcome'}],
-            }),
-          );
-        } else {
-          Alert.alert(
-            error?.response?.data?.message
-              ? error?.response?.data?.message
-              : 'Something went wrong',
-          );
+          onError(error);
         }
-        setLoading(false);
       });
-
     handleTracking();
   }, []);
 
@@ -151,15 +135,15 @@ const TrackFlight = ({route, navigation}: any) => {
         />
       ) : (
         <View style={styles.container}>
-          {response && data && response.length > 0 ? (
+          {departureAirportLocation && destinationAirportLocation && data ? (
             <MapView
               provider={PROVIDER_GOOGLE} // remove if not using Google Maps
               showsUserLocation={false}
               ref={ref}
               onMapReady={onMapReadyHandler}
               region={{
-                latitude: response[0].lat,
-                longitude: response[0].lon,
+                latitude: departureAirportLocation.lat,
+                longitude: departureAirportLocation.lng,
                 latitudeDelta: 20,
                 longitudeDelta: 20,
               }}
@@ -168,16 +152,16 @@ const TrackFlight = ({route, navigation}: any) => {
               <Polyline
                 coordinates={[
                   {
-                    latitude: response[0].lat,
-                    longitude: response[0].lon,
+                    latitude: departureAirportLocation.lat,
+                    longitude: departureAirportLocation.lng,
                   },
                   {
                     latitude: data.latitude,
                     longitude: data.longitude,
                   },
                   {
-                    latitude: response[1].lat,
-                    longitude: response[1].lon,
+                    latitude: destinationAirportLocation.lat,
+                    longitude: destinationAirportLocation.lng,
                   },
                 ]}
                 geodesic={true}
@@ -187,8 +171,8 @@ const TrackFlight = ({route, navigation}: any) => {
               <Marker
                 key={'initial'}
                 coordinate={{
-                  latitude: response[0].lat,
-                  longitude: response[0].lon,
+                  latitude: departureAirportLocation.lat,
+                  longitude: departureAirportLocation.lng,
                 }}
                 title={'initial'}
               />
@@ -209,21 +193,21 @@ const TrackFlight = ({route, navigation}: any) => {
               <Marker
                 key={'final'}
                 coordinate={{
-                  latitude: response[1].lat,
-                  longitude: response[1].lon,
+                  latitude: destinationAirportLocation.lat,
+                  longitude: destinationAirportLocation.lng,
                 }}
                 title={'final'}
               />
             </MapView>
           ) : (
-            response &&
-            response.length > 0 && (
+            departureAirportLocation &&
+            destinationAirportLocation && (
               <MapView
                 provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                 showsUserLocation={false}
                 region={{
-                  latitude: response[0].lat,
-                  longitude: response[0].lon,
+                  latitude: departureAirportLocation.lat,
+                  longitude: departureAirportLocation.lng,
                   latitudeDelta: 20,
                   longitudeDelta: 20,
                 }}
@@ -234,31 +218,31 @@ const TrackFlight = ({route, navigation}: any) => {
                 <Polyline
                   coordinates={[
                     {
-                      latitude: response[0].lat,
-                      longitude: response[0].lon,
+                      latitude: departureAirportLocation.lat,
+                      longitude: departureAirportLocation.lng,
                     },
                     {
-                      latitude: response[1].lat,
-                      longitude: response[1].lon,
+                      latitude: destinationAirportLocation.lat,
+                      longitude: destinationAirportLocation.lng,
                     },
                   ]}
-                  geodesic={true}
+                  // geodesic={true}
                   strokeWidth={2}
                   lineDashPhase={3}
                 />
                 <Marker
                   key={'initial'}
                   coordinate={{
-                    latitude: response[0].lat,
-                    longitude: response[0].lon,
+                    latitude: departureAirportLocation.lat,
+                    longitude: departureAirportLocation.lng,
                   }}
                   title={'initial'}
                 />
                 <Marker
                   key={'final'}
                   coordinate={{
-                    latitude: response[1].lat,
-                    longitude: response[1].lon,
+                    latitude: destinationAirportLocation.lat,
+                    longitude: destinationAirportLocation.lng,
                   }}
                   title={'final'}
                 />
@@ -289,7 +273,19 @@ const TrackFlight = ({route, navigation}: any) => {
               </Text>
             </View>
 
-            <Button title={'Chat'} onPress={() => {}} />
+            {/* <Button title={'Chat'} onPress={() => {}} /> */}
+            <Button
+              title={'Chat'}
+              onPress={() => {
+                navigation.navigate('ChatScreen', {
+                  receiverId,
+                  requestId: null,
+                  // requestId,
+                }),
+                  setCustomerRead(true);
+              }}
+              chat={!isCustomerRead}
+            />
           </View>
         </View>
       )}

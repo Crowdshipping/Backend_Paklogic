@@ -59,7 +59,9 @@ const QueryDetail = ({navigation, route}: any) => {
           {customerSupportAdminAnswer && (
             <>
               <Text style={styles.heading}>Answer</Text>
-              <View style={styles.description} />
+              <View style={styles.description}>
+                <Text style={styles.txt}>{customerSupportAdminAnswer}</Text>
+              </View>
             </>
           )}
         </View>

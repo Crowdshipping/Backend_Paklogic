@@ -20,17 +20,20 @@ import {colors} from '../../../theme';
 import MapView, {Marker, PROVIDER_GOOGLE, Polyline} from 'react-native-maps';
 import {styles} from './style';
 
-import MapViewDirections from 'react-native-maps-directions';
-
 import {CommonActions, useFocusEffect} from '@react-navigation/native';
 import moment from 'moment';
 import {shipsvgMap} from '../../../theme/assets/svg';
 import {SvgXml} from 'react-native-svg';
 
 const TrackShip = ({route, navigation}: any) => {
-  const {mmsiNumber, pickupAddress, dropAddress, eta} = route.params;
+  const {mmsiNumber, pickupAddress, dropAddress, eta, receiverId} =
+    route.params;
+
+    console.log(JSON.stringify({pickupAddress}), JSON.stringify({dropAddress}))
   // const [isLoading, setLoading] = useState(true);
   const [isLoading, setLoading] = useState(true);
+  const [isCustomerRead, setCustomerRead] = useState<boolean>(true);
+
   const [data, setData] = useState<any>();
 
   function handleTracking() {
@@ -132,6 +135,7 @@ const TrackShip = ({route, navigation}: any) => {
               style={styles.map}
               onMapReady={onMapReadyHandler}>
               <Polyline
+              
                 coordinates={[
                   {latitude: pickupAddress.lat, longitude: pickupAddress.lng},
                   {latitude: data.LAT, longitude: data.LON},
@@ -234,8 +238,18 @@ const TrackShip = ({route, navigation}: any) => {
                 Ship Arrival Date {moment(eta).format('YYYY-MM-DD hh:mm:ss')}
               </Text>
             </View>
-
-            <Button title={'Chat'} onPress={() => {}} />
+            <Button
+              title={'Chat'}
+              onPress={() => {
+                navigation.navigate('ChatScreen', {
+                  receiverId,
+                  requestId: null,
+                  // requestId,
+                }),
+                  setCustomerRead(true);
+              }}
+              chat={!isCustomerRead}
+            />
           </View>
         </View>
       )}

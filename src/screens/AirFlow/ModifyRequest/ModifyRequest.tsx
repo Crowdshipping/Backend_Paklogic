@@ -16,8 +16,8 @@ import {
   Header,
   Datepicker,
   PhoneNumberPicker,
-} from '../../components';
-import {packagedetails, carlocation} from '../../theme/assets/svg';
+} from '../../../components';
+import {packagedetails, carlocation} from '../../../theme/assets/svg';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {SvgXml} from 'react-native-svg';
@@ -27,12 +27,12 @@ import {
 } from 'react-native-responsive-screen';
 import {styles} from './style';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {colors} from '../../theme/colors';
-import {ModalTypes, SuccessModal} from '../../Modals';
+import {colors} from '../../../theme/colors';
+import {ModalTypes, SuccessModal} from '../../../Modals';
 import Modal from 'react-native-modal/dist/modal';
 
-import OpenCamera from '../Cam_Gal/OpenCamera';
-import OpenGallery from '../Cam_Gal/OpenGallery';
+import OpenCamera from '../../Cam_Gal/OpenCamera';
+import OpenGallery from '../../Cam_Gal/OpenGallery';
 import {
   createBooking,
   requestProvider,
@@ -42,15 +42,13 @@ import {
   getProductTypes,
   LogoutApi,
   getProductCategories,
-  calculateAirBookingFare,
-} from '../../API';
+} from '../../../API';
 
-import {cross} from '../../theme/assets/svg';
+import {cross} from '../../../theme/assets/svg';
 import Entypo from 'react-native-vector-icons/Entypo';
 import moment from 'moment';
-import {NUM_REGEX} from '../../appConstants';
+import {NUM_REGEX} from '../../../appConstants';
 import {CommonActions} from '@react-navigation/native';
-import getDistance from 'geolib/es/getDistance';
 export interface ICountryCode {
   name: string;
   dial_code: string;
@@ -69,22 +67,17 @@ interface ITypes {
 interface IimageShow1 extends Array<IimageShow> {}
 const ModifyRequest = ({navigation, route}: any) => {
   const {
-    pickcoords,
-    dropcoords,
-
     providerId,
     flightId,
     fa_flight_id,
     type,
     pickupIATACityCode,
     dropoffIATACityCode,
+    dropoffCity,
+    pickupCity,
   } = route.params?.data;
   const [toCaptureImage, settoCaptureImage] = useState(false);
-  const dropoffCity = route.params?.data?.dropoffCity;
-  const pickupCity = route.params?.data?.pickupCity;
-
   const [isModalVisible, setModalVisible] = useState(false);
-  const [totalFare, settotalFare] = useState(route.params?.totalFare);
   const [isModalVisible2, setModalVisible2] = useState(false);
   const [isModalVisible3, setModalVisible3] = useState(false);
 
@@ -105,13 +98,7 @@ const ModifyRequest = ({navigation, route}: any) => {
   const [dateShow, setdateShow] = useState(false);
 
   const [ImagesValue, setImagesValue] = useState(true);
-  const [Images, setImages] = useState<IimageShow1>(
-    route?.params?.data?.Images,
-  );
-
-  // const [SelectedCategory, setSelectedCategory] = useState(
-  //   route.params?.data?.SelectedCategory,
-  // );
+  const [Images, setImages] = useState<IimageShow1>(route.params?.data?.Images);
 
   const [SelectedCategory, setSelectedCategory] = useState<ITypes>({
     id: '',
@@ -123,9 +110,7 @@ const ModifyRequest = ({navigation, route}: any) => {
   });
 
   const [categoryValue, setcategoryValue] = useState(true);
-  // const [SelectedType, setSelectedType] = useState(
-  //   route.params?.data?.SelectedType,
-  // );
+
   const [typeValue, settypeValue] = useState(true);
   const [SelectedUnit, setSelectedUnit] = useState(
     route.params?.data?.SelectedUnit,
@@ -136,11 +121,16 @@ const ModifyRequest = ({navigation, route}: any) => {
     route.params?.data?.description,
   );
   const [receiverName, setreceiverName] = useState(route.params?.receiverName);
+  const [suggestedPrice, setsuggestedPrice] = useState<number>(
+    route.params?.suggestedPrice,
+  );
 
   const [valueNum, setvalueNum] = useState(true);
   const [valueName, setvalueName] = useState(true);
   const [weight, setweight] = useState(route.params?.data?.weight);
   const [weightValue, setweightValue] = useState(true);
+
+  const [errormsg, seterrorMsg] = useState('');
 
   const [Type, setType] = useState<ITypes[]>([]);
   const [category, setcategory] = useState<ITypes[]>([]);
@@ -149,17 +139,7 @@ const ModifyRequest = ({navigation, route}: any) => {
   let bookingId: string = route.params.data?.bookingId
     ? route.params.data?.bookingId
     : '';
-  // const category = [
-  //   { id: 1, name: 'Wood' },
-  //   { id: 2, name: 'Iron' },
-  //   { id: 3, name: 'Plastic' },
-  //   { id: 4, name: 'Glass' },
-  // ];
-  // const Type = [
-  //   { id: 1, name: 'Cargo' },
-  //   { id: 2, name: 'hand Carry' },
-  //   { id: 3, name: 'soft' },
-  // ];
+
   const Unit = [
     {
       id: 'mcg',
@@ -195,6 +175,25 @@ const ModifyRequest = ({navigation, route}: any) => {
     },
   ];
 
+  function onError(error: any) {
+    if (error.response.status === 401) {
+      LogoutApi();
+      Alert.alert('Session Expired', 'Please login again');
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{name: 'Welcome'}],
+        }),
+      );
+    } else {
+      Alert.alert(
+        error?.response?.data?.message
+          ? error?.response?.data?.message
+          : 'Something went wrong',
+      );
+    }
+  }
+
   async function handleSubmit() {
     let validate = true;
 
@@ -214,166 +213,92 @@ const ModifyRequest = ({navigation, route}: any) => {
       validate = false;
       setImagesValue(false);
     }
+    if (isNaN(suggestedPrice)) {
+      seterrorMsg('only numbers are allowed');
+      validate = false;
+    } else if (suggestedPrice < 20) {
+      validate = false;
+      seterrorMsg('price must be greater than 20');
+    }
     if (validate) {
       setloading(true);
+
       if (bookingId === '') {
-        postImage(Images)
-          .then((rest: any) => {
-            let validate = true;
-            // setloading(false);
-            if (rest.length === 2) {
-              if (rest[0].success && rest[1].success) {
-                productImage = rest[0].imageUrl;
-                productImage2 = rest[1].imageUrl;
-              } else {
-                validate = false;
-              }
-            } else if (rest.length === 1) {
-              if (rest[0].success) {
-                productImage = rest[0].imageUrl;
-              } else {
-                validate = false;
-              }
+        try {
+          const imgUrl = await postImage(Images);
+          if (imgUrl.length === 2 && imgUrl[0].success && imgUrl[1].success) {
+            productImage = imgUrl[0].imageUrl;
+            productImage2 = imgUrl[1].imageUrl;
+          } else if (imgUrl.length === 1 && imgUrl[0].success) {
+            productImage = imgUrl[0].imageUrl;
+          }
+          const bookingApi: any = await createBooking(
+            SelectedCategory.name,
+            SelectedType.name,
+            description,
+            weight,
+            SelectedUnit,
+            {
+              //pick cordinates
+              lat: '',
+              lon: '',
+            },
+            {
+              //drop cordinates
+              lat: '',
+              lon: '',
+            },
+            null,
+            null,
+            receiverName,
+            countrySelect.dial_code,
+            phone.trim(),
+            productImage,
+            productImage2,
+            null,
+            null,
+            null,
+            null,
+          );
+          bookingId = bookingApi.booking._id;
+          if (bookingApi.success && providerId) {
+            const requestProviderApi: any = await requestProvider(
+              providerId,
+              bookingId,
+              type,
+              null,
+              flightId,
+              suggestedPrice,
+            );
+
+            if (requestProviderApi.success) {
+              setsuccess(true);
             }
-            if (validate) {
-              createBooking(
-                SelectedCategory.name,
-                SelectedType.name,
-                description,
-                weight,
-                SelectedUnit,
-                pickcoords,
-                dropcoords,
-                null,
-                null,
-                receiverName,
-                countrySelect.dial_code,
-                phone.trim(),
-                productImage,
-                productImage2,
-                null,
-                null,
-                null,
-                null,
-                totalFare,
-              )
-                .then((rest: any) => {
-                  bookingId = rest.booking._id;
-                  setloading(false);
-                  rest.success && providerId
-                    ? requestProvider(
-                        providerId,
-                        bookingId,
-                        type,
-                        null,
-                        flightId,
-                      )
-                        .then((rest: any) => {
-                          rest.success && setsuccess(true);
-                        })
-                        .catch(async error => {
-                          setloading(false);
-                          if (error.response.status === 401) {
-                            Alert.alert(
-                              'Session Expired',
-                              'Please login again',
-                            );
-                            LogoutApi();
-                            navigation.dispatch(
-                              CommonActions.reset({
-                                index: 1,
-                                routes: [{name: 'Welcome'}],
-                              }),
-                            );
-                          } else {
-                            Alert.alert(
-                              error?.response?.data?.message
-                                ? error?.response?.data?.message
-                                : 'something went wrong',
-                            );
-                          }
-                        })
-                    : postRequest(
-                        bookingId,
-                        type,
-                        pickupCity,
-                        dropoffCity,
-                        fa_flight_id,
-                        pickupIATACityCode,
-                        dropoffIATACityCode,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                      )
-                        .then((rest: any) => {
-                          rest.success && setsuccess(true);
-                        })
-                        .catch(async error => {
-                          setloading(false);
-                          if (error.response.status === 401) {
-                            Alert.alert(
-                              'Session Expired',
-                              'Please login again',
-                            );
-                            LogoutApi();
-                            navigation.dispatch(
-                              CommonActions.reset({
-                                index: 1,
-                                routes: [{name: 'Welcome'}],
-                              }),
-                            );
-                          } else {
-                            Alert.alert(
-                              error?.response?.data?.message
-                                ? error?.response?.data?.message
-                                : 'something went wrong',
-                            );
-                          }
-                        });
-                })
-                .catch(async error => {
-                  setloading(false);
-                  if (error.response.status === 401) {
-                    Alert.alert('Session Expired', 'Please login again');
-                    LogoutApi();
-                    navigation.dispatch(
-                      CommonActions.reset({
-                        index: 1,
-                        routes: [{name: 'Welcome'}],
-                      }),
-                    );
-                  } else {
-                    Alert.alert(
-                      error?.response?.data?.message
-                        ? error?.response?.data?.message
-                        : 'something went wrong',
-                    );
-                  }
-                });
+          } else {
+            const postRequestApi: any = await postRequest(
+              bookingId,
+              type,
+              pickupCity,
+              dropoffCity,
+              fa_flight_id,
+              pickupIATACityCode,
+              dropoffIATACityCode,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              suggestedPrice,
+            );
+            if (postRequestApi.success) {
+              setsuccess(true);
             }
-          })
-          .catch(async error => {
-            setloading(false);
-            if (error.response.status === 401) {
-              Alert.alert('Session Expired', 'Please login again');
-              LogoutApi();
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 1,
-                  routes: [{name: 'Welcome'}],
-                }),
-              );
-            } else {
-              Alert.alert(
-                error?.response?.data?.message
-                  ? error?.response?.data?.message
-                  : 'something went wrong',
-              );
-            }
-          });
+          }
+        } catch (error) {
+          setloading(false);
+          onError(error);
+        }
       } else {
         if (!Images[0]?.uri?.includes('https://')) {
           await postImage([Images[0]]).then((rest: any) => {
@@ -413,40 +338,32 @@ const ModifyRequest = ({navigation, route}: any) => {
             description,
             weight,
             SelectedUnit,
-            pickcoords,
-            dropcoords,
+            {
+              //pick cordinates
+              lat: '',
+              lon: '',
+            },
+            {
+              //drop cordinates
+              lat: '',
+              lon: '',
+            },
             null,
             null,
             receiverName,
             countrySelect.dial_code,
-            phone.trim(),
+            phone,
             productImage,
             productImage2,
           )
             .then((rest: any) => {
               Alert.alert(rest.message);
               navigation.navigate('BookingHistory');
-              setloading(false);
             })
             .catch(async error => {
-              setloading(false);
-              if (error.response.status === 401) {
-                Alert.alert('Session Expired', 'Please login again');
-                LogoutApi();
-                navigation.dispatch(
-                  CommonActions.reset({
-                    index: 1,
-                    routes: [{name: 'Welcome'}],
-                  }),
-                );
-              } else {
-                Alert.alert(
-                  error?.response?.data?.message
-                    ? error?.response?.data?.message
-                    : 'something went wrong',
-                );
-              }
-            });
+              onError(error);
+            })
+            .finally(() => setloading(false));
         }
       }
     }
@@ -461,35 +378,18 @@ const ModifyRequest = ({navigation, route}: any) => {
   useEffect(() => {
     getProductTypes()
       .then((result: any) => {
-        setloading(false);
         result.success &&
           result.productTypes.map((products: any) => {
-            setType(Type => [
-              ...Type,
+            setType(currentTypes => [
+              ...currentTypes,
               {id: products._id, name: products.productName},
             ]);
           });
       })
-      .catch(async error => {
-        setloading(false);
-        if (error.response.status === 401) {
-          Alert.alert('Session Expired', 'Please login again');
-          LogoutApi();
-          LogoutApi();
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 1,
-              routes: [{name: 'Welcome'}],
-            }),
-          );
-        } else {
-          Alert.alert(
-            error?.response?.data?.message
-              ? error?.response?.data?.message
-              : 'something went wrong',
-          );
-        }
-      });
+      .catch(error => {
+        onError(error);
+      })
+      .finally(() => setloading(false));
   }, []);
 
   useEffect(() => {
@@ -498,71 +398,18 @@ const ModifyRequest = ({navigation, route}: any) => {
         .then((result: any) => {
           result.success &&
             result.productCategories.map((products: any) => {
-              setcategory(category => [
-                ...category,
+              setcategory(currentCategory => [
+                ...currentCategory,
                 {id: products._id, name: products.productCategoryName},
               ]);
             });
         })
-        .catch(async error => {
-          setloading(false);
-          if (error.response.status === 401) {
-            Alert.alert('Session Expired', 'Please login again');
-            LogoutApi();
-            LogoutApi();
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 1,
-                routes: [{name: 'Welcome'}],
-              }),
-            );
-          } else {
-            Alert.alert(
-              error?.response?.data?.message
-                ? error?.response?.data?.message
-                : 'something went wrong',
-            );
-          }
-        });
+        .catch(error => {
+          onError(error);
+        })
+        .finally(() => setloading(false));
     }
   }, [SelectedType.id]);
-
-  useEffect(() => {
-    let distance =
-      getDistance(
-        {latitude: pickcoords.lat, longitude: pickcoords.lon},
-        {latitude: dropcoords.lat, longitude: dropcoords.lon},
-      ) * 0.000621;
-
-    let data = {
-      bookingFee: 10,
-      costPerMile: 0.5,
-      totalMiles: distance,
-    };
-    calculateAirBookingFare(data)
-      .then((result: any) => {
-        result.success && settotalFare(result.amount);
-      })
-      .catch(async error => {
-        setloading(false);
-        if (error.response.status === 401) {
-          Alert.alert('Session Expired', 'Please login again');
-          LogoutApi();
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 1,
-              routes: [{name: 'Welcome'}],
-            }),
-          );
-        } else {
-          Alert.alert(
-            error?.response?.data?.message
-              ? error?.response?.data?.message
-              : 'something went wrong',
-          );
-        }
-      });
-  }, [pickcoords.lat, dropcoords.lat]);
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
@@ -678,7 +525,6 @@ const ModifyRequest = ({navigation, route}: any) => {
               <TouchableOpacity
                 style={{
                   width: '47%',
-                  borderBottomWidth: 1,
                   marginTop: hp(2),
                   marginBottom: hp(2),
                   borderColor: colors.gray,
@@ -699,14 +545,15 @@ const ModifyRequest = ({navigation, route}: any) => {
                   />
                 </View>
 
-                <Text
-                  style={{
-                    borderColor: colors.gray,
-                    paddingVertical: wp(1),
-                    color: colors.black,
-                  }}>
-                  {SelectedUnit ? SelectedUnit : 'Select Unit'}
-                </Text>
+                <View style={{borderBottomWidth: 1, borderColor: colors.black}}>
+                  <Text
+                    style={{
+                      paddingVertical: wp(2),
+                      color: colors.gray,
+                    }}>
+                    {SelectedUnit ? SelectedUnit : 'Select Unit'}
+                  </Text>
+                </View>
               </TouchableOpacity>
             </View>
             <View
@@ -759,40 +606,32 @@ const ModifyRequest = ({navigation, route}: any) => {
 
             <View style={styles.attachment}>
               <Text style={styles.txt}>Attached Photo</Text>
-
-              <TouchableOpacity
-                style={styles.arrorwStyle}
-                onPress={() => {
-                  settoCaptureImage(true);
-                }}
-                disabled={Images.length >= 2 ? true : false}>
-                <Entypo
-                  name="attachment"
-                  color={colors.black}
-                  size={wp(5)}
-                  style={{alignSelf: 'flex-end'}}
-                />
-              </TouchableOpacity>
             </View>
-            <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-              {Images.length >= 1 ? (
-                Images.map((item, index) => {
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+              }}>
+              {Images.length >= 1 &&
+                Images.map((item, index1: number) => {
                   return (
-                    <View key={index} style={{marginLeft: wp(8)}}>
+                    <View key={index1} style={{marginLeft: wp(8)}}>
                       <TouchableOpacity
                         onPress={() => {
                           setImages([
-                            ...Images.slice(0, index),
-                            ...Images.slice(index + 1, Images.length),
+                            ...Images.slice(0, index1),
+                            ...Images.slice(index1 + 1, Images.length),
                           ]);
                         }}
                         style={{
                           alignSelf: 'flex-end',
-                          borderRadius: 78,
+                          borderRadius: 100,
                           backgroundColor: colors.red,
+                          position: 'absolute',
                           padding: wp(1),
-                          left: wp(3),
-                          top: wp(3.5),
+                          right: -wp(2),
+                          top: -wp(2),
                           zIndex: 100,
                         }}>
                         <SvgXml width={wp(4)} height={wp(4)} xml={cross} />
@@ -803,24 +642,27 @@ const ModifyRequest = ({navigation, route}: any) => {
                         style={{
                           height: wp(37),
                           width: wp(37),
-                          // margin: wp(5),
-                          borderRadius: 10,
-                          // borderWidth: 1,
+                          borderRadius: wp(3),
                         }}
                       />
                     </View>
                   );
-                })
-              ) : (
-                <View
+                })}
+              {Images.length < 2 && (
+                <TouchableOpacity
+                  onPress={() => {
+                    settoCaptureImage(true);
+                  }}
                   style={{
-                    height: wp(35),
-                    width: wp(35),
-                    borderRadius: wp(5),
+                    height: wp(37),
+                    width: wp(37),
+                    borderRadius: wp(3),
                     justifyContent: 'center',
                     alignItems: 'center',
                     marginHorizontal: wp(8),
+                    top: -wp(2),
                     backgroundColor: '#C4C4C4',
+                    borderWidth: 1,
                   }}>
                   <View
                     style={{
@@ -830,7 +672,7 @@ const ModifyRequest = ({navigation, route}: any) => {
                       borderColor: '#C0904E',
                     }}
                   />
-                </View>
+                </TouchableOpacity>
               )}
             </View>
             {!ImagesValue && (
@@ -969,7 +811,11 @@ const ModifyRequest = ({navigation, route}: any) => {
               </Text>
               <Textbox
                 title="Name"
-                placeholder={route.params?.receiverName}
+                placeholder={
+                  route.params?.receiverName
+                    ? route.params?.receiverName
+                    : 'Name'
+                }
                 onChangeValue={(text: string) => {
                   setreceiverName(text);
                   setvalueName(true);
@@ -1001,7 +847,7 @@ const ModifyRequest = ({navigation, route}: any) => {
               />
             </View>
 
-            <View style={styles.paymentView}>
+            {/* <View style={styles.paymentView}>
               {totalFare > 0 ? (
                 <>
                   <Text style={{fontSize: 16, padding: 1, color: colors.black}}>
@@ -1018,6 +864,35 @@ const ModifyRequest = ({navigation, route}: any) => {
                   style={{justifyContent: 'center', alignSelf: 'center'}}
                 />
               )}
+            </View> */}
+            <View style={styles.paymentView}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  padding: 1,
+                  color: colors.black,
+                  textAlign: 'center',
+                }}>
+                Total Amount $
+              </Text>
+
+              <TextInput
+                placeholder={
+                  route.params?.suggestedPrice
+                    ? `${route.params?.suggestedPrice}`
+                    : 'Enter amount'
+                }
+                placeholderTextColor={colors.gray}
+                keyboardType={'numeric'}
+                style={styles.paymentInput}
+                onChangeText={text => {
+                  seterrorMsg('');
+                  setsuggestedPrice(parseInt(text));
+                }}
+              />
+              {errormsg ? (
+                <Text style={styles.errorMsg}>{errormsg}</Text>
+              ) : null}
             </View>
             <Button title="next" onPress={handleSubmit} loading={loading} />
           </View>
@@ -1125,7 +1000,10 @@ const ModifyRequest = ({navigation, route}: any) => {
               // paddin,
             }}>
             <View style={{width: '45%', height: hp(5)}}>
-              <OpenCamera callbackImage={getSelectedImage.bind(this)} />
+              <OpenCamera
+                callbackImage={getSelectedImage.bind(this)}
+                modalExit={() => settoCaptureImage(false)}
+              />
             </View>
             <View
               style={{
@@ -1134,7 +1012,10 @@ const ModifyRequest = ({navigation, route}: any) => {
               }}
             />
             <View style={{width: '45%', height: hp(5)}}>
-              <OpenGallery callbackImage={getSelectedImage.bind(this)} />
+              <OpenGallery
+                callbackImage={getSelectedImage.bind(this)}
+                modalExit={() => settoCaptureImage(false)}
+              />
             </View>
           </View>
         </View>
@@ -1143,20 +1024,3 @@ const ModifyRequest = ({navigation, route}: any) => {
   );
 };
 export default ModifyRequest;
-
-// settoCaptureImage(false),
-// navigation.navigate('ReceiverDetails', {
-//   data: {
-//     SelectedCategory,
-//     SelectedType,
-//     instructions,
-//     description,
-//     weight,
-//     pickcoords,
-//     dropcoords,
-//     dropoffCity,
-//     pickupCity,
-//     providerId,
-//     flightId,
-//   },
-// });

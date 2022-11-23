@@ -3,7 +3,7 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
-import {colors} from '../../theme';
+import {colors} from '../../../theme';
 
 export const styles = StyleSheet.create({
   sectionContainer: {flex: 1},

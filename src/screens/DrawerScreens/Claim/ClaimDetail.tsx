@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Text, StyleSheet, View, ScrollView} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
@@ -10,6 +10,7 @@ import {Header} from '../../../components';
 import {colors} from '../../../theme';
 
 const ClaimDetail = ({navigation, route}: any) => {
+  const {claimTitle, claimDescription} = route.params.item;
   return (
     <SafeAreaView>
       <ScrollView>
@@ -34,11 +35,9 @@ const ClaimDetail = ({navigation, route}: any) => {
                 fontWeight: 'bold',
                 paddingVertical: hp(1),
               }}>
-              {route.params.item.claimTitle}
+              {claimTitle}
             </Text>
-            <Text style={{color: colors.black}}>
-              {route.params.item.claimDescription}
-            </Text>
+            <Text style={{color: colors.black}}>{claimDescription}</Text>
           </View>
         </View>
       </ScrollView>

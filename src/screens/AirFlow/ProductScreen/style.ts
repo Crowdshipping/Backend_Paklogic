@@ -4,36 +4,31 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {colors} from '../../theme';
+import {colors} from '../../../theme';
 
 export const styles = StyleSheet.create({
-  viewlocation: {
-    flexDirection: 'row',
-    marginTop: hp(1.5),
-  },
-  paymentView: {
-    backgroundColor: '#F3F2F2',
-    paddingVertical: hp(1),
-    paddingHorizontal: wp(10),
-    borderRadius: wp(1),
-    marginVertical: hp(2),
-    alignSelf: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   arrorwStyle: {
+    // width: wp(10),
+    // borderWidth: 2,
     alignSelf: 'flex-end',
+    // justifyContent: 'right',
   },
   bckimg: {
+    // flex: 1,
     backgroundColor: colors.white,
+    marginTop: hp(10),
     borderTopRightRadius: 15,
     borderTopLeftRadius: 15,
     paddingTop: hp(1),
   },
   svg: {
     borderWidth: 2,
+    // marginVertical: hp(5),
+    // paddingVertical: hp(5),
+    // marginHorizontal: wp(40),
     color: colors.black,
     fontSize: wp(4),
+    // bottom: 15,
   },
 
   txt: {
@@ -41,18 +36,26 @@ export const styles = StyleSheet.create({
     color: colors.black,
     fontSize: wp(4),
   },
+
   main: {
-    paddingTop: hp(5),
+    // paddingTop: hp(4),
+    // paddingHorizontal: wp(5),
+    bottom: hp(4),
+    // padding: 20,
+    // backgroundColor: 'green',
   },
   attachment: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: wp(8),
     paddingVertical: hp(2),
+    // backgroundColor: 'blue',
   },
   input: {
     marginTop: hp(2),
+    // textAlign: 'center',
     backgroundColor: '#FFd0Ca',
+    // width: wp(90),
     flexWrap: 'wrap',
     borderRadius: 10,
     justifyContent: 'flex-start',
@@ -61,19 +64,23 @@ export const styles = StyleSheet.create({
 
   txtview: {
     justifyContent: 'space-between',
+    // paddingBottom: hp(1),
+    // width: '100%',
     flexDirection: 'row',
   },
   txt1: {
     fontSize: wp(4),
-    textTransform: 'uppercase',
+    // textTransform: 'uppercase',
     color: colors.black,
   },
+
   Touch: {
     borderBottomWidth: 1,
     marginTop: hp(2),
     marginHorizontal: wp(8),
     paddingBottom: hp(1),
-    borderColor: colors.gray,
+    borderColor: colors.black,
+    // borderWidth: 1,
   },
   menu: {marginHorizontal: wp(10), marginVertical: hp(3)},
   location: {
@@ -92,11 +99,29 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingVertical: 1,
   },
+  // nobottom:
+  // {
+  //   borderBottomColor:
+  // },
+
+  viewlocation: {
+    flexDirection: 'row',
+    marginTop: hp(1.5),
+    // paddingTop: hp(2),
+    // borderWidth: 1,
+    width: '100%',
+    // justifyContent: 'space-between',
+    // flexWrap: 'wrap',
+    paddingVertical: hp(1),
+  },
 
   txtviewsmall: {
     justifyContent: 'space-between',
     paddingTop: hp(1),
+    // paddingBottom: hp(1),
+    // width: '50%',
     flexDirection: 'row',
+    // borderWidth: 3,
   },
 
   Touchsmall: {
@@ -107,9 +132,12 @@ export const styles = StyleSheet.create({
     width: '30%',
   },
   Touchsmallprops: {
+    // borderBottomWidth: 1,
     borderColor: colors.gray,
     paddingBottom: 1,
     marginVertical: hp(1),
+    // borderWidth: 1,
+    // justifyContent: 'space-between',
     width: '30%',
   },
 
@@ -120,6 +148,7 @@ export const styles = StyleSheet.create({
     borderRadius: 5,
   },
   line: {
+    // flexDirection: 'row',
     borderWidth: 0.5,
   },
 });

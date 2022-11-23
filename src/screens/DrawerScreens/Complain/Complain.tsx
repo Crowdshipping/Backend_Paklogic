@@ -75,23 +75,26 @@ const Complain = ({navigation}: any) => {
   const noComplainAvailable = () => {
     return (
       <View
-        style={{
-          backgroundColor: colors.boxBackground,
-          alignSelf: 'center',
-          paddingVertical: hp(10),
-          marginVertical: '50%',
-          paddingHorizontal: wp(10),
-          borderRadius: hp(2),
-        }}>
-        <Text
-          style={{
-            textAlign: 'center',
-            color: colors.red,
-            fontSize: hp(2),
-          }}>
-          Sorry no complains available
-        </Text>
-      </View>
+                  style={{
+                    backgroundColor: colors.boxBackground,
+                    // backgroundColor: 'aqua',
+                    alignSelf: 'center',
+                    // paddingVertical: hp(10),
+                    marginVertical: '40%',
+                    
+                    paddingHorizontal: wp(10),
+                    borderRadius: hp(2),
+                  }}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      color: colors.red,
+                      fontSize: hp(2),
+                      paddingVertical: hp(10)
+                    }}>
+                    Sorry no complains available
+                  </Text>
+                </View>
     );
   };
 
@@ -105,15 +108,15 @@ const Complain = ({navigation}: any) => {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
+      <Header title={'Complains'} pressMethod={() => navigation.goBack()} />
       {isLoading ? (
         <ActivityIndicator
           size={'small'}
           color={colors.red}
-          style={{justifyContent: 'center', alignSelf: 'center'}}
+          style={{flex: 1, justifyContent: 'center', alignSelf: 'center'}}
         />
       ) : (
         <ScrollView>
-          <Header title={'Complains'} pressMethod={() => navigation.goBack()} />
           <View style={styles.maincontainer}>
             <TouchableOpacity
               onPress={() => {

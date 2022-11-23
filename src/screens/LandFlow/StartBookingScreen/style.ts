@@ -54,7 +54,7 @@ export const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
-    height: hp(65),
+    height: hp(70),
     // paddingBottom: 5,
   },
   menu: {marginHorizontal: wp(10), marginVertical: hp(2.5)},
@@ -78,9 +78,12 @@ export const styles = StyleSheet.create({
     // borderTopRightRadius: 15,
     // borderTopLeftRadius: 15,
     // paddingTop: hp(1),
-    height: hp(35),
+position: 'absolute',
+    height: hp(30),
+    width: wp(100),
+    bottom: 0,
 
-    // top: Platform.OS === 'android' ? hp(35) : hp(32),
+    // top: Platform.OS === 'android' ? hp(50) : hp(45),
     // top: hp(35),
     // alignSelf: 'flex-end',
     // justifyContent: 'space-evenly',

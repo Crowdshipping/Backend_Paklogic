@@ -21,12 +21,12 @@ import {colors} from '../../../theme';
 import {CommonActions, useIsFocused} from '@react-navigation/native';
 
 const Claims = ({navigation}: any) => {
-  const [claimResponse, setClaimResponse] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(false);
-  // const [assignShow, setAssignShow] = React.useState(false);
-  // const [isDisabled, setDisabled] = React.useState(false);
-  const [pending, setPending] = React.useState(true);
-  const [resolved, setResolved] = React.useState(true);
+  const [claimResponse, setClaimResponse] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  // const [assignShow, setAssignShow] = useState(false);
+  // const [isDisabled, setDisabled] = useState(false);
+  const [pending, setPending] = useState(true);
+  const [resolved, setResolved] = useState(true);
   const isfocus = useIsFocused();
   function getData() {
     setIsLoading(true);
@@ -72,28 +72,29 @@ const Claims = ({navigation}: any) => {
   };
 
   return (
-    <SafeAreaView>
-      <ScrollView>
-        <Header
-          title={'Claims'}
-          pressMethod={() => {
-            navigation.goBack();
-          }}
-        />
-        {isLoading ? (
-          <View
-            style={{
-              // backgroundColor: colors.boxBackground,
-              alignSelf: 'center',
-              justifyContent: 'center',
-              alignItems: 'center',
-              // paddingVertical: hp(10),
-              // paddingHorizontal: wp(10),
-              // borderRadius: hp(2),
-            }}>
-            <ActivityIndicator size={'small'} color={colors.red} />
-          </View>
-        ) : (
+    <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
+      <Header
+        title={'Claims'}
+        pressMethod={() => {
+          navigation.goBack();
+        }}
+      />
+      {isLoading ? (
+        <View
+          style={{
+            flex: 1,
+            // backgroundColor: colors.boxBackground,
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+            // paddingVertical: hp(10),
+            // paddingHorizontal: wp(10),
+            // borderRadius: hp(2),
+          }}>
+          <ActivityIndicator size={'small'} color={colors.red} />
+        </View>
+      ) : (
+        <ScrollView>
           <View style={styles.maincontainer}>
             <TouchableOpacity
               onPress={() => {
@@ -133,27 +134,30 @@ const Claims = ({navigation}: any) => {
               })
             ) : (
               <View
-                style={{
-                  backgroundColor: colors.boxBackground,
-                  alignSelf: 'center',
-                  paddingVertical: hp(10),
-                  marginVertical: '50%',
-                  paddingHorizontal: wp(10),
-                  borderRadius: hp(2),
-                }}>
-                <Text
                   style={{
-                    textAlign: 'center',
-                    color: colors.red,
-                    fontSize: hp(2),
+                    backgroundColor: colors.boxBackground,
+                    // backgroundColor: 'aqua',
+                    alignSelf: 'center',
+                    // paddingVertical: hp(10),
+                    marginVertical: '40%',
+                    
+                    paddingHorizontal: wp(10),
+                    borderRadius: hp(2),
                   }}>
-                  Sorry no claims available
-                </Text>
-              </View>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      color: colors.red,
+                      fontSize: hp(2),
+                      paddingVertical: hp(10)
+                    }}>
+                    Sorry no claims available
+                  </Text>
+                </View>
             )}
           </View>
-        )}
-      </ScrollView>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };

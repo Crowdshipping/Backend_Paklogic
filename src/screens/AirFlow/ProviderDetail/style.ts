@@ -3,7 +3,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {colors} from '../../theme';
+import {colors} from '../../../theme';
 
 export const styles = StyleSheet.create({
   btnView: {alignSelf: 'center'},
@@ -17,6 +17,8 @@ export const styles = StyleSheet.create({
   details: {
     fontSize: wp(4),
     color: colors.black,
+    flex: 1,
+    textAlignVertical: 'center',
     // fontWeight: 'bold',
   },
   txt: {
@@ -27,7 +29,10 @@ export const styles = StyleSheet.create({
   data: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: hp(1),
+    // paddingVertical: hp(0.5),
+    // marginVertical: hp(0.5),
+    alignItems: 'center',
+    flex: 1,
   },
 
   img: {
@@ -37,38 +42,13 @@ export const styles = StyleSheet.create({
     backgroundColor: '#E7C295',
     marginTop: hp(3),
   },
-  main: {
-    flex: 1,
-    // paddingBottom: hp(4),
-    paddingHorizontal: wp(5),
-    marginHorizontal: wp(5),
-    // padding: 20,
-    backgroundColor: colors.white,
-    bottom: hp(5),
-    elevation: 5,
-    shadowColor: colors.black,
-    borderRadius: 8,
-  },
+
   title: {
     textAlign: 'center',
     fontSize: hp(3),
     fontWeight: 'bold',
     color: colors.red,
-    paddingBottom: hp(4),
-  },
-  attachment: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    // paddingHorizontal: wp(9.5),
-    paddingVertical: hp(2),
-
-    // backgroundColor: 'blue',
-  },
-  input: {
-    marginTop: hp(2),
-    textAlign: 'center',
-    backgroundColor: 'pink',
-    width: wp(90),
-    flexWrap: 'wrap',
+    textTransform: 'capitalize',
+    // paddingVertical: hp(3),
   },
 });

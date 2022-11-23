@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import {styles} from './style';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import {Button, Header, Datepicker} from '../../components';
+import {Button, Header, Datepicker} from '../../../components';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -16,34 +16,28 @@ import {
 
 import Entypo from 'react-native-vector-icons/Entypo';
 
-import {SearchCity} from '../../Modals';
+import {SearchCity} from '../../../Modals';
 import moment from 'moment';
-import {colors} from '../../theme';
+import {colors} from '../../../theme';
 interface cityArray {
   name: string;
   code: string;
-  coordinates: {lat: string; lon: string};
-  country_code: string;
+  // coordinates: {lat: string; lon: string};
+  // country_code: string;
   // time_zone: string;
 }
 const AirDelivery = ({navigation}: any) => {
-  const [initialDate, setinitialDate] = useState<Date>();
+  const [initialDate, setinitialDate] = useState<any>();
+  const [finalDate, setfinalDate] = useState<any>();
 
-  const [finalDate, setfinalDate] = useState<Date>();
   // const [finalValue, setfinalValue] = useState(true);
   const [pickupLocation, setpickupLocation] = useState<cityArray>({
     name: '',
     code: '',
-    coordinates: {lat: '', lon: ''},
-    country_code: '',
-    // time_zone: '',
   });
   const [dropoffLocation, setdropoffLocation] = useState<cityArray>({
     name: '',
     code: '',
-    coordinates: {lat: '', lon: ''},
-    country_code: '',
-    // time_zone: '',
   });
   const [dateShow, setdateShow] = useState('');
   const [pickValue, setpickValue] = useState(true);
@@ -51,7 +45,7 @@ const AirDelivery = ({navigation}: any) => {
   const [isVisible, setisVisible] = useState(false);
   const [isVisible2, setisVisible2] = useState(false);
 
-  const [markers, setmarkers] = useState([
+  const [markers] = useState([
     {
       title: 'initial',
       latlng: {latitude: 33.738045, longitude: 73.084488},
@@ -159,7 +153,7 @@ const AirDelivery = ({navigation}: any) => {
             }}>
             {pickupLocation?.name !== ''
               ? pickupLocation.name
-              : 'Pickup Location'}
+              : 'Pickup Airport'}
           </Text>
         </TouchableOpacity>
         {!pickValue && (
@@ -187,7 +181,7 @@ const AirDelivery = ({navigation}: any) => {
             }}>
             {dropoffLocation?.name !== ''
               ? dropoffLocation.name
-              : 'Dropoff Location'}
+              : 'Dropoff Airport'}
           </Text>
         </TouchableOpacity>
         {!dropValue && (
@@ -266,24 +260,3 @@ const AirDelivery = ({navigation}: any) => {
   );
 };
 export default AirDelivery;
-
-// useEffect(() => {
-
-//   setinitialDate(''),
-//     setfinalDate(''),
-//     setpickupLocation({
-//       name: '',
-//       code: '',
-//       // coordinates: {lat: '', lon: ''},
-//       // country_code: '',
-//       // time_zone: '',
-//     }),
-//     setdropoffLocation({
-//       name: '',
-//       code: '',
-//       // coordinates: {lat: '', lon: ''},
-//       // country_code: '',
-//       // time_zone: '',
-//     });
-
-// }, []);

@@ -11,6 +11,7 @@ import {Header} from '../../../components';
 import {prodUrl} from '../../../appConstants';
 
 const ComplainDetail = ({navigation, route}: any) => {
+  const {complainTitle, complainDescription, complainImage} = route.params.item;
   return (
     <SafeAreaView>
       <Header
@@ -19,12 +20,10 @@ const ComplainDetail = ({navigation, route}: any) => {
       />
       <ScrollView>
         <View style={styles.maincontainer}>
-          <Text style={styles.heading}>{route.params.item.complainTitle}</Text>
+          <Text style={styles.heading}>{complainTitle}</Text>
           <Text style={styles.heading}>Description</Text>
           <View style={styles.description}>
-            <Text style={styles.txt}>
-              {route.params.item.complainDescription}
-            </Text>
+            <Text style={styles.txt}>{complainDescription}</Text>
           </View>
           <Text style={styles.heading}>Complain Photo</Text>
           <View style={styles.imageBox}>
@@ -36,7 +35,7 @@ const ComplainDetail = ({navigation, route}: any) => {
                 borderWidth: 1,
               }}
               source={{
-                uri: prodUrl + route.params.item.complainImage,
+                uri: prodUrl + complainImage,
               }}
             />
           </View>

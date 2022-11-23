@@ -11,10 +11,10 @@ import {
 import {SvgXml} from 'react-native-svg';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {location} from '../../theme/assets/svg';
-import {mapp} from '../../theme/assets/images';
+import {location} from '../../../theme/assets/svg';
+import {mapp} from '../../../theme/assets/images';
 
-import {getFlights, LogoutApi} from '../../API';
+import {getFlights, LogoutApi} from '../../../API';
 
 import moment from 'moment';
 import {
@@ -22,36 +22,39 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-import {Header, Datepicker} from '../../components';
-import {SearchCity} from '../../Modals';
+import {Header, Datepicker} from '../../../components';
+import {SearchCity} from '../../../Modals';
 import {styles} from './style';
-import {colors} from '../../theme/colors';
+import {colors} from '../../../theme/colors';
 import {CommonActions} from '@react-navigation/native';
 interface cityArray {
   name: string;
   code: string;
-  coordinates: {lat: string; lon: string};
+  // coordinates: {lat: string; lon: string};
   // country_code: string;
   // time_zone: string;
 }
-interface country {
-  name: string;
-  // dial_code: string;
-  // code: string;
-  // flag: string;
+
+interface IflightDetails {
+  fa_flight_id: string;
+  origin: string;
+  destination: string;
+  scheduled_in: string;
+  ident_iata: string;
 }
 
 // import { Button } from '../../components/button';
 const BookingListScreen = ({navigation, route}: any) => {
   const [isVisible, setisVisible] = useState(false);
   const [isVisible2, setisVisible2] = useState(false);
-  const [detailsArray, setdetailsArray] = useState([]);
+  const [detailsArray, setdetailsArray] = useState<IflightDetails[]>([]);
   const [detailsArrayProvider, setdetailsArrayProvider] = useState([]);
 
   const [dateShow, setdateShow] = useState('');
-  // const [dobToShow2, setDobToShow2] = useState(false);
-  const [dobTo, setdobTo] = useState<Date>(route?.params?.initialDate);
-  const [dobTo2, setdobTo2] = useState<Date>(route?.params?.finalDate);
+  const [initialDate, setinitialDate] = useState<Date>(
+    route.params?.initialDate,
+  );
+  const [finalDate, setfinalDate] = useState<Date>(route.params?.finalDate);
   const [isLoading, setLoading] = useState(true);
   // const [placeholder , set]
   const [prevReq, setprevReq] = useState(0);
@@ -63,20 +66,20 @@ const BookingListScreen = ({navigation, route}: any) => {
   const [pickupLocation, setpickupLocation] = useState<cityArray>({
     name: route.params?.pickupLocation?.name,
     code: route.params?.pickupLocation?.code,
-    coordinates: {
-      lat: route.params?.pickupLocation?.coordinates.lat,
-      lon: route.params?.pickupLocation?.coordinates.lon,
-    },
+    // coordinates: {
+    //   lat: route.params?.pickupLocation?.coordinates.lat,
+    //   lon: route.params?.pickupLocation?.coordinates.lon,
+    // },
     // country_code: '',
     // time_zone: '',
   });
   const [dropoffLocation, setdropoffLocation] = useState<cityArray>({
     name: route.params?.dropoffLocation?.name,
     code: route.params?.dropoffLocation?.code,
-    coordinates: {
-      lat: route.params?.dropoffLocation?.coordinates.lat,
-      lon: route.params?.dropoffLocation?.coordinates.lon,
-    },
+    // coordinates: {
+    //   lat: route.params?.dropoffLocation?.coordinates.lat,
+    //   lon: route.params?.dropoffLocation?.coordinates.lon,
+    // },
     // country_code: '',
     // time_zone: '',
   });
@@ -84,19 +87,19 @@ const BookingListScreen = ({navigation, route}: any) => {
   useEffect(() => {
     let mounted = true;
     let validate = true;
-    if (!dobTo && !dobTo2) {
+    if (!initialDate && !finalDate) {
       setdateShow('Initial and final dates are Required');
       validate = false;
-    } else if (!dobTo) {
+    } else if (!initialDate) {
       setdateShow('Initial Date is Required');
       validate = false;
-    } else if (!dobTo2) {
+    } else if (!finalDate) {
       setdateShow('Final Date is Required');
       validate = false;
-    } else if (dobTo >= dobTo2) {
+    } else if (initialDate >= finalDate) {
       setdateShow('initial date must be smaller than final date');
       validate = false;
-    } else if (moment(dobTo2).diff(moment(dobTo), 'days') > 21) {
+    } else if (moment(finalDate).diff(moment(initialDate), 'days') > 21) {
       setdateShow(
         'Difference between initial and final date should be less than 21 days',
       );
@@ -117,28 +120,24 @@ const BookingListScreen = ({navigation, route}: any) => {
         });
       }
     }
-  }, [pickupLocation, dropoffLocation, dobTo, dobTo2]);
+  }, [pickupLocation, dropoffLocation, initialDate, finalDate]);
 
   async function handleGetFlights() {
     let data = {
       pickupCity: pickupLocation.name,
       dropoffCity: dropoffLocation.name,
-      startingDate: moment(dobTo).format('YYYY-MM-DD'),
-      endingDate: moment(dobTo2).format('YYYY-MM-DD'),
+      startingDate: moment(initialDate).format('YYYY-MM-DD'),
+      endingDate: moment(finalDate).format('YYYY-MM-DD'),
       departCode: pickupLocation.code,
       arrivalCode: dropoffLocation.code,
     };
     getFlights(data)
       .then((rest: any) => {
-        {
-          rest.success &&
-            (setdetailsArray(rest?.flightawareflights?.scheduled),
-            setdetailsArrayProvider(rest?.flights),
-            setLoading(false));
-        }
+        rest.success &&
+          (setdetailsArray(rest?.flightawareflights?.scheduled),
+          setdetailsArrayProvider(rest?.flights));
       })
       .catch(async error => {
-        setLoading(false);
         if (error.response.status === 401) {
           LogoutApi();
           Alert.alert('Session Expired', 'Please login again');
@@ -155,7 +154,8 @@ const BookingListScreen = ({navigation, route}: any) => {
               : 'Something went wrong',
           );
         }
-      });
+      })
+      .finally(() => setLoading(false));
   }
 
   return (
@@ -213,9 +213,9 @@ const BookingListScreen = ({navigation, route}: any) => {
         <View style={styles.Touch}>
           <Datepicker
             text={'From'}
-            datePrev={moment(dobTo).format('YYYY-MM-DD')}
+            datePrev={moment(initialDate).format('YYYY-MM-DD')}
             onChange={(selectedDate: Date) => {
-              setdobTo(selectedDate);
+              setinitialDate(selectedDate);
               setdateShow('');
             }}
           />
@@ -223,9 +223,9 @@ const BookingListScreen = ({navigation, route}: any) => {
         <View style={styles.Touch}>
           <Datepicker
             text={'To'}
-            datePrev={moment(dobTo2).format('YYYY-MM-DD')}
+            datePrev={moment(finalDate).format('YYYY-MM-DD')}
             onChange={(selectedDate: Date) => {
-              setdobTo2(selectedDate);
+              setfinalDate(selectedDate);
               setdateShow('');
             }}
           />
@@ -274,7 +274,9 @@ const BookingListScreen = ({navigation, route}: any) => {
 
                                 <Text style={{color: colors.black}}>
                                   Departure Time:{' '}
-                                  {moment(item.flightDate).format('hh:mm')}
+                                  {moment(item.flightDate).format(
+                                    'yyyy:mm:dd hh:mm',
+                                  )}
                                 </Text>
                               </View>
                             </View>
@@ -294,7 +296,7 @@ const BookingListScreen = ({navigation, route}: any) => {
                                 }}>
                                 <View style={styles.viewdetail}>
                                   <Text style={styles.txtdetail}>
-                                    {item.pickupCity}
+                                    {item.pickupIATACityCode}
                                   </Text>
                                   <TouchableOpacity
                                     onPress={() => {
@@ -303,20 +305,23 @@ const BookingListScreen = ({navigation, route}: any) => {
                                           firstname: item.provider.firstname,
                                           lastname: item.provider.lastname,
                                           phoneno: item.provider.phoneno,
+                                          profilepic: item.provider.profilepic,
+
                                           flightDate: item.flightDate,
                                           arrivalDate: item.flightarrivalDate,
                                           flightAirline: item.flightAirline,
-                                          pickcoords:
-                                            pickupLocation.coordinates,
-                                          dropcoords:
-                                            dropoffLocation.coordinates,
-                                          flightId: item._id,
+
                                           providerId: item.provider._id,
+                                          flightId: item._id,
+                                          type: 'Flight',
+                                          pickupIATACityCode:
+                                            item.pickupIATACityCode,
+                                          dropoffIATACityCode:
+                                            item.dropoffIATACityCode,
                                           pickupCity: pickupLocation.name,
                                           dropoffCity: dropoffLocation.name,
-                                          initialDate: dobTo,
-                                          finalDate: dobTo2,
-                                          type: 'Flight',
+                                          initialDate,
+                                          finalDate,
                                         },
                                       });
                                     }}>
@@ -327,7 +332,7 @@ const BookingListScreen = ({navigation, route}: any) => {
                                 </View>
                                 <View style={styles.viewdetail}>
                                   <Text style={styles.txtdetail}>
-                                    {item.dropoffCity}
+                                    {item.dropoffIATACityCode}
                                   </Text>
                                   <Text
                                     style={{fontSize: 14, color: colors.black}}>
@@ -408,7 +413,7 @@ const BookingListScreen = ({navigation, route}: any) => {
                 {detailsArray.length >= 1 &&
                   detailsArray
                     .slice(prevPost, nextPost)
-                    .map((item: any, index: number) => {
+                    .map((item: IflightDetails, index: number) => {
                       return (
                         item.fa_flight_id && (
                           <View key={index} style={styles.detailsboxinner}>
@@ -437,7 +442,7 @@ const BookingListScreen = ({navigation, route}: any) => {
                                 }}>
                                 <View style={[styles.viewdetail]}>
                                   <Text style={styles.txtdetail}>
-                                    {item.origin_iata}
+                                    {item.origin}
                                   </Text>
                                   <TouchableOpacity
                                     onPress={() => {
@@ -445,17 +450,12 @@ const BookingListScreen = ({navigation, route}: any) => {
                                         item: {
                                           fa_flight_id: item.fa_flight_id,
                                           type: 'Flight',
-                                          pickupIATACityCode: item.origin_iata,
-                                          dropoffIATACityCode:
-                                            item.destination_iata,
+                                          pickupIATACityCode: item.origin,
+                                          dropoffIATACityCode: item.destination,
                                           pickupCity: pickupLocation.name,
                                           dropoffCity: dropoffLocation.name,
-                                          pickcoords:
-                                            pickupLocation.coordinates,
-                                          dropcoords:
-                                            dropoffLocation.coordinates,
-                                          initialDate: dobTo,
-                                          finalDate: dobTo2,
+                                          initialDate,
+                                          finalDate,
                                         },
                                       });
                                     }}>
@@ -466,7 +466,7 @@ const BookingListScreen = ({navigation, route}: any) => {
                                 </View>
                                 <View style={styles.viewdetail}>
                                   <Text style={styles.txtdetail}>
-                                    {item.destination_iata}
+                                    {item.destination}
                                   </Text>
                                   <Text
                                     style={{fontSize: 14, color: colors.black}}>
@@ -547,8 +547,9 @@ const BookingListScreen = ({navigation, route}: any) => {
                     backgroundColor: colors.boxBackground,
                     // backgroundColor: 'aqua',
                     alignSelf: 'center',
-                    paddingVertical: hp(10),
+                    // paddingVertical: hp(10),
                     marginVertical: '40%',
+                    
                     paddingHorizontal: wp(10),
                     borderRadius: hp(2),
                   }}>
@@ -556,7 +557,8 @@ const BookingListScreen = ({navigation, route}: any) => {
                     style={{
                       textAlign: 'center',
                       color: colors.red,
-                      fontSize: 16,
+                      fontSize: hp(2),
+                      paddingVertical: hp(10)
                     }}>
                     Sorry no bookings available
                   </Text>

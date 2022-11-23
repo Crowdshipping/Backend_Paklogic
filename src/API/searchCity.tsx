@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios, { AxiosRequestConfig } from 'axios';
-import { prodUrl } from '../appConstants';
+import axios, {AxiosRequestConfig} from 'axios';
+import {prodUrl} from '../appConstants';
 
 export const searchCity = async (city: string) => {
   const userToken = await AsyncStorage.getItem('@userToken');
@@ -9,9 +9,9 @@ export const searchCity = async (city: string) => {
     const config: AxiosRequestConfig = {
       method: 'get',
       headers: {
-        Authorization: `Bearer ${userToken}`
+        Authorization: `Bearer ${userToken}`,
       },
-      url: `${prodUrl}/customer/searchcity/${city}`,
+      url: `${prodUrl}/provider/searchairport/${city}`,
     };
     axios(config)
       .then(response => {

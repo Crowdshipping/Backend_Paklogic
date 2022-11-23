@@ -8,6 +8,7 @@ import {
   Modal,
   TextInput,
   Platform,
+  Alert,
 } from 'react-native';
 // import Modal from 'react-native-modal';
 import {
@@ -16,7 +17,8 @@ import {
 } from 'react-native-responsive-screen';
 import {Header} from '../components';
 import {colors} from '../theme';
-import {searchPort} from '../API';
+import {LogoutApi, searchPort} from '../API';
+import {CommonActions, useNavigation} from '@react-navigation/native';
 
 interface IModal {
   setModalVisible: Function;
@@ -32,19 +34,25 @@ interface portArray {
 interface portArray1 extends Array<portArray> {}
 
 export const SearchPort = (props: IModal) => {
-  const [ports, setports] = useState<portArray1>([
-    {
-      Country: '',
-      Location: '',
-      Name: '',
-    },
-  ]);
+  const navigation = useNavigation();
+
+  const [ports, setports] = useState<portArray1>([]);
   function handleSearch(text: string) {
     searchPort(text)
       .then((rest: any) => {
         setports(rest.ports);
       })
       .catch(error => {
+        if (error.response.status === 401) {
+          LogoutApi();
+          Alert.alert('Session Expired', 'Please login again');
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [{name: 'Welcome'}],
+            }),
+          );
+        }
         // Alert.alert(error.message ? error.message : 'Something went wrong');
       });
   }

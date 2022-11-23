@@ -50,6 +50,7 @@ import {
   AddClaim,
   ViewPaymentLogs,
   PromoCodes,
+  Inbox,
 } from '../screens';
 import CustomDrawerContent from './DrawerNavigation';
 import {StripePayment, ChatScreen} from '../features';
@@ -110,6 +111,7 @@ export type rootStack = {
   RateDriver: undefined;
   ViewPaymentLogs: undefined;
   PromoCodes: undefined;
+  Inbox: undefined;
 };
 const Stack = createStackNavigator<rootStack>();
 const Drawer = createDrawerNavigator();
@@ -117,7 +119,7 @@ const Drawer = createDrawerNavigator();
 const MyDrawer = () => {
   return (
     <Drawer.Navigator
-      screenOptions={{headerShown: false}}
+      screenOptions={{headerShown: false, }}
       initialRouteName="DrawerScreens"
       drawerContent={props => <CustomDrawerContent {...props} />}>
       <Drawer.Screen name="DrawerScreens" component={DrawerScreens} />
@@ -131,7 +133,7 @@ const MyDrawer = () => {
 const DrawerScreens = () => {
   return (
     <Stack.Navigator
-      screenOptions={{headerShown: false}}
+      screenOptions={{headerShown: false, gestureEnabled: false}}
       initialRouteName="Landing">
       <Stack.Screen name="Landing" component={LandingScreen} />
       <Stack.Screen name="SearchShip" component={ShipDelivery} />
@@ -166,6 +168,7 @@ const DrawerScreens = () => {
       <Stack.Screen name="RateDriver" component={RateDriver} />
       <Stack.Screen name="ViewPaymentLogs" component={ViewPaymentLogs} />
       <Stack.Screen name="PromoCodes" component={PromoCodes} />
+      <Stack.Screen name="Inbox" component={Inbox} />
     </Stack.Navigator>
   );
 };

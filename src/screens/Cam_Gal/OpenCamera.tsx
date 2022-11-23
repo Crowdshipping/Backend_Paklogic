@@ -12,7 +12,7 @@ import {
   ImageLibraryOptions,
 } from 'react-native-image-picker';
 import ImageResizer from 'react-native-image-resizer';
-import { styles } from './style';
+import {styles} from './style';
 
 interface IimageShow {
   name: string;
@@ -20,7 +20,9 @@ interface IimageShow {
   type: string;
 }
 const OpenCamera = (props: any) => {
+
   const callbackImage = (objectImage: Object) => {
+    props.modalExit()
     props.callbackImage(objectImage);
   };
   const pickImage = async () => {
@@ -52,7 +54,7 @@ const OpenCamera = (props: any) => {
       includeExtra: false,
       presentationStyle: 'pageSheet',
     };
-    launchCamera({ ...DEFAULT_OPTIONS }, (response: any) => {
+    launchCamera({...DEFAULT_OPTIONS}, (response: any) => {
       if (response.didCancel) {
         // Alert.alert('User cancelled camera picker');
         return;
@@ -76,16 +78,18 @@ const OpenCamera = (props: any) => {
           0,
           undefined,
         )
-          .then((response: any) => {
+          .then((resizerResponse: any) => {
             let ImageObject: IimageShow = {
-              uri: response.uri,
+              uri: resizerResponse.uri,
               type: 'image/JPEG',
-              name: response.name,
+              name: resizerResponse.name,
             };
             callbackImage(ImageObject);
           })
           .catch((error: any) => {
-            Alert.alert(error?.response?.data?.message ? error?.response?.data?.message : 'Something went wrong');
+            Alert.alert(
+              error?.response?.data?.message || 'Something went wrong',
+            );
           });
       }
     });

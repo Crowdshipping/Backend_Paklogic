@@ -75,9 +75,6 @@ const RegisterScreen = ({route, navigation}: any) => {
     }
 
     if (validate) {
-      let code = 'hello';
-      code = code.substring(1);
-      //  = countryCode.substring(1);
       setloading(true);
       registerUser(
         fname,

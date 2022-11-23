@@ -3,7 +3,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {colors} from '../../theme';
+import {colors} from '../../../theme';
 export const styles = StyleSheet.create({
   sectionContainer: {
     marginTop: 32,
@@ -12,10 +12,11 @@ export const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: hp(2),
+    paddingHorizontal: wp(3),
     paddingTop: hp(3),
   },
   txt1: {
+    flex: 1,
     color: colors.black,
     fontSize: hp(2),
   },
@@ -27,20 +28,22 @@ export const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   Touch: {
+    flex: 1,
     backgroundColor: colors.boxBackground,
     borderRadius: hp(1),
-    paddingHorizontal: hp(1),
+    paddingHorizontal: wp(2),
     paddingVertical: hp(1),
+    marginHorizontal: wp(2),
     // flexDirection: 'row',
     // alignItems: 'center',
     alignSelf: 'center',
     justifyContent: 'space-between',
-    width: wp(43),
-    height: hp(7),
+    // width: wp(43),
+    // height: hp(7),
   },
   bookingtxt: {
     textAlign: 'center',
-    paddingVertical: hp(5),
+    paddingVertical: hp(3),
     fontSize: hp(2.5),
     color: colors.red,
   },

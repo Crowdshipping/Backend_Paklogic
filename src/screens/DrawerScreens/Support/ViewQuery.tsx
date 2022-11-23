@@ -26,7 +26,7 @@ const ViewQuery = ({navigation}: any) => {
   const [QueryResponse, setQueryResponse] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [pending, setPending] = React.useState(true);
-  const [resolved, setResolved] = React.useState(false);
+  const [resolved, setResolved] = React.useState(true);
   const isfocus = useIsFocused();
 
   const getData = async () => {
@@ -79,23 +79,26 @@ const ViewQuery = ({navigation}: any) => {
   const noQueryAvailable = () => {
     return (
       <View
-        style={{
-          backgroundColor: colors.boxBackground,
-          alignSelf: 'center',
-          paddingVertical: hp(10),
-          marginVertical: '50%',
-          paddingHorizontal: wp(10),
-          borderRadius: hp(2),
-        }}>
-        <Text
-          style={{
-            textAlign: 'center',
-            color: colors.red,
-            fontSize: hp(2),
-          }}>
-          Sorry no queries available
-        </Text>
-      </View>
+                  style={{
+                    backgroundColor: colors.boxBackground,
+                    // backgroundColor: 'aqua',
+                    alignSelf: 'center',
+                    // paddingVertical: hp(10),
+                    marginVertical: '40%',
+                    
+                    paddingHorizontal: wp(10),
+                    borderRadius: hp(2),
+                  }}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      color: colors.red,
+                      fontSize: hp(2),
+                      paddingVertical: hp(10)
+                    }}>
+                    Sorry no queris available
+                  </Text>
+                </View>
     );
   };
 
@@ -115,13 +118,13 @@ const ViewQuery = ({navigation}: any) => {
   };
 
   return (
-    <SafeAreaView style={{backgroundColor: colors.white, height: '100%'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
       <Header title={'Support'} pressMethod={() => navigation.goBack()} />
       {isLoading ? (
         <ActivityIndicator
           size={'small'}
           color={colors.red}
-          style={{justifyContent: 'center', alignSelf: 'center'}}
+          style={{flex: 1, justifyContent: 'center', alignSelf: 'center'}}
         />
       ) : (
         <ScrollView>

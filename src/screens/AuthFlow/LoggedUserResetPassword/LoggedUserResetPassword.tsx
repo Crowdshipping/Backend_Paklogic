@@ -23,7 +23,7 @@ const LoggedUserResetPassword = ({navigation}: any) => {
     useState(true);
   const [isvalidPassword, setIsvalidPassword] = useState(true);
   const [isvalidConfirmPassword, setIsvalidConfirmPassword] = useState(true);
-  const validate = () => {
+  const handleValidation = () => {
     // setIsvalidPassword(!validatePassword(password));
     // setIsvalidConfirmPassword(!validatePassword(rePassword));
     let validate = true;
@@ -57,7 +57,6 @@ const LoggedUserResetPassword = ({navigation}: any) => {
       };
       loggedResetPassword(data)
         .then((result: any) => {
-          setLoading(false);
           if (result.success) {
             Alert.alert('CrowdShipping', result.message, [
               {
@@ -70,8 +69,7 @@ const LoggedUserResetPassword = ({navigation}: any) => {
             ]);
           }
         })
-        .catch(async error => {
-          setLoading(false);
+        .catch(error => {
           if (error.response.status === 401) {
             Alert.alert('Session Expired', 'Please login again');
             LogoutApi();
@@ -82,7 +80,8 @@ const LoggedUserResetPassword = ({navigation}: any) => {
               }),
             );
           }
-        });
+        })
+        .finally(() => setLoading(false));
     }
   };
   // alert('lsjdc')
@@ -158,7 +157,7 @@ const LoggedUserResetPassword = ({navigation}: any) => {
           loading={loading}
           title="NEXT"
           onPress={() => {
-            validate();
+            handleValidation();
           }}
           containerStyle={{marginTop: hp(7)}}
         />

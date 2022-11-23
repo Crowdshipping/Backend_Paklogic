@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {SafeAreaView, View, Alert} from 'react-native';
+import {SafeAreaView, Alert} from 'react-native';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {Textbox, Button, Header} from '../../../components';
 

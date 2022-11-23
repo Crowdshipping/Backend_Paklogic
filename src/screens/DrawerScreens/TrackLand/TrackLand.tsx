@@ -278,7 +278,8 @@ const TrackLand = ({route, navigation}: any) => {
               onPress={() => {
                 navigation.navigate('ChatScreen', {
                   receiverId: driverID,
-                  requestId,
+                  requestId: null,
+                  // requestId,
                 }),
                   setCustomerRead(true);
               }}

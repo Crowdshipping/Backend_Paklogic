@@ -5,6 +5,7 @@ import {
   BackHandler,
   Image,
   SafeAreaView,
+  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -42,9 +43,7 @@ const PromoCodes = ({route, navigation}: any) => {
   const getData = async () => {
     getPromoCodes()
       .then((result: any) => {
-        setIsLoading(false);
-        result.success && setPromoData(result.promocodesofUser),
-          setIsLoading(false);
+        result.success && setPromoData(result.promocodesofUser);
       })
       .catch(async error => {
         if (error.response.status === 401) {
@@ -57,8 +56,8 @@ const PromoCodes = ({route, navigation}: any) => {
             }),
           );
         }
-        setIsLoading(false);
-      });
+      })
+      .finally(() => setIsLoading(false));
   };
   useEffect(() => {
     setNotificationData({});
@@ -72,10 +71,11 @@ const PromoCodes = ({route, navigation}: any) => {
         <ActivityIndicator
           size={'small'}
           color={colors.red}
-          style={{justifyContent: 'center', alignSelf: 'center'}}
+          style={{flex: 1, justifyContent: 'center', alignSelf: 'center'}}
         />
       ) : promoData.length > 0 ? (
-        promoData.map((item: any, index: number) => {
+        <ScrollView>
+          {promoData.map((item: any, index: number) => {
           return (
             <View key={index} style={styles.detailsboxinner}>
               <View style={styles.flexrow}>
@@ -132,26 +132,31 @@ const PromoCodes = ({route, navigation}: any) => {
               </View>
             </View>
           );
-        })
+        })}
+        </ScrollView>
+        
       ) : (
         <View
-          style={{
-            backgroundColor: colors.boxBackground,
-            alignSelf: 'center',
-            paddingVertical: hp(10),
-            marginVertical: '50%',
-            paddingHorizontal: wp(10),
-            borderRadius: hp(2),
-          }}>
-          <Text
-            style={{
-              textAlign: 'center',
-              color: colors.red,
-              fontSize: hp(2),
-            }}>
-            Sorry no promos available
-          </Text>
-        </View>
+                  style={{
+                    backgroundColor: colors.boxBackground,
+                    // backgroundColor: 'aqua',
+                    alignSelf: 'center',
+                    // paddingVertical: hp(10),
+                    marginVertical: '40%',
+                    
+                    paddingHorizontal: wp(10),
+                    borderRadius: hp(2),
+                  }}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      color: colors.red,
+                      fontSize: hp(2),
+                      paddingVertical: hp(10)
+                    }}>
+                    Sorry no promos available
+                  </Text>
+                </View>
       )}
     </SafeAreaView>
   );

@@ -4,7 +4,6 @@ import {StyleSheet, View} from 'react-native';
 import {colors} from '../theme';
 
 const CheckBoxState = ({text, onPress, isDisabled, checked}: any) => {
-  const [toggleCheckBox, setToggleCheckBox] = React.useState(false);
   return (
     <View style={styles.container}>
       <BouncyCheckbox
@@ -18,7 +17,7 @@ const CheckBoxState = ({text, onPress, isDisabled, checked}: any) => {
         text={text}
         size={20}
         fillColor="green"
-        iconStyle={{borderColor: toggleCheckBox ? colors.gray : colors.black}}
+        iconStyle={{borderColor: checked ? colors.gray : colors.black}}
         onPress={onPress}
       />
     </View>

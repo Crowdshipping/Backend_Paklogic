@@ -3,12 +3,16 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {colors} from '../../theme';
+import {colors} from '../../../theme';
 
 export const styles = StyleSheet.create({
   sectionContainer: {
     marginTop: 32,
     paddingHorizontal: 24,
+  },
+  errorMsg: {
+    textAlign: 'left',
+    color: colors.red,
   },
   arrorwStyle: {
     alignSelf: 'flex-end',
@@ -32,6 +36,7 @@ export const styles = StyleSheet.create({
   main: {
     // paddingTop: hp(4),
     // paddingHorizontal: wp(5),
+    flex: 1,
     width: wp(90),
     alignSelf: 'center',
     bottom: hp(3),
@@ -98,8 +103,17 @@ export const styles = StyleSheet.create({
     paddingHorizontal: wp(10),
     borderRadius: wp(1),
     marginVertical: hp(2),
-    alignSelf: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
+    // alignSelf: 'center',
+    marginHorizontal: wp(5),
+    // justifyContent: 'center',
+    // alignItems: 'center',
+  },
+  paymentInput: {
+    backgroundColor: colors.white,
+    color: colors.black,
+    paddingVertical: hp(1),
+    borderRadius: 10,
+    marginVertical: hp(1),
+    paddingHorizontal: wp(3),
   },
 });

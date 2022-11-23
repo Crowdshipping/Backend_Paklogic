@@ -38,7 +38,7 @@ export const styles = StyleSheet.create({
     borderRadius: 25,
   },
   ViewDetails: {
-    paddingTop: hp(10),
+    paddingTop: hp(5),
     paddingHorizontal: hp(5),
     height: '75%',
   },

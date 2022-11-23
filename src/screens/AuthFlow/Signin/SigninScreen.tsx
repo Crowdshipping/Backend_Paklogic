@@ -23,14 +23,9 @@ import OneSignal from 'react-native-onesignal';
 import {EMAIL_REGEX} from '../../../appConstants';
 import {AppContext} from '../../../../App';
 import {colors} from '../../../theme';
-import {
-  CommonActions,
-  useFocusEffect,
-  useIsFocused,
-} from '@react-navigation/native';
+import {CommonActions, useFocusEffect} from '@react-navigation/native';
 
 const SigninScreen = ({navigation}: any) => {
-  const isfocus = useIsFocused();
   const {setUserData} = useContext(AppContext);
   const [emailValue, setemailValue] = useState(true);
   const [passwordValue, setpasswordValue] = useState(true);
@@ -46,7 +41,7 @@ const SigninScreen = ({navigation}: any) => {
   // const [password, setpassword] = useState(__DEV__ ? 'Hahaha88*' : '');
   const [loading, setloading] = useState(false);
 
-  function handleSubmit() {
+  async function handleSubmit() {
     let validate = true;
 
     if (!EMAIL_REGEX.test(email.trim())) {
@@ -59,60 +54,39 @@ const SigninScreen = ({navigation}: any) => {
     }
     if (validate) {
       setloading(true);
-      signIn(email.trim(), password)
-        .then(async (rest: any) => {
-          setloading(false);
-          if (rest.success && !rest.user?.role) {
-            setUserData(rest.user);
-            try {
-              AsyncStorage.setItem('@userId', rest.user._id);
-              AsyncStorage.setItem('@userToken', rest?.accessToken);
-            } catch (e) {
-              console.log('error', e);
-            }
-            handleDeviceState(rest.user._id);
-          } else {
-            Alert.alert('User does not exist');
+      try {
+        const SigninApi: any = await signIn(email.trim(), password);
+        if (!SigninApi.user?.role) {
+          setUserData(SigninApi.user);
+
+          AsyncStorage.setItem('@userId', SigninApi.user._id);
+          AsyncStorage.setItem('@userToken', SigninApi?.accessToken);
+
+          const data = await OneSignal.getDeviceState();
+          if (data?.userId) {
+            const AddPlayerApi: any = await AddPlayer({
+              playerId: data.userId,
+              UserId: SigninApi.user._id,
+            });
+
+            AsyncStorage.setItem('@userPlayerId', AddPlayerApi.playerID);
+            navigation.replace('MyDrawer');
           }
-        })
-        .catch(error => {
+        } else {
           setloading(false);
-          Alert.alert(
-            error?.response?.data?.message
-              ? error?.response?.data?.message
-              : 'User does not exist',
-          );
-        });
+          Alert.alert('User does not exist');
+        }
+      } catch (error: any) {
+        setloading(false);
+        Alert.alert(
+          error?.response?.data?.message
+            ? error?.response?.data?.message
+            : 'User does not exist',
+        );
+      }
     }
   }
 
-  async function handleDeviceState(user: string) {
-    const data = await OneSignal.getDeviceState();
-    if (data?.userId) {
-      let item = {
-        playerId: data.userId,
-        UserId: user,
-      };
-      AddPlayer(item)
-        .then((rest: any) => {
-          if (rest.success) {
-            try {
-              AsyncStorage.setItem('@userPlayerId', rest.playerID);
-            } catch (error) {
-              console.log('error', error);
-            }
-            navigation.replace('MyDrawer');
-          }
-        })
-        .catch(error => {
-          Alert.alert(
-            error?.response?.data?.message
-              ? error?.response?.data?.message
-              : 'something went wrong',
-          );
-        });
-    }
-  }
 
   useFocusEffect(
     React.useCallback(() => {
@@ -132,20 +106,6 @@ const SigninScreen = ({navigation}: any) => {
         BackHandler.removeEventListener('hardwareBackPress', onBackPress);
     }, []),
   );
-
-  // useEffect(() => {
-  //   setemail('');
-  //   setpassword('');
-  // }, [isfocus]);
-
-  // React.useEffect(() => {
-  //   const willFocusSubscription = navigation.addListener('focus', () => {
-  //     setemail('');
-  //     setpassword('');
-  //   });
-
-  //   return willFocusSubscription;
-  // }, []);
 
   return (
     <SafeAreaView>

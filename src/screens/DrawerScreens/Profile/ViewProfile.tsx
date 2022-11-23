@@ -8,6 +8,7 @@ import {
   ImageBackground,
   Image,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import {getUser, getUserAverageRating, LogoutApi} from '../../../API';
 import {Header} from '../../../components';
@@ -19,12 +20,11 @@ import {
 } from 'react-native-responsive-screen';
 import {prodUrl} from '../../../appConstants';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {locationicon, mailicon, setting} from '../../../theme/assets/svg';
+import {locationicon, mailicon} from '../../../theme/assets/svg';
 import {colors} from '../../../theme';
 import {profileicon} from '../../../theme/assets/svg/profileicon';
 import {styles} from './style';
 import {CommonActions, useIsFocused} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AppContext} from '../../../../App';
 import Icon from 'react-native-vector-icons/Feather';
 import {Avatar, Rating} from 'react-native-elements';
@@ -32,36 +32,40 @@ import {Avatar, Rating} from 'react-native-elements';
 const ViewProfile = ({navigation, route}: any) => {
   const {setUserData} = useContext(AppContext);
   const [loading, setloading] = useState(false);
-  const [rating, setRating] = useState('');
+  const [rating, setRating] = useState<number>();
   const [profileData, setprofileData] = useState<any>({});
   const isfocus = useIsFocused();
+
+  function onError(error: any) {
+    if (error.response.status === 401) {
+      LogoutApi();
+      Alert.alert('Session Expired', 'Please login again');
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{name: 'Welcome'}],
+        }),
+      );
+    } else {
+      Alert.alert(
+        error?.response?.data?.message
+          ? error?.response?.data?.message
+          : 'Something went wrong',
+      );
+    }
+  }
   function fetchProfileData() {
     setloading(true);
     getUser()
       .then(async (rest: any) => {
         setloading(false);
         setprofileData(rest.user);
-        if (route?.params?.isEdited) {
+        if (route.params?.isEdited) {
           setUserData(rest.user);
         }
       })
       .catch(async error => {
-        if (error.response.status === 401) {
-          Alert.alert('Session Expired', 'Please login again');
-          LogoutApi();
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 1,
-              routes: [{name: 'Welcome'}],
-            }),
-          );
-        } else {
-          Alert.alert(
-            error?.response?.data?.message
-              ? error?.response?.data?.message
-              : 'something went wrong',
-          );
-        }
+        onError(error);
       });
   }
   function fetchRating() {
@@ -73,14 +77,7 @@ const ViewProfile = ({navigation, route}: any) => {
       })
       .catch(async error => {
         if (error.response.status === 401) {
-          Alert.alert('Session Expired', 'Please login again');
-          LogoutApi();
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 1,
-              routes: [{name: 'Welcome'}],
-            }),
-          );
+          onError(error);
         }
       });
   }
@@ -99,7 +96,7 @@ const ViewProfile = ({navigation, route}: any) => {
           style={{flex: 1, justifyContent: 'center', alignSelf: 'center'}}
         />
       ) : (
-        <View style={{}}>
+        <ScrollView style={{}}>
           <View style={styles.ViewTop}>
             <ImageBackground
               resizeMode="stretch"
@@ -137,13 +134,14 @@ const ViewProfile = ({navigation, route}: any) => {
 
           <View style={styles.ViewDetails}>
             {rating ? (
+              <View>
               <Rating
                 type="custom"
                 ratingColor={colors.red}
                 ratingBackgroundColor={colors.white}
                 imageSize={35}
                 // showRating
-                readonly
+                // fractions="{2}"
                 ratingCount={5}
                 // style={{paddingVertical: hp(5)}}
                 // onFinishRating={ratingCompleted}
@@ -151,6 +149,8 @@ const ViewProfile = ({navigation, route}: any) => {
 
                 startingValue={rating}
               />
+              <Text style={{fontSize: 16, textAlign: 'center', marginTop: hp(1), marginBottom: hp(2)}}>Rating: {rating.toFixed(1)}</Text>
+              </View>
             ) : null}
 
             <View style={styles.editContainer}>
@@ -235,7 +235,7 @@ const ViewProfile = ({navigation, route}: any) => {
               <AntDesign name="right" color={colors.black} size={wp(5)} />
             </TouchableOpacity>
           </View>
-        </View>
+        </ScrollView>
       )}
     </SafeAreaView>
   );

@@ -70,7 +70,7 @@ const StartBookingScreen = ({navigation}: any) => {
     },
   );
 
-  const [distance, setDistance] = useState(0);
+  const [distance, setDistance] = useState<any>(0);
   const [isSelected, setSelected] = useState('none');
 
   const [pickValue, setpickValue] = useState(true);
@@ -154,239 +154,242 @@ const StartBookingScreen = ({navigation}: any) => {
       dropoffLocation.lon
     ) {
       setDistance(
-        getDistance(
-          {latitude: pickupLocation.lat, longitude: pickupLocation.lon},
-          {latitude: dropoffLocation.lat, longitude: dropoffLocation.lon},
-        ) * 0.000621,
+        (
+          getDistance(
+            {latitude: pickupLocation.lat, longitude: pickupLocation.lon},
+            {latitude: dropoffLocation.lat, longitude: dropoffLocation.lon},
+          ) * 0.000621
+        ).toFixed(2),
       );
     }
   }, [pickupLocation.lat, dropoffLocation.lat]);
   return (
     <SafeAreaView
       style={{display: 'flex', flex: 1, backgroundColor: colors.white}}>
-      {pickupLocation.lat !== '' &&
-      pickupLocation.lon !== '' &&
-      dropoffLocation.lat !== '' &&
-      dropoffLocation.lon !== '' ? (
-        <MapView
-          ref={ref}
-          provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-          onMapReady={onMapReadyHandler}
-          zoomEnabled
-          paddingAdjustmentBehavior={'always'}
-          showsMyLocationButton={false}
-          mapPadding={{top: 0, right: 0, left: 0, bottom: 0}}
-          // showsCompass={true}
-          zoomControlEnabled={false}
-          style={styles.map}>
-          <Marker
-            identifier="1"
-            coordinate={{
-              latitude: pickupLocation.lat,
-              longitude: pickupLocation.lon,
-            }}
-            title={'pickup'}
-          />
+      <View style={styles.container}>
+        {pickupLocation.lat !== '' &&
+        pickupLocation.lon !== '' &&
+        dropoffLocation.lat !== '' &&
+        dropoffLocation.lon !== '' ? (
+          <MapView
+            ref={ref}
+            provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+            onMapReady={onMapReadyHandler}
+            zoomEnabled
+            paddingAdjustmentBehavior={'always'}
+            showsMyLocationButton={false}
+            mapPadding={{top: 0, right: 0, left: 0, bottom: 0}}
+            // showsCompass={true}
+            zoomControlEnabled={false}
+            style={styles.map}>
+            <Marker
+              // identifier="1"
+              coordinate={{
+                latitude: pickupLocation.lat,
+                longitude: pickupLocation.lon,
+              }}
+              title={'pickup'}
+            />
 
-          <Marker
-            identifier="2"
-            coordinate={{
-              latitude: dropoffLocation.lat,
-              longitude: dropoffLocation.lon,
-            }}
-            title={'dropoff'}
-          />
+            <Marker
+              // identifier="2"
+              coordinate={{
+                latitude: dropoffLocation.lat,
+                longitude: dropoffLocation.lon,
+              }}
+              title={'dropoff'}
+            />
 
-          <MapViewDirections
-            apikey={GOOGLE_MAPS_APIKEY}
-            onReady={onMapReadyHandler}
-            origin={{
-              latitude: pickupLocation.lat,
-              longitude: pickupLocation.lon,
-            }}
-            destination={{
-              latitude: dropoffLocation.lat,
-              longitude: dropoffLocation.lon,
-            }}
-            strokeWidth={wp(1)}
-            strokeColor={colors.red}
-          />
-        </MapView>
-      ) : (
-        <MapWithUserLocation />
-      )}
-
-      <View
+            <MapViewDirections
+              apikey={GOOGLE_MAPS_APIKEY}
+              onReady={onMapReadyHandler}
+              origin={{
+                latitude: pickupLocation.lat,
+                longitude: pickupLocation.lon,
+              }}
+              destination={{
+                latitude: dropoffLocation.lat,
+                longitude: dropoffLocation.lon,
+              }}
+              strokeWidth={wp(1)}
+              strokeColor={colors.red}
+            />
+          </MapView>
+        ) : (
+          <MapWithUserLocation />
+        )}
+      </View>
+      {/* <View
         style={{
           flex: 1,
           justifyContent: 'space-between',
-        }}>
-        <View>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.toggleDrawer();
-            }}
-            style={styles.menu}>
-            <Entypo name="menu" size={25} color={colors.black} />
-          </TouchableOpacity>
-          <View style={styles.location}>
-            <TouchableOpacity
-              onPress={() => {
-                setisVisible(true);
-              }}
-              style={{
-                borderBottomWidth: 1,
-                marginHorizontal: wp(5),
-              }}>
-              <Text
-                style={{
-                  paddingVertical: Platform.OS === 'ios' ? wp(2) : 0,
-                  borderBottomWidth: 1,
-                  borderColor: colors.gray,
-                  color: colors.black,
-                }}>
-                {pickupLocation && pickupLocation.name !== ''
-                  ? pickupLocation.name
-                  : 'Pickup Location'}
-              </Text>
-            </TouchableOpacity>
-            {!pickValue && (
-              <Text style={[styles.errorMsg, {paddingHorizontal: wp(5)}]}>
-                Pickup Location is required
-              </Text>
-            )}
-            <TouchableOpacity
-              onPress={() => {
-                setisVisible2(true);
-              }}
-              style={{
-                borderBottomWidth: 1,
-                marginTop: hp(2),
-                // marginBottom: hp(1),
-                // paddingHorizontal: wp(5),
-                marginHorizontal: wp(5),
-              }}>
-              <Text
-                style={{
-                  paddingVertical: Platform.OS === 'ios' ? wp(2) : 0,
-                  borderBottomWidth: 1,
-                  borderColor: colors.gray,
-                  color: colors.black,
-                }}>
-                {dropoffLocation && dropoffLocation?.name !== ''
-                  ? dropoffLocation.name
-                  : 'Dropoff Location'}
-              </Text>
-            </TouchableOpacity>
-            {!dropValue && (
-              <Text style={[styles.errorMsg, {paddingHorizontal: wp(5)}]}>
-                Dropoff Location is required
-              </Text>
-            )}
-          </View>
-        </View>
-        {isSelected === 'none' ? (
-          <View style={styles.bckimg}>
-            <Header title={''} pressMethod={() => navigation.goBack()} />
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-                marginTop: hp(3),
-              }}>
-              <View
-                style={{
-                  // justifyContent: 'center',
-                  alignItems: 'center',
-                  width: wp(30),
-                }}>
-                <Text style={{fontSize: 18, color: colors.black}}>Cycle</Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    setSelected('Cycle');
-                  }}
-                  style={{
-                    backgroundColor: '#d0d0d0',
-                    borderRadius: 10,
-                    marginTop: hp(1),
-                    elevation: 5,
-                  }}>
-                  <SvgXml xml={cycle} width={100} height={100} />
-                </TouchableOpacity>
-              </View>
-              <View
-                style={{
-                  // justifyContent: 'center',
-                  alignItems: 'center',
-                  width: wp(30),
-                }}>
-                <Text style={{fontSize: 18, color: colors.black}}>Scooter</Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    setSelected('Scooter');
-                  }}
-                  style={{
-                    backgroundColor: '#d0d0d0',
-                    borderRadius: 10,
-                    marginTop: hp(1),
-                    elevation: 5,
-                  }}>
-                  <SvgXml xml={scooter} width={100} height={100} />
-                </TouchableOpacity>
-              </View>
-              <View
-                style={{
-                  // justifyContent: 'center',
-                  alignItems: 'center',
-                  width: wp(30),
-                }}>
-                <Text style={{fontSize: 18, color: colors.black}}>Car</Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    setSelected('Car');
-                  }}
-                  style={{
-                    backgroundColor: '#d0d0d0',
-                    borderRadius: 10,
-                    marginTop: hp(1),
-                    elevation: 5,
-                  }}>
-                  <SvgXml xml={car} width={100} height={100} />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        ) : (
-          <View style={styles.bckimg}>
-            <View style={{bottom: hp(5)}}>
-              <MapHeader
-                title={`Vehicle ${isSelected}`}
-                picture={
-                  isSelected === 'Car'
-                    ? carbgRed
-                    : isSelected === 'Scooter'
-                    ? scooterbgRed
-                    : isSelected === 'Cycle'
-                    ? cyclebgRed
-                    : ''
-                }
-                pressMethod={() => {
-                  // navigation.goBack();
-                  setSelected('none');
-                }}
-              />
-            </View>
-            <Text
-              style={{textAlign: 'center', fontSize: 18, color: colors.black}}>
-              Total Distance:{' '}
-              <Text style={{fontWeight: 'bold', color: colors.black}}>
-                {distance} Miles
-              </Text>
-            </Text>
-            <Button title="next" onPress={handleNext} />
-          </View>
+        }}> */}
+      {/* <View> */}
+      <TouchableOpacity
+        onPress={() => {
+          navigation.toggleDrawer();
+        }}
+        style={styles.menu}>
+        <Entypo name="menu" size={25} color={colors.black} />
+      </TouchableOpacity>
+      <View style={styles.location}>
+        <TouchableOpacity
+          onPress={() => {
+            setisVisible(true);
+          }}
+          style={{
+            borderBottomWidth: 1,
+            marginHorizontal: wp(5),
+          }}>
+          <Text
+            style={{
+              paddingVertical: Platform.OS === 'ios' ? wp(2) : 0,
+              borderBottomWidth: 1,
+              borderColor: colors.gray,
+              color: colors.black,
+            }}>
+            {pickupLocation && pickupLocation.name !== ''
+              ? pickupLocation.name
+              : 'Pickup Location'}
+          </Text>
+        </TouchableOpacity>
+        {!pickValue && (
+          <Text style={[styles.errorMsg, {paddingHorizontal: wp(5)}]}>
+            Pickup Location is required
+          </Text>
+        )}
+        <TouchableOpacity
+          onPress={() => {
+            setisVisible2(true);
+          }}
+          style={{
+            borderBottomWidth: 1,
+            marginTop: hp(2),
+            // marginBottom: hp(1),
+            // paddingHorizontal: wp(5),
+            marginHorizontal: wp(5),
+          }}>
+          <Text
+            style={{
+              paddingVertical: Platform.OS === 'ios' ? wp(2) : 0,
+              borderBottomWidth: 1,
+              borderColor: colors.gray,
+              color: colors.black,
+            }}>
+            {dropoffLocation && dropoffLocation?.name !== ''
+              ? dropoffLocation.name
+              : 'Dropoff Location'}
+          </Text>
+        </TouchableOpacity>
+        {!dropValue && (
+          <Text style={[styles.errorMsg, {paddingHorizontal: wp(5)}]}>
+            Dropoff Location is required
+          </Text>
         )}
       </View>
+      {/* </View> */}
+      {isSelected === 'none' ? (
+        <View style={styles.bckimg}>
+          <Header title={''} pressMethod={() => navigation.goBack()} />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              marginTop: hp(3),
+            }}>
+            <View
+              style={{
+                // justifyContent: 'center',
+                alignItems: 'center',
+                width: wp(30),
+              }}>
+              <Text style={{fontSize: 18, color: colors.black}}>Cycle</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setSelected('Cycle');
+                }}
+                style={{
+                  backgroundColor: '#d0d0d0',
+                  borderRadius: 10,
+                  marginTop: hp(1),
+                  elevation: 5,
+                }}>
+                <SvgXml xml={cycle} width={100} height={100} />
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                // justifyContent: 'center',
+                alignItems: 'center',
+                width: wp(30),
+              }}>
+              <Text style={{fontSize: 18, color: colors.black}}>Scooter</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setSelected('Scooter');
+                }}
+                style={{
+                  backgroundColor: '#d0d0d0',
+                  borderRadius: 10,
+                  marginTop: hp(1),
+                  elevation: 5,
+                }}>
+                <SvgXml xml={scooter} width={100} height={100} />
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                // justifyContent: 'center',
+                alignItems: 'center',
+                width: wp(30),
+              }}>
+              <Text style={{fontSize: 18, color: colors.black}}>Car</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setSelected('Car');
+                }}
+                style={{
+                  backgroundColor: '#d0d0d0',
+                  borderRadius: 10,
+                  marginTop: hp(1),
+                  elevation: 5,
+                }}>
+                <SvgXml xml={car} width={100} height={100} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      ) : (
+        <View style={styles.bckimg}>
+          <View style={{bottom: hp(5)}}>
+            <MapHeader
+              title={`Vehicle ${isSelected}`}
+              picture={
+                isSelected === 'Car'
+                  ? carbgRed
+                  : isSelected === 'Scooter'
+                  ? scooterbgRed
+                  : isSelected === 'Cycle'
+                  ? cyclebgRed
+                  : ''
+              }
+              pressMethod={() => {
+                // navigation.goBack();
+                setSelected('none');
+              }}
+            />
+          </View>
+          <Text
+            style={{textAlign: 'center', fontSize: 18, color: colors.black}}>
+            Total Distance:{' '}
+            <Text style={{fontWeight: 'bold', color: colors.black}}>
+              {distance} Miles
+            </Text>
+          </Text>
+          <Button title="next" onPress={handleNext} />
+        </View>
+      )}
+      {/* </View> */}
 
       <SearchPlaces
         isModalVisible={isVisible}

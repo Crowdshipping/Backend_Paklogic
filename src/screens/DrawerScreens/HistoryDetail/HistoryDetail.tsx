@@ -19,7 +19,7 @@ import {
 import {styles} from './style';
 import {colors} from '../../../theme';
 import {prodUrl} from '../../../appConstants';
-import {Button} from '../../../components';
+import {Button, MineCard} from '../../../components';
 import {CommonActions, useIsFocused} from '@react-navigation/native';
 import {getMessageStatus, getRatings, LogoutApi} from '../../../API';
 import {Avatar, Rating} from 'react-native-elements';
@@ -41,7 +41,11 @@ const HistoryDetail = ({navigation, route}: any) => {
     flight,
     ship,
     _id,
-  } = route.params.item?.request;
+    pickupCity,
+    dropoffCity,
+    destinationPort,
+    departurePort
+  } = route.params.item;
 
   const [isCustomerRead, setCustomerRead] = useState<boolean>(true);
   const [Images, setImages] = useState<IimageShow1>([]);
@@ -49,47 +53,23 @@ const HistoryDetail = ({navigation, route}: any) => {
   const [rateDataCustomer, setrateDataCustomer] = useState<boolean>(false);
   const isfocus = useIsFocused();
 
-  function getRatingAndMessageStatus() {
+  function getRatingsAndMessageStatus() {
     if (provider) {
-      getRatings(_id, provider._id)
-        .then((result: any) => {
-          result.success && setrateData(result.rating);
-        })
-        .catch(error => {
-          if (error.response.status === 401) {
-            LogoutApi();
-            Alert.alert('Session Expired', 'Please login again');
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 1,
-                routes: [{name: 'Welcome'}],
-              }),
-            );
-          }
-        });
-      getRatings(_id, requestedBy._id)
-        .then((result: any) => {
-          result.success && setrateDataCustomer(true);
-        })
-        .catch(error => {
-          if (error.response.status === 401) {
-            LogoutApi();
-            Alert.alert('Session Expired', 'Please login again');
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 1,
-                routes: [{name: 'Welcome'}],
-              }),
-            );
-          }
-        });
-    }
-    getMessageStatus(_id)
-      .then((result: any) => {
-        result.success && setCustomerRead(result.request.isCustomerRead);
-      })
-      .catch(error => {
-        if (error.response.status === 401) {
+      Promise.allSettled([
+        getRatings(_id, provider._id),
+        getRatings(_id, requestedBy._id),
+        getMessageStatus(_id),
+      ]).then((result: any) => {
+        result[0].status === 'fulfilled' && setrateData(result[0].value.rating);
+        result[1].status === 'fulfilled' && setrateDataCustomer(true);
+        result[2].status === 'fulfilled' &&
+          setCustomerRead(result[2].value.request.isCustomerRead);
+
+        if (
+          result[0]?.reason?.status === 401 ||
+          result[1]?.reason?.status === 401 ||
+          result[2]?.reason?.status === 401
+        ) {
           LogoutApi();
           Alert.alert('Session Expired', 'Please login again');
           navigation.dispatch(
@@ -100,14 +80,11 @@ const HistoryDetail = ({navigation, route}: any) => {
           );
         }
       });
+    }
   }
 
   useEffect(() => {
     if (bookingId?.productImage) {
-      // setImages(Images => [
-      //   ...Images,
-      //   {uri: prodUrl + bookingId?.productImage},
-      // ]);
       setImages([{uri: prodUrl + bookingId?.productImage}]);
     }
     if (bookingId?.productImage2) {
@@ -116,10 +93,8 @@ const HistoryDetail = ({navigation, route}: any) => {
         {uri: prodUrl + bookingId?.productImage2},
       ]);
     }
-    if (!isfocus) {
-      setImages([]);
-    } else {
-      getRatingAndMessageStatus();
+    if (isfocus) {
+      getRatingsAndMessageStatus();
     }
   }, [bookingId, isfocus]);
 
@@ -135,8 +110,8 @@ const HistoryDetail = ({navigation, route}: any) => {
           }}
         />
 
-        <View style={[styles.detailsbox, {marginTop: hp(5)}]}>
-          <View style={styles.detailsboxinner}>
+        <View style={{marginTop: hp(3)}}>
+          <MineCard>
             <View style={styles.flexrow}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <SvgXml
@@ -166,14 +141,25 @@ const HistoryDetail = ({navigation, route}: any) => {
                   )}
                 </View>
               </View>
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: '600',
-                  color: colors.red,
-                }}>
-                ${bookingId?.totalFare}
-              </Text>
+              {bookingId?.totalFare > 0 ? (
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: '600',
+                    color: colors.red,
+                  }}>
+                  {`$${bookingId.totalFare}`}
+                </Text>
+              ) : (route.params.item.suggestedPrice ? 
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: '600',
+                    color: colors.red,
+                  }}>
+                  {`$${route.params.item.suggestedPrice}`}
+                </Text> : null
+              ) }
             </View>
 
             <View style={styles.viewlocation}>
@@ -205,22 +191,22 @@ const HistoryDetail = ({navigation, route}: any) => {
               ) : type === 'Flight' ? (
                 <View
                   style={{
-                    justifyContent: 'space-between',
+                    justifyContent: 'center',
                     width: '90%',
                     paddingHorizontal: wp(1),
                   }}>
                   <View style={[styles.viewdetail, {alignItems: 'flex-start'}]}>
                     <Text style={styles.txtdetail}>
-                      {flight?.pickupCity
-                        ? flight.pickupCity
-                        : route?.params?.item?.request?.pickupCity}
+                      {flight?.departureAirport
+                        ? flight.departureAirport
+                        : pickupCity}
                     </Text>
                   </View>
                   <View style={[styles.viewdetail, {alignItems: 'flex-end'}]}>
                     <Text style={styles.txtdetail}>
-                      {flight?.dropoffCity
-                        ? flight?.dropoffCity
-                        : route?.params?.item?.request?.dropoffCity}
+                      {flight?.destinationAirport
+                        ? flight?.destinationAirport
+                        : dropoffCity}
                     </Text>
                   </View>
                 </View>
@@ -235,16 +221,12 @@ const HistoryDetail = ({navigation, route}: any) => {
                     <View
                       style={[styles.viewdetail, {alignItems: 'flex-start'}]}>
                       <Text style={styles.txtdetail}>
-                        {ship?.pickupCity
-                          ? ship.pickupCity
-                          : route?.params?.item?.request?.pickupCity}
+                        {ship?.pickupCity ? ship.pickupCity : departurePort}
                       </Text>
                     </View>
                     <View style={[styles.viewdetail, {alignItems: 'flex-end'}]}>
                       <Text style={styles.txtdetail}>
-                        {ship?.dropoffCity
-                          ? ship.dropoffCity
-                          : route?.params?.item?.request?.dropoffCity}
+                        {ship?.dropoffCity ? ship.dropoffCity : destinationPort}
                       </Text>
                     </View>
                   </View>
@@ -278,7 +260,7 @@ const HistoryDetail = ({navigation, route}: any) => {
               <Text style={styles.txtheading}>Attached Photos</Text>
             </View>
             <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-              {Images && Images.length >= 1 ? (
+              {Images && Images.length > 0 ? (
                 Images.map((item, index) => {
                   return (
                     <View
@@ -466,7 +448,7 @@ const HistoryDetail = ({navigation, route}: any) => {
                     }}
                     onPress={() => {
                       navigation.navigate('RateDriver', {
-                        item: route.params.item.request,
+                        item: route.params.item,
                       });
                     }}>
                     <Text
@@ -498,8 +480,12 @@ const HistoryDetail = ({navigation, route}: any) => {
                         ? navigation.navigate('TrackFlight', {
                             fa_flight_id: flight?.fa_flight_id,
                             flightarrivalDate: flight?.flightarrivalDate,
-                            departureAirport: flight?.departureAirport,
-                            destinationAirport: flight?.destinationAirport,
+                            receiverId: provider?._id,
+                            requestId: _id,
+                            departureAirportLocation:
+                              flight.departureAirportLocation,
+                            destinationAirportLocation:
+                              flight.destinationAirportLocation,
                           })
                         : type === 'Ship'
                         ? navigation.navigate('TrackShip', {
@@ -507,12 +493,15 @@ const HistoryDetail = ({navigation, route}: any) => {
                             eta: ship?.eta,
                             pickupAddress: bookingId?.pickupAddress,
                             dropAddress: bookingId?.dropAddress,
+                            receiverId: provider?._id,
+                            requestId: _id,
                           })
                         : type === 'Land'
                         ? navigation.navigate('TrackLand', {
                             driverID: provider?._id,
                             pickupAddress: bookingId?.pickupAddress,
                             dropAddress: bookingId?.dropAddress,
+                            requestId: _id,
                           })
                         : null;
                     }}>
@@ -528,124 +517,110 @@ const HistoryDetail = ({navigation, route}: any) => {
                 </View>
               )}
             </View>
-          </View>
-        </View>
+          </MineCard>
+          {provider && (
+            <>
+              <Text style={[styles.txtheading, {textAlign: 'center'}]}>
+                Provider Details
+              </Text>
 
-        {/* 3rd View  */}
-        {provider && (
-          <>
-            <Text style={[styles.txtheading, {textAlign: 'center'}]}>
-              Provider Details
-            </Text>
-            <View
-              style={[
-                styles.detailsbox,
-                {
-                  marginBottom: hp(3),
-                  paddingHorizontal: wp(5),
-                  paddingVertical: hp(3),
-                },
-              ]}>
-              {/* <View style={[styles.viewdetailbox3, {paddingBottom: wp(5)}]}> */}
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginBottom: hp(3),
-                }}>
-                {provider.profilepic ? (
-                  <Image
-                    source={{uri: prodUrl + provider.profilepic}}
-                    style={[
-                      styles.img,
-                      {
-                        borderWidth: 2,
-                        borderColor: colors.red,
-                      },
-                    ]}
-                  />
-                ) : (
-                  <Avatar
-                    size={wp(10)}
-                    rounded
-                    icon={{name: 'person', color: colors.gray, size: 40}}
-                    containerStyle={styles.img}
-                  />
-                )}
-
-                <Text
+              <MineCard>
+                <View
                   style={{
-                    fontSize: wp(5),
-                    color: colors.red,
-                    textAlignVertical: 'center',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginBottom: hp(3),
                   }}>
-                  {provider?.firstname + ' ' + provider?.lastname}
-                </Text>
-              </View>
-
-              <View style={styles.viewdetail}>
-                <Text style={styles.txtdetailbox}>Contact Number</Text>
-                <Text style={styles.txtdetailbox}>
-                  +{provider?.countrycode}
-                  {provider?.phoneno}
-                </Text>
-              </View>
-
-              <View style={styles.viewdetail}>
-                <Text style={styles.txtdetailbox}>Email</Text>
-                <Text style={styles.txtdetailbox}>{provider.email}</Text>
-              </View>
-
-              {rateData?.rate ? (
-                <>
-                  <Text style={styles.txtheading}>
-                    Your rating from provider
-                  </Text>
-                  <View style={{bottom: hp(5)}}>
-                    <Rating
-                      type="custom"
-                      ratingColor={colors.red}
-                      ratingBackgroundColor={colors.white}
-                      imageSize={35}
-                      // showRating
-                      readonly
-                      ratingCount={5}
-                      style={{paddingVertical: hp(5)}}
-                      // onFinishRating={ratingCompleted}
-                      // style={{ padd: hp(5) }}
-
-                      startingValue={rateData.rate}
+                  {provider.profilepic ? (
+                    <Image
+                      source={{uri: prodUrl + provider.profilepic}}
+                      style={[
+                        styles.img,
+                        {
+                          borderWidth: 2,
+                          borderColor: colors.red,
+                        },
+                      ]}
                     />
-                    {rateData.review ? (
-                      <View style={{bottom: hp(3)}}>
-                        <Text style={styles.txtheading}>Review</Text>
-                        <View style={styles.description}>
-                          <Text style={{color: colors.black}}>
-                            {rateData.review}
-                          </Text>
+                  ) : (
+                    <Avatar
+                      size={wp(10)}
+                      rounded
+                      icon={{name: 'person', color: colors.gray, size: 40}}
+                      containerStyle={styles.img}
+                    />
+                  )}
+
+                  <Text
+                    style={{
+                      fontSize: wp(5),
+                      color: colors.red,
+                      textAlignVertical: 'center',
+                    }}>
+                    {provider?.firstname + ' ' + provider?.lastname}
+                  </Text>
+                </View>
+                <View style={styles.viewdetail}>
+                  <Text style={styles.txtdetailbox}>Contact Number</Text>
+                  <Text style={styles.txtdetailbox}>
+                    +{provider?.countrycode}
+                    {provider?.phoneno}
+                  </Text>
+                </View>
+                <View style={styles.viewdetail}>
+                  <Text style={styles.txtdetailbox}>Email</Text>
+                  <Text style={styles.txtdetailbox}>{provider.email}</Text>
+                </View>
+                {rateData?.rate ? (
+                  <>
+                    <Text style={styles.txtheading}>
+                      Your rating from provider
+                    </Text>
+                    <View style={{bottom: hp(5)}}>
+                      <Rating
+                        type="custom"
+                        ratingColor={colors.red}
+                        ratingBackgroundColor={colors.white}
+                        imageSize={35}
+                        // showRating
+                        readonly
+                        ratingCount={5}
+                        style={{paddingVertical: hp(5)}}
+                        // onFinishRating={ratingCompleted}
+                        // style={{ padd: hp(5) }}
+
+                        startingValue={rateData.rate}
+                      />
+                      {rateData.review ? (
+                        <View style={{bottom: hp(3)}}>
+                          <Text style={styles.txtheading}>Review</Text>
+                          <View style={styles.description}>
+                            <Text style={{color: colors.black}}>
+                              {rateData.review}
+                            </Text>
+                          </View>
                         </View>
-                      </View>
-                    ) : null}
-                  </View>
-                </>
-              ) : null}
-              {/* </View> */}
-            </View>
-            {state !== 'Completed' && provider && (
-              <Button
-                title={'Chat'}
-                onPress={() => {
-                  navigation.navigate('ChatScreen', {
-                    receiverId: provider?._id,
-                    requestId: _id,
-                  });
-                  setCustomerRead(true);
-                }}
-                chat={!isCustomerRead}
-              />
-            )}
-          </>
-        )}
+                      ) : null}
+                    </View>
+                  </>
+                ) : null}
+              </MineCard>
+              {state !== 'Completed' && provider && (
+                <Button
+                  title={'Chat'}
+                  onPress={() => {
+                    navigation.navigate('ChatScreen', {
+                      receiverId: provider?._id,
+                      requestId: null,
+                    });
+                    setCustomerRead(true);
+                  }}
+                  chat={!isCustomerRead}
+                />
+              )}
+            </>
+          )}
+        </View>
 
         {/* //available booking viewend */}
       </ScrollView>

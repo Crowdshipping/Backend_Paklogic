@@ -57,6 +57,25 @@ const EditProfile = ({navigation, route}: any) => {
   const [isSuccess, setsuccess] = useState(false);
   const [toCaptureImage, settoCaptureImage] = useState(false);
 
+  function onError(error: any) {
+    if (error.response.status === 401) {
+      LogoutApi();
+      Alert.alert('Session Expired', 'Please login again');
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{name: 'Welcome'}],
+        }),
+      );
+    } else {
+      Alert.alert(
+        error?.response?.data?.message
+          ? error?.response?.data?.message
+          : 'Something went wrong',
+      );
+    }
+  }
+
   function handleProfileUpdate() {
     let validate = true;
     if (!getfirstName) {
@@ -79,7 +98,8 @@ const EditProfile = ({navigation, route}: any) => {
       setIsloading(true);
       postImage([newImage])
         .then((rest: any) => {
-          let data = {
+ 
+          updateUser({
             address: getaddress,
             email,
             firstname: getfirstName,
@@ -87,50 +107,19 @@ const EditProfile = ({navigation, route}: any) => {
             phoneno,
             countrycode,
             profilepic: rest[0].imageUrl,
-          };
-          updateUser(data)
+          })
             .then((rest: any) => {
               setIsloading(false);
               rest.success && setsuccess(true);
             })
-            .catch(async error => {
+            .catch(error => {
               setIsloading(false);
-              if (error.response.status === 401) {
-                LogoutApi();
-                Alert.alert('Session Expired', 'Please login again');
-                navigation.dispatch(
-                  CommonActions.reset({
-                    index: 1,
-                    routes: [{name: 'Welcome'}],
-                  }),
-                );
-              } else {
-                Alert.alert(
-                  error?.response?.data?.message
-                    ? error?.response?.data?.message
-                    : 'something went wrong',
-                );
-              }
+              onError(error);
             });
         })
-        .catch(async error => {
+        .catch(error => {
           setIsloading(false);
-          if (error.response.status === 401) {
-            LogoutApi();
-            Alert.alert('Session Expired', 'Please login again');
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 1,
-                routes: [{name: 'Welcome'}],
-              }),
-            );
-          } else {
-            Alert.alert(
-              error?.response?.data?.message
-                ? error?.response?.data?.message
-                : 'something went wrong',
-            );
-          }
+          onError(error);
         });
     } else if (validate) {
       updateProfile();
@@ -156,29 +145,13 @@ const EditProfile = ({navigation, route}: any) => {
       countrycode,
     };
     updateUser(data)
-      .then(async (rest: any) => {
-        setIsloading(false);
+      .then((rest: any) => {
         rest.success && setsuccess(true);
       })
-      .catch(async error => {
-        setIsloading(false);
-        if (error.response.status === 401) {
-          LogoutApi();
-          Alert.alert('Session Expired', 'Please login again');
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 1,
-              routes: [{name: 'Welcome'}],
-            }),
-          );
-        } else {
-          Alert.alert(
-            error?.response?.data?.message
-              ? error?.response?.data?.message
-              : 'something went wrong',
-          );
-        }
-      });
+      .catch(error => {
+        onError(error);
+      })
+      .finally(() => setIsloading(false));
   }
   const getSelectedImage = (result: any) => {
     setProfileImage({uri: result.uri});
@@ -390,7 +363,7 @@ const EditProfile = ({navigation, route}: any) => {
               // paddin,
             }}>
             <View style={{width: '45%', height: hp(5)}}>
-              <OpenCamera callbackImage={getSelectedImage.bind(this)} />
+              <OpenCamera callbackImage={getSelectedImage.bind(this)} modalExit={()=> settoCaptureImage(false)}/>
             </View>
             <View
               style={{
@@ -399,7 +372,7 @@ const EditProfile = ({navigation, route}: any) => {
               }}
             />
             <View style={{width: '45%', height: hp(5)}}>
-              <OpenGallery callbackImage={getSelectedImage.bind(this)} />
+              <OpenGallery callbackImage={getSelectedImage.bind(this)} modalExit={()=> settoCaptureImage(false)}/>
             </View>
           </View>
         </View>

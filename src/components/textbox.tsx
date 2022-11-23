@@ -7,7 +7,6 @@ import {colors} from '../theme/colors';
 
 export const Textbox = (props: ITextBox) => {
   const {
-    containerStyle,
     title,
     placeholder,
     onChangeValue,
@@ -21,9 +20,9 @@ export const Textbox = (props: ITextBox) => {
   const [secureText, setsecureText] = useState(password ? password : false);
   // let secureText = password ? password : false;
   return (
-    <View style={[styles.sectionContainer, {borderBottomWidth: 1}]}>
+    <View style={[styles.sectionContainer]}>
       {title ? <Text style={styles.titleText}>{title}</Text> : null}
-      <View style={{flexDirection: 'row', flex: 1}}>
+      <View style={{flexDirection: 'row', flex: 1, borderBottomWidth: 1}}>
         <TextInput
           placeholder={placeholder}
           placeholderTextColor={colors.gray}

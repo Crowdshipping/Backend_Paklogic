@@ -238,7 +238,7 @@ const AddComplain = ({navigation}: any) => {
               // paddin,
             }}>
             <View style={{width: '45%', height: hp(5)}}>
-              <OpenCamera callbackImage={getSelectedImage.bind(this)} />
+              <OpenCamera callbackImage={getSelectedImage.bind(this)} modalExit={()=> settoCaptureImage(false)}/>
             </View>
             <View
               style={{
@@ -247,7 +247,7 @@ const AddComplain = ({navigation}: any) => {
               }}
             />
             <View style={{width: '45%', height: hp(5)}}>
-              <OpenGallery callbackImage={getSelectedImage.bind(this)} />
+              <OpenGallery callbackImage={getSelectedImage.bind(this)} modalExit={()=> settoCaptureImage(false)} />
             </View>
           </View>
         </View>

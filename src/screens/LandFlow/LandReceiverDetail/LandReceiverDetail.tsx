@@ -61,17 +61,35 @@ const LandReceiverDetail = ({navigation, route}: any) => {
   const [valueName, setvalueName] = useState(true);
   const [loading, setloading] = useState(false);
   const [isSuccess, setsuccess] = useState(false);
+  const [phone, setphone] = useState('');
   const [countrySelect, setcountrySelect] = useState<ICountryCode>({
     name: 'United States',
     dial_code: '+1',
     code: 'US',
     flag: '🇺🇸',
   });
-  let bookingId: string;
   let productImage: string;
   let productImage2: string;
-  const [phone, setphone] = useState('');
-  function handleSubmit() {
+
+  function onError(error: any) {
+    if (error.response.status === 401) {
+      LogoutApi();
+      Alert.alert('Session Expired', 'Please login again');
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{name: 'Welcome'}],
+        }),
+      );
+    } else {
+      Alert.alert(
+        error?.response?.data?.message
+          ? error?.response?.data?.message
+          : 'Something went wrong',
+      );
+    }
+  }
+  async function handleSubmit() {
     let validate = true;
 
     if (!receiverName.trim()) {
@@ -84,116 +102,46 @@ const LandReceiverDetail = ({navigation, route}: any) => {
     }
     if (validate) {
       setloading(true);
-      postImage(Images)
-        .then((rest: any) => {
-          let validate = true;
-          // setloading(false);
-          if (rest.length === 2) {
-            if (rest[0].success && rest[1].success) {
-              productImage = rest[0].imageUrl;
-              productImage2 = rest[1].imageUrl;
-            } else {
-              validate = false;
-            }
-          } else if (rest.length === 1) {
-            if (rest[0].success) {
-              productImage = rest[0].imageUrl;
-            } else {
-              validate = false;
-            }
-          }
-          if (validate) {
-            createBooking(
-              SelectedCategory,
-              SelectedType,
-              description,
-              weight,
-              SelectedUnit,
-              pickupLocation,
-              dropoffLocation,
-              null,
-              null,
-              receiverName,
-              countrySelect.dial_code,
-              phone.trim(),
-              productImage,
-              productImage2,
-              SelectedBookingType,
-              vehicleType,
-              moment(initialDate).format('YYYY-MM-DD'),
-              moment(finalDate).format('YYYY-MM-DD'),
-              totalFare,
-            )
-              .then((rest: any) => {
-                bookingId = rest.booking._id;
-                {
-                  rest.success &&
-                    createDriverRequest(bookingId)
-                      .then((rest: any) => {
-                        rest.success && setsuccess(true);
-                      })
-                      .catch(async error => {
-                        setloading(false);
-                        if (error.response.status === 401) {
-                          Alert.alert('Session Expired', 'Please login again');
-                          LogoutApi();
-                          navigation.dispatch(
-                            CommonActions.reset({
-                              index: 1,
-                              routes: [{name: 'Welcome'}],
-                            }),
-                          );
-                        } else {
-                          Alert.alert(
-                            error?.response?.data?.message
-                              ? error?.response?.data?.message
-                              : 'something went wrong',
-                          );
-                        }
-                      });
-                }
-                setloading(false);
-              })
-              .catch(async error => {
-                setloading(false);
-                if (error.response.status === 401) {
-                  Alert.alert('Session Expired', 'Please login again');
-                  LogoutApi();
-                  navigation.dispatch(
-                    CommonActions.reset({
-                      index: 1,
-                      routes: [{name: 'Welcome'}],
-                    }),
-                  );
-                } else {
-                  Alert.alert(
-                    error?.response?.data?.message
-                      ? error?.response?.data?.message
-                      : 'something went wrong',
-                  );
-                }
-              });
-          }
-        })
-        .catch(async error => {
-          setloading(false);
-          if (error.response.status === 401) {
-            Alert.alert('Session Expired', 'Please login again');
-            LogoutApi();
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 1,
-                routes: [{name: 'Welcome'}],
-              }),
-            );
-          } else {
-            Alert.alert(
-              error?.response?.data?.message
-                ? error?.response?.data?.message
-                : 'something went wrong',
-            );
-          }
-        });
+      try {
+        const imgUrl = await postImage(Images);
+        if (imgUrl.length === 2 && imgUrl[0].success && imgUrl[1].success) {
+          productImage = imgUrl[0].imageUrl;
+          productImage2 = imgUrl[1].imageUrl;
+        } else if (imgUrl.length === 1 && imgUrl[0].success) {
+          productImage = imgUrl[0].imageUrl;
+        }
+        const bookingApi: any = await createBooking(
+          SelectedCategory,
+          SelectedType,
+          description,
+          weight,
+          SelectedUnit,
+          pickupLocation,
+          dropoffLocation,
+          null,
+          null,
+          receiverName,
+          countrySelect.dial_code,
+          phone.trim(),
+          productImage,
+          productImage2,
+          SelectedBookingType,
+          vehicleType,
+          moment(initialDate).format('YYYY-MM-DD'),
+          moment(finalDate).format('YYYY-MM-DD'),
+          totalFare,
+        );
+        const createDriverRequestApi: any = await createDriverRequest(
+          bookingApi.booking._id,
+        );
+        console.log(createDriverRequestApi);
+        if (createDriverRequestApi.success) {
+          setsuccess(true);
+        }
+      } catch (error) {
+        setloading(false);
+        onError(error);
+      }
     }
   }
 
@@ -210,28 +158,12 @@ const LandReceiverDetail = ({navigation, route}: any) => {
     };
     calculateBookingFare(data)
       .then((result: any) => {
-        setloading(false);
         result.success && settotalFare(result.amount);
       })
-      .catch(async error => {
-        setloading(false);
-        if (error.response.status === 401) {
-          Alert.alert('Session Expired', 'Please login again');
-          LogoutApi();
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 1,
-              routes: [{name: 'Welcome'}],
-            }),
-          );
-        } else {
-          Alert.alert(
-            error?.response?.data?.message
-              ? error?.response?.data?.message
-              : 'something went wrong',
-          );
-        }
-      });
+      .catch(error => {
+        onError(error);
+      })
+      .finally(() => setloading(false));
   }, []);
   return (
     <SafeAreaView>

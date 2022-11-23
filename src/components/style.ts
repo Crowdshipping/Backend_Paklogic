@@ -8,6 +8,7 @@ import {colors} from '../theme';
 export const styles = StyleSheet.create({
   addressView: {
     flexDirection: 'row',
+    flex: 1
     // justifyContent: 'space-around',
   },
   titleText: {
@@ -23,7 +24,6 @@ export const styles = StyleSheet.create({
     width: wp(15),
   },
   sectionContainer: {
-    // marginVertical: hp(2),
     marginTop: hp(2),
     marginBottom: hp(1),
     marginHorizontal: wp(5),
@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     maxWidth: '45%',
-    borderColor: colors.gray,
+    borderColor: colors.black,
     // justifyContent: 'space-between',
     marginRight: '5%',
   },
@@ -80,7 +80,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     fontSize: wp(4),
     borderBottomWidth: 1,
-    borderColor: colors.gray,
+    borderColor: colors.black,
     // padding: wp(1),
     paddingVertical: Platform.OS === 'ios' ? wp(2) : 0,
     color: colors.black,

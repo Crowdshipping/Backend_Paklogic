@@ -53,29 +53,33 @@ export const SearchPlaces = (props: IModal) => {
           }}
         />
 
-        {/* <Button
-          title="Rawalpindi"
-          onPress={() => {
-            setLocation({
-              name: 'Rawalpindi',
-              lat: 33.5651107,
-              lon: 73.0169135,
-            }),
-              setModalVisible(false);
-          }}
-        />
+        {__DEV__ && (
+          <View>
+            <Button
+              title="Rawalpindi"
+              onPress={() => {
+                setLocation({
+                  name: 'Rawalpindi',
+                  lat: 33.5651107,
+                  lon: 73.0169135,
+                }),
+                  setModalVisible(false);
+              }}
+            />
 
-        <Button
-          title="Islamabad"
-          onPress={() => {
-            setLocation({
-              name: 'Islamabad Capital Territory',
-              lat: 33.6844202,
-              lon: 73.047885,
-            }),
-              setModalVisible(false);
-          }}
-        /> */}
+            <Button
+              title="Islamabad"
+              onPress={() => {
+                setLocation({
+                  name: 'Islamabad Capital Territory',
+                  lat: 33.6844202,
+                  lon: 73.047885,
+                }),
+                  setModalVisible(false);
+              }}
+            />
+          </View>
+        )}
       </SafeAreaView>
     </Modal>
   );

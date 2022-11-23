@@ -39,9 +39,10 @@ const BookingListShipping = ({navigation, route}: any) => {
   const [marineShipsProvider, setmarineShipsProvider] = useState([]);
 
   const [dateShow, setdateShow] = useState(false);
-  // const [dobToShow2, setDobToShow2] = useState(false);
-  const [dobTo, setdobTo] = useState<Date>(route?.params?.initialDate);
-  const [dobTo2, setdobTo2] = useState<Date>(route?.params?.finalDate);
+  const [initialDate, setinitalDate] = useState<Date>(
+    route.params?.initialDate,
+  );
+  const [finalDate, setfinalDate] = useState<Date>(route.params?.finalDate);
   const [isLoading, setLoading] = useState(true);
   // const [placeholder , set]
 
@@ -63,7 +64,7 @@ const BookingListShipping = ({navigation, route}: any) => {
   const [dropValue, setdropValue] = useState(true);
   useEffect(() => {
     let validate = true;
-    if (dobTo >= dobTo2) {
+    if (initialDate >= finalDate) {
       setdateShow(true);
       validate = false;
     }
@@ -79,8 +80,8 @@ const BookingListShipping = ({navigation, route}: any) => {
       const data = {
         pickupCity: pickupLocation.Name,
         dropoffCity: dropoffLocation.Name,
-        startingDate: moment(dobTo).format('YYYY-MM-DD'),
-        endingDate: moment(dobTo2).format('YYYY-MM-DD'),
+        startingDate: moment(initialDate).format('YYYY-MM-DD'),
+        endingDate: moment(finalDate).format('YYYY-MM-DD'),
         pickupPortUnlocode: pickupLocation.Country + pickupLocation.Location,
         dropoffPortUnlocode: dropoffLocation.Country + dropoffLocation.Location,
       };
@@ -115,7 +116,7 @@ const BookingListShipping = ({navigation, route}: any) => {
           setLoading(false);
         });
     }
-  }, [pickupLocation, dropoffLocation, dobTo, dobTo2]);
+  }, [pickupLocation, dropoffLocation, initialDate, finalDate]);
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
@@ -173,9 +174,9 @@ const BookingListShipping = ({navigation, route}: any) => {
         <View style={styles.Touch}>
           <Datepicker
             text={'From'}
-            datePrev={moment(dobTo).format('YYYY-MM-DD')}
+            datePrev={moment(initialDate).format('YYYY-MM-DD')}
             onChange={(selectedDate: Date) => {
-              setdobTo(selectedDate);
+              setinitalDate(selectedDate);
             }}
             // initialDate={moment().clone().add(1, 'days').toDate()}
             initialDate={moment().clone().add(0, 'days').toDate()}
@@ -184,9 +185,9 @@ const BookingListShipping = ({navigation, route}: any) => {
         <View style={styles.Touch}>
           <Datepicker
             text={'To'}
-            datePrev={moment(dobTo2).format('YYYY-MM-DD')}
+            datePrev={moment(finalDate).format('YYYY-MM-DD')}
             onChange={(selectedDate: Date) => {
-              setdobTo2(selectedDate);
+              setfinalDate(selectedDate);
             }}
             initialDate={moment().clone().add(1, 'days').toDate()}
           />
@@ -248,8 +249,8 @@ const BookingListShipping = ({navigation, route}: any) => {
                                   lat: '',
                                   lng: '',
                                 },
-                                initialDate: dobTo,
-                                finalDate: dobTo2,
+                                initialDate: initialDate,
+                                finalDate: finalDate,
                                 pickupPortUnlocode:
                                   pickupLocation.Country +
                                   pickupLocation.Location,
@@ -305,8 +306,8 @@ const BookingListShipping = ({navigation, route}: any) => {
                                 lat: '',
                                 lng: '',
                               },
-                              initialDate: dobTo,
-                              finalDate: dobTo2,
+                              initialDate: initialDate,
+                              finalDate: finalDate,
                               pickupPortUnlocode:
                                 pickupLocation.Country +
                                 pickupLocation.Location,
@@ -332,23 +333,26 @@ const BookingListShipping = ({navigation, route}: any) => {
                   marineShipsProvider &&
                   marineShipsProvider.length < 1 && (
                     <View
-                      style={{
-                        backgroundColor: colors.boxBackground,
-                        alignSelf: 'center',
-                        paddingVertical: hp(10),
-                        marginVertical: '40%',
-                        paddingHorizontal: wp(10),
-                        borderRadius: hp(2),
-                      }}>
-                      <Text
-                        style={{
-                          textAlign: 'center',
-                          color: colors.red,
-                          fontSize: hp(2),
-                        }}>
-                        Sorry no bookings available
-                      </Text>
-                    </View>
+                  style={{
+                    backgroundColor: colors.boxBackground,
+                    // backgroundColor: 'aqua',
+                    alignSelf: 'center',
+                    // paddingVertical: hp(10),
+                    marginVertical: '40%',
+                    
+                    paddingHorizontal: wp(10),
+                    borderRadius: hp(2),
+                  }}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      color: colors.red,
+                      fontSize: hp(2),
+                      paddingVertical: hp(10)
+                    }}>
+                    Sorry no bookings available
+                  </Text>
+                </View>
                   )}
               </ScrollView>
             </View>

@@ -11,11 +11,11 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-import {Textbox, Button, MapHeader} from '../../components';
-import {packagedetails, cross} from '../../theme/assets/svg';
+import {Textbox, Button, MapHeader} from '../../../components';
+import {packagedetails, cross} from '../../../theme/assets/svg';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {mapp} from '../../theme/assets/images';
+import {mapp} from '../../../theme/assets/images';
 
 import {
   widthPercentageToDP as wp,
@@ -24,15 +24,15 @@ import {
 import Entypo from 'react-native-vector-icons/Entypo';
 import {styles} from './style';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {colors} from '../../theme/colors';
-import {ModalTypes} from '../../Modals';
+import {colors} from '../../../theme/colors';
+import {ModalTypes} from '../../../Modals';
 
 import {SvgXml} from 'react-native-svg';
 import Modal from 'react-native-modal/dist/modal';
 
-import OpenCamera from '../Cam_Gal/OpenCamera';
-import OpenGallery from '../Cam_Gal/OpenGallery';
-import {getProductCategories, getProductTypes, LogoutApi} from '../../API';
+import OpenCamera from '../../Cam_Gal/OpenCamera';
+import OpenGallery from '../../Cam_Gal/OpenGallery';
+import {getProductCategories, getProductTypes, LogoutApi} from '../../../API';
 import {CommonActions} from '@react-navigation/native';
 
 interface IimageShow {
@@ -47,14 +47,19 @@ interface ITypes {
   name: string;
 }
 const ProductScreen = ({navigation, route}: any) => {
-  const pickcoords = route.params?.item?.pickcoords;
-  const dropcoords = route.params?.item?.dropcoords;
-  const providerId = route.params.item?.providerId;
-  const flightId = route.params.item?.flightId;
-  const dropoffCity = route.params?.item?.dropoffCity;
-  const pickupCity = route.params?.item?.pickupCity;
-  const fa_flight_id = route.params?.item?.fa_flight_id;
-  const type = route.params?.item?.type;
+  const {
+    providerId,
+    flightId,
+
+    fa_flight_id,
+    type,
+    pickupIATACityCode,
+    dropoffIATACityCode,
+    pickupCity,
+    dropoffCity,
+    initialDate,
+    finalDate,
+  } = route.params.item;
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [isModalVisible2, setModalVisible2] = useState(false);
@@ -82,17 +87,6 @@ const ProductScreen = ({navigation, route}: any) => {
   const [Type, setType] = useState<ITypes[]>([]);
   const [category, setcategory] = useState<ITypes[]>([]);
 
-  // const category = [
-  //   { id: 1, name: 'Wood' },
-  //   { id: 2, name: 'Iron' },
-  //   { id: 3, name: 'Plastic' },
-  //   { id: 4, name: 'Glass' },
-  // ];
-  // const Type = [
-  //   { id: 1, name: 'Cargo' },
-  //   { id: 2, name: 'hand Carry' },
-  //   { id: 3, name: 'soft' },
-  // ];
   const Unit = [
     {
       id: 'mcg',
@@ -168,16 +162,17 @@ const ProductScreen = ({navigation, route}: any) => {
             description,
             weight,
             SelectedUnit,
-            pickcoords,
-            dropcoords,
-            dropoffCity,
-            pickupCity,
+            Images,
+
             providerId,
             flightId,
-            initialDate: route.params.item.initialDate,
-            finalDate: route.params.item.finalDate,
-            Images,
             type,
+            pickupIATACityCode,
+            dropoffIATACityCode,
+            pickupCity,
+            dropoffCity,
+            initialDate,
+            finalDate,
           },
         });
     } else if (fa_flight_id) {
@@ -189,19 +184,36 @@ const ProductScreen = ({navigation, route}: any) => {
             description,
             weight,
             SelectedUnit,
+            Images,
+
             fa_flight_id,
             type,
-            pickupIATACityCode: route.params?.item?.pickupIATACityCode,
-            dropoffIATACityCode: route.params?.item?.dropoffIATACityCode,
+            pickupIATACityCode,
+            dropoffIATACityCode,
             dropoffCity,
             pickupCity,
-            pickcoords,
-            dropcoords,
-            initialDate: route.params.item.initialDate,
-            finalDate: route.params.item.finalDate,
-            Images,
+            initialDate,
+            finalDate,
           },
         });
+    }
+  }
+  function onError(error: any) {
+    if (error.response.status === 401) {
+      LogoutApi();
+      Alert.alert('Session Expired', 'Please login again');
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{name: 'Welcome'}],
+        }),
+      );
+    } else {
+      Alert.alert(
+        error?.response?.data?.message
+          ? error?.response?.data?.message
+          : 'Something went wrong',
+      );
     }
   }
   const getSelectedImage = (result: any) => {
@@ -213,34 +225,18 @@ const ProductScreen = ({navigation, route}: any) => {
   useEffect(() => {
     getProductTypes()
       .then((result: any) => {
-        setloading(false);
         result.success &&
           result.productTypes.map((products: any) => {
-            setType(Type => [
-              ...Type,
+            setType(currentType => [
+              ...currentType,
               {id: products._id, name: products.productName},
             ]);
           });
       })
-      .catch(async error => {
-        setloading(false);
-        if (error.response.status === 401) {
-          Alert.alert('Session Expired', 'Please login again');
-          LogoutApi();
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 1,
-              routes: [{name: 'Welcome'}],
-            }),
-          );
-        } else {
-          Alert.alert(
-            error?.response?.data?.message
-              ? error?.response?.data?.message
-              : 'something went wrong',
-          );
-        }
-      });
+      .catch(error => {
+        onError(error);
+      })
+      .finally(() => setloading(false));
   }, []);
 
   useEffect(() => {
@@ -249,30 +245,14 @@ const ProductScreen = ({navigation, route}: any) => {
         .then((result: any) => {
           result.success &&
             result.productCategories.map((products: any) => {
-              setcategory(category => [
-                ...category,
+              setcategory(currentCategory => [
+                ...currentCategory,
                 {id: products._id, name: products.productCategoryName},
               ]);
             });
         })
-        .catch(async error => {
-          setloading(false);
-          if (error.response.status === 401) {
-            Alert.alert('Session Expired', 'Please login again');
-            LogoutApi();
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 1,
-                routes: [{name: 'Welcome'}],
-              }),
-            );
-          } else {
-            Alert.alert(
-              error?.response?.data?.message
-                ? error?.response?.data?.message
-                : 'something went wrong',
-            );
-          }
+        .catch(error => {
+          onError(error);
         });
     }
   }, [SelectedType.id]);
@@ -393,11 +373,7 @@ const ProductScreen = ({navigation, route}: any) => {
                     }}>
                     <Textbox
                       title="Product Weight"
-                      placeholder={
-                        route.params?.data?.weight
-                          ? route.params?.data?.weight
-                          : 'Enter weight'
-                      }
+                      placeholder={'Enter weight'}
                       onChangeValue={(text: string) => {
                         setweightValue(true), setweight(text);
                       }}
@@ -416,10 +392,9 @@ const ProductScreen = ({navigation, route}: any) => {
                   <TouchableOpacity
                     style={{
                       width: '47%',
-                      borderBottomWidth: 1,
                       marginTop: hp(2),
                       marginBottom: hp(2),
-                      borderColor: colors.gray,
+                      borderColor: colors.black,
                       // height: '55%',
                     }}
                     onPress={() => setModalVisible3(!isModalVisible3)}>
@@ -437,35 +412,28 @@ const ProductScreen = ({navigation, route}: any) => {
                       />
                     </View>
 
-                    <Text
-                      style={{
-                        borderColor: colors.gray,
-                        paddingVertical: wp(1),
-                        color: colors.black,
-                      }}>
-                      {SelectedUnit ? SelectedUnit : 'Select Unit'}
-                    </Text>
+                    <View
+                      style={{borderBottomWidth: 1, borderColor: colors.black}}>
+                      <Text
+                        style={{
+                          paddingVertical: wp(2),
+                          color: colors.gray,
+                        }}>
+                        {SelectedUnit ? SelectedUnit : 'Select Unit'}
+                      </Text>
+                    </View>
                   </TouchableOpacity>
                 </View>
                 <View style={styles.attachment}>
                   <Text style={styles.txt}>Attached Photo</Text>
-
-                  <TouchableOpacity
-                    style={styles.arrorwStyle}
-                    onPress={() => {
-                      settoCaptureImage(true);
-                    }}
-                    disabled={Images.length >= 2 ? true : false}>
-                    <Entypo
-                      name="attachment"
-                      color={colors.black}
-                      size={wp(5)}
-                      style={{alignSelf: 'flex-end'}}
-                    />
-                  </TouchableOpacity>
                 </View>
-                <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-                  {Images.length >= 1 ? (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                  }}>
+                  {Images.length >= 1 &&
                     Images.map((item, index1: number) => {
                       return (
                         <View key={index1} style={{marginLeft: wp(8)}}>
@@ -478,11 +446,12 @@ const ProductScreen = ({navigation, route}: any) => {
                             }}
                             style={{
                               alignSelf: 'flex-end',
-                              borderRadius: 78,
+                              borderRadius: 100,
                               backgroundColor: colors.red,
+                              position: 'absolute',
                               padding: wp(1),
-                              left: wp(3),
-                              top: wp(3.5),
+                              right: -wp(2),
+                              top: -wp(2),
                               zIndex: 100,
                             }}>
                             <SvgXml width={wp(4)} height={wp(4)} xml={cross} />
@@ -493,22 +462,27 @@ const ProductScreen = ({navigation, route}: any) => {
                             style={{
                               height: wp(37),
                               width: wp(37),
-                              borderRadius: 10,
+                              borderRadius: wp(3),
                             }}
                           />
                         </View>
                       );
-                    })
-                  ) : (
-                    <View
+                    })}
+                  {Images.length < 2 && (
+                    <TouchableOpacity
+                      onPress={() => {
+                        settoCaptureImage(true);
+                      }}
                       style={{
-                        height: wp(35),
-                        width: wp(35),
-                        borderRadius: wp(5),
+                        height: wp(37),
+                        width: wp(37),
+                        borderRadius: wp(3),
                         justifyContent: 'center',
                         alignItems: 'center',
                         marginHorizontal: wp(8),
+                        top: -wp(2),
                         backgroundColor: '#C4C4C4',
+                        borderWidth: 1,
                       }}>
                       <View
                         style={{
@@ -518,7 +492,7 @@ const ProductScreen = ({navigation, route}: any) => {
                           borderColor: '#C0904E',
                         }}
                       />
-                    </View>
+                    </TouchableOpacity>
                   )}
                 </View>
                 {!ImagesValue && (
@@ -571,6 +545,8 @@ const ProductScreen = ({navigation, route}: any) => {
                       autoCapitalize={'none'}
                       style={{
                         width: wp(80),
+                        flex: 1,
+                        textAlignVertical: 'top',
                         paddingHorizontal: wp(3),
                         marginTop: hp(1),
                         paddingVertical: hp(1),
@@ -671,7 +647,10 @@ const ProductScreen = ({navigation, route}: any) => {
               alignItems: 'center',
             }}>
             <View style={{width: '45%', height: hp(5)}}>
-              <OpenCamera callbackImage={getSelectedImage.bind(this)} />
+              <OpenCamera
+                callbackImage={getSelectedImage.bind(this)}
+                modalExit={() => settoCaptureImage(false)}
+              />
             </View>
             <View
               style={{
@@ -680,7 +659,10 @@ const ProductScreen = ({navigation, route}: any) => {
               }}
             />
             <View style={{width: '45%', height: hp(5)}}>
-              <OpenGallery callbackImage={getSelectedImage.bind(this)} />
+              <OpenGallery
+                callbackImage={getSelectedImage.bind(this)}
+                modalExit={() => settoCaptureImage(false)}
+              />
             </View>
           </View>
         </View>

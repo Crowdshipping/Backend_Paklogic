@@ -1,5 +1,5 @@
-import axios, { AxiosRequestConfig } from 'axios';
-import { prodUrl } from '../appConstants';
+import axios, {AxiosRequestConfig} from 'axios';
+import {prodUrl} from '../appConstants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const postRequest = async (
@@ -18,6 +18,7 @@ export const postRequest = async (
   departurePort?: string | null,
   destinationPort?: string | null,
   ETA?: string | null,
+  suggestedPrice?: number | null,
 ) => {
   const userId = await AsyncStorage.getItem('@userId');
   const userToken = await AsyncStorage.getItem('@userToken');
@@ -27,23 +28,24 @@ export const postRequest = async (
       method: 'post',
       url: `${prodUrl}/customer/postflightrequest`,
       headers: {
-        Authorization: `Bearer ${userToken}`
+        Authorization: `Bearer ${userToken}`,
       },
       data: {
-        fa_flight_id: fa_flight_id ? fa_flight_id : null,
-        mmsiNumber: MMSI ? MMSI : null,
+        fa_flight_id: fa_flight_id || null,
+        mmsiNumber: MMSI || null,
         type: type,
         bookingId: bookingId,
         requestedBy: userId,
-        pickupIATACityCode: pickupIATACityCode ? pickupIATACityCode : null,
-        dropoffIATACityCode: dropoffIATACityCode ? dropoffIATACityCode : null,
-        pickupCity: pickupCity ? pickupCity : null,
-        dropoffCity: dropoffCity ? dropoffCity : null,
-        pickupPortUnlocode: pickupPortUnlocode ? pickupPortUnlocode : null,
-        dropoffPortUnlocode: dropoffPortUnlocode ? dropoffPortUnlocode : null,
-        departurePort: departurePort ? departurePort : null,
-        destinationPort: destinationPort ? destinationPort : null,
-        ETA: ETA ? ETA : null,
+        pickupIATACityCode: pickupIATACityCode || null,
+        dropoffIATACityCode: dropoffIATACityCode || null,
+        pickupCity: pickupCity || null,
+        dropoffCity: dropoffCity || null,
+        pickupPortUnlocode: pickupPortUnlocode || null,
+        dropoffPortUnlocode: dropoffPortUnlocode || null,
+        departurePort: departurePort || null,
+        destinationPort: destinationPort || null,
+        ETA: ETA || null,
+        suggestedPrice: suggestedPrice || null,
       },
     };
     axios(config)

@@ -14,55 +14,60 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-import {Button, Header} from '../../components';
-import {LogoutApi, rateRider} from '../../API';
-import {prodUrl} from '../../appConstants';
+import {Button, Header} from '../../../components';
+import {LogoutApi, rateRider} from '../../../API';
+import {prodUrl} from '../../../appConstants';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {colors} from '../../theme';
-import {SuccessModal} from '../../Modals';
+import {colors} from '../../../theme';
+import {SuccessModal} from '../../../Modals';
 import {CommonActions} from '@react-navigation/native';
 // import { ScrollView } from 'react-native-gesture-handler';
 
 export default function RateDriver({navigation, route}: any) {
-  const [rating, setRating] = React.useState<any>();
+  const {_id, provider} = route.params.item;
+  const [rating, setRating] = React.useState<any>(5);
   const [review, setReview] = React.useState<any>('');
   const [isloading, setLoading] = React.useState<any>(false);
   const [isSuccess, setsuccess] = React.useState<any>(false);
 
   const uploadData = async () => {
-    setLoading(true);
+    let validate = true;
+    if (!rating) validate = false;
 
-    let data = {
-      requestId: route.params.item._id,
-      rate: rating,
-      review: review,
-      ratedTo: route.params.item.provider._id,
-    };
+    if (validate) {
+      setLoading(true);
 
-    rateRider(data)
-      .then((result: any) => {
-        setLoading(false);
-        result.success && setsuccess(true);
-      })
-      .catch(async error => {
-        setLoading(false);
-        if (error.response.status === 401) {
-          Alert.alert('Session Expired', 'Please login again');
-          LogoutApi();
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 1,
-              routes: [{name: 'Welcome'}],
-            }),
-          );
-        } else {
-          Alert.alert(
-            error?.response?.data?.message
-              ? error?.response?.data?.message
-              : 'something went wrong',
-          );
-        }
-      });
+      let data = {
+        requestId: _id,
+        rate: rating,
+        review: review,
+        ratedTo: provider._id,
+      };
+
+      rateRider(data)
+        .then((result: any) => {
+          result.success && setsuccess(true);
+        })
+        .catch(async error => {
+          if (error.response.status === 401) {
+            Alert.alert('Session Expired', 'Please login again');
+            LogoutApi();
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{name: 'Welcome'}],
+              }),
+            );
+          } else {
+            Alert.alert(
+              error?.response?.data?.message
+                ? error?.response?.data?.message
+                : 'something went wrong',
+            );
+          }
+        })
+        .finally(() => setLoading(false));
+    }
   };
 
   const ratingCompleted = (rating: any) => {
@@ -81,7 +86,7 @@ export default function RateDriver({navigation, route}: any) {
 
         <View style={{marginTop: hp(5)}}>
           <View style={styles.imgview}>
-            {!route.params.item.provider.profilepic ? (
+            {!provider.profilepic ? (
               <Avatar
                 size={110}
                 rounded
@@ -91,7 +96,7 @@ export default function RateDriver({navigation, route}: any) {
             ) : (
               <Image
                 source={{
-                  uri: prodUrl + route.params.item.provider.profilepic,
+                  uri: prodUrl + provider.profilepic,
                 }}
                 style={styles.img}
               />
@@ -99,9 +104,7 @@ export default function RateDriver({navigation, route}: any) {
           </View>
           <View style={{alignItems: 'center', marginTop: hp('2%')}}>
             <Text style={{color: colors.black}}>
-              {route.params.item.provider.firstname +
-                ' ' +
-                route.params.item.provider.lastname}
+              {provider.firstname + ' ' + provider.lastname}
             </Text>
           </View>
           <View style={{alignItems: 'center', marginTop: hp('5%')}}>
@@ -116,7 +119,7 @@ export default function RateDriver({navigation, route}: any) {
               ratingCount={5}
               onFinishRating={ratingCompleted}
               style={{paddingVertical: 10}}
-              startingValue={0}
+              startingValue={rating}
             />
           </View>
           <View style={{alignItems: 'center', marginTop: '1%'}}>

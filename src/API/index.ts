@@ -17,7 +17,7 @@ import {postImage} from './postImage';
 import {orderHistory} from './orderHistory';
 import {flightTracking} from './flightTracking';
 import {shipTracking} from './shipTracking';
-import {searchAirport} from './searchAirport';
+import {getAirportCoordinates} from './getAirportCoordinates';
 import {createPaymentsHistory} from './createPaymentsHistory';
 import {createDriverRequest} from './createDriverRequest';
 import {cancelDriverRequest} from './cancelDriverRequest';
@@ -51,6 +51,10 @@ import {calculateShipBookingFare} from './calculateShipBookingFare';
 import {getUserAverageRating} from './getUserAverageRating';
 import {calculateAirBookingFare} from './calculateAirBookingFare';
 import {getPromoCodes} from './getPromoCodes';
+import {getPrivateChat} from './getPrivateChat';
+import {createPrivateChat} from './createPrivateChat';
+import {getAllPrivateChats} from './getAllPrivateChats';
+import {updateSuggestedPrice} from './updateSuggestedPrice';
 
 export {
   forgotPassword,
@@ -72,7 +76,7 @@ export {
   orderHistory,
   flightTracking,
   shipTracking,
-  searchAirport,
+  getAirportCoordinates,
   createPaymentsHistory,
   createDriverRequest,
   cancelDriverRequest,
@@ -106,4 +110,8 @@ export {
   calculateAirBookingFare,
   getUserAverageRating,
   getPromoCodes,
+  getPrivateChat,
+  createPrivateChat,
+  getAllPrivateChats,
+  updateSuggestedPrice,
 };

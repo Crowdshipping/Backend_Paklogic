@@ -50,7 +50,8 @@ const LandingScreen = ({navigation}: any) => {
         : notificationData.isFor === 'Chat' &&
           navigation.navigate('ChatScreen', {
             receiverId: notificationData.id,
-            requestId: notificationData.requestId,
+            requestId: null,
+            // requestId: notificationData.requestId,
           }));
   }, [notificationData]);
   return (
@@ -104,12 +105,12 @@ const LandingScreen = ({navigation}: any) => {
                 )
               : navigation.navigate('AirFlowNavigation');
           }}
-          style={styles.svgView}>
+          style={[styles.svgView, {height: hp(20)}]}>
           <SvgXml
             style={styles.svg}
             xml={plane}
-            height={hp(20)}
-            // width={wp(100)}
+            height={hp(18)}
+            width={wp(100)}
           />
         </TouchableOpacity>
       </View>

@@ -180,6 +180,25 @@ const LandProductScreen = ({navigation, route}: any) => {
     }
   }
 
+  function onError(error: any) {
+    if (error.response.status === 401) {
+      LogoutApi();
+      Alert.alert('Session Expired', 'Please login again');
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{name: 'Welcome'}],
+        }),
+      );
+    } else {
+      Alert.alert(
+        error?.response?.data?.message
+          ? error?.response?.data?.message
+          : 'Something went wrong',
+      );
+    }
+  }
+
   function handleNavigation() {
     settoCaptureImage(false),
       navigation.navigate('LandReceiverDetail', {
@@ -212,7 +231,6 @@ const LandProductScreen = ({navigation, route}: any) => {
     if (Type.length === 0) {
       getProductTypes()
         .then((result: any) => {
-          setloading(false);
           result.success &&
             result.productTypes.map((products: any) => {
               setType(Type => [
@@ -222,24 +240,9 @@ const LandProductScreen = ({navigation, route}: any) => {
             });
         })
         .catch(error => {
-          setloading(false);
-          if (error.response.status === 401) {
-            Alert.alert('Session Expired', 'Please login again');
-            LogoutApi();
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 1,
-                routes: [{name: 'Welcome'}],
-              }),
-            );
-          } else {
-            Alert.alert(
-              error?.response?.data?.message
-                ? error?.response?.data?.message
-                : 'something went wrong',
-            );
-          }
-        });
+          onError(error);
+        })
+        .finally(() => setloading(false));
     }
   }, []);
 
@@ -255,25 +258,10 @@ const LandProductScreen = ({navigation, route}: any) => {
               ]);
             });
         })
-        .catch(async error => {
-          setloading(false);
-          if (error.response.status === 401) {
-            Alert.alert('Session Expired', 'Please login again');
-            LogoutApi();
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 1,
-                routes: [{name: 'Welcome'}],
-              }),
-            );
-          } else {
-            Alert.alert(
-              error?.response?.data?.message
-                ? error?.response?.data?.message
-                : 'something went wrong',
-            );
-          }
-        });
+        .catch(error => {
+          onError(error);
+        })
+        .finally(() => setloading(false));
     }
   }, [SelectedType.id]);
 
@@ -397,11 +385,7 @@ const LandProductScreen = ({navigation, route}: any) => {
                     }}>
                     <Textbox
                       title="Product Weight"
-                      placeholder={
-                        route.params?.data?.weight
-                          ? route.params?.data?.weight
-                          : 'Enter weight'
-                      }
+                      placeholder={'Enter weight'}
                       onChangeValue={(text: string) => {
                         setweightValue(true), setweight(text);
                       }}
@@ -420,10 +404,10 @@ const LandProductScreen = ({navigation, route}: any) => {
                   <TouchableOpacity
                     style={{
                       width: '47%',
-                      borderBottomWidth: 1,
                       marginTop: hp(2),
                       marginBottom: hp(2),
                       borderColor: colors.gray,
+                      // borderBottomWidth: 1,
                       // height: '55%',
                     }}
                     onPress={() => setModalVisible3(!isModalVisible3)}>
@@ -440,15 +424,16 @@ const LandProductScreen = ({navigation, route}: any) => {
                         }}
                       />
                     </View>
-
-                    <Text
-                      style={{
-                        borderColor: colors.gray,
-                        paddingVertical: wp(1),
-                        color: colors.black,
-                      }}>
-                      {SelectedUnit ? SelectedUnit : 'Select Unit'}
-                    </Text>
+                    <View
+                      style={{borderBottomWidth: 1, borderColor: colors.black}}>
+                      <Text
+                        style={{
+                          paddingVertical: wp(2),
+                          color: colors.gray,
+                        }}>
+                        {SelectedUnit ? SelectedUnit : 'Select Unit'}
+                      </Text>
+                    </View>
                   </TouchableOpacity>
                 </View>
                 <TouchableOpacity
@@ -517,27 +502,14 @@ const LandProductScreen = ({navigation, route}: any) => {
 
                 <View style={styles.attachment}>
                   <Text style={styles.txt}>Attached Photo</Text>
-
-                  <TouchableOpacity
-                    style={styles.arrorwStyle}
-                    onPress={() => {
-                      settoCaptureImage(true);
-                    }}
-                    disabled={Images.length >= 2 ? true : false}>
-                    <Entypo
-                      name="attachment"
-                      color={colors.black}
-                      size={wp(5)}
-                      style={{alignSelf: 'flex-end'}}
-                    />
-                  </TouchableOpacity>
                 </View>
                 <View
                   style={{
                     flexDirection: 'row',
+                    alignItems: 'center',
                     flexWrap: 'wrap',
                   }}>
-                  {Images.length >= 1 ? (
+                  {Images.length >= 1 &&
                     Images.map((item, index1: number) => {
                       return (
                         <View key={index1} style={{marginLeft: wp(8)}}>
@@ -550,11 +522,12 @@ const LandProductScreen = ({navigation, route}: any) => {
                             }}
                             style={{
                               alignSelf: 'flex-end',
-                              borderRadius: 78,
+                              borderRadius: 100,
                               backgroundColor: colors.red,
+                              position: 'absolute',
                               padding: wp(1),
-                              left: wp(3),
-                              top: wp(3.5),
+                              right: -wp(2),
+                              top: -wp(2),
                               zIndex: 100,
                             }}>
                             <SvgXml width={wp(4)} height={wp(4)} xml={cross} />
@@ -565,24 +538,27 @@ const LandProductScreen = ({navigation, route}: any) => {
                             style={{
                               height: wp(37),
                               width: wp(37),
-                              // margin: wp(5),
-                              borderRadius: 10,
-                              // borderWidth: 1,
+                              borderRadius: wp(3),
                             }}
                           />
                         </View>
                       );
-                    })
-                  ) : (
-                    <View
+                    })}
+                  {Images.length < 2 && (
+                    <TouchableOpacity
+                      onPress={() => {
+                        settoCaptureImage(true);
+                      }}
                       style={{
-                        height: wp(35),
-                        width: wp(35),
-                        borderRadius: wp(5),
+                        height: wp(37),
+                        width: wp(37),
+                        borderRadius: wp(3),
                         justifyContent: 'center',
                         alignItems: 'center',
                         marginHorizontal: wp(8),
+                        top: -wp(2),
                         backgroundColor: '#C4C4C4',
+                        borderWidth: 1,
                       }}>
                       <View
                         style={{
@@ -592,7 +568,7 @@ const LandProductScreen = ({navigation, route}: any) => {
                           borderColor: '#C0904E',
                         }}
                       />
-                    </View>
+                    </TouchableOpacity>
                   )}
                 </View>
                 {!ImagesValue && (
@@ -779,7 +755,10 @@ const LandProductScreen = ({navigation, route}: any) => {
               // paddin,
             }}>
             <View style={{width: '45%', height: hp(5)}}>
-              <OpenCamera callbackImage={getSelectedImage.bind(this)} />
+              <OpenCamera
+                callbackImage={getSelectedImage.bind(this)}
+                modalExit={() => settoCaptureImage(false)}
+              />
             </View>
             <View
               style={{
@@ -788,7 +767,10 @@ const LandProductScreen = ({navigation, route}: any) => {
               }}
             />
             <View style={{width: '45%', height: hp(5)}}>
-              <OpenGallery callbackImage={getSelectedImage.bind(this)} />
+              <OpenGallery
+                callbackImage={getSelectedImage.bind(this)}
+                modalExit={() => settoCaptureImage(false)}
+              />
             </View>
           </View>
         </View>

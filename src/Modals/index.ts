@@ -5,6 +5,7 @@ import {ModalTypes} from './modalTypes';
 import {SuccessModal} from './successModal';
 import {SearchPort} from './searchPort';
 import {SearchPlaces} from './searchPlaces';
+import {UpdatePrice} from './updatePrice';
 export {
   SelectCountryModal,
   SearchCity,
@@ -12,4 +13,5 @@ export {
   SuccessModal,
   SearchPort,
   SearchPlaces,
+  UpdatePrice,
 };
