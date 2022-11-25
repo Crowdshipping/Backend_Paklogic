@@ -7,6 +7,15 @@ import {
 import {colors} from '../../../theme';
 
 export const styles = StyleSheet.create({
+  mainContainer: {flex: 1, backgroundColor: colors.white},
+  caretDesign: {alignSelf: 'center', marginLeft: hp(1)},
+  paymentText: {
+    fontSize: 16,
+    padding: 1,
+    color: colors.black,
+    textAlign: 'center',
+  },
+
   viewlocation: {
     flexDirection: 'row',
     marginTop: hp(1.5),
@@ -44,7 +53,7 @@ export const styles = StyleSheet.create({
     fontSize: wp(4),
   },
   main: {
-    paddingTop: hp(5),
+    paddingTop: hp(2),
   },
   attachment: {
     flexDirection: 'row',

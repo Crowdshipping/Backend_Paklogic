@@ -1,124 +1,68 @@
-import {Platform, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import {colors} from '../../../theme';
+
 export const styles = StyleSheet.create({
-  txt1: {
-    color: colors.black,
-    fontSize: hp(2),
-  },
-  box: {
-    backgroundColor: 'lightgrey',
-    borderRadius: hp(3),
-    paddingHorizontal: hp(3),
-    paddingVertical: hp(1),
-    textDecorationLine: 'underline',
-  },
-  Touch: {
-    // backgroundColor: 'lightgrey',
-    // borderRadius: hp(1),
-    // paddingHorizontal: hp(1),
-    // paddingVertical: hp(1),
-    // flexDirection: 'row',
-    // alignSelf: 'center',
-    // justifyContent: 'space-between',
-    // width: wp(35),
-  },
-  bookingtxt: {
-    textAlign: 'center',
-    paddingVertical: hp(5),
-    fontSize: hp(2.5),
-    color: colors.red,
-  },
-  detailsbox: {
-    marginTop: hp(6),
-    elevation: 8,
-    marginHorizontal: wp(5),
-    paddingHorizontal: wp(5),
-
-    shadowColor: Platform.OS === 'android' ? colors.black : colors.gray,
-    borderRadius: hp(2),
-    backgroundColor: colors.white,
-
-    shadowOffset: {
-      width: 1,
-      height: 1,
-    },
-    shadowOpacity: 10,
-    shadowRadius: 5,
-  },
-  detailsboxinner: {
-    marginHorizontal: wp(5),
-    // paddingHorizontal: wp(3),
-    paddingVertical: hp(2),
-    borderColor: colors.red,
-
-    // borderWidth: 2,
-  },
-  flexrow: {
+  mainContainer: {flex: 1, backgroundColor: colors.white},
+  ActivityContainer: {flex: 1, justifyContent: 'center', alignSelf: 'center'},
+  tabViewContainer: {
     flexDirection: 'row',
-    // justifyContent: 'space-between',
-    borderBottomWidth: 2,
-  },
-  viewlocation: {
-    flexDirection: 'row',
-    marginTop: hp(1.5),
-    width: '100%',
-
-    paddingTop: hp(1),
-    paddingBottom: hp(2.5),
-  },
-
-  plane: {
-    marginRight: '5%',
-    alignItems: 'center',
-    justifyContent: 'center',
     alignSelf: 'center',
-    // borderWidth: 1,
-    // paddingBottom: hp(2),
+    marginTop: hp(2),
+    borderWidth: 1,
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    borderRadius: wp(2),
   },
-  viewdetail: {
+  tabViewRight: {
+    borderLeftWidth: 0.5,
+
+    // borderWidth: 1,
+    borderTopRightRadius: wp(2),
+    borderBottomRightRadius: wp(2),
+  },
+  tabViewLeft: {
+    borderRightWidth: 0.5,
+
+    // borderWidth: 1,
+    borderTopLeftRadius: wp(2),
+    borderBottomLeftRadius: wp(2),
+  },
+  tabText: {
+    paddingHorizontal: wp(5),
+    paddingVertical: hp(1),
+    color: colors.black,
+  },
+  pageContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingHorizontal: wp(5),
   },
-  txtdetail: {
-    fontSize: 18,
-    color: colors.black,
-  },
-
-  test: {
-    borderColor: colors.red,
-    borderRadius: 10,
-    // marginBottom: 20,
-    // borderWidth: 1,
-    // justifyContent: 'center',
-    // flex: 1,
-  },
-
-  view1: {
-    // borderBottomWidth: 1,
-
-    justifyContent: 'center',
+  pageView: {
+    borderRadius: wp(2),
     alignItems: 'center',
-    // paddingVertical: 30,
-    paddingBottom: hp(4),
+    justifyContent: 'center',
+    backgroundColor: colors.red,
   },
-  // txt1: {
-  //   textAlign: 'center',
-  //   fontSize: 18,
-  //   // paddingHorizontal: 15,
-  //   paddingTop: 15,
-  //   // paddingBottom: 10,
-  // },
+  pageText: {
+    marginVertical: wp(1.5),
+    marginHorizontal: wp(2),
+    color: colors.white,
+  },
 
-  modal: {
-    backgroundColor: colors.white,
-    elevation: 5,
-
-    width: wp(80),
+  noAvailabilityContainer: {
+    backgroundColor: colors.boxBackground,
     alignSelf: 'center',
-    borderRadius: 10,
+    marginVertical: '40%',
+    paddingHorizontal: wp(10),
+    borderRadius: hp(2),
+  },
+  notAvailableText: {
+    textAlign: 'center',
+    color: colors.red,
+    fontSize: hp(2),
+    paddingVertical: hp(10),
   },
 });

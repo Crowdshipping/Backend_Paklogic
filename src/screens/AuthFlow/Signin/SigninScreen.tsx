@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   SafeAreaView,
   Text,
@@ -7,10 +7,7 @@ import {
   Alert,
   BackHandler,
 } from 'react-native';
-import {
-  heightPercentageToDP,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
+import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
 import {styles} from './style';
 import {Textbox, Button, Header} from '../../../components';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -22,18 +19,18 @@ import {signIn, AddPlayer} from '../../../API';
 import OneSignal from 'react-native-onesignal';
 import {EMAIL_REGEX} from '../../../appConstants';
 import {AppContext} from '../../../../App';
-import {colors} from '../../../theme';
 import {CommonActions, useFocusEffect} from '@react-navigation/native';
 
 const SigninScreen = ({navigation}: any) => {
   const {setUserData} = useContext(AppContext);
-  const [emailValue, setemailValue] = useState(true);
-  const [passwordValue, setpasswordValue] = useState(true);
-  const [email, setemail] = useState(__DEV__ ? 'Salman090898@gmail.com' : '');
-  const [password, setpassword] = useState(__DEV__ ? 'Qwerty1@' : '');
+  const [emailValue, setemailValue] = useState('');
+  const [passwordValue, setpasswordValue] = useState('');
 
-  // const [email, setemail] = useState('');
-  // const [password, setpassword] = useState('');
+  // const [email, setemail] = useState(__DEV__ ? 'Salman090898@gmail.com' : '');
+  // const [password, setpassword] = useState(__DEV__ ? 'Qwerty1@' : '');
+
+  const [email, setemail] = useState('');
+  const [password, setpassword] = useState('');
   // const [email, setemail] = useState(__DEV__ ? 'Salman@gmail.com' : '');
   // const [password, setpassword] = useState(__DEV__ ? 'Muneeb1@' : '');
 
@@ -44,14 +41,18 @@ const SigninScreen = ({navigation}: any) => {
   async function handleSubmit() {
     let validate = true;
 
-    if (!EMAIL_REGEX.test(email.trim())) {
-      setemailValue(false);
+    if (email.length === 0) {
+      setemailValue('Email is Required');
+      validate = false;
+    } else if (!EMAIL_REGEX.test(email.trim())) {
+      setemailValue('Invalid Email');
       validate = false;
     }
-    if (!(password.length > 1)) {
-      setpasswordValue(false);
+    if (password.length === 0) {
+      setpasswordValue('Password is Required');
       validate = false;
     }
+
     if (validate) {
       setloading(true);
       try {
@@ -87,7 +88,6 @@ const SigninScreen = ({navigation}: any) => {
     }
   }
 
-
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
@@ -108,7 +108,7 @@ const SigninScreen = ({navigation}: any) => {
   );
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.mainContainer}>
       <KeyboardAwareScrollView>
         <Header
           title={'Sign in'}
@@ -127,15 +127,9 @@ const SigninScreen = ({navigation}: any) => {
         <Textbox
           title={'Email'}
           placeholder={'Email'}
-          errormsg={
-            !emailValue
-              ? email.length == 0
-                ? 'Email is Required'
-                : 'Invalid Email'
-              : ''
-          }
+          errormsg={emailValue}
           onChangeValue={(text: string) => {
-            setemailValue(true);
+            setemailValue('');
             setemail(text);
           }}
         />
@@ -144,15 +138,9 @@ const SigninScreen = ({navigation}: any) => {
           placeholder={'Password'}
           password={true}
           eye={true}
-          errormsg={
-            !passwordValue
-              ? password.length == 0
-                ? 'Password is Required'
-                : 'Invalid Password'
-              : ''
-          }
+          errormsg={passwordValue}
           onChangeValue={(text: string) => {
-            setpasswordValue(true);
+            setpasswordValue('');
             setpassword(text);
           }}
         />
@@ -161,7 +149,7 @@ const SigninScreen = ({navigation}: any) => {
         </TouchableOpacity>
 
         <View style={styles.registerView}>
-          <Text style={{color: colors.black}}>Don't have an Account ?</Text>
+          <Text style={styles.blackText}>Don't have an Account ?</Text>
           <TouchableOpacity
             onPress={() => {
               navigation.navigate('RegisterNumber', {from: 'signin'});
@@ -169,7 +157,7 @@ const SigninScreen = ({navigation}: any) => {
             <Text style={styles.btnText}> Register Now</Text>
           </TouchableOpacity>
         </View>
-        <View style={{marginBottom: heightPercentageToDP(10)}}>
+        <View style={styles.btnView}>
           <Button
             title="Next"
             onPress={() => {

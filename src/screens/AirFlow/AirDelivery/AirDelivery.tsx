@@ -99,8 +99,7 @@ const AirDelivery = ({navigation}: any) => {
   }
 
   return (
-    <SafeAreaView
-      style={{display: 'flex', flex: 1, backgroundColor: colors.white}}>
+    <SafeAreaView style={styles.mainContainer}>
       <View style={styles.container}>
         <MapView
           provider={PROVIDER_GOOGLE} // remove if not using Google Maps
@@ -139,9 +138,6 @@ const AirDelivery = ({navigation}: any) => {
           }}
           style={{
             borderBottomWidth: 1,
-            // marginTop: hp(2),
-            // marginBottom: hp(1),
-            // paddingHorizontal: wp(5),
             marginHorizontal: wp(5),
           }}>
           <Text
@@ -167,10 +163,8 @@ const AirDelivery = ({navigation}: any) => {
           }}
           style={{
             borderBottomWidth: 1,
-            marginTop: hp(2),
-            // marginBottom: hp(1),
-            // paddingHorizontal: wp(5),
             marginHorizontal: wp(5),
+            marginTop: hp(2),
           }}>
           <Text
             style={{

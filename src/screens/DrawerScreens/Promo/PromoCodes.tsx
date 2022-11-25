@@ -2,39 +2,24 @@ import React, {useContext, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Alert,
-  BackHandler,
   Image,
   SafeAreaView,
   ScrollView,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {styles} from './style';
-import {
-  Textbox,
-  Button,
-  Address,
-  PhoneNumberPicker,
-  Header,
-  MineCard,
-} from '../../../components';
-import {SvgXml} from 'react-native-svg';
-import {register} from '../../../theme/assets/svg';
-import {registerUser} from '../../../API/registerUser';
-import {SuccessModal} from '../../../Modals';
-import {EMAIL_REGEX, PASS_REGEX} from '../../../appConstants';
+import {Header} from '../../../components';
 import {colors} from '../../../theme';
-import {CommonActions, useFocusEffect} from '@react-navigation/native';
+import {CommonActions} from '@react-navigation/native';
 import {LogoutApi, getPromoCodes} from '../../../API';
 import moment from 'moment';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {promotions} from '../../../theme/assets/images';
 import {AppContext} from '../../../../App';
 
-const PromoCodes = ({route, navigation}: any) => {
+const PromoCodes = ({navigation}: any) => {
   const {setNotificationData} = useContext(AppContext);
 
   const [isLoading, setIsLoading] = React.useState(true);
@@ -76,87 +61,88 @@ const PromoCodes = ({route, navigation}: any) => {
       ) : promoData.length > 0 ? (
         <ScrollView>
           {promoData.map((item: any, index: number) => {
-          return (
-            <View key={index} style={styles.detailsboxinner}>
-              <View style={styles.flexrow}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Image source={promotions} style={styles.img} />
+            return (
+              <View key={index} style={styles.detailsboxinner}>
+                <View style={styles.flexrow}>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Image source={promotions} style={styles.img} />
 
-                  {item.promoName && (
-                    <Text style={[styles.txtdetail, {marginHorizontal: '5%'}]}>
-                      {item.promoName}
+                    {item.promoName && (
+                      <Text
+                        style={[styles.txtdetail, {marginHorizontal: '5%'}]}>
+                        {item.promoName}
+                      </Text>
+                    )}
+                  </View>
+
+                  <Text
+                    style={{textAlignVertical: 'center', color: colors.black}}>
+                    Code:{' '}
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        fontWeight: '600',
+                        color: colors.red,
+                      }}>
+                      {item.promoCodePin}
                     </Text>
-                  )}
+                  </Text>
                 </View>
 
-                <Text
-                  style={{textAlignVertical: 'center', color: colors.black}}>
-                  Code:{' '}
+                <Text style={[styles.txtdetail, {width: '90%'}]}>
+                  Use Promo code {item.promoCodePin} to get{' '}
+                  {item.discountPercent}% off on any booking
+                </Text>
+                <View
+                  style={{
+                    alignItems: 'center',
+                    width: '100%',
+                    flexDirection: 'row',
+                    paddingHorizontal: wp(1),
+                  }}>
                   <Text
                     style={{
-                      fontSize: 20,
-                      fontWeight: '600',
-                      color: colors.red,
+                      color: colors.black,
+                      fontSize: hp(2.5),
+                      marginRight: wp(3),
                     }}>
-                    {item.promoCodePin}
+                    Available only
                   </Text>
-                </Text>
-              </View>
 
-              <Text style={[styles.txtdetail, {width: '90%'}]}>
-                Use Promo code {item.promoCodePin} to get {item.discountPercent}
-                % off on any booking
-              </Text>
-              <View
-                style={{
-                  alignItems: 'center',
-                  width: '100%',
-                  flexDirection: 'row',
-                  paddingHorizontal: wp(1),
-                }}>
-                <Text
-                  style={{
-                    color: colors.black,
-                    fontSize: hp(2.5),
-                    marginRight: wp(3),
-                  }}>
-                  Available only
-                </Text>
-
-                <Text style={{color: colors.black}}>
-                  From:{' '}
-                  {moment(item.availableTill).format('YYYY-MM-DD hh:mm:ss')}{' '}
-                  {'\n'}
-                  To: {moment(item.availableTill).format('YYYY-MM-DD hh:mm:ss')}
-                </Text>
+                  <Text style={{color: colors.black}}>
+                    From:{' '}
+                    {moment(item.availableTill).format('YYYY-MM-DD hh:mm:ss')}{' '}
+                    {'\n'}
+                    To:{' '}
+                    {moment(item.availableTill).format('YYYY-MM-DD hh:mm:ss')}
+                  </Text>
+                </View>
               </View>
-            </View>
-          );
-        })}
+            );
+          })}
         </ScrollView>
-        
       ) : (
         <View
-                  style={{
-                    backgroundColor: colors.boxBackground,
-                    // backgroundColor: 'aqua',
-                    alignSelf: 'center',
-                    // paddingVertical: hp(10),
-                    marginVertical: '40%',
-                    
-                    paddingHorizontal: wp(10),
-                    borderRadius: hp(2),
-                  }}>
-                  <Text
-                    style={{
-                      textAlign: 'center',
-                      color: colors.red,
-                      fontSize: hp(2),
-                      paddingVertical: hp(10)
-                    }}>
-                    Sorry no promos available
-                  </Text>
-                </View>
+          style={{
+            backgroundColor: colors.boxBackground,
+            // backgroundColor: 'aqua',
+            alignSelf: 'center',
+            // paddingVertical: hp(10),
+            marginVertical: '40%',
+
+            paddingHorizontal: wp(10),
+            borderRadius: hp(2),
+          }}>
+          <Text
+            style={{
+              textAlign: 'center',
+              color: colors.red,
+              fontSize: hp(2),
+              paddingVertical: hp(10),
+            }}>
+            Sorry no promos available
+          </Text>
+        </View>
       )}
     </SafeAreaView>
   );

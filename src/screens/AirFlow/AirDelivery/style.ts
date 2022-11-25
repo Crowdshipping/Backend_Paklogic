@@ -6,6 +6,7 @@ import {
 } from 'react-native-responsive-screen';
 
 export const styles = StyleSheet.create({
+  mainContainer: {flex: 1, backgroundColor: colors.white},
   container: {
     ...StyleSheet.absoluteFillObject,
     // height: hp(65),

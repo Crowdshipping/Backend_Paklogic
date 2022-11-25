@@ -6,11 +6,11 @@ import {
   ScrollView,
   Image,
   Alert,
+  SafeAreaView,
   ActivityIndicator,
 } from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {location} from '../../../theme/assets/svg';
 import {mapp} from '../../../theme/assets/images';
 
@@ -549,7 +549,7 @@ const BookingListScreen = ({navigation, route}: any) => {
                     alignSelf: 'center',
                     // paddingVertical: hp(10),
                     marginVertical: '40%',
-                    
+
                     paddingHorizontal: wp(10),
                     borderRadius: hp(2),
                   }}>
@@ -558,7 +558,7 @@ const BookingListScreen = ({navigation, route}: any) => {
                       textAlign: 'center',
                       color: colors.red,
                       fontSize: hp(2),
-                      paddingVertical: hp(10)
+                      paddingVertical: hp(10),
                     }}>
                     Sorry no bookings available
                   </Text>

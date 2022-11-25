@@ -1,6 +1,5 @@
 import React from 'react';
-import {Text, View, Image} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {Text, View, SafeAreaView, Image} from 'react-native';
 // import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {
   widthPercentageToDP as wp,

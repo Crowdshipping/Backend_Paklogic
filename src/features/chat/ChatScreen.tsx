@@ -49,7 +49,6 @@ const ChatScreen = ({navigation, route}: any) => {
   const [receiverData, setreceiverData] = useState<any>({});
 
   function onError(error: any) {
-
     if (error.response.status === 401) {
       LogoutApi();
       Alert.alert('Session Expired', 'Please login again');
@@ -81,8 +80,7 @@ const ChatScreen = ({navigation, route}: any) => {
     } else {
       try {
         const result: any = await getPrivateChat(receiverId);
-        console.log(JSON.stringify(result.userA))
-        setreceiverData(result.userA)
+        setreceiverData(result.userA);
         setMyData(result.userB);
         if (result.initiated === false) await createPrivateChat(receiverId);
         else setMessages(result.chat.reverse());
@@ -321,7 +319,14 @@ const ChatScreen = ({navigation, route}: any) => {
         backgroundColor: colors.white,
         alignSelf: 'center',
       }}>
-      <Header title={receiverData?.firstname ? `${receiverData?.firstname} ${receiverData?.lastname}` : ""} pressMethod={() => navigation.goBack()} />
+      <Header
+        title={
+          receiverData?.firstname
+            ? `${receiverData?.firstname} ${receiverData?.lastname}`
+            : ''
+        }
+        pressMethod={() => navigation.goBack()}
+      />
       {isloading ? (
         <ActivityIndicator
           size={'small'}

@@ -29,7 +29,6 @@ const TrackFlight = ({route, navigation}: any) => {
     destinationAirportLocation,
   } = route.params;
 
-  console.log(departureAirportLocation, destinationAirportLocation)
   const ref = useRef<MapView>(null);
 
   const [isLoading, setLoading] = useState(true);

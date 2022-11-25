@@ -8,13 +8,13 @@ import {
   ImageBackground,
   TextInput,
   Alert,
+  SafeAreaView,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {updateUser, postImage, LogoutApi} from '../../../API';
 import {Button, Header} from '../../../components';
 import {background} from '../../../theme/assets/images';
@@ -98,7 +98,6 @@ const EditProfile = ({navigation, route}: any) => {
       setIsloading(true);
       postImage([newImage])
         .then((rest: any) => {
- 
           updateUser({
             address: getaddress,
             email,
@@ -363,7 +362,10 @@ const EditProfile = ({navigation, route}: any) => {
               // paddin,
             }}>
             <View style={{width: '45%', height: hp(5)}}>
-              <OpenCamera callbackImage={getSelectedImage.bind(this)} modalExit={()=> settoCaptureImage(false)}/>
+              <OpenCamera
+                callbackImage={getSelectedImage.bind(this)}
+                modalExit={() => settoCaptureImage(false)}
+              />
             </View>
             <View
               style={{
@@ -372,7 +374,10 @@ const EditProfile = ({navigation, route}: any) => {
               }}
             />
             <View style={{width: '45%', height: hp(5)}}>
-              <OpenGallery callbackImage={getSelectedImage.bind(this)} modalExit={()=> settoCaptureImage(false)}/>
+              <OpenGallery
+                callbackImage={getSelectedImage.bind(this)}
+                modalExit={() => settoCaptureImage(false)}
+              />
             </View>
           </View>
         </View>

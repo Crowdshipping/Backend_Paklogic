@@ -7,13 +7,8 @@ import {
   Text,
   TouchableOpacity,
   RefreshControl,
+  SafeAreaView,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-
-import {
-  heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
 
 import {BookingListCard, Header} from '../../../components';
 import {CommonActions, useIsFocused} from '@react-navigation/native';
@@ -29,12 +24,15 @@ import {
 import {colors} from '../../../theme';
 import {AppContext} from '../../../../App';
 import {UpdatePrice} from '../../../Modals';
+import {styles} from './style';
 
 const BookingHistory = ({navigation}: any) => {
   const {setNotificationData} = useContext(AppContext);
 
   const [isLoading, setLoading] = useState(true);
   const [isUpdatePrice, setisUpdatePrice] = useState(false);
+  const [tabRequest, settabRequest] = useState(true);
+  const [tabpostRequest, settabpostRequest] = useState(false);
 
   const [data, setData] = useState([]);
   const [postData, setPostData] = useState([]);
@@ -46,11 +44,8 @@ const BookingHistory = ({navigation}: any) => {
   const [updatePricePostRequestId, setupdatePricePostRequestId] = useState('');
   const isfocus = useIsFocused();
   const scrollRef = useRef<ScrollView>(null);
-  const [tabRequest, settabRequest] = useState(true);
-  const [tabpostRequest, settabpostRequest] = useState(false);
 
   const onRefresh = React.useCallback(() => {
-    // setRefreshing(true);
     fetchData();
   }, []);
 
@@ -115,9 +110,7 @@ const BookingHistory = ({navigation}: any) => {
   useEffect(() => {
     if (isfocus) {
       setNotificationData({});
-      // fetchData();
       getData();
-      // fetchPostData();
     }
   }, [isfocus]);
 
@@ -159,59 +152,35 @@ const BookingHistory = ({navigation}: any) => {
   }
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
+    <SafeAreaView style={styles.mainContainer}>
       <Header title="Booking History" pressMethod={() => navigation.goBack()} />
 
-      <View
-        style={{
-          flexDirection: 'row',
-          alignSelf: 'center',
-          marginTop: hp(2),
-          borderWidth: 1,
-          backgroundColor: 'rgba(255,255,255,0.9)',
-          borderRadius: wp(2),
-        }}>
+      <View style={styles.tabViewContainer}>
         <TouchableOpacity
           disabled={tabRequest}
           onPress={() => {
             settabRequest(true), settabpostRequest(false);
           }}
-          style={{
-            borderRightWidth: 0.5,
-            borderTopLeftRadius: wp(2),
-            borderBottomLeftRadius: wp(2),
-            backgroundColor: tabRequest ? colors.boxBackground : colors.white,
-          }}>
-          <Text
-            style={{
-              paddingHorizontal: wp(5),
-              paddingVertical: hp(1),
-              color: colors.black,
-            }}>
-            My Requests
-          </Text>
+          style={[
+            styles.tabViewLeft,
+            {backgroundColor: tabRequest ? colors.boxBackground : colors.white},
+          ]}>
+          <Text style={styles.tabText}>My Requests</Text>
         </TouchableOpacity>
         <TouchableOpacity
           disabled={tabpostRequest}
           onPress={() => {
             settabpostRequest(true), settabRequest(false);
           }}
-          style={{
-            borderLeftWidth: 0.5,
-            borderTopRightRadius: wp(2),
-            borderBottomRightRadius: wp(2),
-            backgroundColor: tabpostRequest
-              ? colors.boxBackground
-              : colors.white,
-          }}>
-          <Text
-            style={{
-              paddingHorizontal: wp(5),
-              paddingVertical: hp(1),
-              color: colors.black,
-            }}>
-            Bookings
-          </Text>
+          style={[
+            styles.tabViewRight,
+            {
+              backgroundColor: tabpostRequest
+                ? colors.boxBackground
+                : colors.white,
+            },
+          ]}>
+          <Text style={styles.tabText}>Bookings</Text>
         </TouchableOpacity>
       </View>
 
@@ -219,12 +188,12 @@ const BookingHistory = ({navigation}: any) => {
         <ActivityIndicator
           size={'small'}
           color={colors.red}
-          style={{flex: 1, justifyContent: 'center', alignSelf: 'center'}}
+          style={styles.ActivityContainer}
         />
       ) : tabRequest && data.length > 0 ? (
         <ScrollView
           ref={scrollRef}
-          style={{height: '90%'}}
+          // style={{height: '90%'}}
           refreshControl={
             <RefreshControl
               refreshing={isLoading}
@@ -400,20 +369,10 @@ const BookingHistory = ({navigation}: any) => {
             );
           })}
           {data.length > 10 && (
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingHorizontal: wp(5),
-              }}>
+            <View style={styles.pageContainer}>
               <TouchableOpacity
                 disabled={prev === 0 ? true : false}
-                style={{
-                  borderRadius: wp(2),
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: colors.red,
-                }}
+                style={styles.pageView}
                 onPress={() => {
                   setprev(prev - 10);
                   setnext(next - 10);
@@ -422,23 +381,11 @@ const BookingHistory = ({navigation}: any) => {
                     animated: true,
                   });
                 }}>
-                <Text
-                  style={{
-                    marginVertical: wp(1.5),
-                    marginHorizontal: wp(2),
-                    color: colors.white,
-                  }}>
-                  Prev
-                </Text>
+                <Text style={styles.pageText}>Prev</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 disabled={next >= data.length ? true : false}
-                style={{
-                  borderRadius: wp(2),
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: colors.red,
-                }}
+                style={styles.pageView}
                 onPress={() => {
                   setnext(next + 10);
                   setprev(prev + 10);
@@ -447,20 +394,13 @@ const BookingHistory = ({navigation}: any) => {
                     animated: true,
                   });
                 }}>
-                <Text
-                  style={{
-                    marginVertical: wp(1.5),
-                    marginHorizontal: wp(2),
-                    color: colors.white,
-                  }}>
-                  Next
-                </Text>
+                <Text style={styles.pageText}>Next</Text>
               </TouchableOpacity>
             </View>
           )}
         </ScrollView>
       ) : tabpostRequest && postData.length > 0 ? (
-        <ScrollView ref={scrollRef} style={{height: '90%'}}>
+        <ScrollView ref={scrollRef}>
           {postData
             .slice(postprev, postnext)
             .map((item: any, index: number) => {
@@ -567,20 +507,10 @@ const BookingHistory = ({navigation}: any) => {
               );
             })}
           {postData.length > 10 && (
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingHorizontal: wp(5),
-              }}>
+            <View style={styles.pageContainer}>
               <TouchableOpacity
                 disabled={postprev === 0 ? true : false}
-                style={{
-                  borderRadius: wp(2),
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: colors.red,
-                }}
+                style={styles.pageView}
                 onPress={() => {
                   setpostprev(postprev - 10);
                   setpostnext(postnext - 10);
@@ -589,23 +519,11 @@ const BookingHistory = ({navigation}: any) => {
                     animated: true,
                   });
                 }}>
-                <Text
-                  style={{
-                    marginVertical: wp(1.5),
-                    marginHorizontal: wp(2),
-                    color: colors.white,
-                  }}>
-                  Prev
-                </Text>
+                <Text style={styles.pageText}>Prev</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 disabled={postnext >= postData.length ? true : false}
-                style={{
-                  borderRadius: wp(2),
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: colors.red,
-                }}
+                style={styles.pageView}
                 onPress={() => {
                   setpostprev(postprev + 10);
                   setpostnext(postnext + 10);
@@ -614,37 +532,14 @@ const BookingHistory = ({navigation}: any) => {
                     animated: true,
                   });
                 }}>
-                <Text
-                  style={{
-                    marginVertical: wp(1.5),
-                    marginHorizontal: wp(2),
-                    color: colors.white,
-                  }}>
-                  Next
-                </Text>
+                <Text style={styles.pageText}>Next</Text>
               </TouchableOpacity>
             </View>
           )}
         </ScrollView>
       ) : (
-        <View
-          style={{
-            backgroundColor: colors.boxBackground,
-            // backgroundColor: 'aqua',
-            alignSelf: 'center',
-            // paddingVertical: hp(10),
-            marginVertical: '40%',
-
-            paddingHorizontal: wp(10),
-            borderRadius: hp(2),
-          }}>
-          <Text
-            style={{
-              textAlign: 'center',
-              color: colors.red,
-              fontSize: hp(2),
-              paddingVertical: hp(10),
-            }}>
+        <View style={styles.noAvailabilityContainer}>
+          <Text style={styles.notAvailableText}>
             Sorry no bookings available
           </Text>
         </View>
@@ -660,9 +555,6 @@ const BookingHistory = ({navigation}: any) => {
           updatePriceHandler(text);
           setisUpdatePrice(false);
         }}
-        // update={(text: string) => {
-        //   setupdatePrice(text);
-        // }}
       />
     </SafeAreaView>
   );

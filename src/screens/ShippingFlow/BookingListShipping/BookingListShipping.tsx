@@ -6,9 +6,9 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {SafeAreaView} from 'react-native-safe-area-context';
 
 import moment from 'moment';
 import {
@@ -333,26 +333,26 @@ const BookingListShipping = ({navigation, route}: any) => {
                   marineShipsProvider &&
                   marineShipsProvider.length < 1 && (
                     <View
-                  style={{
-                    backgroundColor: colors.boxBackground,
-                    // backgroundColor: 'aqua',
-                    alignSelf: 'center',
-                    // paddingVertical: hp(10),
-                    marginVertical: '40%',
-                    
-                    paddingHorizontal: wp(10),
-                    borderRadius: hp(2),
-                  }}>
-                  <Text
-                    style={{
-                      textAlign: 'center',
-                      color: colors.red,
-                      fontSize: hp(2),
-                      paddingVertical: hp(10)
-                    }}>
-                    Sorry no bookings available
-                  </Text>
-                </View>
+                      style={{
+                        backgroundColor: colors.boxBackground,
+                        // backgroundColor: 'aqua',
+                        alignSelf: 'center',
+                        // paddingVertical: hp(10),
+                        marginVertical: '40%',
+
+                        paddingHorizontal: wp(10),
+                        borderRadius: hp(2),
+                      }}>
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          color: colors.red,
+                          fontSize: hp(2),
+                          paddingVertical: hp(10),
+                        }}>
+                        Sorry no bookings available
+                      </Text>
+                    </View>
                   )}
               </ScrollView>
             </View>

@@ -4,12 +4,10 @@ import {
   StyleSheet,
   View,
   ScrollView,
-  Image,
   TextInput,
-  Platform,
   Alert,
+  SafeAreaView,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {Button, Header} from '../../../components';
 import {
   widthPercentageToDP as wp,

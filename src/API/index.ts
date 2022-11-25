@@ -1,3 +1,4 @@
+import {getClientSecret} from './getClientSecret';
 import {forgotPassword} from './forgotPassword';
 import {passwordOtp} from './passwordOtp';
 import {registerUser} from './registerUser';
@@ -114,4 +115,5 @@ export {
   createPrivateChat,
   getAllPrivateChats,
   updateSuggestedPrice,
+  getClientSecret,
 };

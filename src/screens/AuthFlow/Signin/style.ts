@@ -5,10 +5,8 @@ import {
 } from 'react-native-responsive-screen';
 import {colors} from '../../../theme';
 export const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
+  mainContainer: {flex: 1, backgroundColor: colors.white},
+
   forgotText: {textAlign: 'right', paddingHorizontal: wp(5), color: colors.red},
   registerView: {
     flexDirection: 'row',
@@ -19,4 +17,6 @@ export const styles = StyleSheet.create({
   btnText: {
     color: colors.red,
   },
+  blackText: {color: colors.black},
+  btnView: {marginBottom: hp(10)},
 });

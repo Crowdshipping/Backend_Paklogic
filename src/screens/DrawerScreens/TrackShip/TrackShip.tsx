@@ -29,7 +29,6 @@ const TrackShip = ({route, navigation}: any) => {
   const {mmsiNumber, pickupAddress, dropAddress, eta, receiverId} =
     route.params;
 
-    console.log(JSON.stringify({pickupAddress}), JSON.stringify({dropAddress}))
   // const [isLoading, setLoading] = useState(true);
   const [isLoading, setLoading] = useState(true);
   const [isCustomerRead, setCustomerRead] = useState<boolean>(true);
@@ -135,7 +134,6 @@ const TrackShip = ({route, navigation}: any) => {
               style={styles.map}
               onMapReady={onMapReadyHandler}>
               <Polyline
-              
                 coordinates={[
                   {latitude: pickupAddress.lat, longitude: pickupAddress.lng},
                   {latitude: data.LAT, longitude: data.LON},

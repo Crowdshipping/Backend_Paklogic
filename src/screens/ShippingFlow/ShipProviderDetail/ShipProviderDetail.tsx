@@ -1,18 +1,17 @@
 import React from 'react';
-import { Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {Text, View, SafeAreaView} from 'react-native';
 // import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import { Button, Header } from '../../../components';
-import { styles } from './style';
-import { SvgXml } from 'react-native-svg';
-import { avatar } from '../../../theme/assets/svg';
+import {Button, Header} from '../../../components';
+import {styles} from './style';
+import {SvgXml} from 'react-native-svg';
+import {avatar} from '../../../theme/assets/svg';
 import moment from 'moment';
 
-const ShipProviderDetail = ({ route, navigation }: any) => {
+const ShipProviderDetail = ({route, navigation}: any) => {
   const {
     MMSI,
     type,
@@ -37,7 +36,7 @@ const ShipProviderDetail = ({ route, navigation }: any) => {
   } = route.params?.data;
 
   return (
-    <SafeAreaView style={{ display: 'flex', flex: 1 }}>
+    <SafeAreaView style={{display: 'flex', flex: 1}}>
       <Header
         title="provider details"
         pressMethod={() => {

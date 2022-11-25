@@ -8,6 +8,7 @@ import {
   Alert,
   Image,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
 
 import {
@@ -18,7 +19,6 @@ import {
   PhoneNumberPicker,
 } from '../../../components';
 import {packagedetails, carlocation} from '../../../theme/assets/svg';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {SvgXml} from 'react-native-svg';
 import {

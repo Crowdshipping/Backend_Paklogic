@@ -8,7 +8,7 @@ import {colors} from '../theme';
 export const styles = StyleSheet.create({
   addressView: {
     flexDirection: 'row',
-    flex: 1
+    flex: 1,
     // justifyContent: 'space-around',
   },
   titleText: {

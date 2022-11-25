@@ -25,7 +25,6 @@ export const ModalTypes = (props: any) => {
       <View
         style={{
           width: wp(90),
-          //   height: hp(70),
           backgroundColor: colors.white,
           borderRadius: wp(2),
           padding: wp(5),

@@ -134,7 +134,6 @@ const LandReceiverDetail = ({navigation, route}: any) => {
         const createDriverRequestApi: any = await createDriverRequest(
           bookingApi.booking._id,
         );
-        console.log(createDriverRequestApi);
         if (createDriverRequestApi.success) {
           setsuccess(true);
         }

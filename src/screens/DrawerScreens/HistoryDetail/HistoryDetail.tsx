@@ -6,9 +6,9 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  SafeAreaView,
 } from 'react-native';
 import {SvgXml} from 'react-native-svg';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {Header} from '../../../components/header';
 import {location, plane, truck, shipsvg} from '../../../theme/assets/svg';
 
@@ -44,7 +44,7 @@ const HistoryDetail = ({navigation, route}: any) => {
     pickupCity,
     dropoffCity,
     destinationPort,
-    departurePort
+    departurePort,
   } = route.params.item;
 
   const [isCustomerRead, setCustomerRead] = useState<boolean>(true);
@@ -150,7 +150,7 @@ const HistoryDetail = ({navigation, route}: any) => {
                   }}>
                   {`$${bookingId.totalFare}`}
                 </Text>
-              ) : (route.params.item.suggestedPrice ? 
+              ) : route.params.item.suggestedPrice ? (
                 <Text
                   style={{
                     fontSize: 20,
@@ -158,8 +158,8 @@ const HistoryDetail = ({navigation, route}: any) => {
                     color: colors.red,
                   }}>
                   {`$${route.params.item.suggestedPrice}`}
-                </Text> : null
-              ) }
+                </Text>
+              ) : null}
             </View>
 
             <View style={styles.viewlocation}>

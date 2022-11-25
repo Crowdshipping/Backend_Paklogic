@@ -7,9 +7,9 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
+  SafeAreaView,
 } from 'react-native';
 
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -134,26 +134,26 @@ const Claims = ({navigation}: any) => {
               })
             ) : (
               <View
+                style={{
+                  backgroundColor: colors.boxBackground,
+                  // backgroundColor: 'aqua',
+                  alignSelf: 'center',
+                  // paddingVertical: hp(10),
+                  marginVertical: '40%',
+
+                  paddingHorizontal: wp(10),
+                  borderRadius: hp(2),
+                }}>
+                <Text
                   style={{
-                    backgroundColor: colors.boxBackground,
-                    // backgroundColor: 'aqua',
-                    alignSelf: 'center',
-                    // paddingVertical: hp(10),
-                    marginVertical: '40%',
-                    
-                    paddingHorizontal: wp(10),
-                    borderRadius: hp(2),
+                    textAlign: 'center',
+                    color: colors.red,
+                    fontSize: hp(2),
+                    paddingVertical: hp(10),
                   }}>
-                  <Text
-                    style={{
-                      textAlign: 'center',
-                      color: colors.red,
-                      fontSize: hp(2),
-                      paddingVertical: hp(10)
-                    }}>
-                    Sorry no claims available
-                  </Text>
-                </View>
+                  Sorry no claims available
+                </Text>
+              </View>
             )}
           </View>
         </ScrollView>

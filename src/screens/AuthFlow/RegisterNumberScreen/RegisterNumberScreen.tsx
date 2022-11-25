@@ -67,7 +67,7 @@ const RegisterNumberScreen = ({navigation, route}: any) => {
     }
   }
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
+    <SafeAreaView style={styles.mainContainer}>
       <KeyboardAwareScrollView>
         <Header
           title={'Register'}
@@ -83,12 +83,7 @@ const RegisterNumberScreen = ({navigation, route}: any) => {
           }}
         />
 
-        <SvgXml
-          xml={welcome}
-          style={{alignSelf: 'center'}}
-          // width={wp(90)}
-          // height={hp(50)}
-        />
+        <SvgXml xml={welcome} style={{alignSelf: 'center'}} />
 
         <View style={styles.inputContainer}>
           <PhoneNumberPicker
@@ -106,13 +101,11 @@ const RegisterNumberScreen = ({navigation, route}: any) => {
             }
             editable={!loading}
           />
-          {/* </View> */}
         </View>
 
         <Button
           title="Next"
           onPress={() => {
-            // navigation.navigate('Sign');
             handleSubmit();
           }}
           loading={loading}

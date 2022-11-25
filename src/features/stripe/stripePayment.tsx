@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   CardField,
   StripeProvider,
@@ -16,10 +16,13 @@ import {
   View,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-import {prodUrl} from '../../appConstants';
-import axios, {AxiosRequestConfig} from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {AvailDiscount, createPaymentsHistory, LogoutApi} from '../../API';
+
+import {
+  AvailDiscount,
+  createPaymentsHistory,
+  getClientSecret,
+  LogoutApi,
+} from '../../API';
 import {SuccessModal} from '../../Modals';
 import {colors} from '../../theme';
 import {
@@ -28,26 +31,24 @@ import {
 } from 'react-native-responsive-screen';
 import {CommonActions} from '@react-navigation/native';
 import {AppContext} from '../../../App';
-// import {PUBLISH_KEY, SECRET_KEY} from '@env';
 
 const StripePayment = ({navigation, route}: any) => {
-  const {amount, requestId} = route.params.item;
+  const {requestId} = route.params.item;
   const {userData} = useContext(AppContext);
-  // const [loading, setloading] = useState(false);
   const [isSuccess, setsuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingDiscount, setLoadingDiscount] = useState(false);
 
   const [promoCodePin, setpromoCodePin] = useState('');
-  const [newAmount, setnewAmount] = useState('');
+  const [amount, setAmount] = useState(route.params.item.amount);
 
-  const [paymentIntent, setPaymentIntent] = useState<any>({});
   const PUBLISH_KEY =
     'pk_test_51L97WUIw8THc1BYAKpDnvdc00Hoo8ofkQZUWrMRLyL5IUU3cfp5F5fxQgdKYgd5B0J3NqifAdFzZ1rNZuIjHJ8IL00KENpcO2i';
 
   const {confirmPayment} = useConfirmPayment();
 
   function onError(error: any) {
+    console.log('abcdefghijklmnopqrstuvwxyz', error);
     if (error.response.status === 401) {
       LogoutApi();
       Alert.alert('Session Expired', 'Please login again');
@@ -66,72 +67,46 @@ const StripePayment = ({navigation, route}: any) => {
     }
   }
   const handlePayment = async () => {
-    if (paymentIntent) {
+    if (amount < 1) {
+      return;
+    }
+    try {
       setLoading(true);
-      let SECRET_KEY = paymentIntent.client_secret;
-      await confirmPayment(SECRET_KEY, {
-        paymentMethodType: 'Card',
-      })
-        .then(result => {
-          if (result.paymentIntent) {
-            let data = {
-              amount: newAmount ? newAmount : amount,
-              requestId: requestId,
-              paymentIntentId: paymentIntent.id,
-            };
-            result.paymentIntent.status === 'Succeeded' &&
-              createPaymentsHistory(data)
-                .then((rest: any) => {
-                  rest.success && setsuccess(true);
-                })
-                .catch((error: any) => {
-                  onError(error);
-                })
-                .finally(() => setLoading(false));
-          } else if (result.error) {
-            setLoading(false);
-            Alert.alert(
-              result.error.localizedMessage
-                ? result.error.localizedMessage
-                : 'Something went wrong',
-            );
+      const getClientSecretApi: any = await getClientSecret({
+        amount,
+        name: `${userData.firstname} ${userData.lastname}`,
+        email: userData.email,
+      });
+      if (getClientSecretApi) {
+        const confirmPaymentApi: any = await confirmPayment(
+          getClientSecretApi.client_secret,
+          {paymentMethodType: 'Card'},
+        );
+
+        if (confirmPaymentApi?.paymentIntent?.status === 'Succeeded') {
+          const createPaymentsHistoryApi: any = await createPaymentsHistory({
+            amount: amount,
+            requestId: requestId,
+            paymentIntentId: confirmPaymentApi.paymentIntent.id,
+          });
+          if (createPaymentsHistoryApi.success) {
+            setsuccess(true);
           }
-        })
-        .catch(error => {
-          setLoading(false);
-          onError(error);
-        });
+        } else if (confirmPaymentApi?.error) {
+          Alert.alert(confirmPaymentApi.error.message);
+        }
+      }
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      onError(error);
     }
   };
 
-  const fetchClientSecret = async () => {
-    const userToken = await AsyncStorage.getItem('@userToken');
-
-    const config: AxiosRequestConfig = {
-      method: 'post',
-      url: `${prodUrl}/customer/securepayment2`,
-      headers: {
-        Authorization: `Bearer ${userToken}`,
-      },
-      data: {
-        name: `${userData.firstname} ${userData.lastname}`,
-        amount: newAmount ? newAmount : amount,
-        email: userData.email,
-      },
-    };
-
-    axios(config)
-      .then(response => {
-        setPaymentIntent(response.data.paymentIntent);
-      })
-      .catch(error => {
-        onError(error);
-      })
-      .finally(() => setLoading(false));
-    // });
-  };
-
   const getDiscount = () => {
+    if (amount < 1) {
+      return;
+    }
     let data = {
       amount,
       promoCodePin,
@@ -139,7 +114,7 @@ const StripePayment = ({navigation, route}: any) => {
     setLoadingDiscount(true);
     AvailDiscount(data)
       .then((result: any) => {
-        setnewAmount(result.discountedAmount);
+        setAmount(result.discountedAmount);
       })
       .catch(error => {
         onError(error);
@@ -147,10 +122,6 @@ const StripePayment = ({navigation, route}: any) => {
       .finally(() => setLoadingDiscount(false));
   };
 
-  useEffect(() => {
-    setLoading(true);
-    fetchClientSecret();
-  }, [newAmount]);
   return (
     <SafeAreaView
       style={{
@@ -251,7 +222,7 @@ const StripePayment = ({navigation, route}: any) => {
           }}>
           Total Amount: {amount}$
         </Text>
-        {newAmount ? (
+        {amount ? (
           <Text
             style={{
               textAlign: 'center',
@@ -261,7 +232,7 @@ const StripePayment = ({navigation, route}: any) => {
               color: 'green',
               fontWeight: 'bold',
             }}>
-            New Amount: {newAmount}$
+            New Amount: {amount}$
           </Text>
         ) : (
           <></>
@@ -274,10 +245,11 @@ const StripePayment = ({navigation, route}: any) => {
           }}
           cardStyle={{
             backgroundColor: colors.white,
+
             textColor: colors.black,
             borderWidth: 0.5,
             cursorColor: colors.black,
-            placeholderColor: colors.black,
+            placeholderColor: colors.gray,
           }}
           style={{
             width: '100%',

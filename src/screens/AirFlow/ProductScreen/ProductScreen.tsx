@@ -8,12 +8,13 @@ import {
   ImageBackground,
   Image,
   Alert,
+  SafeAreaView,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 
 import {Textbox, Button, MapHeader} from '../../../components';
 import {packagedetails, cross} from '../../../theme/assets/svg';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {mapp} from '../../../theme/assets/images';
 
@@ -416,7 +417,8 @@ const ProductScreen = ({navigation, route}: any) => {
                       style={{borderBottomWidth: 1, borderColor: colors.black}}>
                       <Text
                         style={{
-                          paddingVertical: wp(2),
+                          paddingVertical:
+                            Platform.OS === 'android' ? wp(1) : wp(2),
                           color: colors.gray,
                         }}>
                         {SelectedUnit ? SelectedUnit : 'Select Unit'}

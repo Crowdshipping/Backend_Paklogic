@@ -7,8 +7,8 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
+  SafeAreaView,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -75,26 +75,26 @@ const Complain = ({navigation}: any) => {
   const noComplainAvailable = () => {
     return (
       <View
-                  style={{
-                    backgroundColor: colors.boxBackground,
-                    // backgroundColor: 'aqua',
-                    alignSelf: 'center',
-                    // paddingVertical: hp(10),
-                    marginVertical: '40%',
-                    
-                    paddingHorizontal: wp(10),
-                    borderRadius: hp(2),
-                  }}>
-                  <Text
-                    style={{
-                      textAlign: 'center',
-                      color: colors.red,
-                      fontSize: hp(2),
-                      paddingVertical: hp(10)
-                    }}>
-                    Sorry no complains available
-                  </Text>
-                </View>
+        style={{
+          backgroundColor: colors.boxBackground,
+          // backgroundColor: 'aqua',
+          alignSelf: 'center',
+          // paddingVertical: hp(10),
+          marginVertical: '40%',
+
+          paddingHorizontal: wp(10),
+          borderRadius: hp(2),
+        }}>
+        <Text
+          style={{
+            textAlign: 'center',
+            color: colors.red,
+            fontSize: hp(2),
+            paddingVertical: hp(10),
+          }}>
+          Sorry no complains available
+        </Text>
+      </View>
     );
   };
 

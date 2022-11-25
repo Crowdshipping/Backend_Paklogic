@@ -1,7 +1,5 @@
-import React, {useState} from 'react';
-import {Text, StyleSheet, View, ScrollView, Image} from 'react-native';
-
-import {SafeAreaView} from 'react-native-safe-area-context';
+import React from 'react';
+import {Text, StyleSheet, View, ScrollView, SafeAreaView} from 'react-native';
 
 import {
   widthPercentageToDP as wp,

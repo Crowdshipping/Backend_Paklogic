@@ -9,6 +9,7 @@ import {
   Image,
   Platform,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
 
 import {
@@ -19,7 +20,6 @@ import {
   PhoneNumberPicker,
 } from '../../../components';
 import {carlocation} from '../../../theme/assets/svg';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {SvgXml} from 'react-native-svg';
 import {
@@ -262,7 +262,6 @@ const LandModifyRequest = ({navigation, route}: any) => {
       if (bookingId === '') {
         try {
           const imgUrl = await postImage(Images);
-          console.log('object');
           if (imgUrl.length === 2 && imgUrl[0].success && imgUrl[1].success) {
             productImage = imgUrl[0].imageUrl;
             productImage2 = imgUrl[1].imageUrl;

@@ -1,6 +1,12 @@
 import React, {useState} from 'react';
-import {Text, StyleSheet, View, ScrollView, TextInput} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {
+  Text,
+  StyleSheet,
+  View,
+  ScrollView,
+  TextInput,
+  SafeAreaView,
+} from 'react-native';
 import {Button, Header} from '../../../components';
 import {
   widthPercentageToDP as wp,

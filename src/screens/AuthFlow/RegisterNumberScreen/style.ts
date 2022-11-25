@@ -6,10 +6,8 @@ import {
 } from 'react-native-responsive-screen';
 
 export const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    // paddingHorizontal: 24,
-  },
+  mainContainer: {flex: 1, backgroundColor: colors.white},
+
   inputContainer: {
     flexDirection: 'row',
     justifyContent: 'center',

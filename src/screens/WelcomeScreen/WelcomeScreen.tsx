@@ -29,7 +29,7 @@ const WelcomeScreen = ({navigation}: any) => {
     }, []),
   );
   return (
-    <SafeAreaView style={{borderWidth: 1, flex: 1}}>
+    <SafeAreaView style={styles.mainContainer}>
       <Header title={'WELCOME'} />
 
       <SvgXml xml={welcome} style={{alignSelf: 'center'}} />
@@ -45,12 +45,12 @@ const WelcomeScreen = ({navigation}: any) => {
         onPress={() => navigation.navigate('RegisterNumber')}
       />
 
-        <Text style={styles.text}>
-          Crowd shipping corporation app is ground breaking crowd delivery
-          platform where multiple businesses and everyone shares delivery
-          providers to send and receive packages or goods for both local and
-          international delieveries
-        </Text>
+      <Text style={styles.text}>
+        Crowd shipping corporation app is ground breaking crowd delivery
+        platform where multiple businesses and everyone shares delivery
+        providers to send and receive packages or goods for both local and
+        international delieveries
+      </Text>
     </SafeAreaView>
   );
 };

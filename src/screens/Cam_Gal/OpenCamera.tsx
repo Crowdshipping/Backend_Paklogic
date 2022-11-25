@@ -20,13 +20,12 @@ interface IimageShow {
   type: string;
 }
 const OpenCamera = (props: any) => {
-
   const callbackImage = (objectImage: Object) => {
-    props.modalExit()
+    props.modalExit();
     props.callbackImage(objectImage);
   };
   const pickImage = async () => {
-    if (Platform.OS == 'android') {
+    if (Platform.OS === 'android') {
       await PermissionsAndroid.requestMultiple([
         PermissionsAndroid.PERMISSIONS.CAMERA,
         PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,

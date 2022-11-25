@@ -9,11 +9,11 @@ import {
   Image,
   Alert,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
 
 import {Textbox, Button, MapHeader} from '../../../components';
 import {packagedetails, cross} from '../../../theme/assets/svg';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {mapp} from '../../../theme/assets/images';
 
