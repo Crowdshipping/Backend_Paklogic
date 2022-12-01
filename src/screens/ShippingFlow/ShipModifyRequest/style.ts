@@ -7,6 +7,8 @@ import {
 import {colors} from '../../../theme';
 
 export const styles = StyleSheet.create({
+  mainContainer: {flex: 1, backgroundColor: colors.white},
+
   viewlocation: {
     flexDirection: 'row',
     marginTop: hp(1.5),

@@ -169,7 +169,7 @@ const ChatScreen = ({navigation, route}: any) => {
               }}
               style={styles.avatarStyle}
             />
-            <View style={{alignSelf: 'center', justifyContent: 'center'}}>
+            <View style={styles.chatContainer}>
               <Text style={[styles.messageTextStyle, {color: colors.white}]}>
                 {currentMessage.message}
               </Text>
@@ -198,7 +198,7 @@ const ChatScreen = ({navigation, route}: any) => {
               }}
               style={styles.avatarStyle}
             />
-            <View style={{alignSelf: 'center', justifyContent: 'center'}}>
+            <View style={styles.chatContainer}>
               {currentMessage.message ? (
                 <Text style={styles.messageTextStyle}>
                   {currentMessage.message}
@@ -269,12 +269,6 @@ const ChatScreen = ({navigation, route}: any) => {
               />
             )}
 
-            {/* <View
-              style={{
-                paddingHorizontal: wp(2),
-                alignSelf: 'center',
-                justifyContent: 'center',
-              }}> */}
             <Text style={[styles.messageTextStyle, {color: colors.white}]}>
               {currentMessage.message}
             </Text>
@@ -312,13 +306,7 @@ const ChatScreen = ({navigation, route}: any) => {
   };
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        paddingHorizontal: wp(4),
-        backgroundColor: colors.white,
-        alignSelf: 'center',
-      }}>
+    <SafeAreaView style={styles.mainContainer}>
       <Header
         title={
           receiverData?.firstname
@@ -331,7 +319,7 @@ const ChatScreen = ({navigation, route}: any) => {
         <ActivityIndicator
           size={'small'}
           color={colors.red}
-          style={{justifyContent: 'center', alignSelf: 'center'}}
+          style={styles.chatContainer}
         />
       ) : (
         <GiftedChat
@@ -350,10 +338,9 @@ const ChatScreen = ({navigation, route}: any) => {
           renderInputToolbar={renderInputToolbar}
           messagesContainerStyle={{
             backgroundColor: 'transparent',
-            width: wp(100),
+            // width: wp(100),
             alignSelf: 'center',
-            // flexWrap: 'wrap',
-            paddingHorizontal: wp(2),
+            // paddingHorizontal: wp(2),
           }}
           placeholder={'Type message'}
           renderSend={renderSend}
@@ -366,6 +353,7 @@ const ChatScreen = ({navigation, route}: any) => {
 export default ChatScreen;
 
 const styles = StyleSheet.create({
+  mainContainer: {flex: 1, backgroundColor: colors.white},
   userMessage: {
     backgroundColor: colors.boxBackground,
     flexDirection: 'row',
@@ -375,7 +363,7 @@ const styles = StyleSheet.create({
     paddingVertical: hp(1),
     borderRadius: 10,
   },
-
+  chatContainer: {alignSelf: 'center', justifyContent: 'center'},
   inputContainer: {
     borderRadius: 15,
     marginLeft: '5%',

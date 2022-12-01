@@ -21,6 +21,7 @@ import {SuccessModal} from '../../../Modals';
 import {colors} from '../../../theme';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {CommonActions} from '@react-navigation/native';
+import CountDown from 'react-native-countdown-component';
 
 const VerifyOtp = ({route, navigation}: any) => {
   const {countryCode, phone} = route.params;
@@ -37,6 +38,7 @@ const VerifyOtp = ({route, navigation}: any) => {
   const [num5, setNum5] = useState('-');
   const [num6, setNum6] = useState('-');
   const [loading, setloading] = useState(false);
+  const [disabled, setDisabled] = useState(true);
   const [success, setsuccess] = useState(false);
   const [text, setText] = useState('');
 
@@ -73,7 +75,6 @@ const VerifyOtp = ({route, navigation}: any) => {
     setNum1('-');
     refNum1.current.focus();
   }
-
   const Validate = () => {
     if (
       num1 === '-' ||
@@ -109,12 +110,15 @@ const VerifyOtp = ({route, navigation}: any) => {
       setsuccess(true);
     }
   };
-
   const handleResend = () => {
     setloading(true);
     verifyNumber(phone, countryCode.dial_code)
       .then((rest: any) => {
-        rest.success && (setText(rest.message), clearRef(), setsuccess(true));
+        rest.success &&
+          (setText(rest.message),
+          clearRef(),
+          setDisabled(true),
+          setsuccess(true));
       })
       .catch(error => {
         onError(error);
@@ -122,6 +126,7 @@ const VerifyOtp = ({route, navigation}: any) => {
       })
       .finally(() => setloading(false));
   };
+
   return (
     <SafeAreaView
       style={{
@@ -325,7 +330,6 @@ const VerifyOtp = ({route, navigation}: any) => {
                   refNum5.current.clear();
                 } else {
                   setNum5(keyValue);
-
                   refNum6.current.focus();
                 }
               }}
@@ -364,7 +368,34 @@ const VerifyOtp = ({route, navigation}: any) => {
             />
           </View>
         </View>
-        <TouchableOpacity
+
+        {disabled ? (
+          <CountDown
+            // key={random}
+            until={30}
+            size={12}
+            onFinish={() => {
+              setDisabled(false);
+            }}
+            separatorStyle={{color: colors.red}}
+            digitStyle={{}}
+            digitTxtStyle={{color: colors.red}}
+            timeToShow={['M', 'S']}
+            showSeparator
+            timeLabels={{m: '', s: ''}}
+            style={{marginVertical: hp(3)}}
+          />
+        ) : (
+          <Text
+            style={{alignSelf: 'center', marginVertical: hp(3), color: 'red'}}
+            onPress={() => {
+              handleResend();
+            }}>
+            Resend Code
+          </Text>
+        )}
+
+        {/* <TouchableOpacity
           onPress={() => {
             handleResend();
           }}>
@@ -376,7 +407,7 @@ const VerifyOtp = ({route, navigation}: any) => {
             }}>
             Resend Code
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <Button
           title="NEXT"

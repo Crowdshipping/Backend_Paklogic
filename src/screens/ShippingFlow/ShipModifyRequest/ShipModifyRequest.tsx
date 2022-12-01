@@ -9,6 +9,7 @@ import {
   Image,
   ActivityIndicator,
   SafeAreaView,
+  Platform,
 } from 'react-native';
 
 import {
@@ -490,7 +491,7 @@ const ShipModifyRequest = ({navigation, route}: any) => {
   }, [SelectedType.id]);
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: colors.white}}>
+    <SafeAreaView style={styles.mainContainer}>
       <KeyboardAwareScrollView>
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -624,7 +625,8 @@ const ShipModifyRequest = ({navigation, route}: any) => {
                 <View style={{borderBottomWidth: 1, borderColor: colors.black}}>
                   <Text
                     style={{
-                      paddingVertical: wp(2),
+                      paddingVertical:
+                        Platform.OS === 'android' ? wp(1) : wp(2),
                       color: colors.gray,
                     }}>
                     {SelectedUnit ? SelectedUnit : 'Select Unit'}

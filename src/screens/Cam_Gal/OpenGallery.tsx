@@ -16,7 +16,6 @@ interface IimageShow {
 
 const OpenGallery = (props: any) => {
   const callbackImageLibrary = (arrayImage: any) => {
-    props.modalExit()
     props.callbackImage(arrayImage);
   };
 
@@ -32,9 +31,9 @@ const OpenGallery = (props: any) => {
   };
   const launchLibrary = async () => {
     await launchImageLibrary({...DEFAULT_OPTIONS}, (response: any) => {
+      props.modalExit();
       if (response.didCancel) {
         // Alert.alert('User cancelled camera picker');
-        props.modalExit()
         return;
       } else if (response.errorCode == 'camera_unavailable') {
         Alert.alert('Camera not available on device');

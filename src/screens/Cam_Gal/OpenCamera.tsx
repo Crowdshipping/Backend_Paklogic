@@ -21,7 +21,6 @@ interface IimageShow {
 }
 const OpenCamera = (props: any) => {
   const callbackImage = (objectImage: Object) => {
-    props.modalExit();
     props.callbackImage(objectImage);
   };
   const pickImage = async () => {
@@ -54,6 +53,7 @@ const OpenCamera = (props: any) => {
       presentationStyle: 'pageSheet',
     };
     launchCamera({...DEFAULT_OPTIONS}, (response: any) => {
+      props.modalExit();
       if (response.didCancel) {
         // Alert.alert('User cancelled camera picker');
         return;

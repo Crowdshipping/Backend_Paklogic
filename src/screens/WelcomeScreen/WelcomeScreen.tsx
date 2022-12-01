@@ -32,7 +32,7 @@ const WelcomeScreen = ({navigation}: any) => {
     <SafeAreaView style={styles.mainContainer}>
       <Header title={'WELCOME'} />
 
-      <SvgXml xml={welcome} style={{alignSelf: 'center'}} />
+      <SvgXml xml={welcome} style={styles.svgStyle} />
 
       <Button
         title="sign in"

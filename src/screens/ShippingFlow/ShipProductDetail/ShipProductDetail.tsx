@@ -10,6 +10,7 @@ import {
   Alert,
   ActivityIndicator,
   SafeAreaView,
+  Platform,
 } from 'react-native';
 
 import {Textbox, Button, MapHeader} from '../../../components';
@@ -422,7 +423,8 @@ const ShipProductDetail = ({navigation, route}: any) => {
                       style={{borderBottomWidth: 1, borderColor: colors.black}}>
                       <Text
                         style={{
-                          paddingVertical: wp(2),
+                          paddingVertical:
+                            Platform.OS === 'android' ? wp(1) : wp(2),
                           color: colors.gray,
                         }}>
                         {SelectedUnit ? SelectedUnit : 'Select Unit'}

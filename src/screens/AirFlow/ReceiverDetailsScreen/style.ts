@@ -6,6 +6,7 @@ import {
 import {colors} from '../../../theme';
 
 export const styles = StyleSheet.create({
+  mainContainer: {flex: 1, backgroundColor: colors.white},
   sectionContainer: {
     marginTop: 32,
     paddingHorizontal: 24,

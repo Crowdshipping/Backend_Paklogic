@@ -7,6 +7,19 @@ import {
 import {colors} from '../../../theme';
 
 export const styles = StyleSheet.create({
+  mainContainer: {flex: 1, backgroundColor: colors.white},
+  mapHeaderView: {bottom: hp(7)},
+  caretIconStyle: {
+    alignSelf: 'center',
+    marginLeft: hp(1),
+  },
+  selectText: {color: colors.gray},
+  weightUnitView: {
+    flexDirection: 'row',
+    marginLeft: wp(3),
+    marginRight: wp(5),
+  },
+
   arrorwStyle: {
     // width: wp(10),
     // borderWidth: 2,

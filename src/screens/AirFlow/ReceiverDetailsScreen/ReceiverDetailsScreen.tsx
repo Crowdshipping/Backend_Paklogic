@@ -54,7 +54,6 @@ const ReceiverDetailsScreen = ({navigation, route}: any) => {
     dropoffIATACityCode,
     pickupCity,
     dropoffCity,
-
   } = route.params?.data;
   const [receiverName, setreceiverName] = useState('');
   const [phone, setphone] = useState('');
@@ -229,7 +228,7 @@ const ReceiverDetailsScreen = ({navigation, route}: any) => {
   //     });
   // }, []);
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.mainContainer}>
       <KeyboardAwareScrollView>
         <ImageBackground
           // style={styles.bgImage}

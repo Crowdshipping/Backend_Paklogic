@@ -17,7 +17,7 @@ export const Textbox = (props: ITextBox) => {
     type,
     eye,
   } = props;
-  const [secureText, setsecureText] = useState(password ? password : false);
+  const [secureText, setsecureText] = useState(password || false);
   // let secureText = password ? password : false;
   return (
     <View style={[styles.sectionContainer]}>
@@ -31,9 +31,9 @@ export const Textbox = (props: ITextBox) => {
           multiline={false}
           style={styles.inputText}
           secureTextEntry={secureText}
-          editable={!editable ? editable : true}
+          editable={editable && true}
           keyboardType={type ? 'numeric' : 'default'}
-          autoFocus={focus ? focus : false}
+          autoFocus={focus || false}
           onChangeText={text => {
             {
               onChangeValue ? onChangeValue(text) : null;

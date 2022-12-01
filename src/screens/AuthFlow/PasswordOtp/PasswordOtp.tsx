@@ -21,6 +21,7 @@ import {colors} from '../../../theme/colors';
 import {SuccessModal} from '../../../Modals';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {CommonActions} from '@react-navigation/native';
+import CountDown from 'react-native-countdown-component';
 
 const PasswordOtp = ({route, navigation}: any) => {
   const [loading, setloading] = useState(false);
@@ -362,7 +363,7 @@ const PasswordOtp = ({route, navigation}: any) => {
             />
           </View>
         </View>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             Resend();
           }}>
@@ -374,7 +375,32 @@ const PasswordOtp = ({route, navigation}: any) => {
             }}>
             Resend Code
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+        {disabled ? (
+          <CountDown
+            // key={random}
+            until={30}
+            size={12}
+            onFinish={() => {
+              setDisabled(false);
+            }}
+            separatorStyle={{color: colors.red}}
+            digitStyle={{}}
+            digitTxtStyle={{color: colors.red}}
+            timeToShow={['M', 'S']}
+            showSeparator
+            timeLabels={{m: '', s: ''}}
+            style={{marginVertical: hp(3)}}
+          />
+        ) : (
+          <Text
+            style={{alignSelf: 'center', marginVertical: hp(3), color: 'red'}}
+            onPress={() => {
+              handleResend();
+            }}>
+            Resend Code
+          </Text>
+        )}
 
         <Button
           title="NEXT"

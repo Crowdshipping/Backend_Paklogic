@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
     marginTop: 32,
     paddingHorizontal: 24,
   },
-
+  svgStyle: {alignSelf: 'center'},
   text: {
     paddingVertical: 10,
     textAlign: 'center',
